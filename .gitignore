@@ -1,0 +1,13 @@
+# thilo-runner: scaffolding this runner creates in the checkout
+.worktrees/
+.thilo/
+.claude/
+.mcp.json
+__pycache__/
+*.pyc
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+node_modules/
+.venv/
+*~
