@@ -64,6 +64,16 @@ curl -s localhost:5100/udc/list -H 'content-type: application/json' \
   -d '{"collection":"companies","sort":[{"field":"employees","dir":"desc"}],"page":{"limit":5}}'
 ```
 
+The schema is editable at runtime: `schema.add_field`, `schema.update_field` and
+`schema.soft_delete_field` each write a new active revision (`v2`, `v3`, …) into
+`udc_schema_revisions` and create the expression index of every `index: true`
+field; `seed -- --reset` returns a collection to its `schema.json` as `v1`.
+
+```sh
+curl -s localhost:5100/udc/schema.add_field -H 'content-type: application/json' \
+  -d '{"collection":"companies","name":"website","fielddef":{"type":"string","length":120},"position":{"where":"after","anchor":"name"}}'
+```
+
 Collections are directories under `backend/collections/<name>/` (`view.yaml`,
 `schema.json`, `seed.json`), each served from a table of the same name with every
 field in `data jsonb`. `backend/scripts/generate-companies.ts` regenerates the

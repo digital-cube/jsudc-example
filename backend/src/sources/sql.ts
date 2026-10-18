@@ -42,9 +42,28 @@ function textExpr(field: string): SQL {
   return sql.raw(`(data->>'${field}')`);
 }
 
-/** The typed expression comparisons and ORDER BY use. */
+/**
+ * The typed expression comparisons and ORDER BY use, and the expression
+ * index of an indexed field is built on (so the planner can match the two).
+ * date and timestamptz go through the IMMUTABLE wrappers of migration 0001:
+ * the bare casts are STABLE and Postgres refuses them in an index.
+ */
 function typedExpr(field: string, cast: Cast): SQL {
-  return cast === "text" ? textExpr(field) : sql.raw(`((data->>'${field}')::${cast})`);
+  switch (cast) {
+    case "text":
+      return textExpr(field);
+    case "date":
+      return sql.raw(`udc_date(data->>'${field}')`);
+    case "timestamptz":
+      return sql.raw(`udc_timestamptz(data->>'${field}')`);
+    default:
+      return sql.raw(`((data->>'${field}')::${cast})`);
+  }
+}
+
+/** The typed expression of an allowlisted field (see `typedExpr`). */
+export function fieldExpr(field: string, def: FieldDef): SQL {
+  return typedExpr(field, castFor(def));
 }
 
 function param(value: unknown, cast: Cast): SQL {

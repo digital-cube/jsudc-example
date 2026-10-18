@@ -36,7 +36,7 @@ describe("filterableFields", () => {
     expect(out[2]).toMatchObject({ widget: "select", values: ["a", "b"] });
   });
 
-  it("follows view.filterable: names, overrides, per-type default ops; skips deleted and unknown", () => {
+  it("follows view.filterable: names, overrides, per-type default ops; skips deleted and unknown; adds unlisted fields by field_order", () => {
     const view = ViewConfigSchema.parse({
       filterable: {
         fields: [
@@ -55,6 +55,15 @@ describe("filterableFields", () => {
         ops: ["eq", "neq", "gt", "gte", "lt", "lte", "between", "is_null", "is_not_null"],
         default_op: "between",
         widget: "date",
+      },
+      // Not in the view: placed after its field_order neighbour `born`.
+      {
+        field: "kind",
+        type: "enum",
+        ops: expect.any(Array),
+        default_op: expect.any(String),
+        widget: "select",
+        values: ["a", "b"],
       },
       {
         field: "name",

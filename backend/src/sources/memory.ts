@@ -22,6 +22,11 @@ import {
   type SourceMutation,
 } from "./source.js";
 
+const readOnlySchema = () =>
+  Promise.reject(
+    new UdcError("unsupported_op", "the memory source cannot edit its schema (schema_edit: false)"),
+  );
+
 interface Stored {
   id: string;
   version: number;
@@ -126,6 +131,18 @@ export class MemorySource implements Source {
     stored.data = { ...stored.data, ...patch };
     stored.version += 1;
     return serialize(stored);
+  }
+
+  addField(): Promise<SchemaDoc> {
+    return readOnlySchema();
+  }
+
+  updateField(): Promise<SchemaDoc> {
+    return readOnlySchema();
+  }
+
+  softDeleteField(): Promise<SchemaDoc> {
+    return readOnlySchema();
   }
 
   private find(id: string): Stored {

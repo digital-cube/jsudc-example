@@ -14,3 +14,6 @@ export function connect(url: string): DbHandle {
   const db = drizzle({ client: pool });
   return { db, pool, close: () => pool.end() };
 }
+
+/** Anything that runs SQL: the pool-backed `Db` or a transaction of it. */
+export type Executor = Pick<Db, "execute">;

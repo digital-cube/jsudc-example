@@ -7,13 +7,17 @@ import {
 } from "@jsudc/udc-core";
 import { sql } from "drizzle-orm";
 import type { Db } from "./db/client.js";
+import { dropFieldIndexes, syncFieldIndexes } from "./sources/indexes.js";
 
 export interface SeedOptions {
   table: string;
   /** `schema.json` as read from disk, stored as revision 1 with its `field_order` made explicit. */
   schema: SchemaDocInput;
   rows: Record<string, unknown>[];
-  /** Truncate the table and drop the collection's schema revisions first. */
+  /**
+   * Truncate the table and drop the collection's schema revisions (so every
+   * revision after 1 goes) and field indexes first: back to `schema.json`.
+   */
   reset?: boolean;
   limit?: number;
 }
@@ -52,6 +56,7 @@ export async function seedCollection(db: Db, opts: SeedOptions): Promise<SeedRes
     if (opts.reset) {
       await tx.execute(sql`TRUNCATE TABLE ${t}`);
       await tx.execute(sql`DELETE FROM udc_schema_revisions WHERE collection = ${table}`);
+      await dropFieldIndexes(tx, table);
     }
     const rev = await tx.execute(sql`
       INSERT INTO udc_schema_revisions (collection, version, schema, active)
@@ -59,6 +64,8 @@ export async function seedCollection(db: Db, opts: SeedOptions): Promise<SeedRes
       ON CONFLICT DO NOTHING
       RETURNING id`);
     const revision = rev.rows.length > 0 ? "created" : "kept";
+    // Activating revision 1 indexes its fields, as every later activation does.
+    if (revision === "created") await syncFieldIndexes(tx, table, schema);
 
     const existing = await tx.execute<{ n: number }>(sql`SELECT count(*)::int AS n FROM ${t}`);
     if ((existing.rows[0]?.n ?? 0) > 0) return { table, inserted: 0, revision, skipped: true };

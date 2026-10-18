@@ -12,7 +12,8 @@ import {
 } from "@jsudc/udc-core";
 import type { z } from "zod";
 import { buildDescribe } from "./describe.js";
-import type { CollectionRegistry } from "./registry.js";
+import type { Collection, CollectionRegistry } from "./registry.js";
+import type { Source } from "./sources/source.js";
 
 export interface DispatchLogger {
   error(obj: unknown, msg?: string): void;
@@ -84,7 +85,28 @@ export class Dispatcher {
   }
 }
 
-export const PHASE1_ACTIONS = ["collections", "describe", "list", "read", "mutate"] as const;
+export const PHASE1_ACTIONS = [
+  "collections",
+  "describe",
+  "list",
+  "read",
+  "mutate",
+  "schema.add_field",
+  "schema.update_field",
+  "schema.soft_delete_field",
+] as const;
+
+/** The source of a collection whose schema may be edited, or `unsupported_op`. */
+function schemaEditable(c: Collection): Source {
+  if (!c.source.capabilities.schema_edit) {
+    throw new UdcError(
+      "unsupported_op",
+      `collection ${c.name} does not support schema edits (schema_edit: false)`,
+      { collection: c.name },
+    );
+  }
+  return c.source;
+}
 
 /** A dispatcher with the phase-1 actions wired to the registry. */
 export function createDispatcher(
@@ -129,5 +151,26 @@ export function createDispatcher(
     )
     .register("mutate", ACTIONS.mutate.request, async ({ collection, ...op }) => ({
       row: await registry.get(collection).source.mutate(op),
-    }));
+    }))
+    .register(
+      "schema.add_field",
+      ACTIONS["schema.add_field"].request,
+      async ({ collection, ...req }) => ({
+        schema: await schemaEditable(registry.get(collection)).addField(req),
+      }),
+    )
+    .register(
+      "schema.update_field",
+      ACTIONS["schema.update_field"].request,
+      async ({ collection, ...req }) => ({
+        schema: await schemaEditable(registry.get(collection)).updateField(req),
+      }),
+    )
+    .register(
+      "schema.soft_delete_field",
+      ACTIONS["schema.soft_delete_field"].request,
+      async ({ collection, field }) => ({
+        schema: await schemaEditable(registry.get(collection)).softDeleteField(field),
+      }),
+    );
 }

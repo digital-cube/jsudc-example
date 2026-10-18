@@ -8,7 +8,8 @@ import {
 } from "@jsudc/udc-core";
 import { sql } from "drizzle-orm";
 import type { Db } from "../db/client.js";
-import { activeSchema, assertJsonbSchema } from "../schema-store.js";
+import { applySchemaEdit, type SchemaEdit } from "../schema-edit.js";
+import { activeSchema, assertJsonbSchema, writeSchemaRevision } from "../schema-store.js";
 import { type CursorValue, decodeCursor, encodeCursor, isUuid } from "./cursor.js";
 import {
   assertQueryFields,
@@ -21,8 +22,10 @@ import {
   ALL_FILTER_OPS,
   DEFAULT_PAGE_SIZE,
   type Source,
+  type SourceAddField,
   type SourceListRequest,
   type SourceMutation,
+  type SourceUpdateField,
 } from "./source.js";
 import { compileFilter, compileSort, cursorPredicate, orderBy, sortKeyColumns } from "./sql.js";
 
@@ -168,6 +171,32 @@ export class PostgresJsonbSource implements Source {
     const version = current.rows[0]?.version;
     if (version === undefined || m.expected_version === undefined) throw notFound(id);
     throw versionConflict(id, m.expected_version, version);
+  }
+
+  addField(req: SourceAddField): Promise<SchemaDoc> {
+    return this.editSchema({ op: "add", ...req });
+  }
+
+  updateField(req: SourceUpdateField): Promise<SchemaDoc> {
+    return this.editSchema({ op: "update", ...req });
+  }
+
+  softDeleteField(field: string): Promise<SchemaDoc> {
+    return this.editSchema({ op: "soft_delete", field });
+  }
+
+  private editSchema(edit: SchemaEdit): Promise<SchemaDoc> {
+    return writeSchemaRevision(this.db, {
+      collection: this.name,
+      initial: this.initialSchema,
+      edit: (current) => {
+        assertJsonbSchema(current, `active schema of ${this.name}`);
+        return {
+          schema: applySchemaEdit(current, edit),
+          touched: [edit.op === "soft_delete" ? edit.field : edit.name],
+        };
+      },
+    });
   }
 }
 

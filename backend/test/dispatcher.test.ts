@@ -190,6 +190,37 @@ describe("dispatcher on MemorySource", () => {
     expect(ctx.log.error).toHaveBeenCalledOnce();
   });
 
+  it.each([
+    ["schema.add_field", { name: "web", fielddef: { type: "string" }, position: { where: "end" } }],
+    ["schema.update_field", { name: "name", fielddef: { type: "string" } }],
+    ["schema.soft_delete_field", { field: "note" }],
+  ])(
+    "refuses %s with unsupported_op when the source cannot edit its schema",
+    async (action, payload) => {
+      const res = await call(ctx.dispatcher, action, { collection: "firms", ...payload });
+      expect(res.kind).toBe(`udc.${action}.err`);
+      expect(res.payload).toMatchObject({ code: "unsupported_op" });
+      expect((res.payload as { message: string }).message).toMatch(/schema_edit/);
+    },
+  );
+
+  it("validates schema.* payloads before asking the source", async () => {
+    const res = await call(ctx.dispatcher, "schema.add_field", {
+      collection: "firms",
+      name: "Bad Name",
+      fielddef: { type: "string" },
+      position: { where: "end" },
+    });
+    expect(res.payload).toMatchObject({ code: "validation_error" });
+  });
+
+  it("describe hides soft-deleted fields from the schema", async () => {
+    const res = await call(ctx.dispatcher, "describe", { collection: "firms" });
+    const p = res.payload as DescribeResponse;
+    expect(p.schema.fields.old).toBeUndefined();
+    expect(p.schema.field_order).toEqual(["name", "employees", "active", "note"]);
+  });
+
   it("passes a UdcError thrown by a handler through as-is", async () => {
     ctx.dispatcher.register("deny", ACTIONS.collections.request, () => {
       throw new UdcError("forbidden", "no", { why: "test" });

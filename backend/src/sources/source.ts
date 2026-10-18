@@ -1,11 +1,13 @@
 import {
   type Capabilities,
+  type FieldDef,
   type FilterNode,
   type ListResponse,
   type MutateOp,
   type PageRequest,
   type Row,
   type SchemaDoc,
+  type SchemaPosition,
   type SortKey,
   SUPPORTED_OPS,
 } from "@jsudc/udc-core";
@@ -24,10 +26,22 @@ export interface SourceMutation {
   expected_version?: number | undefined;
 }
 
+export interface SourceAddField {
+  name: string;
+  fielddef: FieldDef;
+  position: SchemaPosition;
+}
+
+export interface SourceUpdateField {
+  name: string;
+  fielddef: FieldDef;
+}
+
 /**
  * Where a collection's rows live. Phase 1 has one real implementation
- * (Postgres jsonb) and an in-memory one for dispatcher tests; the
- * `schema.*` methods arrive with ticket 3.
+ * (Postgres jsonb) and an in-memory one for dispatcher tests. The schema
+ * methods return the new active document (soft-deleted fields included);
+ * a source without `capabilities.schema_edit` refuses them.
  */
 export interface Source {
   readonly capabilities: Capabilities;
@@ -36,6 +50,9 @@ export interface Source {
   list(req: SourceListRequest): Promise<ListResponse>;
   read(id: string): Promise<Row>;
   mutate(op: SourceMutation): Promise<Row>;
+  addField(req: SourceAddField): Promise<SchemaDoc>;
+  updateField(req: SourceUpdateField): Promise<SchemaDoc>;
+  softDeleteField(field: string): Promise<SchemaDoc>;
 }
 
 export const ALL_FILTER_OPS = [...SUPPORTED_OPS];

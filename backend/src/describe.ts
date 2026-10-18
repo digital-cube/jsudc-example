@@ -6,21 +6,23 @@ import {
   type SchemaDoc,
   type ViewConfig,
 } from "@jsudc/udc-core";
-import { deriveColumns } from "./columns.js";
+import { deriveColumns, placeUnlisted } from "./columns.js";
+import { presentedSchema } from "./schema-edit.js";
 
 type FieldEntry = Exclude<NonNullable<ViewConfig["filterable"]>["fields"][number], string>;
 
 /**
  * The filter-builder fields: `view.filterable.fields` (bare names or override
- * blocks), or every non-deleted schema field when the view declares none,
- * each merged with the defaults of its type. Deleted and unknown fields drop out.
+ * blocks) in file order, plus every other non-deleted schema field placed by
+ * `field_order` as derived columns are (so a field added at runtime is
+ * filterable at once), each merged with the defaults of its type. Deleted and
+ * unknown fields drop out.
  */
 export function filterableFields(view: ViewConfig, schema: SchemaDoc): FilterableField[] {
-  const declared = view.filterable?.fields ?? [];
-  const entries: FieldEntry[] =
-    declared.length > 0
-      ? declared.map((f) => (typeof f === "string" ? { field: f } : f))
-      : schema.field_order.map((field) => ({ field }));
+  const declared: FieldEntry[] = (view.filterable?.fields ?? []).map((f) =>
+    typeof f === "string" ? { field: f } : f,
+  );
+  const entries = placeUnlisted(declared, schema, (field): FieldEntry => ({ field }));
   const perType = view.filterable?.default_op ?? {};
 
   const out: FilterableField[] = [];
@@ -44,18 +46,21 @@ export function filterableFields(view: ViewConfig, schema: SchemaDoc): Filterabl
   return out;
 }
 
-/** The `describe` payload: the source's active schema and the view with its derived columns. */
+/**
+ * The `describe` payload: the source's active schema without its soft-deleted
+ * fields, and the view with its derived columns.
+ */
 export function buildDescribe(
   collection: string,
   capabilities: Capabilities,
-  schema: SchemaDoc,
+  active: SchemaDoc,
   view: ViewConfig,
 ): DescribeResponse {
   return {
     collection,
     capabilities,
-    schema,
-    view: { ...view, columns: deriveColumns(view.columns, schema, view.default_column_width) },
-    filterable: { fields: filterableFields(view, schema) },
+    schema: presentedSchema(active),
+    view: { ...view, columns: deriveColumns(view.columns, active, view.default_column_width) },
+    filterable: { fields: filterableFields(view, active) },
   };
 }

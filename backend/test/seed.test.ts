@@ -27,6 +27,13 @@ const revisions = async () =>
     )
   ).rows;
 
+const indexNames = async () =>
+  (
+    await db.execute<{ indexname: string }>(
+      sql`select indexname from pg_indexes where tablename = 'companies' order by indexname`,
+    )
+  ).rows.map((r) => r.indexname);
+
 beforeEach(() => resetTables(db));
 
 describe("seedCollection", () => {
@@ -59,6 +66,28 @@ describe("seedCollection", () => {
     });
     expect((await source.list({})).total).toBe(20);
     expect(await revisions()).toHaveLength(1);
+  });
+
+  it("--reset drops later revisions and their indexes, back to schema.json as v1", async () => {
+    await seed({ limit: 5 });
+    await source.addField({
+      name: "website",
+      fielddef: { type: "string", index: true },
+      position: { where: "end" },
+    });
+    await source.softDeleteField("city");
+    expect(await revisions()).toHaveLength(3);
+    expect(await indexNames()).toContain("companies_data_website_idx");
+
+    await seed({ reset: true, limit: 5 });
+    expect(await revisions()).toEqual([{ version: 1, active: true }]);
+    const schema = await source.describe();
+    expect(schema.version).toBe("v1");
+    expect(schema.fields.website).toBeUndefined();
+    expect(schema.fields.city?.deleted).toBeUndefined();
+    const names = await indexNames();
+    expect(names).not.toContain("companies_data_website_idx");
+    expect(names).toContain("companies_data_city_idx");
   });
 
   it("refuses an invalid seed row and writes nothing", async () => {
