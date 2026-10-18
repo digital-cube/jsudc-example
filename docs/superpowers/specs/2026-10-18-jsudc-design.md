@@ -145,8 +145,8 @@ No React, no Node APIs in this package. It must build for both targets.
 | `read` | `{collection, id}` → `{row}` |
 | `mutate` | `{collection, op: insert\|update\|delete, id?, row?, expected_version?}` → `{row}`; update merges a partial patch, bumps `version`; mismatch → `version_conflict` with `details.current_version` |
 | `schema.add_field` | `{collection, name, fielddef, position: {where: before\|after\|end, anchor?}}` → `{schema}` |
-| `schema.update_field` | `{collection, name, fielddef}` → `{schema}` |
-| `schema.soft_delete_field` | `{collection, name}` → `{schema}` |
+| `schema.update_field` | `{collection, name, fielddef}` → `{schema}`; a changed `type` → `unsupported_op` |
+| `schema.soft_delete_field` | `{collection, field}` → `{schema}` |
 
 `capabilities` for the jsonb source: `{mutate: true, subscribe: false, total_count: true, schema_edit: true, config_edit: false, supported_filter_ops: [all 14]}`.
 
