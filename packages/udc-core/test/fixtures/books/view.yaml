@@ -1,0 +1,42 @@
+# books — the "writes + lookups" demo: cached cover thumbnails
+# (render_options.cache -> the svc_examples /udc/img thumbnail cache),
+# multiselect + a bulk delete action, value-keyed row_color rules driven by
+# Books.Genre.* lookup paths (seeds/lookups.yaml), and row_height reserving
+# vertical space so cover thumbs don't jiggle the rows while they load.
+#
+# isbn is the core field (typed column on the Row, not a JSONB key); the
+# rest of the row lives in the JSONB data blob. Unlike serbian_companies /
+# countries this collection is registered WRITABLE (see
+# dclabs_examples.udc.config_source._WritableJSONBSource): inline edit,
+# row edit and the bulk delete all mutate rows for real.
+default_renderer: table
+available_renderers: [table, cards]
+card_options: {image_field: cover_url, title_field: title, subtitle_field: author,
+               meta_fields: [genre, published_year, rating, pages], size: medium}
+columns:
+  - {field: cover_url, render: image_thumb, render_options: {cache: true}, editable: false, width: 80}
+  - {field: title, pin: left, editable: true, width: 280}
+  - {field: author, editable: true}
+  - {field: published_year, editable: true}
+  - {field: pages, render: number_format, editable: true}
+  - {field: genre, editable: true}
+  - {field: rating, editable: true}
+  - {field: isbn, pin: right, editable: false}
+row_actions: [edit]
+page_size_default: 50
+pagination: infinite
+row_height: 80          # reserve space so cover thumbs don't jiggle on load
+multiselect: true
+bulk_actions:
+  - {kind: delete, label: "Delete selected"}
+# Value-keyed rules: each `value` is a Books.Genre lookup path — the exact
+# string every seeded genre cell stores (the LookupCell renders its label).
+# Genres without a rule keep the default row colours.
+row_color:
+  apply: true
+  field: genre
+  rules:
+    - {value: "Books.Genre.CLASSIC",   color: info,    bg: info}
+    - {value: "Books.Genre.ROMANCE",   color: danger}
+    - {value: "Books.Genre.GOTHIC",    color: muted,   bg: muted}
+    - {value: "Books.Genre.DYSTOPIAN", color: warning, bg: warning}

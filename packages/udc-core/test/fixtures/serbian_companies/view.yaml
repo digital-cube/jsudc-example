@@ -1,0 +1,45 @@
+default_renderer: table
+available_renderers: [table, cards]
+card_options:
+  title_field: name
+  subtitle_field: pib
+  meta_fields: [city, industry, employees, revenue_eur, active]
+  size: medium
+columns:
+  - {field: pib, pin: left, editable: false, width: 110}
+  # name is the primary lookup field: painted with semantic info color/bg
+  # and titlecased so display stays Title Case regardless of upstream casing.
+  - field: name
+    pin: left
+    editable: false
+    width: 320
+    transform: titlecase
+    color: info
+    bg: info
+  - {field: mb, editable: false, width: 120}
+  - {field: legal_form, editable: false, width: 110}
+  # city + industry are the string filter demos.
+  - {field: city, editable: false, width: 140}
+  - {field: industry, editable: false, width: 140}
+  # employees + revenue_eur are the numeric sort demos: number_format render
+  # + right align so the JSONB numeric cast sort is visible in the UI.
+  - {field: employees, render: number_format, editable: false, width: 110, align: right}
+  - {field: revenue_eur, render: number_format, editable: false, width: 130, align: right}
+  - field: founded
+    editable: false
+    width: 120
+    transform: date_format:DD.MM.YYYY
+  - field: active
+    editable: false
+    width: 80
+    align: center
+    render: bool
+    render_options: {style: check_x}
+# Served read-only until the udc library's multi-connection write path is
+# fixed (see dclabs_examples.udc.config_source._ReadOnlyJSONBSource): no
+# row_actions, no multiselect/bulk_actions — the read side (sort/filter/
+# pagination + transforms/renderers below) is untouched.
+row_actions: []
+page_size_default: 50
+pagination: infinite
+row_height: 48

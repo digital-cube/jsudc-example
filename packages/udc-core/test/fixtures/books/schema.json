@@ -1,0 +1,14 @@
+{
+  "version": "v1",
+  "core_fields": ["isbn"],
+  "fields": {
+    "cover_url":      {"type": "image"},
+    "title":          {"type": "string", "length": 160, "required": true, "index": true},
+    "author":         {"type": "string", "length": 80, "required": true, "index": true},
+    "published_year": {"type": "year", "index": true},
+    "pages":          {"type": "integer", "min": 1},
+    "genre":          {"type": "lookup", "ref": "Books.Genre", "index": true},
+    "rating":         {"type": "decimal", "min": 0, "max": 5},
+    "isbn":           {"type": "string", "length": 20, "index": true}
+  }
+}

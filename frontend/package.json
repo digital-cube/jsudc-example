@@ -1,0 +1,7 @@
+{
+  "name": "@jsudc/frontend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "jsudc frontend (React + Vite). Placeholder until ticket 4/5."
+}

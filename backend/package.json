@@ -1,0 +1,7 @@
+{
+  "name": "@jsudc/backend",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "description": "jsudc backend (Fastify + Drizzle). Placeholder until ticket 2/5."
+}

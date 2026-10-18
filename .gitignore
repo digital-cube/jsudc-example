@@ -11,3 +11,11 @@ __pycache__/
 node_modules/
 .venv/
 *~
+
+# jsudc
+dist/
+coverage/
+.env
+.env.*
+!.env.example
+*.tsbuildinfo
