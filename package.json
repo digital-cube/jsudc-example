@@ -16,7 +16,10 @@
     "test": "npm run test --workspaces --if-present",
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "biome check .",
-    "format": "biome format --write ."
+    "format": "biome format --write .",
+    "dev": "npm run dev -w @jsudc/backend",
+    "db:setup": "npm run db:create -w @jsudc/backend && npm run db:migrate -w @jsudc/backend && npm run db:migrate:test -w @jsudc/backend",
+    "seed": "npm run build -w @jsudc/udc-core && npm run seed -w @jsudc/backend --"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.15",

@@ -1,7 +1,41 @@
 {
   "name": "@jsudc/backend",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "jsudc backend (Fastify + Drizzle). Placeholder until ticket 2/5."
+  "description": "jsudc backend: Fastify transport, UDC dispatcher, Postgres jsonb source.",
+  "scripts": {
+    "predev": "npm run build -w @jsudc/udc-core",
+    "dev": "tsx watch src/main.ts",
+    "prestart": "npm run build -w @jsudc/udc-core",
+    "start": "tsx src/main.ts",
+    "db:create": "tsx src/cli/db-create.ts",
+    "db:migrate": "drizzle-kit migrate",
+    "db:migrate:test": "MIGRATE_TARGET=test drizzle-kit migrate",
+    "db:generate": "drizzle-kit generate",
+    "seed": "tsx src/cli/seed.ts",
+    "seed:test": "tsx src/cli/seed.ts --reset --test",
+    "generate:companies": "tsx scripts/generate-companies.ts",
+    "typecheck": "tsc -p tsconfig.json --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:cov": "vitest run --coverage"
+  },
+  "dependencies": {
+    "@fastify/swagger": "^9.9.2",
+    "@fastify/swagger-ui": "^6.1.2",
+    "@jsudc/udc-core": "*",
+    "drizzle-orm": "^0.45.4",
+    "fastify": "^5.12.7",
+    "fastify-type-provider-zod": "^7.0.0",
+    "pg": "^8.23.1",
+    "yaml": "^2.9.1",
+    "zod": "^4.6.7"
+  },
+  "devDependencies": {
+    "@types/pg": "^8.23.1",
+    "@vitest/coverage-v8": "^5.0.5",
+    "drizzle-kit": "^0.31.11",
+    "tsx": "^4.23.15"
+  }
 }

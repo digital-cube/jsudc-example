@@ -1,0 +1,177 @@
+import {
+  type Capabilities,
+  FIELD_NAME_RE,
+  type ListResponse,
+  type Row,
+  type SchemaDoc,
+  UdcError,
+} from "@jsudc/udc-core";
+import { sql } from "drizzle-orm";
+import type { Db } from "../db/client.js";
+import { activeSchema, assertJsonbSchema } from "../schema-store.js";
+import { type CursorValue, decodeCursor, encodeCursor, isUuid } from "./cursor.js";
+import {
+  assertQueryFields,
+  assertValidRow,
+  notFound,
+  versionConflict,
+  withoutMeta,
+} from "./fields.js";
+import {
+  ALL_FILTER_OPS,
+  DEFAULT_PAGE_SIZE,
+  type Source,
+  type SourceListRequest,
+  type SourceMutation,
+} from "./source.js";
+import { compileFilter, compileSort, cursorPredicate, orderBy, sortKeyColumns } from "./sql.js";
+
+interface DbRow extends Record<string, unknown> {
+  id: string;
+  version: number;
+  data: Record<string, unknown>;
+}
+
+export interface PostgresJsonbSourceOptions {
+  db: Db;
+  /** The collection's table; also its name in `udc_schema_revisions`. */
+  table: string;
+  /** `schema.json`: served until a revision is active. */
+  initialSchema: SchemaDoc;
+  pageSizeDefault?: number;
+}
+
+/**
+ * One table per collection, every field in `data jsonb`. Filters, sorts and
+ * keyset cursors compile to SQL over `data->>'field'` with typed casts; the
+ * schema comes from the collection's active revision on every call.
+ */
+export class PostgresJsonbSource implements Source {
+  readonly capabilities: Capabilities = {
+    mutate: true,
+    subscribe: false,
+    total_count: true,
+    schema_edit: true,
+    config_edit: false,
+    supported_filter_ops: ALL_FILTER_OPS,
+  };
+
+  private readonly db: Db;
+  private readonly name: string;
+  private readonly table: ReturnType<typeof sql.identifier>;
+  private readonly initialSchema: SchemaDoc;
+  private readonly pageSizeDefault: number;
+
+  constructor(opts: PostgresJsonbSourceOptions) {
+    if (!FIELD_NAME_RE.test(opts.table)) {
+      throw new Error(
+        `invalid table name ${JSON.stringify(opts.table)}: lowercase snake_case only`,
+      );
+    }
+    assertJsonbSchema(opts.initialSchema, `collection ${opts.table}`);
+    this.db = opts.db;
+    this.name = opts.table;
+    this.table = sql.identifier(opts.table);
+    this.initialSchema = opts.initialSchema;
+    this.pageSizeDefault = opts.pageSizeDefault ?? DEFAULT_PAGE_SIZE;
+  }
+
+  async describe(): Promise<SchemaDoc> {
+    const schema = (await activeSchema(this.db, this.name)) ?? this.initialSchema;
+    assertJsonbSchema(schema, `active schema of ${this.name}`);
+    return schema;
+  }
+
+  async list(req: SourceListRequest): Promise<ListResponse> {
+    const schema = await this.describe();
+    // Everything that can be refused is refused before any query runs.
+    assertQueryFields(schema, req.filter, req.sort);
+    const where = compileFilter(req.filter, schema);
+    const terms = compileSort(req.sort, schema);
+    const limit = req.page?.limit ?? this.pageSizeDefault;
+    const cursor = req.page?.cursor;
+    const offset = req.page?.offset ?? 0;
+    const after = cursor != null ? decodeCursor(cursor, terms.length) : null;
+    const pageWhere = after
+      ? sql`${where} AND ${cursorPredicate(terms, after.values, after.id)}`
+      : where;
+    const keyCols = terms.length > 0 ? sql`, ${sortKeyColumns(terms)}` : sql``;
+
+    // One extra row tells whether there is a next page.
+    const [rows, count] = await Promise.all([
+      this.db.execute<DbRow>(sql`
+        SELECT id, version, data${keyCols}
+        FROM ${this.table}
+        WHERE ${pageWhere}
+        ORDER BY ${orderBy(terms)}
+        LIMIT ${limit + 1} OFFSET ${after ? 0 : offset}`),
+      this.db.execute<{ total: number }>(
+        sql`SELECT count(*)::int AS total FROM ${this.table} WHERE ${where}`,
+      ),
+    ]);
+
+    const page = rows.rows.slice(0, limit);
+    const last = page.at(-1);
+    const next_cursor =
+      rows.rows.length > limit && last
+        ? encodeCursor([...terms.map((_, i) => (last[`__k${i}`] ?? null) as CursorValue), last.id])
+        : null;
+    return { rows: page.map(serialize), next_cursor, total: count.rows[0]?.total ?? 0 };
+  }
+
+  async read(id: string): Promise<Row> {
+    if (!isUuid(id)) throw notFound(id);
+    const res = await this.db.execute<DbRow>(
+      sql`SELECT id, version, data FROM ${this.table} WHERE id = ${id}::uuid`,
+    );
+    const row = res.rows[0];
+    if (!row) throw notFound(id);
+    return serialize(row);
+  }
+
+  async mutate(m: SourceMutation): Promise<Row> {
+    const schema = await this.describe();
+    if (m.op === "insert") {
+      const data = withoutMeta(m.row ?? {});
+      assertValidRow(schema, data, "insert");
+      const res = await this.db.execute<DbRow>(sql`
+        INSERT INTO ${this.table} (data) VALUES (${JSON.stringify(data)}::jsonb)
+        RETURNING id, version, data`);
+      return serialize(res.rows[0] as DbRow);
+    }
+
+    if (m.id === undefined) throw new UdcError("validation_error", `${m.op} needs an id`);
+    const id = m.id;
+    const patch = withoutMeta(m.row ?? {});
+    if (m.op === "update") assertValidRow(schema, patch, "patch");
+    if (!isUuid(id)) throw notFound(id);
+
+    // The version check is part of the statement, so two concurrent edits cannot both win.
+    const versionCheck =
+      m.expected_version === undefined ? sql`` : sql` AND version = ${m.expected_version}`;
+    const res =
+      m.op === "update"
+        ? await this.db.execute<DbRow>(sql`
+            UPDATE ${this.table}
+            SET data = data || ${JSON.stringify(patch)}::jsonb, version = version + 1, updated_at = now()
+            WHERE id = ${id}::uuid${versionCheck}
+            RETURNING id, version, data`)
+        : await this.db.execute<DbRow>(sql`
+            DELETE FROM ${this.table} WHERE id = ${id}::uuid${versionCheck}
+            RETURNING id, version, data`);
+    const row = res.rows[0];
+    if (row) return serialize(row);
+
+    const current = await this.db.execute<{ version: number }>(
+      sql`SELECT version FROM ${this.table} WHERE id = ${id}::uuid`,
+    );
+    const version = current.rows[0]?.version;
+    if (version === undefined || m.expected_version === undefined) throw notFound(id);
+    throw versionConflict(id, m.expected_version, version);
+  }
+}
+
+function serialize(row: DbRow): Row {
+  const { __meta: _, ...data } = row.data;
+  return { __meta: { id: row.id, version: row.version }, ...data };
+}

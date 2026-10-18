@@ -1,0 +1,89 @@
+import { sql } from "drizzle-orm";
+import { beforeEach, describe, expect, it } from "vitest";
+import { seedCollection } from "../src/seed.js";
+import {
+  companiesSchema,
+  companiesSchemaJson,
+  companiesSeed,
+  companiesSource,
+  resetTables,
+  useTestDb,
+} from "./helpers.js";
+
+const { db } = useTestDb();
+const source = companiesSource(db);
+const seed = (opts: { reset?: boolean; limit?: number } = {}) =>
+  seedCollection(db, {
+    table: "companies",
+    schema: companiesSchemaJson,
+    rows: companiesSeed,
+    ...opts,
+  });
+
+const revisions = async () =>
+  (
+    await db.execute<{ version: number; active: boolean }>(
+      sql`select version, active from udc_schema_revisions where collection = 'companies'`,
+    )
+  ).rows;
+
+beforeEach(() => resetTables(db));
+
+describe("seedCollection", () => {
+  it("writes schema.json as active revision 1 and every seed row", async () => {
+    expect(await seed()).toEqual({
+      table: "companies",
+      inserted: 200,
+      revision: "created",
+      skipped: false,
+    });
+    expect(await revisions()).toEqual([{ version: 1, active: true }]);
+    expect((await source.list({})).total).toBe(200);
+    // field_order survives jsonb, which does not keep key order.
+    const schema = await source.describe();
+    expect(schema.field_order).toEqual(companiesSchema.field_order);
+    expect(schema.field_order[0]).toBe("pib");
+  });
+
+  it("leaves a seeded collection alone without --reset", async () => {
+    await seed({ limit: 5 });
+    expect(await seed()).toMatchObject({ inserted: 0, revision: "kept", skipped: true });
+    expect((await source.list({})).total).toBe(5);
+  });
+
+  it("--reset truncates first, --limit caps the rows", async () => {
+    await seed();
+    expect(await seed({ reset: true, limit: 20 })).toMatchObject({
+      inserted: 20,
+      revision: "created",
+    });
+    expect((await source.list({})).total).toBe(20);
+    expect(await revisions()).toHaveLength(1);
+  });
+
+  it("refuses an invalid seed row and writes nothing", async () => {
+    await expect(
+      seedCollection(db, {
+        table: "companies",
+        schema: companiesSchemaJson,
+        rows: [{ employees: 1 }],
+      }),
+    ).rejects.toThrow(/seed row 0/);
+    expect(await revisions()).toEqual([]);
+  });
+
+  it("ships a seed that matches the ticket's shape", () => {
+    expect(companiesSeed).toHaveLength(200);
+    const inactive = companiesSeed.filter((r) => r.active === false).length;
+    expect(inactive).toBeGreaterThanOrEqual(10);
+    expect(inactive).toBeLessThanOrEqual(30);
+    for (const r of companiesSeed) {
+      expect(r.pib).toMatch(/^\d{9}$/);
+      expect(r.mb).toMatch(/^\d{8}$/);
+      expect((r.founded as string) >= "1990-01-01" && (r.founded as string) <= "2024-12-31").toBe(
+        true,
+      );
+    }
+    expect(new Set(companiesSeed.map((r) => r.pib)).size).toBe(200);
+  });
+});
