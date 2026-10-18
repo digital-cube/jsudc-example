@@ -1,6 +1,7 @@
+import type { SchemaDoc } from "@jsudc/udc-core";
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import { humanize, storage } from "../lib/utils";
-import { LOCALES, type Locale, TRANSLATIONS, type Translations } from "./translations";
+import { LOCALES, type Locale, type Term, TRANSLATIONS, type Translations } from "./translations";
 
 export const LOCALE_STORAGE_KEY = "udc-locale";
 
@@ -13,21 +14,57 @@ function fill(s: string, vars: Vars | undefined): string {
   return vars ? s.replace(/\{(\w+)\}/g, (m, k: string) => String(vars[k] ?? m)) : s;
 }
 
-/** The translation of `SECTION.TERM`, or `null` when neither the locale nor `en` has one. */
+/** Terms learnt at runtime (field labels from the schema); a locale may be missing. */
+export type Overlay = Record<string, Record<string, Partial<Term>>>;
+
+/**
+ * The translation of `SECTION.TERM`, or `null` when neither the locale nor
+ * `en` has one. An `overlay` entry wins over the static map, locale by locale.
+ */
 export function lookup(
   translations: Translations,
   locale: Locale,
   section: string,
   term: string,
+  overlay?: Overlay,
 ): string | null {
-  const entry = translations[section.toUpperCase()]?.[term.toUpperCase()];
-  return entry?.[locale] ?? entry?.en ?? null;
+  const s = section.toUpperCase();
+  const k = term.toUpperCase();
+  const extra = overlay?.[s]?.[k];
+  const entry = translations[s]?.[k];
+  return extra?.[locale] || entry?.[locale] || extra?.en || entry?.en || null;
 }
 
 /** `t` for a fixed locale; a missing term falls back to the humanised term (`revenue_eur` → `Revenue eur`). */
-export function makeT(locale: Locale, translations: Translations = TRANSLATIONS) {
+export function makeT(
+  locale: Locale,
+  translations: Translations = TRANSLATIONS,
+  overlay?: Overlay,
+) {
   return (section: string, term: string, vars?: Vars): string =>
-    fill(lookup(translations, locale, section, term) ?? humanize(term), vars);
+    fill(lookup(translations, locale, section, term, overlay) ?? humanize(term), vars);
+}
+
+/**
+ * The labels a schema's fields carry, as overlay terms. `fielddef.label` is
+ * `{en, sr}` (what the field form writes) or a plain string for every locale.
+ */
+export function schemaLabelTerms(schema: SchemaDoc): Record<string, Partial<Term>> {
+  const out: Record<string, Partial<Term>> = {};
+  for (const [name, def] of Object.entries(schema.fields)) {
+    const label = (def as { label?: unknown }).label;
+    const term: Partial<Term> = {};
+    if (typeof label === "string" && label.trim()) {
+      for (const l of LOCALES) term[l] = label.trim();
+    } else if (label && typeof label === "object") {
+      for (const l of LOCALES) {
+        const v = (label as Record<string, unknown>)[l];
+        if (typeof v === "string" && v.trim()) term[l] = v.trim();
+      }
+    }
+    if (Object.keys(term).length) out[name.toUpperCase()] = term;
+  }
+  return out;
 }
 
 export function isLocale(v: unknown): v is Locale {
@@ -46,17 +83,30 @@ interface I18n {
   t: (section: string, term: string, vars?: Vars) => string;
   /** The translation, or `null` when there is none (so a caller can use its own fallback). */
   tMaybe: (section: string, term: string, vars?: Vars) => string | null;
+  /** Replace the runtime terms of one section (the field labels of a collection's schema). */
+  setSectionTerms: (section: string, terms: Record<string, Partial<Term>>) => void;
 }
 
 const I18nContext = createContext<I18n | null>(null);
 
 export function I18nProvider({ children }: { children: ReactNode }) {
   const [locale, setLocaleState] = useState<Locale>(initialLocale);
+  const [overlay, setOverlay] = useState<Overlay>({});
 
   const setLocale = useCallback((l: Locale) => {
     storage.set(LOCALE_STORAGE_KEY, l);
     setLocaleState(l);
   }, []);
+
+  const setSectionTerms = useCallback(
+    (section: string, terms: Record<string, Partial<Term>>) =>
+      setOverlay((prev) => {
+        const key = section.toUpperCase();
+        if (JSON.stringify(prev[key] ?? {}) === JSON.stringify(terms)) return prev;
+        return { ...prev, [key]: terms };
+      }),
+    [],
+  );
 
   const value = useMemo<I18n>(() => {
     document.documentElement.lang = locale;
@@ -64,13 +114,14 @@ export function I18nProvider({ children }: { children: ReactNode }) {
       locale,
       intlLocale: INTL_LOCALE[locale],
       setLocale,
-      t: makeT(locale),
+      t: makeT(locale, TRANSLATIONS, overlay),
       tMaybe: (section, term, vars) => {
-        const s = lookup(TRANSLATIONS, locale, section, term);
+        const s = lookup(TRANSLATIONS, locale, section, term, overlay);
         return s === null ? null : fill(s, vars);
       },
+      setSectionTerms,
     };
-  }, [locale, setLocale]);
+  }, [locale, setLocale, overlay, setSectionTerms]);
 
   return <I18nContext.Provider value={value}>{children}</I18nContext.Provider>;
 }

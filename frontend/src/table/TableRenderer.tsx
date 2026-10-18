@@ -9,12 +9,14 @@ import {
   type UdcError,
 } from "@jsudc/udc-core";
 import { type Column, type ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
-import { ArrowDown, ArrowUp, ChevronsUpDown } from "lucide-react";
+import { ArrowDown, ArrowUp, ChevronsUpDown, Plus } from "lucide-react";
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { Skeleton, Spinner } from "../components/ui/misc";
 import { useToast } from "../components/ui/toast";
 import { tableSection, useI18n } from "../i18n/i18n";
 import { cn } from "../lib/utils";
+import { ColumnHeaderMenu } from "../schema-editor/ColumnHeaderMenu";
+import type { SchemaAction } from "../schema-editor/fieldForm";
 import type { UdcCollectionResult } from "../udc/hooks";
 import { useUdcMutate } from "../udc/hooks";
 import type { PagingMode } from "../udc/keys";
@@ -29,6 +31,7 @@ import { CellValue } from "./cells";
 import { Pager } from "./Pager";
 import { EmptyState, ErrorState } from "./states";
 import { BG_COLOR, resolveRowColor, TEXT_COLOR } from "./style";
+import { useInfiniteSentinel } from "./useInfiniteSentinel";
 
 interface ColMeta {
   config: ColumnConfig;
@@ -39,6 +42,8 @@ const meta = (c: Column<Row, unknown>) => c.columnDef.meta as ColMeta;
 
 const SKELETON_ROWS = 12;
 const DEFAULT_ROW_HEIGHT = 40;
+/** The trailing `+` header cell that adds a column at the end. */
+const ADD_COLUMN_WIDTH = 44;
 
 /** The message a `validation_error` carries for one field, else its overall message. */
 export function fieldProblem(err: UdcError, field: string): string {
@@ -69,6 +74,8 @@ export interface TableRendererProps {
   onClearFilters: () => void;
   /** Changes whenever the rows are a different query; scrolls back to the top. */
   resetKey: string;
+  /** Set when the schema may be edited: shows the column menus and the trailing `+`. */
+  onSchemaAction?: ((a: SchemaAction) => void) | undefined;
 }
 
 type EditTarget = { rowId: string; colId: string };
@@ -126,7 +133,9 @@ export function TableRenderer(props: TableRendererProps) {
   const center = table.getCenterLeafColumns();
   const right = table.getRightLeafColumns();
   const ordered = [...left, ...center, ...right];
-  const totalWidth = ordered.reduce((sum, c) => sum + c.getSize(), 0);
+  const schemaEdit = capabilities.schema_edit && props.onSchemaAction !== undefined;
+  const totalWidth =
+    ordered.reduce((sum, c) => sum + c.getSize(), 0) + (schemaEdit ? ADD_COLUMN_WIDTH : 0);
   const rowHeight = view.row_height ?? DEFAULT_ROW_HEIGHT;
 
   const canEdit = (c: Column<Row, unknown>) =>
@@ -154,23 +163,8 @@ export function TableRenderer(props: TableRendererProps) {
   }, [props.resetKey]);
 
   // Infinite mode: the sentinel under the last row asks for the next page.
-  const { hasNextPage, isFetchingNextPage, fetchNextPage } = data;
-  useEffect(() => {
-    if (mode !== "infinite") return;
-    const el = sentinelRef.current;
-    const root = scrollRef.current;
-    if (!el || !root) return;
-    const io = new IntersectionObserver(
-      (entries) => {
-        if (entries.some((e) => e.isIntersecting) && hasNextPage && !isFetchingNextPage) {
-          fetchNextPage();
-        }
-      },
-      { root, rootMargin: "0px 0px 240px 0px" },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, [mode, hasNextPage, isFetchingNextPage, fetchNextPage]);
+  const { hasNextPage, isFetchingNextPage } = data;
+  useInfiniteSentinel(mode === "infinite", scrollRef, sentinelRef, data);
 
   const focusCell = (target: EditTarget) =>
     requestAnimationFrame(() => {
@@ -292,15 +286,30 @@ export function TableRenderer(props: TableRendererProps) {
     const sortable = def !== undefined && def.type !== "json";
     const dir = key ? (key.dir ?? "asc") : null;
     const Icon = dir === "asc" ? ArrowUp : dir === "desc" ? ArrowDown : ChevronsUpDown;
+    const menu = schemaEdit && def !== undefined && props.onSchemaAction;
+    const text = (
+      <span className="flex min-w-0 items-baseline gap-0.5">
+        <span className="truncate">{label}</span>
+        {def?.required ? (
+          // The star is CSS content, so the header's text stays the bare label.
+          <span
+            data-testid="required-marker"
+            title={t("APP", "FORM_REQUIRED")}
+            className="text-sem-danger after:content-['*']"
+          />
+        ) : null}
+      </span>
+    );
     return (
       <th
         key={c.id}
         scope="col"
         data-testid={`th-${config.field}`}
+        data-required={def?.required || undefined}
         aria-sort={dir === "asc" ? "ascending" : dir === "desc" ? "descending" : undefined}
         style={pinStyle(c)}
         className={cn(
-          "relative h-9 border-b border-border bg-muted p-0 text-left text-xs font-medium text-muted-foreground",
+          "group/th relative h-9 border-b border-border bg-muted p-0 text-left text-xs font-medium text-muted-foreground",
           pinClass(c),
           c.getIsPinned() ? "z-[15]" : "",
         )}
@@ -308,15 +317,16 @@ export function TableRenderer(props: TableRendererProps) {
         {sortable ? (
           <button
             type="button"
+            data-testid={`sort-${config.field}`}
             onClick={(e) => props.onSort(config.field, e.shiftKey)}
             title={dir ? t("APP", dir === "asc" ? "SORT_ASC" : "SORT_DESC") : undefined}
             className={cn(
-              "group/th flex h-full w-full items-center gap-1 px-3 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
+              "flex h-full w-full items-center gap-1 px-3 outline-none transition-colors hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset",
               alignClass(c),
               dir && "text-foreground",
             )}
           >
-            <span className="truncate">{label}</span>
+            {text}
             <Icon
               className={cn(
                 "size-3.5 shrink-0 transition-opacity",
@@ -325,13 +335,43 @@ export function TableRenderer(props: TableRendererProps) {
             />
           </button>
         ) : (
-          <div className={cn("flex h-full items-center px-3", alignClass(c))}>
-            <span className="truncate">{label}</span>
-          </div>
+          <div className={cn("flex h-full items-center px-3", alignClass(c))}>{text}</div>
         )}
+        {menu ? (
+          <ColumnHeaderMenu
+            field={config.field}
+            label={label}
+            onAction={menu}
+            className="absolute top-1/2 right-1.5 -translate-y-1/2 bg-muted shadow-[-10px_0_8px_-2px_var(--muted)]"
+          />
+        ) : null}
       </th>
     );
   };
+
+  const addColumnHeader = schemaEdit ? (
+    <th
+      key="__add"
+      scope="col"
+      className="h-9 border-r border-b border-border bg-muted p-0"
+      style={{ width: ADD_COLUMN_WIDTH }}
+    >
+      <button
+        type="button"
+        data-testid="col-add-end"
+        title={t("APP", "COL_ADD")}
+        aria-label={t("APP", "COL_ADD")}
+        onClick={() => props.onSchemaAction?.({ kind: "add", position: { where: "end" } })}
+        className="grid h-full w-full place-items-center text-muted-foreground outline-none transition-colors hover:bg-hover hover:text-primary focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-inset"
+      >
+        <Plus className="size-4" />
+      </button>
+    </th>
+  ) : null;
+  const addColumnCell = (key: string, className: string) =>
+    schemaEdit ? (
+      <td key={key} aria-hidden className={cn("border-r border-b border-border p-0", className)} />
+    ) : null;
 
   const filler = (key: string, className?: string) => (
     <td key={key} aria-hidden className={cn("p-0", className)} />
@@ -363,6 +403,7 @@ export function TableRenderer(props: TableRendererProps) {
             {[...left, ...center].map((c) => (
               <col key={c.id} style={{ width: c.getSize() }} />
             ))}
+            {schemaEdit ? <col style={{ width: ADD_COLUMN_WIDTH }} /> : null}
             <col />
             {right.map((c) => (
               <col key={c.id} style={{ width: c.getSize() }} />
@@ -371,6 +412,7 @@ export function TableRenderer(props: TableRendererProps) {
           <thead className="sticky top-0 z-30">
             <tr>
               {[...left, ...center].map(header)}
+              {addColumnHeader}
               <th aria-hidden className="border-b border-border bg-muted p-0" />
               {right.map(header)}
             </tr>
@@ -392,6 +434,7 @@ export function TableRenderer(props: TableRendererProps) {
                         />
                       </td>
                     ))}
+                    {addColumnCell("a", "bg-surface")}
                     {filler("f", "border-b border-border bg-surface")}
                     {right.map((c) => (
                       <td
@@ -486,6 +529,7 @@ export function TableRenderer(props: TableRendererProps) {
                   style={{ height: rowHeight }}
                 >
                   {[...left, ...center].map(cell)}
+                  {addColumnCell("a", "bg-surface group-hover/row:bg-hover")}
                   {filler("f", "border-b border-border bg-surface group-hover/row:bg-hover")}
                   {right.map(cell)}
                 </tr>

@@ -90,10 +90,18 @@ filters:
 filterable:
   fields: [pib, name, mb, legal_form, city, industry, employees, revenue_eur, founded, active]
 
+# `website` is not in schema.json: the cards leave it out until someone adds that
+# field from the table header (the demo in docs/demo.md), then show it.
 card_options:
   title_field: name
   subtitle_field: pib
-  meta_fields: [city, industry, employees, revenue_eur, active]
+  meta_fields: [city, industry, employees, revenue_eur, active, website]
   size: medium
+
+# Inactive companies are muted: dimmer text in the table, a grey accent bar on the cards.
+row_color:
+  field: active
+  rules:
+    - {value: false, color: muted}
 
 row_actions: []

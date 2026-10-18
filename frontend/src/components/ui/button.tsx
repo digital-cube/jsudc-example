@@ -9,6 +9,8 @@ const VARIANTS = {
     "border border-border-strong/80 bg-surface text-foreground shadow-xs hover:bg-hover hover:border-border-strong",
   ghost: "text-muted-foreground hover:bg-hover hover:text-foreground",
   subtle: "bg-muted text-foreground hover:bg-selected",
+  danger:
+    "bg-sem-danger text-white shadow-sm hover:bg-sem-danger/90 disabled:bg-sem-danger/50 dark:text-background",
 } as const;
 
 const SIZES = {

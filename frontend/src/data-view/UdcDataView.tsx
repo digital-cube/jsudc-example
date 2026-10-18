@@ -1,11 +1,13 @@
 import type { FilterChipConfig } from "@jsudc/udc-core";
 import { InfinityIcon, LayoutGrid, Rows3, Table2 } from "lucide-react";
-import { useCallback, useMemo } from "react";
+import { useCallback, useEffect, useMemo } from "react";
+import { CardRenderer } from "../cards/CardRenderer";
 import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/misc";
 import { Segmented } from "../components/ui/segmented";
-import { tableSection, useI18n } from "../i18n/i18n";
+import { schemaLabelTerms, tableSection, useI18n } from "../i18n/i18n";
 import { humanize } from "../lib/utils";
+import { useSchemaEditor } from "../schema-editor/useSchemaEditor";
 import { ErrorState } from "../table/states";
 import { TableRenderer } from "../table/TableRenderer";
 import { useUdcCollection, useUdcDescribe } from "../udc/hooks";
@@ -13,6 +15,7 @@ import type { PagingMode } from "../udc/keys";
 import { composeFilter } from "./compose";
 import { FilterBuilder, FilterPills } from "./FilterBuilder";
 import { FilterChips } from "./FilterChips";
+import { liveDescribe, liveSort, pruneTree } from "./liveView";
 import { SearchBox } from "./SearchBox";
 import { cycleSort } from "./urlState";
 import { useDataViewState } from "./useDataViewState";
@@ -23,11 +26,31 @@ import { useDataViewState } from "./useDataViewState";
  * in the URL (see `useDataViewState`).
  */
 export function UdcDataView({ collection }: { collection: string }) {
-  const { t, tMaybe, intlLocale } = useI18n();
+  const { t, tMaybe, intlLocale, setSectionTerms } = useI18n();
   const describe = useUdcDescribe(collection);
-  const view = describe.data?.view;
+  // Soft-deleted fields leave the chips, search, cards and any sort or filter in the URL.
+  const live = useMemo(
+    () => (describe.data ? liveDescribe(describe.data) : undefined),
+    [describe.data],
+  );
+  const view = live?.view;
+  const schema = live?.schema;
   const state = useDataViewState(collection, view);
   const section = tableSection(collection);
+
+  // Labels typed in the field form live in the schema; the headers read them through i18n.
+  useEffect(() => {
+    if (schema) setSectionTerms(section, schemaLabelTerms(schema));
+  }, [schema, section, setSectionTerms]);
+
+  const sort = useMemo(
+    () => (schema ? liveSort(state.sort, schema) : state.sort),
+    [state.sort, schema],
+  );
+  const tree = useMemo(
+    () => (schema ? pruneTree(state.tree, schema) : state.tree),
+    [state.tree, schema],
+  );
 
   const filter = useMemo(
     () =>
@@ -36,16 +59,16 @@ export function UdcDataView({ collection }: { collection: string }) {
         searchConfig: view?.search,
         chips: state.chips,
         chipConfigs: view?.filters,
-        tree: state.tree,
+        tree,
       }),
-    [state.search, state.chips, state.tree, view?.search, view?.filters],
+    [state.search, state.chips, tree, view?.search, view?.filters],
   );
 
   const limit = view?.page_size_default ?? 50;
   const data = useUdcCollection({
     collection,
     filter,
-    sort: state.sort,
+    sort,
     mode: state.mode,
     pageLimit: limit,
     page: state.page,
@@ -59,6 +82,7 @@ export function UdcDataView({ collection }: { collection: string }) {
   );
   const { setSearch } = state;
   const onSearch = useCallback((q: string) => setSearch(q), [setSearch]);
+  const editor = useSchemaEditor({ collection, schema, fieldLabel });
 
   const title = t("COLLECTIONS", collection);
   const description = tMaybe(section, "__DESCRIPTION");
@@ -74,7 +98,7 @@ export function UdcDataView({ collection }: { collection: string }) {
   const filtered = filter !== undefined;
   const fmt = (n: number) => new Intl.NumberFormat(intlLocale).format(n);
   const total = data.total;
-  const resetKey = JSON.stringify([filter ?? null, state.sort, state.mode]);
+  const resetKey = JSON.stringify([filter ?? null, sort, state.mode]);
 
   return (
     <div
@@ -87,24 +111,59 @@ export function UdcDataView({ collection }: { collection: string }) {
           <h1 className="text-lg font-semibold tracking-tight">{title}</h1>
           {description ? <p className="text-[13px] text-muted-foreground">{description}</p> : null}
         </div>
-        {view && view.available_renderers.length > 1 ? (
-          <Segmented
-            aria-label="Renderer"
-            data-testid="tab-switch"
-            value={state.tab}
-            onChange={state.setTab}
-            options={view.available_renderers.map((r) => ({
-              value: r,
-              testId: `tab-${r}`,
-              label: (
-                <>
-                  {r === "cards" ? <LayoutGrid /> : <Table2 />}
-                  {t("APP", `TAB_${r}`)}
-                </>
-              ),
-            }))}
-          />
-        ) : null}
+        <div className="flex flex-wrap items-center gap-2">
+          {view ? (
+            <Segmented<PagingMode>
+              aria-label={t("APP", "PAGING")}
+              data-testid="paging-toggle"
+              value={state.mode}
+              onChange={state.setMode}
+              options={[
+                {
+                  value: "pages",
+                  testId: "paging-pages",
+                  label: (
+                    <>
+                      <Rows3 />
+                      {t("APP", "PAGING_PAGES")}
+                    </>
+                  ),
+                },
+                {
+                  value: "infinite",
+                  testId: "paging-infinite",
+                  label: (
+                    <>
+                      <InfinityIcon />
+                      {t("APP", "PAGING_INFINITE")}
+                    </>
+                  ),
+                },
+              ]}
+            />
+          ) : null}
+          {view && view.available_renderers.length > 1 ? (
+            <span aria-hidden className="mx-1 h-5 w-px bg-border-strong/70" />
+          ) : null}
+          {view && view.available_renderers.length > 1 ? (
+            <Segmented
+              aria-label="Renderer"
+              data-testid="tab-switch"
+              value={state.tab}
+              onChange={state.setTab}
+              options={view.available_renderers.map((r) => ({
+                value: r,
+                testId: `tab-${r}`,
+                label: (
+                  <>
+                    {r === "cards" ? <LayoutGrid /> : <Table2 />}
+                    {t("APP", `TAB_${r}`)}
+                  </>
+                ),
+              }))}
+            />
+          ) : null}
+        </div>
       </header>
 
       <div className="mx-6 mb-6 flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm shadow-black/[0.03]">
@@ -123,7 +182,8 @@ export function UdcDataView({ collection }: { collection: string }) {
                   t("APP", "SEARCH")
                 }
               />
-              <div className="flex min-w-0 flex-1 flex-wrap items-center gap-1.5">
+              {/* Its natural width: on a narrow screen the chips wrap as one group, under the search. */}
+              <div className="flex flex-wrap items-center gap-1.5">
                 {view.filters?.length ? (
                   <FilterChips
                     configs={view.filters}
@@ -132,16 +192,16 @@ export function UdcDataView({ collection }: { collection: string }) {
                     label={chipLabel}
                   />
                 ) : null}
-                {describe.data?.filterable.fields.length ? (
+                {live?.filterable.fields.length ? (
                   <FilterBuilder
-                    fields={describe.data.filterable.fields}
-                    tree={state.tree}
+                    fields={live.filterable.fields}
+                    tree={tree}
                     onChange={state.setTree}
                     fieldLabel={fieldLabel}
                   />
                 ) : null}
               </div>
-              <div className="ml-auto flex items-center gap-3">
+              <div className="ml-auto flex items-center">
                 <span
                   className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
                   data-testid="row-count"
@@ -154,34 +214,6 @@ export function UdcDataView({ collection }: { collection: string }) {
                     t("APP", "SHOWING", { shown: fmt(data.rows.length), total: fmt(total) })
                   )}
                 </span>
-                <Segmented<PagingMode>
-                  aria-label={t("APP", "PAGING")}
-                  data-testid="paging-toggle"
-                  value={state.mode}
-                  onChange={state.setMode}
-                  options={[
-                    {
-                      value: "pages",
-                      testId: "paging-pages",
-                      label: (
-                        <>
-                          <Rows3 />
-                          {t("APP", "PAGING_PAGES")}
-                        </>
-                      ),
-                    },
-                    {
-                      value: "infinite",
-                      testId: "paging-infinite",
-                      label: (
-                        <>
-                          <InfinityIcon />
-                          {t("APP", "PAGING_INFINITE")}
-                        </>
-                      ),
-                    },
-                  ]}
-                />
               </div>
             </>
           ) : (
@@ -193,14 +225,14 @@ export function UdcDataView({ collection }: { collection: string }) {
           )}
         </div>
 
-        {describe.data && state.tree ? (
+        {live && tree ? (
           <div
             data-testid="filter-pills"
             className="flex flex-wrap items-center gap-1.5 border-b border-border bg-muted/40 px-3 py-2"
           >
             <FilterPills
-              fields={describe.data.filterable.fields}
-              tree={state.tree}
+              fields={live.filterable.fields}
+              tree={tree}
               onChange={state.setTree}
               fieldLabel={fieldLabel}
             />
@@ -215,22 +247,34 @@ export function UdcDataView({ collection }: { collection: string }) {
           </div>
         ) : null}
 
-        {describe.data && state.tab === "cards" ? (
-          <CardsPlaceholder />
-        ) : describe.data ? (
-          <TableRenderer
+        {live && state.tab === "cards" ? (
+          <CardRenderer
             collection={collection}
-            describe={describe.data}
+            describe={live}
             data={data}
             mode={state.mode}
             page={state.page}
             limit={limit}
             onPage={state.setPage}
-            sort={state.sort}
-            onSort={(field, multi) => state.setSort(cycleSort(state.sort, field, multi))}
             filtered={filtered}
             onClearFilters={state.clearFilters}
             resetKey={resetKey}
+          />
+        ) : live ? (
+          <TableRenderer
+            collection={collection}
+            describe={live}
+            data={data}
+            mode={state.mode}
+            page={state.page}
+            limit={limit}
+            onPage={state.setPage}
+            sort={sort}
+            onSort={(field, multi) => state.setSort(cycleSort(sort, field, multi))}
+            filtered={filtered}
+            onClearFilters={state.clearFilters}
+            resetKey={resetKey}
+            onSchemaAction={live.capabilities.schema_edit ? editor.open : undefined}
           />
         ) : (
           <div className="flex flex-col gap-3 p-4">
@@ -241,27 +285,7 @@ export function UdcDataView({ collection }: { collection: string }) {
           </div>
         )}
       </div>
-    </div>
-  );
-}
-
-function CardsPlaceholder() {
-  const { t } = useI18n();
-  return (
-    <div
-      data-testid="cards-placeholder"
-      className="flex flex-1 flex-col items-center justify-center p-12 text-center"
-    >
-      <div className="mb-4 grid grid-cols-3 gap-2 opacity-70">
-        {Array.from({ length: 6 }, (_, i) => (
-          // biome-ignore lint/suspicious/noArrayIndexKey: decoration
-          <div key={i} className="h-12 w-16 rounded-lg border border-border bg-muted" />
-        ))}
-      </div>
-      <div className="text-sm font-semibold">{t("APP", "CARDS_SOON_TITLE")}</div>
-      <div className="mt-1 max-w-sm text-[13px] text-muted-foreground">
-        {t("APP", "CARDS_SOON_BODY")}
-      </div>
+      {editor.dialogs}
     </div>
   );
 }

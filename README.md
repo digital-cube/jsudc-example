@@ -21,8 +21,9 @@ Both the server and the browser import it. The design is in
 ```
 packages/udc-core/   shared protocol (zod is its only runtime dependency)
 backend/             Fastify + Drizzle server: UDC envelope RPC over Postgres jsonb
-frontend/            React 19 + Vite app: UDC client, hooks, the generic data view and table
-docs/                design and plans
+frontend/            React 19 + Vite app: UDC client, hooks, the generic data view, table and
+                     card renderers, the schema editor (add / edit / delete columns)
+docs/                design, plans and the two-minute demo script (docs/demo.md)
 ```
 
 ## Install and test

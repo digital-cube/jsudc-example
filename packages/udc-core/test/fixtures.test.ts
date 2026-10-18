@@ -43,6 +43,13 @@ describe("dclabs view details survive parsing", () => {
     expect(view.row_color?.rules).toHaveLength(4);
   });
 
+  it("accepts both spellings of the card size", () => {
+    for (const size of ["sm", "small", "medium", "lg", "large"]) {
+      expect(ViewConfigSchema.parse({ card_options: { size } }).card_options?.size).toBe(size);
+    }
+    expect(() => ViewConfigSchema.parse({ card_options: { size: "xl" } })).toThrow();
+  });
+
   it("passes unknown keys through", () => {
     const view = ViewConfigSchema.parse({
       kanban_options: { group_field: "status" },

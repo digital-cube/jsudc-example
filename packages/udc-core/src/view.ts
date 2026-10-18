@@ -83,7 +83,8 @@ export const CardOptionsSchema = z.looseObject({
   subtitle_field: z.string().optional(),
   image_field: z.string().optional(),
   meta_fields: z.array(z.string()).optional(),
-  size: z.enum(["sm", "medium", "lg"]).optional(),
+  /** dclabs spells the ends `sm` / `lg`; both spellings parse. */
+  size: z.enum(["sm", "small", "medium", "lg", "large"]).optional(),
 });
 
 export type CardOptions = z.infer<typeof CardOptionsSchema>;

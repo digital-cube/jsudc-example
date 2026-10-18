@@ -39,10 +39,10 @@ describe("companies table", () => {
     }).then(({ rows: [top] }) => {
       const max = Number(top?.employees).toLocaleString("en-US");
       cy.openCompanies();
-      cy.get('[data-testid="th-employees"] button').click();
+      cy.get('[data-testid="sort-employees"]').click();
       cy.location("search").should("contain", "sort=employees%3Aasc");
       cy.get('[data-testid="th-employees"]').should("have.attr", "aria-sort", "ascending");
-      cy.get('[data-testid="th-employees"] button').click();
+      cy.get('[data-testid="sort-employees"]').click();
       cy.location("search").should("contain", "sort=employees%3Adesc");
       cy.get('[data-testid="th-employees"]').should("have.attr", "aria-sort", "descending");
       rows().first().find('[data-testid="cell-employees"]').should("have.text", max);
