@@ -193,6 +193,16 @@ create unique index on udc_schema_revisions (collection) where active;
 
 Seeding writes `schema.json` as revision 1 (active). Every `schema.*` action inserts a new revision, activates it and deactivates the previous one in one transaction. `soft_delete_field` sets `deleted: true` (data stays). On activation, every field with `index: true` of a sortable type gets `CREATE INDEX IF NOT EXISTS <table>_data_<field>_idx ON <table> ((<cast expr>))`. `describe` always serves the active revision; `field_order` is maintained by `position`.
 
+**Schema version on the wire vs in the table** (my call, keeps wire compat): the table stores `version integer`; the `SchemaDoc.version` sent and received on the wire is the string `"v<n>"`, exactly as udc-py bumps `v1 → v2`. dclabs schema files with `"version": "v1"` parse verbatim. `schema.soft_delete_field` takes `{collection, field}` (udc-py/udc-js spelling), not `name`.
+
+**Schema edits vs existing rows** (my call):
+
+- `schema.update_field` **may not change `type`** → `unsupported_op`. Existing `data` was validated against the old type, so the cast expressions in sort/filter stay safe. The field form hides the type control in edit mode. Changing a type means soft-deleting and adding a new field.
+- `schema.add_field` with `required: true` is allowed. `required` is enforced on **insert** and whenever the patch **touches that field**; an `update` that patches other fields of a row where the required field is still empty succeeds. (udc-py validates the merged row and locks every existing row after such an add; jsudc does not.)
+- Rows that predate a field simply have no key in `data`; `is_null` matches them and they sort last (`NULLS LAST`) in both directions.
+
+**Columns for fields that are not in `view.columns`** (my call): the derivation happens **server-side in `describe`**, so any client, including an unmodified `@udc/react`, sees the new column. Starting from `view.columns` in file order, every non-deleted schema field that is not listed is inserted as a default column (`width: default_column_width`, `editable: true`) **next to its `field_order` neighbour**: right after the nearest preceding field in `field_order` that already has a column, or first if there is none. `position: before|after` on `schema.add_field` therefore has a visible effect in the table without persisting a view revision. `view.columns` keeps its dclabs meaning: the styled, ordered base layout. Per-user reordering is phase 2.
+
 **CLI** (`backend` scripts): `db:create`, `db:migrate`, `seed [--reset] [--db jsudc|jsudc_test] [--limit N]` (seeds schema revision 1 and the `seed.json` rows), `dev`, `test`.
 
 **Configuration** through env: `DATABASE_URL` (default `postgresql://jsudc:123@localhost/jsudc`), `TEST_DATABASE_URL`, `PORT` (default 5100). A `.env.example` is committed; `.env` is not.
