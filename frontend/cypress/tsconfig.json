@@ -1,0 +1,18 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2023", "DOM", "DOM.Iterable"],
+    "module": "ESNext",
+    "moduleResolution": "Bundler",
+    "types": ["cypress", "node"],
+    "noEmit": true,
+    "declaration": false,
+    "declarationMap": false,
+    "isolatedModules": false,
+    "paths": {
+      "@jsudc/udc-core": ["../../packages/udc-core/src/index.ts"]
+    }
+  },
+  "include": ["**/*.ts", "../cypress.config.ts"]
+}

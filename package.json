@@ -17,13 +17,17 @@
     "typecheck": "npm run typecheck --workspaces --if-present",
     "lint": "biome check .",
     "format": "biome format --write .",
-    "dev": "npm run dev -w @jsudc/backend",
+    "dev": "concurrently -k -n backend,web -c blue,magenta \"npm run dev -w @jsudc/backend\" \"npm run dev -w @jsudc/frontend\"",
     "db:setup": "npm run db:create -w @jsudc/backend && npm run db:migrate -w @jsudc/backend && npm run db:migrate:test -w @jsudc/backend",
-    "seed": "npm run build -w @jsudc/udc-core && npm run seed -w @jsudc/backend --"
+    "seed": "npm run build -w @jsudc/udc-core && npm run seed -w @jsudc/backend --",
+    "dev:backend": "npm run dev -w @jsudc/backend",
+    "dev:web": "npm run dev -w @jsudc/frontend",
+    "e2e": "node scripts/e2e.mjs"
   },
   "devDependencies": {
     "@biomejs/biome": "^2.5.15",
     "@types/node": "^24",
+    "concurrently": "^10.0.6",
     "typescript": "^5.9.3",
     "vitest": "^5.0.5"
   }

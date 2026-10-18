@@ -21,7 +21,7 @@ Both the server and the browser import it. The design is in
 ```
 packages/udc-core/   shared protocol (zod is its only runtime dependency)
 backend/             Fastify + Drizzle server: UDC envelope RPC over Postgres jsonb
-frontend/            React + Vite app (ticket 4)
+frontend/            React 19 + Vite app: UDC client, hooks, the generic data view and table
 docs/                design and plans
 ```
 
@@ -34,7 +34,7 @@ nvm use            # Node 24
 npm install
 npm run typecheck  # tsc --noEmit in every workspace
 npm run lint       # Biome, one config for the whole repo
-npm test           # Vitest in every workspace
+npm test           # Vitest in every workspace (backend needs Postgres, see below)
 npm run build      # udc-core -> packages/udc-core/dist (ESM + .d.ts)
 npm run format     # Biome, rewrites files
 ```
@@ -78,3 +78,38 @@ Collections are directories under `backend/collections/<name>/` (`view.yaml`,
 `schema.json`, `seed.json`), each served from a table of the same name with every
 field in `data jsonb`. `backend/scripts/generate-companies.ts` regenerates the
 synthetic `companies` seed deterministically.
+
+## Frontend
+
+```sh
+npm run dev        # backend (:5100) and Vite (:5173) together; open /udc/companies
+npm run dev:web    # Vite only, proxying POST /udc/* and /healthz to 127.0.0.1:5100
+npm test -w @jsudc/frontend   # Vitest + Testing Library (jsdom), no backend needed
+npm run e2e        # Cypress headless against a reseeded jsudc_test (see below)
+```
+
+Vite listens on `VITE_PORT` (5173; it moves to the next free port if that one is
+taken). The dev proxy targets `UDC_PROXY_TARGET` (default `http://127.0.0.1:5100`);
+setting `VITE_UDC_URL` instead makes the browser call that backend directly.
+Only POSTs under `/udc` are proxied: `GET /udc/<collection>` is an app route.
+
+`frontend/src/`:
+
+```
+udc/          UdcClient (one method per action), UdcProvider, TanStack Query hooks
+data-view/    <UdcDataView>: URL state, search, chips, filter builder, paging toggle
+table/        TableRenderer (TanStack Table), cell formats and transforms, inline editor, pager
+i18n/         t(section, term), en + sr, persisted under udc-locale
+components/ui shadcn-style primitives on Radix (popover, select, tooltip, toast, …)
+```
+
+Everything the user picks lives in the URL (`?q=` search, `?cf=` chips and `?f=`
+filter tree as base64url JSON, `?sort=field:dir,…`, `?mode=pages|infinite`, `?p=`,
+`?tab=`). The paging mode defaults from the view's `pagination`; the user's choice
+is remembered per collection in `localStorage` (`udc:paging:<collection>`).
+
+`npm run e2e` (`scripts/e2e.mjs`) migrates and reseeds the test database
+(`TEST_DATABASE_URL`, 200 rows), starts the backend on it at `E2E_BACKEND_PORT`
+(5110) and Vite at `E2E_WEB_PORT` (5310), runs `cypress run`, and stops both. Spec
+files that edit rows reseed first. Extra arguments go to Cypress, e.g.
+`npm run e2e -- --spec frontend/cypress/e2e/edit.cy.ts`.

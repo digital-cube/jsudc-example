@@ -19,3 +19,5 @@ coverage/
 .env.*
 !.env.example
 *.tsbuildinfo
+frontend/cypress/screenshots/
+frontend/cypress/downloads/

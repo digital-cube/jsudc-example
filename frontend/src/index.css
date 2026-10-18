@@ -1,0 +1,177 @@
+@import "tailwindcss";
+
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens. Every colour the components use is one of these, so the
+ * light and dark themes differ only here.
+ */
+:root {
+  --background: oklch(0.985 0.002 260);
+  --foreground: oklch(0.21 0.02 265);
+  --surface: oklch(1 0 0);
+  --surface-raised: oklch(1 0 0);
+  --muted: oklch(0.965 0.004 260);
+  --muted-foreground: oklch(0.52 0.02 262);
+  --border: oklch(0.915 0.006 260);
+  --border-strong: oklch(0.86 0.01 260);
+  --input: oklch(0.89 0.008 260);
+  --ring: oklch(0.58 0.2 268);
+  --primary: oklch(0.52 0.2 268);
+  --primary-foreground: oklch(0.99 0 0);
+  --hover: oklch(0.97 0.008 268);
+  --selected: oklch(0.95 0.025 268);
+  --shadow-pin: oklch(0.2 0.02 265 / 0.12);
+
+  --sem-accent: oklch(0.5 0.2 268);
+  --sem-success: oklch(0.52 0.13 155);
+  --sem-warning: oklch(0.6 0.14 70);
+  --sem-danger: oklch(0.55 0.2 25);
+  --sem-info: oklch(0.5 0.14 240);
+  --sem-muted: oklch(0.55 0.015 262);
+
+  --sem-accent-bg: oklch(0.96 0.03 268);
+  --sem-success-bg: oklch(0.965 0.035 155);
+  --sem-warning-bg: oklch(0.97 0.05 85);
+  --sem-danger-bg: oklch(0.965 0.03 25);
+  --sem-info-bg: oklch(0.97 0.02 240);
+  --sem-muted-bg: oklch(0.965 0.004 260);
+
+  color-scheme: light;
+}
+
+.dark {
+  --background: oklch(0.16 0.012 265);
+  --foreground: oklch(0.94 0.008 260);
+  --surface: oklch(0.195 0.013 265);
+  --surface-raised: oklch(0.235 0.015 265);
+  --muted: oklch(0.24 0.014 265);
+  --muted-foreground: oklch(0.68 0.02 262);
+  --border: oklch(0.285 0.016 265);
+  --border-strong: oklch(0.34 0.018 265);
+  --input: oklch(0.33 0.018 265);
+  --ring: oklch(0.68 0.17 268);
+  --primary: oklch(0.66 0.17 268);
+  --primary-foreground: oklch(0.16 0.02 265);
+  --hover: oklch(0.225 0.016 266);
+  --selected: oklch(0.26 0.04 268);
+  --shadow-pin: oklch(0 0 0 / 0.45);
+
+  --sem-accent: oklch(0.76 0.13 268);
+  --sem-success: oklch(0.76 0.13 155);
+  --sem-warning: oklch(0.8 0.13 80);
+  --sem-danger: oklch(0.72 0.16 25);
+  --sem-info: oklch(0.78 0.1 235);
+  --sem-muted: oklch(0.66 0.015 262);
+
+  --sem-accent-bg: oklch(0.26 0.05 268);
+  --sem-success-bg: oklch(0.25 0.04 155);
+  --sem-warning-bg: oklch(0.26 0.04 80);
+  --sem-danger-bg: oklch(0.26 0.05 25);
+  --sem-info-bg: oklch(0.215 0.022 245);
+  --sem-muted-bg: oklch(0.23 0.012 265);
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-hover: var(--hover);
+  --color-selected: var(--selected);
+
+  --color-sem-accent: var(--sem-accent);
+  --color-sem-success: var(--sem-success);
+  --color-sem-warning: var(--sem-warning);
+  --color-sem-danger: var(--sem-danger);
+  --color-sem-info: var(--sem-info);
+  --color-sem-muted: var(--sem-muted);
+  --color-sem-accent-bg: var(--sem-accent-bg);
+  --color-sem-success-bg: var(--sem-success-bg);
+  --color-sem-warning-bg: var(--sem-warning-bg);
+  --color-sem-danger-bg: var(--sem-danger-bg);
+  --color-sem-info-bg: var(--sem-info-bg);
+  --color-sem-muted-bg: var(--sem-muted-bg);
+
+  --font-sans:
+    "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+  --animate-in: fade-in 140ms ease-out;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  html,
+  body,
+  #root {
+    height: 100%;
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 25%, transparent);
+  }
+}
+
+@layer components {
+  /* A thin scrollbar that follows the theme. */
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--muted) 25%,
+      color-mix(in oklch, var(--muted) 40%, var(--surface)) 50%,
+      var(--muted) 75%
+    );
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+}
