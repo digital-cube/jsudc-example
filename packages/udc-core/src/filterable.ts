@@ -60,7 +60,11 @@ const BY_TYPE: Record<FieldType, FilterableDefaults> = {
   enum: { ops: CHOICE_OPS, default_op: "in", widget: "select" },
   lookup: { ops: CHOICE_OPS, default_op: "in", widget: "lookup" },
   relation: { ops: CHOICE_OPS, default_op: "eq", widget: "text" },
-  string_array: { ops: ["contains", ...NULL_OPS], default_op: "contains", widget: "text" },
+  string_array: {
+    ops: ["contains", "in", "not_in", ...NULL_OPS],
+    default_op: "contains",
+    widget: "text",
+  },
   lookup_array: { ops: ["contains", ...NULL_OPS], default_op: "contains", widget: "lookup" },
 };
 

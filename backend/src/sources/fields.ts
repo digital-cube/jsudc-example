@@ -27,6 +27,36 @@ export function allowedField(schema: SchemaDoc, field: string, where: string): F
   return def;
 }
 
+/**
+ * The allowlisted parts of a `reindex`: every scope field and the order
+ * field must be live schema fields, the order field numeric. The scope comes
+ * back as the filter both sources select the rows with.
+ */
+export function reindexPlan(
+  schema: SchemaDoc,
+  scope: Record<string, string | number | boolean>,
+  orderField: string,
+): { filter: FilterNode; orderField: string; orderDef: FieldDef } {
+  const def = allowedField(schema, orderField, "reindex order_field");
+  if (def.type !== "integer" && def.type !== "decimal") {
+    throw new UdcError("validation_error", `reindex order_field ${orderField} must be numeric`, {
+      field: orderField,
+      type: def.type,
+    });
+  }
+  const conds = Object.entries(scope).map(([field, value]) => {
+    allowedField(schema, field, "reindex scope");
+    return { field, op: "eq" as const, value };
+  });
+  // Typed like a patch, so both sources refuse the same values (the SQL casts would, memory not).
+  const problems = validateRow(schema, scope, { mode: "patch" });
+  if (problems.length > 0) {
+    const summary = problems.map((p) => `${p.field} ${p.message}`).join("; ");
+    throw new UdcError("validation_error", `invalid reindex scope: ${summary}`, { problems });
+  }
+  return { filter: { and: conds }, orderField, orderDef: def };
+}
+
 export function filterFields(node: FilterNode | null | undefined): string[] {
   if (!node) return [];
   if (isCondition(node)) return [node.field];

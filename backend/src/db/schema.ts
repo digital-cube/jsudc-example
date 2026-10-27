@@ -24,6 +24,9 @@ export function collectionTable(name: string) {
 }
 
 export const companies = collectionTable("companies");
+export const boards = collectionTable("boards");
+export const buckets = collectionTable("buckets");
+export const tickets = collectionTable("tickets");
 
 export const udcSchemaRevisions = pgTable(
   "udc_schema_revisions",

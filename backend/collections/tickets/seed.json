@@ -1,0 +1,1246 @@
+[
+  {
+    "__meta": {
+      "id": "ea0f752e-220d-4bf7-99b0-79dc296a5918"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "4ce98b89-94a0-4b40-99c3-28ff47b7ac0d",
+    "order": 100,
+    "key": "ROA-001",
+    "title": "Saved filters per user",
+    "body": "Blocked until the related change is merged.",
+    "priority": "normal",
+    "tags": [],
+    "assignees": [
+      "Luka Pavlović",
+      "Ivana Lukić"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "327c5ac2-0a03-442c-a372-3d0e4ce19b3c"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "4ce98b89-94a0-4b40-99c3-28ff47b7ac0d",
+    "order": 200,
+    "key": "ROA-002",
+    "title": "Bulk edit for selected rows",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "normal",
+    "tags": [],
+    "assignees": [
+      "Filip Janković"
+    ],
+    "due": "2026-10-26",
+    "starts_at": "2026-10-26T08:30:00Z",
+    "ends_at": "2026-10-26T10:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "19c3c1a0-9026-4c59-855e-2af6aface15c"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "4ce98b89-94a0-4b40-99c3-28ff47b7ac0d",
+    "order": 300,
+    "key": "ROA-003",
+    "title": "Export the current view to CSV",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "normal",
+    "tags": [
+      "ux"
+    ],
+    "assignees": [
+      "Luka Pavlović",
+      "Ana Petrović",
+      "Mila Đorđević"
+    ],
+    "due": "2026-11-21",
+    "starts_at": "2026-11-21T09:45:00Z",
+    "ends_at": "2026-11-21T11:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "43bccaa3-14e9-4d78-b48b-1e13e864ab86"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "4ce98b89-94a0-4b40-99c3-28ff47b7ac0d",
+    "order": 400,
+    "key": "ROA-004",
+    "title": "Keyboard shortcuts cheat sheet",
+    "body": "Customer asked for an update by the end of the week.",
+    "priority": "normal",
+    "tags": [
+      "mobile",
+      "docs"
+    ],
+    "assignees": [
+      "Luka Pavlović",
+      "Mila Đorđević"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "829e8b14-533d-416e-aef7-90af33f74f57"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "4ce98b89-94a0-4b40-99c3-28ff47b7ac0d",
+    "order": 500,
+    "key": "ROA-005",
+    "title": "Dark mode for the print layout",
+    "body": "Agree on the scope first, then split it into small steps.",
+    "priority": "high",
+    "tags": [
+      "performance",
+      "ux"
+    ],
+    "assignees": [
+      "Nikola Stojanović",
+      "Luka Pavlović",
+      "Ana Petrović"
+    ],
+    "due": "2026-10-30",
+    "starts_at": "2026-10-30T08:00:00Z",
+    "ends_at": "2026-10-30T10:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "353f6dba-43c5-4b55-9e43-486618e9193e"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "4ce98b89-94a0-4b40-99c3-28ff47b7ac0d",
+    "order": 600,
+    "key": "ROA-006",
+    "title": "Column presets per collection",
+    "body": "Customer asked for an update by the end of the week.",
+    "priority": "low",
+    "tags": [],
+    "assignees": [],
+    "due": "2026-11-13",
+    "starts_at": "2026-11-13T14:00:00Z",
+    "ends_at": "2026-11-13T16:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "f4733c78-3ec5-4b9c-a422-19bd713cc61b"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "9e523662-6123-4f85-8ac7-eab6e3447383",
+    "order": 100,
+    "key": "ROA-007",
+    "title": "Inline image previews",
+    "body": "Low risk; a quick win if someone has an hour.",
+    "priority": "normal",
+    "tags": [
+      "a11y",
+      "docs",
+      "ux"
+    ],
+    "assignees": [
+      "Jelena Kovač"
+    ],
+    "due": "2026-10-31",
+    "starts_at": "2026-10-31T11:30:00Z",
+    "ends_at": "2026-10-31T12:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "cd63af1e-1525-4d9a-92bd-fec47cd2e39a"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "9e523662-6123-4f85-8ac7-eab6e3447383",
+    "order": 200,
+    "key": "ROA-008",
+    "title": "Audit log for schema edits",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "normal",
+    "tags": [
+      "docs"
+    ],
+    "assignees": [
+      "Ana Petrović",
+      "Stefan Marković",
+      "Ivana Lukić"
+    ],
+    "due": "2026-10-29",
+    "starts_at": "2026-10-29T10:15:00Z",
+    "ends_at": "2026-10-29T11:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "b1f9b0aa-afc5-4f62-aee6-7a6fae1b1847"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "9e523662-6123-4f85-8ac7-eab6e3447383",
+    "order": 300,
+    "key": "ROA-009",
+    "title": "Undo for the last change",
+    "body": "Low risk; a quick win if someone has an hour.",
+    "priority": "normal",
+    "tags": [
+      "performance",
+      "api",
+      "ux"
+    ],
+    "assignees": [],
+    "due": "2026-11-22",
+    "starts_at": "2026-11-22T14:15:00Z",
+    "ends_at": "2026-11-22T15:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "aab09fb4-2795-43ea-b592-17f3f44f2202"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "9e523662-6123-4f85-8ac7-eab6e3447383",
+    "order": 400,
+    "key": "ROA-010",
+    "title": "Shareable view links",
+    "body": "Agree on the scope first, then split it into small steps.",
+    "priority": "high",
+    "tags": [
+      "mobile"
+    ],
+    "assignees": [
+      "Luka Pavlović"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "3c388277-b459-4a4b-af44-305d4a215812"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "09eba228-cf4e-4003-a8be-8aa6c54fb294",
+    "order": 100,
+    "key": "ROA-011",
+    "title": "Faster first load on slow networks",
+    "body": "Blocked until the related change is merged.",
+    "priority": "low",
+    "tags": [
+      "a11y"
+    ],
+    "assignees": [
+      "Mila Đorđević"
+    ],
+    "due": "2026-11-19",
+    "starts_at": "2026-11-19T11:30:00Z",
+    "ends_at": "2026-11-19T13:30:00Z"
+  },
+  {
+    "__meta": {
+      "id": "3f8c0dd5-9227-4093-8b46-04c5327b5b51"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "09eba228-cf4e-4003-a8be-8aa6c54fb294",
+    "order": 200,
+    "key": "ROA-012",
+    "title": "Calendar view for due dates",
+    "body": "Steps to reproduce are in the first comment; it happens every time.",
+    "priority": "normal",
+    "tags": [
+      "mobile",
+      "a11y"
+    ],
+    "assignees": [
+      "Ivana Lukić",
+      "Nikola Stojanović"
+    ],
+    "due": "2026-11-01",
+    "starts_at": "2026-11-01T08:30:00Z",
+    "ends_at": "2026-11-01T09:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "8d6de530-56a7-421c-96bc-9a8d91e2c258"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "09eba228-cf4e-4003-a8be-8aa6c54fb294",
+    "order": 300,
+    "key": "ROA-013",
+    "title": "Comment threads on rows",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "normal",
+    "tags": [
+      "ux",
+      "performance",
+      "a11y"
+    ],
+    "assignees": [],
+    "due": "2026-11-17",
+    "starts_at": "2026-11-17T12:30:00Z",
+    "ends_at": "2026-11-17T14:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "f7d8de76-146d-47e7-8abf-0b2a2d922b10"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "09eba228-cf4e-4003-a8be-8aa6c54fb294",
+    "order": 400,
+    "key": "ROA-014",
+    "title": "Onboarding checklist",
+    "body": "Needs a short design review before anyone starts.",
+    "priority": "low",
+    "tags": [],
+    "assignees": [
+      "Nikola Stojanović",
+      "Filip Janković",
+      "Ana Petrović"
+    ],
+    "due": "2026-11-24",
+    "starts_at": "2026-11-24T14:15:00Z",
+    "ends_at": "2026-11-24T16:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "3dfaf71d-e44f-4e28-a552-f120caec747d"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "dc0657eb-6002-4ab8-936c-5ca05887e4ae",
+    "order": 100,
+    "key": "ROA-015",
+    "title": "Usage analytics dashboard",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "urgent",
+    "tags": [
+      "docs"
+    ],
+    "assignees": [
+      "Jelena Kovač",
+      "Mila Đorđević"
+    ],
+    "due": "2026-11-20",
+    "starts_at": "2026-11-20T12:45:00Z",
+    "ends_at": "2026-11-20T13:30:00Z"
+  },
+  {
+    "__meta": {
+      "id": "4a0650df-f7a1-4c13-8d86-998d95b01ecd"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "dc0657eb-6002-4ab8-936c-5ca05887e4ae",
+    "order": 200,
+    "key": "ROA-016",
+    "title": "Field-level permissions",
+    "body": "Customer asked for an update by the end of the week.",
+    "priority": "high",
+    "tags": [
+      "performance",
+      "api",
+      "ux"
+    ],
+    "assignees": [
+      "Jelena Kovač",
+      "Mila Đorđević",
+      "Sara Nikolić"
+    ],
+    "due": "2026-11-21",
+    "starts_at": "2026-11-21T14:30:00Z",
+    "ends_at": "2026-11-21T16:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "1c513577-ef6b-4cf8-b951-83f6a6a85b2d"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "dc0657eb-6002-4ab8-936c-5ca05887e4ae",
+    "order": 300,
+    "key": "ROA-017",
+    "title": "Mobile layout for the toolbar",
+    "body": "Needs a short design review before anyone starts.",
+    "priority": "high",
+    "tags": [
+      "api"
+    ],
+    "assignees": [
+      "Nikola Stojanović",
+      "Ivana Lukić",
+      "Luka Pavlović"
+    ],
+    "due": "2026-11-26",
+    "starts_at": "2026-11-26T12:15:00Z",
+    "ends_at": "2026-11-26T14:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "0cea8eeb-bc9a-47e8-a5b6-efb66c89c948"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "96c366c2-5d42-497b-b99e-dfa7dcd40b3c",
+    "order": 100,
+    "key": "ROA-018",
+    "title": "Import rows from a spreadsheet",
+    "body": "Steps to reproduce are in the first comment; it happens every time.",
+    "priority": "normal",
+    "tags": [
+      "api",
+      "performance",
+      "docs"
+    ],
+    "assignees": [
+      "Filip Janković",
+      "Ana Petrović",
+      "Sara Nikolić"
+    ],
+    "due": "2026-10-26",
+    "starts_at": "2026-10-26T10:30:00Z",
+    "ends_at": "2026-10-26T13:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "27a3bc25-7be7-4824-914a-73534b10ce75"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "96c366c2-5d42-497b-b99e-dfa7dcd40b3c",
+    "order": 200,
+    "key": "ROA-019",
+    "title": "Relation picker with search",
+    "body": "Low risk; a quick win if someone has an hour.",
+    "priority": "low",
+    "tags": [
+      "mobile",
+      "ux"
+    ],
+    "assignees": [],
+    "due": "2026-10-28",
+    "starts_at": "2026-10-28T12:45:00Z",
+    "ends_at": "2026-10-28T13:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "d2e61936-e67d-4af2-8f96-43fb0ab6304f"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "bucket_id": "96c366c2-5d42-497b-b99e-dfa7dcd40b3c",
+    "order": 300,
+    "key": "ROA-020",
+    "title": "Accessible drag and drop",
+    "body": "Needs a short design review before anyone starts.",
+    "priority": "normal",
+    "tags": [
+      "mobile",
+      "ux"
+    ],
+    "assignees": [
+      "Ana Petrović"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "7427c706-13be-4598-9641-8b235efb20eb"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "1373d089-e887-4cfd-99c2-057ce44e4674",
+    "order": 100,
+    "key": "SUP-001",
+    "title": "Cannot log in after password reset",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "normal",
+    "tags": [
+      "data",
+      "billing",
+      "account"
+    ],
+    "assignees": [],
+    "due": "2026-11-21",
+    "starts_at": "2026-11-21T13:45:00Z",
+    "ends_at": "2026-11-21T14:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "f40bf43d-9180-4b72-bc94-5aa8333e1409"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "1373d089-e887-4cfd-99c2-057ce44e4674",
+    "order": 200,
+    "key": "SUP-002",
+    "title": "Invoice shows the wrong currency",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "low",
+    "tags": [],
+    "assignees": [],
+    "due": "2026-11-16",
+    "starts_at": "2026-11-16T10:30:00Z",
+    "ends_at": "2026-11-16T11:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "b84a9650-5e06-4ba9-83c4-a3daf7fee053"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "1373d089-e887-4cfd-99c2-057ce44e4674",
+    "order": 300,
+    "key": "SUP-003",
+    "title": "Export stops at 1,000 rows",
+    "body": "Agree on the scope first, then split it into small steps.",
+    "priority": "low",
+    "tags": [],
+    "assignees": [
+      "Mila Đorđević",
+      "Jelena Kovač",
+      "Ivana Lukić"
+    ],
+    "due": "2026-10-24",
+    "starts_at": "2026-10-24T13:30:00Z",
+    "ends_at": "2026-10-24T14:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "9f29149c-a83e-4dd9-b2ba-1053c4ff6552"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "1373d089-e887-4cfd-99c2-057ce44e4674",
+    "order": 400,
+    "key": "SUP-004",
+    "title": "Dates show in the wrong time zone",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "low",
+    "tags": [
+      "data"
+    ],
+    "assignees": [
+      "Luka Pavlović",
+      "Jelena Kovač"
+    ],
+    "due": "2026-11-16",
+    "starts_at": "2026-11-16T15:30:00Z",
+    "ends_at": "2026-11-16T16:30:00Z"
+  },
+  {
+    "__meta": {
+      "id": "71954bdc-f795-4e96-8814-06f4125d4314"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "1373d089-e887-4cfd-99c2-057ce44e4674",
+    "order": 500,
+    "key": "SUP-005",
+    "title": "Search misses accented names",
+    "body": "Low risk; a quick win if someone has an hour.",
+    "priority": "high",
+    "tags": [],
+    "assignees": [],
+    "due": "2026-11-10",
+    "starts_at": "2026-11-10T11:00:00Z",
+    "ends_at": "2026-11-10T11:30:00Z"
+  },
+  {
+    "__meta": {
+      "id": "24a717d0-aace-4af0-b520-2e72a0e70966"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "d32ee38f-8453-44c3-be28-a937b3ff2738",
+    "order": 100,
+    "key": "SUP-006",
+    "title": "Two-factor codes arrive late",
+    "body": "Agree on the scope first, then split it into small steps.",
+    "priority": "low",
+    "tags": [],
+    "assignees": [
+      "Nikola Stojanović",
+      "Ana Petrović"
+    ],
+    "due": "2026-11-13",
+    "starts_at": "2026-11-13T14:30:00Z",
+    "ends_at": "2026-11-13T15:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "fe9fd479-c809-453f-ae6c-7499f07deffe"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "d32ee38f-8453-44c3-be28-a937b3ff2738",
+    "order": 200,
+    "key": "SUP-007",
+    "title": "Dashboard is slow on Mondays",
+    "body": "Needs a short design review before anyone starts.",
+    "priority": "normal",
+    "tags": [
+      "account",
+      "urgent-customer",
+      "bug"
+    ],
+    "assignees": [
+      "Luka Pavlović"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "46729e2b-91aa-42a7-a34e-bd8f0532d57a"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "d32ee38f-8453-44c3-be28-a937b3ff2738",
+    "order": 300,
+    "key": "SUP-008",
+    "title": "Attachment upload fails over 10 MB",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "normal",
+    "tags": [],
+    "assignees": [
+      "Ana Petrović",
+      "Stefan Marković",
+      "Marko Ilić"
+    ],
+    "due": "2026-11-08",
+    "starts_at": "2026-11-08T14:30:00Z",
+    "ends_at": "2026-11-08T17:30:00Z"
+  },
+  {
+    "__meta": {
+      "id": "1d143d23-bb97-4ce1-b412-8b2b98d35fec"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "d32ee38f-8453-44c3-be28-a937b3ff2738",
+    "order": 400,
+    "key": "SUP-009",
+    "title": "Duplicate rows after import",
+    "body": "Steps to reproduce are in the first comment; it happens every time.",
+    "priority": "low",
+    "tags": [],
+    "assignees": [
+      "Marko Ilić",
+      "Filip Janković"
+    ],
+    "due": "2026-11-09",
+    "starts_at": "2026-11-09T14:15:00Z",
+    "ends_at": "2026-11-09T17:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "0c9bb6b1-3e7a-4046-acb3-65ca475bfb6c"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "09833e4a-3533-42ec-ad29-41dc46573212",
+    "order": 100,
+    "key": "SUP-010",
+    "title": "Email notifications go to spam",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "urgent",
+    "tags": [],
+    "assignees": [
+      "Sara Nikolić",
+      "Mila Đorđević",
+      "Marko Ilić"
+    ],
+    "due": "2026-11-13",
+    "starts_at": "2026-11-13T13:00:00Z",
+    "ends_at": "2026-11-13T13:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "b60faf21-91e9-4e7f-81f5-07812ad56a37"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "09833e4a-3533-42ec-ad29-41dc46573212",
+    "order": 200,
+    "key": "SUP-011",
+    "title": "Need a copy of last year's data",
+    "body": "Low risk; a quick win if someone has an hour.",
+    "priority": "urgent",
+    "tags": [
+      "account"
+    ],
+    "assignees": [
+      "Sara Nikolić",
+      "Ivana Lukić",
+      "Nikola Stojanović"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "a5aa4bd0-7157-4b7f-9f14-15694b2ece4e"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "09833e4a-3533-42ec-ad29-41dc46573212",
+    "order": 300,
+    "key": "SUP-012",
+    "title": "Report totals do not add up",
+    "body": "Agree on the scope first, then split it into small steps.",
+    "priority": "normal",
+    "tags": [],
+    "assignees": [
+      "Ivana Lukić",
+      "Filip Janković"
+    ],
+    "due": "2026-10-25",
+    "starts_at": "2026-10-25T12:15:00Z",
+    "ends_at": "2026-10-25T12:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "05712257-46ac-4c44-ad22-53ce5b253019"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "09833e4a-3533-42ec-ad29-41dc46573212",
+    "order": 400,
+    "key": "SUP-013",
+    "title": "User cannot see shared views",
+    "body": "Agree on the scope first, then split it into small steps.",
+    "priority": "normal",
+    "tags": [
+      "question",
+      "data"
+    ],
+    "assignees": [],
+    "due": "2026-11-25",
+    "starts_at": "2026-11-25T09:30:00Z",
+    "ends_at": "2026-11-25T12:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "83fc06c1-849f-4f10-ace6-6912b6c33d8a"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "09833e4a-3533-42ec-ad29-41dc46573212",
+    "order": 500,
+    "key": "SUP-014",
+    "title": "Request to rename the workspace",
+    "body": "Blocked until the related change is merged.",
+    "priority": "normal",
+    "tags": [
+      "question",
+      "account",
+      "urgent-customer"
+    ],
+    "assignees": [],
+    "due": "2026-11-09",
+    "starts_at": "2026-11-09T14:00:00Z",
+    "ends_at": "2026-11-09T15:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "73988ca8-9417-498a-b69b-192f6f4df707"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "76450c19-1dc9-4258-a17e-6621ecd71946",
+    "order": 100,
+    "key": "SUP-015",
+    "title": "Printing cuts off the last column",
+    "body": "Blocked until the related change is merged.",
+    "priority": "normal",
+    "tags": [
+      "question",
+      "account"
+    ],
+    "assignees": [
+      "Mila Đorđević"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "efd7d54a-9f69-4ef4-9b79-55a93297a09d"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "76450c19-1dc9-4258-a17e-6621ecd71946",
+    "order": 200,
+    "key": "SUP-016",
+    "title": "API key rotation question",
+    "body": "Customer asked for an update by the end of the week.",
+    "priority": "low",
+    "tags": [],
+    "assignees": [
+      "Stefan Marković",
+      "Mila Đorđević"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "521a12fd-bb69-4d68-807e-cf489ad7fcb9"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "76450c19-1dc9-4258-a17e-6621ecd71946",
+    "order": 300,
+    "key": "SUP-017",
+    "title": "Billing address change",
+    "body": "Blocked until the related change is merged.",
+    "priority": "low",
+    "tags": [
+      "question",
+      "billing",
+      "account"
+    ],
+    "assignees": [
+      "Marko Ilić"
+    ],
+    "due": "2026-11-04",
+    "starts_at": "2026-11-04T12:00:00Z",
+    "ends_at": "2026-11-04T15:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "f14020cd-f468-4272-babf-642e0fa1a178"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "7c940f92-3b6e-42b3-a6b3-ff7236b89913",
+    "order": 100,
+    "key": "SUP-018",
+    "title": "Filter chips reset on reload",
+    "body": "Steps to reproduce are in the first comment; it happens every time.",
+    "priority": "urgent",
+    "tags": [
+      "urgent-customer"
+    ],
+    "assignees": [
+      "Ivana Lukić",
+      "Sara Nikolić",
+      "Jelena Kovač"
+    ],
+    "due": "2026-11-22",
+    "starts_at": "2026-11-22T10:15:00Z",
+    "ends_at": "2026-11-22T13:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "8aa77270-9e28-4814-a457-7d77a14bb86a"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "7c940f92-3b6e-42b3-a6b3-ff7236b89913",
+    "order": 200,
+    "key": "SUP-019",
+    "title": "Translation missing in the menu",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "urgent",
+    "tags": [
+      "account",
+      "data"
+    ],
+    "assignees": [
+      "Nikola Stojanović",
+      "Ana Petrović",
+      "Mila Đorđević"
+    ],
+    "due": "2026-11-02",
+    "starts_at": "2026-11-02T08:00:00Z",
+    "ends_at": "2026-11-02T10:30:00Z"
+  },
+  {
+    "__meta": {
+      "id": "b5ceda8d-afe9-42c8-b605-6d630fd8db99"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "bucket_id": "7c940f92-3b6e-42b3-a6b3-ff7236b89913",
+    "order": 300,
+    "key": "SUP-020",
+    "title": "Session expires too quickly",
+    "body": "Agree on the scope first, then split it into small steps.",
+    "priority": "low",
+    "tags": [
+      "question"
+    ],
+    "assignees": [
+      "Filip Janković",
+      "Mila Đorđević",
+      "Jelena Kovač"
+    ],
+    "due": "2026-11-09",
+    "starts_at": "2026-11-09T13:15:00Z",
+    "ends_at": "2026-11-09T14:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "fc43ce34-384b-4611-b690-2f4bdebe3429"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "00bdb844-797e-4143-a17d-61b2dd1ba900",
+    "order": 100,
+    "key": "REL-001",
+    "title": "Freeze the public API",
+    "body": "Low risk; a quick win if someone has an hour.",
+    "priority": "low",
+    "tags": [],
+    "assignees": [
+      "Filip Janković",
+      "Jelena Kovač",
+      "Marko Ilić"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "3a0118bd-e28b-4961-b61e-feb263b3d3a0"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "00bdb844-797e-4143-a17d-61b2dd1ba900",
+    "order": 200,
+    "key": "REL-002",
+    "title": "Migrate the settings table",
+    "body": "Customer asked for an update by the end of the week.",
+    "priority": "normal",
+    "tags": [],
+    "assignees": [],
+    "due": "2026-11-17",
+    "starts_at": "2026-11-17T10:45:00Z",
+    "ends_at": "2026-11-17T13:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "a43bb515-8a07-40b7-9ab6-ef809741bfa2"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "00bdb844-797e-4143-a17d-61b2dd1ba900",
+    "order": 300,
+    "key": "REL-003",
+    "title": "Write the upgrade guide",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "low",
+    "tags": [
+      "release",
+      "security",
+      "infra"
+    ],
+    "assignees": [
+      "Mila Đorđević"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "4cbe14c6-f94d-42e7-9b55-a0853443ca9b"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "00bdb844-797e-4143-a17d-61b2dd1ba900",
+    "order": 400,
+    "key": "REL-004",
+    "title": "Load test the list endpoint",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "urgent",
+    "tags": [
+      "release"
+    ],
+    "assignees": [],
+    "due": "2026-11-18",
+    "starts_at": "2026-11-18T13:45:00Z",
+    "ends_at": "2026-11-18T14:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "0feba2db-1e64-4644-8a88-4391433385e9"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "43868a92-64c3-47d2-aa02-8cee4f05c593",
+    "order": 100,
+    "key": "REL-005",
+    "title": "Update third-party licences",
+    "body": "Low risk; a quick win if someone has an hour.",
+    "priority": "high",
+    "tags": [
+      "qa"
+    ],
+    "assignees": [
+      "Filip Janković"
+    ],
+    "due": "2026-10-23",
+    "starts_at": "2026-10-23T09:45:00Z",
+    "ends_at": "2026-10-23T12:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "1159c1ed-6da5-44d9-9f12-56f295e4d81e"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "43868a92-64c3-47d2-aa02-8cee4f05c593",
+    "order": 200,
+    "key": "REL-006",
+    "title": "Record the release demo",
+    "body": "Needs a short design review before anyone starts.",
+    "priority": "normal",
+    "tags": [
+      "release",
+      "docs"
+    ],
+    "assignees": [
+      "Nikola Stojanović",
+      "Ana Petrović",
+      "Luka Pavlović"
+    ],
+    "due": "2026-11-06",
+    "starts_at": "2026-11-06T08:30:00Z",
+    "ends_at": "2026-11-06T10:45:00Z"
+  },
+  {
+    "__meta": {
+      "id": "b38f7569-580b-4ccd-835f-beb1f2bc225d"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "43868a92-64c3-47d2-aa02-8cee4f05c593",
+    "order": 300,
+    "key": "REL-007",
+    "title": "Rotate the signing keys",
+    "body": "Customer asked for an update by the end of the week.",
+    "priority": "urgent",
+    "tags": [
+      "qa",
+      "security"
+    ],
+    "assignees": [
+      "Sara Nikolić",
+      "Stefan Marković"
+    ],
+    "due": "2026-11-06",
+    "starts_at": "2026-11-06T14:30:00Z",
+    "ends_at": "2026-11-06T17:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "3ea5f053-0262-48cf-8aef-f214471e18ad"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "43868a92-64c3-47d2-aa02-8cee4f05c593",
+    "order": 400,
+    "key": "REL-008",
+    "title": "Smoke tests on staging",
+    "body": "Blocked until the related change is merged.",
+    "priority": "normal",
+    "tags": [
+      "infra"
+    ],
+    "assignees": [],
+    "due": "2026-11-19",
+    "starts_at": "2026-11-19T10:00:00Z",
+    "ends_at": "2026-11-19T12:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "0d7cef66-e059-40c5-9a96-2e499ea4a8f6"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "43868a92-64c3-47d2-aa02-8cee4f05c593",
+    "order": 500,
+    "key": "REL-009",
+    "title": "Database backup drill",
+    "body": "Check with the team lead which option we prefer.",
+    "priority": "low",
+    "tags": [
+      "security"
+    ],
+    "assignees": [],
+    "due": "2026-11-03",
+    "starts_at": "2026-11-03T09:30:00Z",
+    "ends_at": "2026-11-03T11:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "d5525d3c-7aa4-4884-8951-639c20326227"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "e227fab6-b6f8-4f05-9142-9786101b82aa",
+    "order": 100,
+    "key": "REL-010",
+    "title": "Changelog for 3.0",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "low",
+    "tags": [
+      "security",
+      "qa",
+      "docs"
+    ],
+    "assignees": [],
+    "due": "2026-10-28",
+    "starts_at": "2026-10-28T12:15:00Z",
+    "ends_at": "2026-10-28T13:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "17cabba8-0b3a-491e-a70f-a9353ac662e1"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "e227fab6-b6f8-4f05-9142-9786101b82aa",
+    "order": 200,
+    "key": "REL-011",
+    "title": "Remove deprecated endpoints",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "high",
+    "tags": [],
+    "assignees": [
+      "Nikola Stojanović"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "a45d9998-ffa7-4b0c-9fd8-94a474f2e69a"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "e227fab6-b6f8-4f05-9142-9786101b82aa",
+    "order": 300,
+    "key": "REL-012",
+    "title": "Bump the minimum Node version",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "high",
+    "tags": [
+      "qa"
+    ],
+    "assignees": [
+      "Ivana Lukić",
+      "Stefan Marković"
+    ],
+    "due": "2026-11-23",
+    "starts_at": "2026-11-23T10:30:00Z",
+    "ends_at": "2026-11-23T13:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "e6a34a8e-894e-4fea-8c31-06edaae216d5"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "e227fab6-b6f8-4f05-9142-9786101b82aa",
+    "order": 400,
+    "key": "REL-013",
+    "title": "Translate new strings",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "low",
+    "tags": [
+      "infra"
+    ],
+    "assignees": [
+      "Nikola Stojanović"
+    ],
+    "due": "2026-11-09",
+    "starts_at": "2026-11-09T10:00:00Z",
+    "ends_at": "2026-11-09T13:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "aa70ef1a-fc11-4822-a903-05287a3e784f"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "98b6aa1b-b052-4a8a-8e2b-dde7c76f01e2",
+    "order": 100,
+    "key": "REL-014",
+    "title": "Security review sign-off",
+    "body": "Blocked until the related change is merged.",
+    "priority": "low",
+    "tags": [
+      "qa"
+    ],
+    "assignees": [
+      "Stefan Marković",
+      "Jelena Kovač",
+      "Luka Pavlović"
+    ],
+    "due": "2026-10-27",
+    "starts_at": "2026-10-27T14:00:00Z",
+    "ends_at": "2026-10-27T15:30:00Z"
+  },
+  {
+    "__meta": {
+      "id": "0279aeba-f423-443d-a656-65f1730fb2db"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "98b6aa1b-b052-4a8a-8e2b-dde7c76f01e2",
+    "order": 200,
+    "key": "REL-015",
+    "title": "Prepare the rollback plan",
+    "body": "Needs a short design review before anyone starts.",
+    "priority": "low",
+    "tags": [
+      "qa",
+      "docs",
+      "infra"
+    ],
+    "assignees": [],
+    "due": "2026-11-26",
+    "starts_at": "2026-11-26T09:15:00Z",
+    "ends_at": "2026-11-26T10:15:00Z"
+  },
+  {
+    "__meta": {
+      "id": "dfa7dc51-1ef9-401b-bd88-4fffdccfb9dc"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "98b6aa1b-b052-4a8a-8e2b-dde7c76f01e2",
+    "order": 300,
+    "key": "REL-016",
+    "title": "Tag the release candidate",
+    "body": "Needs a short design review before anyone starts.",
+    "priority": "high",
+    "tags": [
+      "docs"
+    ],
+    "assignees": [
+      "Sara Nikolić",
+      "Ivana Lukić"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "43c090ca-5df3-4c92-9c6f-2c90df38bd99"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "98b6aa1b-b052-4a8a-8e2b-dde7c76f01e2",
+    "order": 400,
+    "key": "REL-017",
+    "title": "Announce the maintenance window",
+    "body": "Customer asked for an update by the end of the week.",
+    "priority": "normal",
+    "tags": [
+      "release"
+    ],
+    "assignees": [
+      "Filip Janković",
+      "Ana Petrović"
+    ]
+  },
+  {
+    "__meta": {
+      "id": "5c80c1b7-d559-46da-9e5f-71c407515098"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "c8493018-0689-43d8-bf5b-315463ff68ed",
+    "order": 100,
+    "key": "REL-018",
+    "title": "Verify the metrics dashboards",
+    "body": "The acceptance criteria are listed in the description of the epic.",
+    "priority": "normal",
+    "tags": [
+      "security",
+      "infra",
+      "qa"
+    ],
+    "assignees": [
+      "Jelena Kovač"
+    ],
+    "due": "2026-11-19",
+    "starts_at": "2026-11-19T09:30:00Z",
+    "ends_at": "2026-11-19T10:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "5260a323-1176-420b-b1e1-e60f261ae538"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "c8493018-0689-43d8-bf5b-315463ff68ed",
+    "order": 200,
+    "key": "REL-019",
+    "title": "Archive the 2.x branch",
+    "body": "Blocked until the related change is merged.",
+    "priority": "normal",
+    "tags": [
+      "docs",
+      "security",
+      "release"
+    ],
+    "assignees": [
+      "Sara Nikolić",
+      "Luka Pavlović"
+    ],
+    "due": "2026-11-01",
+    "starts_at": "2026-11-01T12:15:00Z",
+    "ends_at": "2026-11-01T15:00:00Z"
+  },
+  {
+    "__meta": {
+      "id": "d2891703-a953-4bda-92b4-460eba9d5494"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "bucket_id": "c8493018-0689-43d8-bf5b-315463ff68ed",
+    "order": 300,
+    "key": "REL-020",
+    "title": "Send the release notes",
+    "body": "Steps to reproduce are in the first comment; it happens every time.",
+    "priority": "high",
+    "tags": [],
+    "assignees": [
+      "Ivana Lukić",
+      "Luka Pavlović"
+    ],
+    "due": "2026-11-10",
+    "starts_at": "2026-11-10T14:30:00Z",
+    "ends_at": "2026-11-10T17:00:00Z"
+  }
+]

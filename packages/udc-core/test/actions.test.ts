@@ -19,12 +19,13 @@ const capabilities = {
   total_count: true,
   schema_edit: true,
   config_edit: false,
+  reindex: false,
   supported_filter_ops: [...SUPPORTED_OPS],
 };
 const row = { __meta: { id: "r1", version: 2 }, name: "Alfa" };
 
 describe("ACTIONS registry", () => {
-  it("lists the phase-1 actions", () => {
+  it("lists every action", () => {
     expect(ACTION_NAMES).toEqual([
       "collections",
       "describe",
@@ -34,6 +35,7 @@ describe("ACTIONS registry", () => {
       "schema.add_field",
       "schema.update_field",
       "schema.soft_delete_field",
+      "reindex",
     ]);
     expect(isActionName("list")).toBe(true);
     expect(isActionName("toString")).toBe(false);

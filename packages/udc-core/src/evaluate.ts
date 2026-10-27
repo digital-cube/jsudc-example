@@ -56,7 +56,9 @@ function evaluateCondition(cond: Condition, row: Record<string, unknown>): Tri {
           field: cond.field,
         });
       }
-      const hit = rhs.some((v) => !isMissing(v) && equals(lhs, v, ci));
+      const member = (x: unknown) => rhs.some((v) => !isMissing(v) && equals(x, v, ci));
+      // An array field is in the list when one of its elements is, as for the text ops.
+      const hit = Array.isArray(lhs) ? lhs.some((el) => !isMissing(el) && member(el)) : member(lhs);
       return cond.op === "in" ? hit : !hit;
     }
     case "contains":

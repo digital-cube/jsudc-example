@@ -31,7 +31,7 @@ const EXPECTED: Record<FieldType, [string[], string, string]> = {
   enum: [CHOICE, "in", "select"],
   lookup: [CHOICE, "in", "lookup"],
   relation: [CHOICE, "eq", "text"],
-  string_array: [["contains", ...NULLS], "contains", "text"],
+  string_array: [["contains", "in", "not_in", ...NULLS], "contains", "text"],
   lookup_array: [["contains", ...NULLS], "contains", "lookup"],
 };
 

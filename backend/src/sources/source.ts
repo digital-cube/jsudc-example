@@ -32,6 +32,15 @@ export interface SourceAddField {
   position: SchemaPosition;
 }
 
+/** A `reindex` request as a source sees it; the defaults are already applied by the caller or here. */
+export interface SourceReindex {
+  scope: Record<string, string | number | boolean>;
+  order_field?: string | undefined;
+  gap?: number | undefined;
+}
+
+export const DEFAULT_ORDER_FIELD = "order";
+
 export interface SourceUpdateField {
   name: string;
   fielddef: FieldDef;
@@ -53,6 +62,12 @@ export interface Source {
   addField(req: SourceAddField): Promise<SchemaDoc>;
   updateField(req: SourceUpdateField): Promise<SchemaDoc>;
   softDeleteField(field: string): Promise<SchemaDoc>;
+  /**
+   * Renumber `order_field` of the rows matching `scope` to `gap`, `2*gap`, …
+   * in their current order (NULLs last, ties by id), bumping each version.
+   * Answers how many rows it renumbered. Present when `capabilities.reindex`.
+   */
+  reindex?(req: SourceReindex): Promise<number>;
 }
 
 export const ALL_FILTER_OPS = [...SUPPORTED_OPS];

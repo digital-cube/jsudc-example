@@ -1,0 +1,11 @@
+{
+  "version": "v1",
+  "core_fields": [],
+  "fields": {
+    "name": { "type": "string", "length": 120, "required": true, "index": true },
+    "key": { "type": "string", "length": 8, "index": true },
+    "description": { "type": "text" },
+    "color": { "type": "string", "length": 16 },
+    "order": { "type": "integer", "index": true }
+  }
+}

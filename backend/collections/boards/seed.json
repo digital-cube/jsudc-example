@@ -1,0 +1,32 @@
+[
+  {
+    "__meta": {
+      "id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e"
+    },
+    "name": "Product roadmap",
+    "key": "ROA",
+    "description": "What the product team builds next, from idea to shipped.",
+    "color": "accent",
+    "order": 100
+  },
+  {
+    "__meta": {
+      "id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0"
+    },
+    "name": "Support desk",
+    "key": "SUP",
+    "description": "Customer requests, triaged and answered.",
+    "color": "info",
+    "order": 200
+  },
+  {
+    "__meta": {
+      "id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2"
+    },
+    "name": "Release 3.0",
+    "key": "REL",
+    "description": "The steps from feature freeze to the 3.0 release.",
+    "color": "success",
+    "order": 300
+  }
+]

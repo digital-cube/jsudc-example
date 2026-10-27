@@ -1,0 +1,11 @@
+{
+  "version": "v1",
+  "core_fields": [],
+  "fields": {
+    "board_id": { "type": "relation", "ref": "boards", "label_field": "name", "required": true, "index": true },
+    "name": { "type": "string", "length": 80, "required": true, "index": true },
+    "color": { "type": "string", "length": 16 },
+    "order": { "type": "integer", "index": true },
+    "is_done": { "type": "bool", "index": true }
+  }
+}

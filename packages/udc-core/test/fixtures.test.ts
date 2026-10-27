@@ -52,10 +52,10 @@ describe("dclabs view details survive parsing", () => {
 
   it("passes unknown keys through", () => {
     const view = ViewConfigSchema.parse({
-      kanban_options: { group_field: "status" },
+      gantt_options: { group_field: "status" },
       columns: [{ field: "a", mono: true }],
     });
-    expect(view.kanban_options).toEqual({ group_field: "status" });
+    expect(view.gantt_options).toEqual({ group_field: "status" });
     expect(view.columns[0]).toMatchObject({ field: "a", mono: true });
   });
 });

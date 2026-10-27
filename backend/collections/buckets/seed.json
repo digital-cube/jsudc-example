@@ -1,0 +1,152 @@
+[
+  {
+    "__meta": {
+      "id": "4ce98b89-94a0-4b40-99c3-28ff47b7ac0d"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "name": "Backlog",
+    "color": "muted",
+    "order": 100,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "9e523662-6123-4f85-8ac7-eab6e3447383"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "name": "Ready",
+    "color": "info",
+    "order": 200,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "09eba228-cf4e-4003-a8be-8aa6c54fb294"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "name": "In progress",
+    "color": "accent",
+    "order": 300,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "dc0657eb-6002-4ab8-936c-5ca05887e4ae"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "name": "Review",
+    "color": "warning",
+    "order": 400,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "96c366c2-5d42-497b-b99e-dfa7dcd40b3c"
+    },
+    "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
+    "name": "Done",
+    "color": "success",
+    "order": 500,
+    "is_done": true
+  },
+  {
+    "__meta": {
+      "id": "1373d089-e887-4cfd-99c2-057ce44e4674"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "name": "New",
+    "color": "info",
+    "order": 100,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "d32ee38f-8453-44c3-be28-a937b3ff2738"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "name": "Triage",
+    "color": "warning",
+    "order": 200,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "09833e4a-3533-42ec-ad29-41dc46573212"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "name": "In progress",
+    "color": "accent",
+    "order": 300,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "76450c19-1dc9-4258-a17e-6621ecd71946"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "name": "Waiting on customer",
+    "color": "muted",
+    "order": 400,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "7c940f92-3b6e-42b3-a6b3-ff7236b89913"
+    },
+    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "name": "Resolved",
+    "color": "success",
+    "order": 500,
+    "is_done": true
+  },
+  {
+    "__meta": {
+      "id": "00bdb844-797e-4143-a17d-61b2dd1ba900"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "name": "Planned",
+    "color": "muted",
+    "order": 100,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "43868a92-64c3-47d2-aa02-8cee4f05c593"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "name": "Building",
+    "color": "accent",
+    "order": 200,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "e227fab6-b6f8-4f05-9142-9786101b82aa"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "name": "Testing",
+    "color": "warning",
+    "order": 300,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "98b6aa1b-b052-4a8a-8e2b-dde7c76f01e2"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "name": "Staging",
+    "color": "info",
+    "order": 400,
+    "is_done": false
+  },
+  {
+    "__meta": {
+      "id": "c8493018-0689-43d8-bf5b-315463ff68ed"
+    },
+    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "name": "Released",
+    "color": "success",
+    "order": 500,
+    "is_done": true
+  }
+]

@@ -1,10 +1,20 @@
 import { z } from "zod";
 import { FilterNodeSchema, FilterOpSchema } from "./filter.js";
+import { KanbanOptionsSchema } from "./kanban.js";
 
 // Every block is loose: dclabs views carry renderer-specific option blocks
 // and keys jsudc does not read yet, and they must parse without edits.
 
-export const PHASE1_RENDERERS = ["table", "cards"] as const;
+/**
+ * The renderer names jsudc knows. `available_renderers` stays an open list:
+ * an unknown name parses, and the UI shows its tab disabled.
+ */
+export const RENDERER_NAMES = ["table", "cards", "kanban", "calendar", "tree", "map", "chart"] as const;
+export type RendererName = (typeof RENDERER_NAMES)[number];
+
+export function isRendererName(name: unknown): name is RendererName {
+  return (RENDERER_NAMES as readonly unknown[]).includes(name);
+}
 
 export const COLUMN_COLORS = [
   "default",
@@ -142,6 +152,8 @@ export const ViewConfigSchema = z.looseObject({
   filters: z.array(FilterChipConfigSchema).optional(),
   filterable: FilterableConfigSchema.optional(),
   card_options: CardOptionsSchema.optional(),
+  /** Validated when present: a typo in a field name fails at load, not on screen. */
+  kanban_options: KanbanOptionsSchema.optional(),
   row_color: RowColorConfigSchema.optional(),
 
   row_actions: z.array(z.string()).default([]),

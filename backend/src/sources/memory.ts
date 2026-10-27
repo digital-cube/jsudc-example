@@ -3,12 +3,14 @@ import {
   type Capabilities,
   evaluateFilter,
   type ListResponse,
+  ORDER_GAP,
   type Row,
   type SchemaDoc,
   UdcError,
 } from "@jsudc/udc-core";
 import {
   assertQueryFields,
+  reindexPlan,
   assertValidRow,
   notFound,
   versionConflict,
@@ -16,10 +18,12 @@ import {
 } from "./fields.js";
 import {
   ALL_FILTER_OPS,
+  DEFAULT_ORDER_FIELD,
   DEFAULT_PAGE_SIZE,
   type Source,
   type SourceListRequest,
   type SourceMutation,
+  type SourceReindex,
 } from "./source.js";
 
 const readOnlySchema = () =>
@@ -50,6 +54,7 @@ export class MemorySource implements Source {
     total_count: true,
     schema_edit: false,
     config_edit: false,
+    reindex: true,
     supported_filter_ops: ALL_FILTER_OPS,
   };
 
@@ -131,6 +136,27 @@ export class MemorySource implements Source {
     stored.data = { ...stored.data, ...patch };
     stored.version += 1;
     return serialize(stored);
+  }
+
+  async reindex(req: SourceReindex): Promise<number> {
+    const { filter, orderField } = reindexPlan(
+      this.schema,
+      req.scope,
+      req.order_field ?? DEFAULT_ORDER_FIELD,
+    );
+    // Same ordering as the list sort (NULLS LAST, then id), so the result matches the SQL source.
+    const { rows } = await this.list({
+      filter,
+      sort: [{ field: orderField }],
+      page: { limit: Number.MAX_SAFE_INTEGER },
+    });
+    const gap = req.gap ?? ORDER_GAP;
+    rows.forEach((row, i) => {
+      const stored = this.find(row.__meta.id);
+      stored.data = { ...stored.data, [orderField]: (i + 1) * gap };
+      stored.version += 1;
+    });
+    return rows.length;
   }
 
   addField(): Promise<SchemaDoc> {

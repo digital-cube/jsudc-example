@@ -2,6 +2,7 @@ import {
   type Capabilities,
   FIELD_NAME_RE,
   type ListResponse,
+  ORDER_GAP,
   type Row,
   type SchemaDoc,
   UdcError,
@@ -15,19 +16,29 @@ import {
   assertQueryFields,
   assertValidRow,
   notFound,
+  reindexPlan,
   versionConflict,
   withoutMeta,
 } from "./fields.js";
 import {
   ALL_FILTER_OPS,
+  DEFAULT_ORDER_FIELD,
   DEFAULT_PAGE_SIZE,
   type Source,
   type SourceAddField,
   type SourceListRequest,
   type SourceMutation,
+  type SourceReindex,
   type SourceUpdateField,
 } from "./source.js";
-import { compileFilter, compileSort, cursorPredicate, orderBy, sortKeyColumns } from "./sql.js";
+import {
+  compileFilter,
+  compileSort,
+  cursorPredicate,
+  fieldExpr,
+  orderBy,
+  sortKeyColumns,
+} from "./sql.js";
 
 interface DbRow extends Record<string, unknown> {
   id: string;
@@ -56,6 +67,7 @@ export class PostgresJsonbSource implements Source {
     total_count: true,
     schema_edit: true,
     config_edit: false,
+    reindex: true,
     supported_filter_ops: ALL_FILTER_OPS,
   };
 
@@ -171,6 +183,35 @@ export class PostgresJsonbSource implements Source {
     const version = current.rows[0]?.version;
     if (version === undefined || m.expected_version === undefined) throw notFound(id);
     throw versionConflict(id, m.expected_version, version);
+  }
+
+  /**
+   * One statement: number the scope's rows by their current order (NULLS
+   * LAST, ties by id) and write `n * gap` back, bumping each version. The
+   * order and scope fields passed the allowlist, so they may sit in the SQL.
+   */
+  async reindex(req: SourceReindex): Promise<number> {
+    const schema = await this.describe();
+    const { filter, orderField, orderDef } = reindexPlan(
+      schema,
+      req.scope,
+      req.order_field ?? DEFAULT_ORDER_FIELD,
+    );
+    const where = compileFilter(filter, schema);
+    const order = fieldExpr(orderField, orderDef);
+    const gap = req.gap ?? ORDER_GAP;
+    const res = await this.db.execute(sql`
+      UPDATE ${this.table} AS t
+      SET data = jsonb_set(t.data, ARRAY[${orderField}]::text[], to_jsonb(r.n * ${gap}::int)),
+          version = t.version + 1,
+          updated_at = now()
+      FROM (
+        SELECT id, ROW_NUMBER() OVER (ORDER BY ${order} NULLS LAST, id) AS n
+        FROM ${this.table}
+        WHERE ${where}
+      ) AS r
+      WHERE t.id = r.id`);
+    return res.rowCount ?? 0;
   }
 
   addField(req: SourceAddField): Promise<SchemaDoc> {

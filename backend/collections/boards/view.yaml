@@ -1,0 +1,22 @@
+# The boards of the kanban example. `tickets` reads them for its board switcher.
+default_renderer: table
+available_renderers: [table, cards]
+pagination: infinite
+page_size_default: 50
+
+columns:
+  - {field: name, pin: left, editable: true, width: 220}
+  - {field: key, width: 90}
+  - {field: description, editable: true, width: 420}
+  - {field: color, width: 110}
+  - {field: order, render: number_format, align: right, width: 90}
+
+search:
+  fields: [name, description]
+  placeholder: Search boards
+
+card_options:
+  title_field: name
+  subtitle_field: key
+  meta_fields: [description, color, order]
+  size: medium

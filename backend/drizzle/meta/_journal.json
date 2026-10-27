@@ -15,6 +15,13 @@
       "when": 1792304329108,
       "tag": "0001_udc_cast_functions",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "7",
+      "when": 1793140006954,
+      "tag": "0002_kanban_collections",
+      "breakpoints": true
     }
   ]
 }

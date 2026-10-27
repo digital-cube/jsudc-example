@@ -85,17 +85,6 @@ export class Dispatcher {
   }
 }
 
-export const PHASE1_ACTIONS = [
-  "collections",
-  "describe",
-  "list",
-  "read",
-  "mutate",
-  "schema.add_field",
-  "schema.update_field",
-  "schema.soft_delete_field",
-] as const;
-
 /** The source of a collection whose schema may be edited, or `unsupported_op`. */
 function schemaEditable(c: Collection): Source {
   if (!c.source.capabilities.schema_edit) {
@@ -108,7 +97,20 @@ function schemaEditable(c: Collection): Source {
   return c.source;
 }
 
-/** A dispatcher with the phase-1 actions wired to the registry. */
+/** The source of a collection that renumbers orders, or `unsupported_op`. */
+function reindexable(c: Collection): Source & Required<Pick<Source, "reindex">> {
+  const { source } = c;
+  if (!source.capabilities.reindex || !source.reindex) {
+    throw new UdcError(
+      "unsupported_op",
+      `collection ${c.name} does not support reindex (reindex: false)`,
+      { collection: c.name },
+    );
+  }
+  return source as Source & Required<Pick<Source, "reindex">>;
+}
+
+/** A dispatcher with every action wired to the registry. */
 export function createDispatcher(
   registry: CollectionRegistry,
   opts: { log: DispatchLogger },
@@ -172,5 +174,8 @@ export function createDispatcher(
       async ({ collection, field }) => ({
         schema: await schemaEditable(registry.get(collection)).softDeleteField(field),
       }),
-    );
+    )
+    .register("reindex", ACTIONS.reindex.request, async ({ collection, ...req }) => ({
+      updated: await reindexable(registry.get(collection)).reindex(req),
+    }));
 }

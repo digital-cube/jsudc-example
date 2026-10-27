@@ -13,6 +13,8 @@ export const CapabilitiesSchema = z.looseObject({
   total_count: z.boolean(),
   schema_edit: z.boolean(),
   config_edit: z.boolean(),
+  /** The source renumbers an order field server-side (`reindex`). */
+  reindex: z.boolean(),
   supported_filter_ops: z.array(FilterOpSchema),
 });
 
@@ -161,9 +163,31 @@ export type SchemaSoftDeleteFieldRequest = z.infer<typeof SchemaSoftDeleteFieldR
 export const SchemaResponseSchema = z.object({ schema: SchemaDocSchema });
 export type SchemaResponse = z.infer<typeof SchemaResponseSchema>;
 
+// reindex -------------------------------------------------------------------
+
+/** One scope value: the rows renumbered are those whose fields equal every entry. */
+const ScopeValueSchema = z.union([z.string(), z.number(), z.boolean()]);
+
+/**
+ * Renumber `order_field` (default `order`) of the rows in `scope` to `gap`,
+ * `2*gap`, … in their current order (ties by id). What a client calls when
+ * two neighbours left no integer between them.
+ */
+export const ReindexRequestSchema = z.object({
+  collection: CollectionName,
+  scope: z.record(z.string().min(1), ScopeValueSchema),
+  order_field: z.string().min(1).optional(),
+  gap: z.number().int().min(2).max(1_000_000).optional(),
+});
+
+export type ReindexRequest = z.infer<typeof ReindexRequestSchema>;
+
+export const ReindexResponseSchema = z.object({ updated: z.number().int().min(0) });
+export type ReindexResponse = z.infer<typeof ReindexResponseSchema>;
+
 // registry ------------------------------------------------------------------
 
-/** Every phase-1 action with its payload schemas, so a server can dispatch generically. */
+/** Every action with its payload schemas, so a server can dispatch generically. */
 export const ACTIONS = {
   collections: { request: CollectionsRequestSchema, response: CollectionsResponseSchema },
   describe: { request: DescribeRequestSchema, response: DescribeResponseSchema },
@@ -179,6 +203,7 @@ export const ACTIONS = {
     request: SchemaSoftDeleteFieldRequestSchema,
     response: SchemaResponseSchema,
   },
+  reindex: { request: ReindexRequestSchema, response: ReindexResponseSchema },
 } as const satisfies Record<string, { request: z.ZodType; response: z.ZodType }>;
 
 export type ActionName = keyof typeof ACTIONS;

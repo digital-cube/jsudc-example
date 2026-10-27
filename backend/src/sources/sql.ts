@@ -119,11 +119,48 @@ const COMPARE: Partial<Record<Condition["op"], string>> = {
 
 const NULL = sql`NULL::boolean`;
 
+const ARRAY_TYPES: ReadonlySet<FieldDef["type"]> = new Set(["string_array", "lookup_array"]);
+
+/**
+ * A condition on an array field holds when one element passes it (`not_in`:
+ * when none is in the list), as in evaluateFilter. A row without the field
+ * stays UNKNOWN.
+ */
+function compileArrayCondition(cond: Condition): SQL {
+  const { field, op, value } = cond;
+  const arr = sql.raw(`(data->'${field}')`);
+  const ci = cond.case_insensitive === true;
+  const el = sql.raw(ci ? "lower(e.el)" : "e.el");
+  let test: SQL;
+  if (op === "contains" || op === "starts_with" || op === "ends_with") {
+    if (isMissing(value)) return NULL;
+    const text = escapeLike(scalarText(value, field, op));
+    const pattern =
+      op === "contains" ? `%${text}%` : op === "starts_with" ? `${text}%` : `%${text}`;
+    test = sql`e.el ${sql.raw(ci ? "ILIKE" : "LIKE")} ${pattern}::text`;
+  } else if (op === "in" || op === "not_in") {
+    if (!Array.isArray(value)) throw badValue(field, op, "an array");
+    const items = value
+      .filter((v) => !isMissing(v))
+      .map((v) => scalarText(v, field, op))
+      .map((v) => (ci ? v.toLowerCase() : v));
+    test = sql`${el} = ANY(${sql.param(items)}::text[])`;
+  } else {
+    throw new UdcError("unsupported_op", `${op} is not supported on the array field ${field}`, {
+      field,
+      op,
+    });
+  }
+  const exists = sql`EXISTS (SELECT 1 FROM jsonb_array_elements_text(${arr}) AS e(el) WHERE ${test})`;
+  return sql`(CASE WHEN jsonb_typeof(${arr}) = 'array' THEN ${op === "not_in" ? sql`NOT ${exists}` : exists} ELSE NULL END)`;
+}
+
 function compileCondition(cond: Condition, def: FieldDef): SQL {
   const { field, op, value } = cond;
 
   if (op === "is_null") return sql`(${textExpr(field)} IS NULL)`;
   if (op === "is_not_null") return sql`(${textExpr(field)} IS NOT NULL)`;
+  if (ARRAY_TYPES.has(def.type)) return compileArrayCondition(cond);
 
   if (op === "contains" || op === "starts_with" || op === "ends_with") {
     if (isMissing(value)) return NULL;

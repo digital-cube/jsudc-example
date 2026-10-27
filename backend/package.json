@@ -19,7 +19,8 @@
     "typecheck": "tsc -p tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:cov": "vitest run --coverage"
+    "test:cov": "vitest run --coverage",
+    "generate:kanban": "tsx scripts/generate-kanban.ts"
   },
   "dependencies": {
     "@fastify/swagger": "^9.9.2",

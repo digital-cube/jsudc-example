@@ -3,7 +3,7 @@
  *   npm run e2e [-- <extra cypress run args>]
  *
  * The Cypress run, end to end: migrate and reseed the TEST database (200
- * companies), start the backend on it, start Vite proxying to that backend,
+ * companies), start the backend on it , start Vite proxying to that backend,
  * run Cypress headless, and stop both servers whatever happens.
  *
  * Ports are not the dev ones, so `npm run dev` may keep running alongside:
@@ -91,7 +91,7 @@ try {
   run("npm", ["run", "db:migrate:test", "--silent", "-w", "@jsudc/backend"], {
     env: { ...process.env, TEST_DATABASE_URL: testDb },
   });
-  log("seeding 200 companies");
+  log("seeding every collection (200 companies, 3 boards, 15 buckets, 60 tickets)");
   run("sh", ["-c", seedCmd]);
 
   log(`backend on ${backendUrl}`);

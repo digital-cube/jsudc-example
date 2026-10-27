@@ -1,4 +1,5 @@
 import {
+  ACTION_NAMES,
   ACTIONS,
   type DescribeResponse,
   type ListResponse,
@@ -8,7 +9,7 @@ import {
   ViewConfigSchema,
 } from "@jsudc/udc-core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
-import { createDispatcher, Dispatcher, PHASE1_ACTIONS } from "../src/dispatcher.js";
+import { createDispatcher, Dispatcher } from "../src/dispatcher.js";
 import { CollectionRegistry } from "../src/registry.js";
 import { MemorySource } from "../src/sources/memory.js";
 
@@ -53,7 +54,7 @@ describe("dispatcher on MemorySource", () => {
   });
 
   it("registers the phase-1 actions", () => {
-    expect(ctx.dispatcher.actions()).toEqual([...PHASE1_ACTIONS]);
+    expect(ctx.dispatcher.actions()).toEqual(ACTION_NAMES);
   });
 
   it("collections lists every registered collection", async () => {
@@ -238,5 +239,49 @@ describe("dispatcher on MemorySource", () => {
       id: "m1",
       payload: { pong: true },
     });
+  });
+});
+
+describe("reindex action", () => {
+  const orderSchema = SchemaDocSchema.parse({
+    version: "v1",
+    fields: { title: { type: "string" }, lane: { type: "string" }, order: { type: "integer" } },
+  });
+
+  function withSources() {
+    const registry = new CollectionRegistry();
+    registry.register({
+      name: "cards",
+      source: new MemorySource({
+        schema: orderSchema,
+        rows: [
+          { title: "x", lane: "l", order: 5 },
+          { title: "y", lane: "l", order: 6 },
+        ],
+      }),
+      view,
+    });
+    const readOnly = new MemorySource({ schema: orderSchema });
+    Object.assign(readOnly, { capabilities: { ...readOnly.capabilities, reindex: false } });
+    registry.register({ name: "frozen", source: readOnly, view });
+    return createDispatcher(registry, { log: { error: vi.fn() } });
+  }
+
+  it("renumbers and answers the count", async () => {
+    const d = withSources();
+    const res = await call(d, "reindex", { collection: "cards", scope: { lane: "l" } });
+    expect(res).toMatchObject({ kind: "udc.reindex.ok", payload: { updated: 2 } });
+    const list = await call(d, "list", { collection: "cards", sort: [{ field: "order" }] });
+    expect((list.payload as ListResponse).rows.map((r) => r.order)).toEqual([100, 200]);
+  });
+
+  it("is unsupported where the capability is off", async () => {
+    const res = await call(withSources(), "reindex", { collection: "frozen", scope: {} });
+    expect(res).toMatchObject({ kind: "udc.reindex.err", payload: { code: "unsupported_op" } });
+  });
+
+  it("validates the payload", async () => {
+    const res = await call(withSources(), "reindex", { collection: "cards", scope: { lane: [1] } });
+    expect(res).toMatchObject({ kind: "udc.reindex.err", payload: { code: "validation_error" } });
   });
 });

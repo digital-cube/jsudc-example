@@ -72,6 +72,8 @@ const CASES: [string, FilterNode, number[]][] = [
   ["contains with % is literal", f.contains("name", "%", false), [3]],
   ["contains with _ is literal", f.contains("name", "_", false), [4]],
   ["contains over an array field", f.contains("tags", "it", false), [0]],
+  ["in over an array field: one element is enough", f.in("tags", ["b2b", "retail"]), [0, 1]],
+  ["not_in over an array field: no element may match", f.notIn("tags", ["it"]), [1, 2]],
   ["starts_with", f.startsWith("name", "Ep"), [4]],
   ["starts_with case-sensitive misses", f.startsWith("name", "ep"), []],
   ["starts_with case-insensitive", f.startsWith("name", "ZE", true), [5]],

@@ -70,9 +70,11 @@ export async function seedCollection(db: Db, opts: SeedOptions): Promise<SeedRes
     const existing = await tx.execute<{ n: number }>(sql`SELECT count(*)::int AS n FROM ${t}`);
     if ((existing.rows[0]?.n ?? 0) > 0) return { table, inserted: 0, revision, skipped: true };
 
+    // A seed row may fix its id in `__meta.id` (rows that others refer to); the rest get a random one.
     const res = await tx.execute(sql`
-      INSERT INTO ${t} (data)
-      SELECT value FROM jsonb_array_elements(${JSON.stringify(rows)}::jsonb)`);
+      INSERT INTO ${t} (id, data)
+      SELECT COALESCE((value->'__meta'->>'id')::uuid, gen_random_uuid()), value - '__meta'
+      FROM jsonb_array_elements(${JSON.stringify(rows)}::jsonb)`);
     return { table, inserted: res.rowCount ?? rows.length, revision, skipped: false };
   });
 }

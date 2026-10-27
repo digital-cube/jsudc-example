@@ -1,6 +1,11 @@
 import { sql } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+import { type SchemaDocInput, SchemaDocSchema } from "@jsudc/udc-core";
+import { COLLECTIONS_DIR } from "../src/config.js";
 import { seedCollection } from "../src/seed.js";
+import { PostgresJsonbSource } from "../src/sources/postgres-jsonb.js";
 import {
   companiesSchema,
   companiesSchemaJson,
@@ -9,6 +14,13 @@ import {
   resetTables,
   useTestDb,
 } from "./helpers.js";
+
+const ticketsSchemaJson = JSON.parse(
+  readFileSync(join(COLLECTIONS_DIR, "tickets", "schema.json"), "utf8"),
+) as SchemaDocInput;
+const ticketsSeed = JSON.parse(
+  readFileSync(join(COLLECTIONS_DIR, "tickets", "seed.json"), "utf8"),
+) as Record<string, unknown>[];
 
 const { db } = useTestDb();
 const source = companiesSource(db);
@@ -114,5 +126,38 @@ describe("seedCollection", () => {
       );
     }
     expect(new Set(companiesSeed.map((r) => r.pib)).size).toBe(200);
+  });
+
+  it("keeps a fixed __meta.id and indexes relation and order fields", async () => {
+    const res = await seedCollection(db, {
+      table: "tickets",
+      schema: ticketsSchemaJson,
+      rows: ticketsSeed,
+      reset: true,
+    });
+    expect(res.inserted).toBe(ticketsSeed.length);
+    const first = ticketsSeed[0] as { __meta: { id: string }; title: string };
+    const tickets = new PostgresJsonbSource({
+      db,
+      table: "tickets",
+      initialSchema: SchemaDocSchema.parse(ticketsSchemaJson),
+    });
+    const row = await tickets.read(first.__meta.id);
+    expect(row).toMatchObject({ __meta: { id: first.__meta.id, version: 1 }, title: first.title });
+    const stored = await db.execute<{ data: Record<string, unknown> }>(
+      sql`select data from tickets where id = ${first.__meta.id}::uuid`,
+    );
+    expect(stored.rows[0]?.data).not.toHaveProperty("__meta");
+    const idx = await db.execute<{ indexname: string }>(
+      sql`select indexname from pg_indexes where tablename = 'tickets' order by indexname`,
+    );
+    expect(idx.rows.map((r) => r.indexname)).toEqual(
+      expect.arrayContaining([
+        "tickets_data_board_id_idx",
+        "tickets_data_bucket_id_idx",
+        "tickets_data_order_idx",
+        "tickets_data_priority_idx",
+      ]),
+    );
   });
 });
