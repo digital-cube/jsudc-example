@@ -82,6 +82,10 @@ export function displayText(
     case "datetime":
       return formatDateTime(value, intlLocale);
     default:
+      // A string_array reads as a list, not as JSON.
+      if (Array.isArray(value) && value.every((v) => typeof v !== "object")) {
+        return value.map(String).join(", ");
+      }
       return typeof value === "object" ? JSON.stringify(value) : String(value);
   }
 }

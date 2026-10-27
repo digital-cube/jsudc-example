@@ -9,7 +9,15 @@ import { KanbanOptionsSchema } from "./kanban.js";
  * The renderer names jsudc knows. `available_renderers` stays an open list:
  * an unknown name parses, and the UI shows its tab disabled.
  */
-export const RENDERER_NAMES = ["table", "cards", "kanban", "calendar", "tree", "map", "chart"] as const;
+export const RENDERER_NAMES = [
+  "table",
+  "cards",
+  "kanban",
+  "calendar",
+  "tree",
+  "map",
+  "chart",
+] as const;
 export type RendererName = (typeof RENDERER_NAMES)[number];
 
 export function isRendererName(name: unknown): name is RendererName {

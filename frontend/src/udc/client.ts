@@ -96,6 +96,10 @@ export class UdcClient {
     return this.call("mutate", req);
   }
 
+  reindex(req: ActionRequest<"reindex">) {
+    return this.call("reindex", req);
+  }
+
   schemaAddField(req: ActionRequest<"schema.add_field">) {
     return this.call("schema.add_field", req);
   }

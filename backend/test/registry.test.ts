@@ -42,10 +42,20 @@ describe("collection registry", () => {
     const opts = tickets?.view.kanban_options;
     const buckets = assets.find((a) => a.name === "buckets");
     const card = opts ? Object.values(opts.card).flat() : [];
-    for (const f of [opts?.ticket_board_field, opts?.ticket_bucket_field, opts?.ticket_order_field, ...card]) {
+    for (const f of [
+      opts?.ticket_board_field,
+      opts?.ticket_bucket_field,
+      opts?.ticket_order_field,
+      ...card,
+    ]) {
       expect(tickets?.schema.fields, String(f)).toHaveProperty(String(f));
     }
-    for (const f of [opts?.bucket_filter_field, opts?.bucket_order_field, opts?.bucket_label_field, opts?.bucket_color_field]) {
+    for (const f of [
+      opts?.bucket_filter_field,
+      opts?.bucket_order_field,
+      opts?.bucket_label_field,
+      opts?.bucket_color_field,
+    ]) {
       expect(buckets?.schema.fields, String(f)).toHaveProperty(String(f));
     }
   });

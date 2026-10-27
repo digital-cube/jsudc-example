@@ -218,7 +218,8 @@ function weighted<T>(rand: Rand, xs: readonly T[], weights: readonly number[]): 
 function sample<T>(rand: Rand, xs: readonly T[], n: number): T[] {
   const pool = [...xs];
   const out: T[] = [];
-  while (out.length < n && pool.length > 0) out.push(pool.splice(Math.floor(rand() * pool.length), 1)[0] as T);
+  while (out.length < n && pool.length > 0)
+    out.push(pool.splice(Math.floor(rand() * pool.length), 1)[0] as T);
   return out;
 }
 
@@ -267,7 +268,8 @@ export function generateKanban(seed: number): KanbanSeed {
         if (rand() < 0.8) {
           const day = BASE_DAY + between(rand, -10, 24) * DAY;
           ticket.due = isoDay(day);
-          const start = day + between(rand, 8, 15) * 3_600_000 + pick(rand, [0, 15, 30, 45]) * 60_000;
+          const start =
+            day + between(rand, 8, 15) * 3_600_000 + pick(rand, [0, 15, 30, 45]) * 60_000;
           ticket.starts_at = isoTime(start);
           ticket.ends_at = isoTime(start + between(rand, 2, 12) * 15 * 60_000);
         }

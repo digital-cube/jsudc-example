@@ -51,6 +51,7 @@ function describeOf(v: ViewConfig): DescribeResponse {
       total_count: true,
       schema_edit: true,
       config_edit: false,
+      reindex: false,
       supported_filter_ops: [],
     },
     schema,

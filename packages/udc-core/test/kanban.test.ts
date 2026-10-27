@@ -59,9 +59,9 @@ describe("KanbanOptions", () => {
   });
 
   it("rejects a bad density", () => {
-    expect(
-      KanbanOptionsSchema.safeParse({ ...minimal, cards: { density: "airy" } }).success,
-    ).toBe(false);
+    expect(KanbanOptionsSchema.safeParse({ ...minimal, cards: { density: "airy" } }).success).toBe(
+      false,
+    );
   });
 
   it("parses the tickets view of the backend", () => {
@@ -88,7 +88,15 @@ describe("KanbanOptions", () => {
 
 describe("renderer names", () => {
   it("knows the seven", () => {
-    expect(RENDERER_NAMES).toEqual(["table", "cards", "kanban", "calendar", "tree", "map", "chart"]);
+    expect(RENDERER_NAMES).toEqual([
+      "table",
+      "cards",
+      "kanban",
+      "calendar",
+      "tree",
+      "map",
+      "chart",
+    ]);
     expect(isRendererName("kanban")).toBe(true);
     expect(isRendererName("gantt")).toBe(false);
   });
@@ -102,7 +110,14 @@ describe("renderer names", () => {
 describe("reindex payloads", () => {
   it.each([
     [{ collection: "tickets", scope: { bucket_id: "b1" } }],
-    [{ collection: "tickets", scope: { board_id: "x", is_done: false }, order_field: "rank", gap: 10 }],
+    [
+      {
+        collection: "tickets",
+        scope: { board_id: "x", is_done: false },
+        order_field: "rank",
+        gap: 10,
+      },
+    ],
     [{ collection: "tickets", scope: {} }],
   ])("accepts %j", (req) => {
     expect(ACTIONS.reindex.request.safeParse(req).success).toBe(true);

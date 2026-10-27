@@ -15,6 +15,8 @@ export const CapabilitiesSchema = z.looseObject({
   config_edit: z.boolean(),
   /** The source renumbers an order field server-side (`reindex`). */
   reindex: z.boolean(),
+  /** How `list` pages: keyset `cursor`, `offset`, or both. Absent means both. */
+  paging: z.array(z.enum(["cursor", "offset"])).optional(),
   supported_filter_ops: z.array(FilterOpSchema),
 });
 

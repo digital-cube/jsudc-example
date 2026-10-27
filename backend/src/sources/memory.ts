@@ -10,9 +10,9 @@ import {
 } from "@jsudc/udc-core";
 import {
   assertQueryFields,
-  reindexPlan,
   assertValidRow,
   notFound,
+  reindexPlan,
   versionConflict,
   withoutMeta,
 } from "./fields.js";
@@ -55,6 +55,7 @@ export class MemorySource implements Source {
     schema_edit: false,
     config_edit: false,
     reindex: true,
+    paging: ["offset"],
     supported_filter_ops: ALL_FILTER_OPS,
   };
 

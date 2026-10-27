@@ -263,10 +263,7 @@
         "udc_schema_revisions_collection_version_key": {
           "name": "udc_schema_revisions_collection_version_key",
           "nullsNotDistinct": false,
-          "columns": [
-            "collection",
-            "version"
-          ]
+          "columns": ["collection", "version"]
         }
       },
       "policies": {},

@@ -48,7 +48,11 @@ describe("generate-kanban", () => {
   });
 
   it("orders are sparse and unique within a bucket", () => {
-    const byBucket = Map.groupBy(seed.tickets, (t) => t.bucket_id as string);
+    const byBucket = new Map<string, typeof seed.tickets>();
+    for (const t of seed.tickets) {
+      const bucket = t.bucket_id as string;
+      byBucket.set(bucket, [...(byBucket.get(bucket) ?? []), t]);
+    }
     for (const tickets of byBucket.values()) {
       expect(tickets.map((t) => t.order)).toEqual(tickets.map((_, i) => (i + 1) * 100));
     }
@@ -59,14 +63,16 @@ describe("generate-kanban", () => {
       const schema = SchemaDocSchema.parse(
         JSON.parse(readFileSync(join(COLLECTIONS_DIR, name, "schema.json"), "utf8")),
       );
-      for (const row of seed[name]) expect(validateRow(schema, row, { mode: "insert" })).toEqual([]);
+      for (const row of seed[name])
+        expect(validateRow(schema, row, { mode: "insert" })).toEqual([]);
     }
   });
 
   it("gives a calendar slot exactly to the tickets with a due date", () => {
     for (const t of seed.tickets) {
       expect(t.starts_at === undefined).toBe(t.due === undefined);
-      if (t.starts_at) expect(Date.parse(t.ends_at as string)).toBeGreaterThan(Date.parse(t.starts_at as string));
+      if (t.starts_at)
+        expect(Date.parse(t.ends_at as string)).toBeGreaterThan(Date.parse(t.starts_at as string));
     }
   });
 });

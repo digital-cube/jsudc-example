@@ -2,6 +2,7 @@ import type { FilterNode, SortKey, ViewConfig } from "@jsudc/udc-core";
 import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { storage } from "../lib/utils";
+import { resolveTab } from "../renderers/registry";
 import type { PagingMode } from "../udc/keys";
 import {
   type ChipState,
@@ -86,8 +87,7 @@ export function useDataViewState(collection: string, view: ViewConfig | undefine
   const sort = useMemo(() => decodeSortParam(raw.sort), [raw.sort]);
 
   const renderers = view?.available_renderers ?? ["table"];
-  const tab =
-    raw.tab && renderers.includes(raw.tab) ? raw.tab : (view?.default_renderer ?? "table");
+  const tab = resolveTab(raw.tab ?? "", renderers, view?.default_renderer ?? "table");
   const mode = resolvePagingMode(
     decodeModeParam(raw.mode),
     storage.get(pagingStorageKey(collection)),

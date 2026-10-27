@@ -6,7 +6,8 @@ export interface ListKeyParams {
   filter: FilterNode | undefined;
   sort: SortKey[];
   limit: number;
-  mode: PagingMode;
+  /** `all`: every row up to `limit`, fetched page by page into one list (`useUdcAllRows`). */
+  mode: PagingMode | "all";
   page?: number;
 }
 

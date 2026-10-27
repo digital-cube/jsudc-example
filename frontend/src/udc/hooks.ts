@@ -1,5 +1,6 @@
 import {
   type ActionRequest,
+  type Capabilities,
   type FilterNode,
   isVersionConflict,
   type ListResponse,
@@ -15,6 +16,8 @@ import {
   useQuery,
   useQueryClient,
 } from "@tanstack/react-query";
+import { useState } from "react";
+import type { UdcClient } from "./client";
 import { type ListKeyParams, type PagingMode, udcKeys } from "./keys";
 import { useUdcClient } from "./provider";
 
@@ -23,12 +26,13 @@ export function useUdcCollections() {
   return useQuery({ queryKey: udcKeys.collections(), queryFn: () => client.collections() });
 }
 
-export function useUdcDescribe(collection: string) {
+export function useUdcDescribe(collection: string, opts: { enabled?: boolean } = {}) {
   const client = useUdcClient();
   return useQuery({
     queryKey: udcKeys.describe(collection),
     queryFn: () => client.describe(collection),
     staleTime: 5 * 60_000,
+    enabled: (opts.enabled ?? true) && collection !== "",
   });
 }
 
@@ -134,6 +138,141 @@ export function useUdcCollection(args: UseUdcCollectionArgs): UdcCollectionResul
     hasNextPage: false,
     isFetchingNextPage: false,
     fetchNextPage: () => {},
+  };
+}
+
+export const ALL_ROWS_MAX = 2000;
+const ALL_ROWS_PAGE = 500;
+
+export interface FetchAllRowsArgs {
+  collection: string;
+  filter?: FilterNode | undefined;
+  sort?: SortKey[];
+  /** Stop after this many rows. */
+  max: number;
+  /** Rows per `list` call. */
+  pageLimit?: number;
+  /** Keyset paging unless the source pages by offset only. */
+  cursor: boolean;
+  signal?: AbortSignal;
+  onProgress?: (loaded: number, total: number | null) => void;
+}
+
+/**
+ * Every row of a filter, `list` page after page, until `total` or `max`.
+ * Follows `next_cursor` when keyset paging is on; a source that answers no
+ * cursor while rows remain is walked on by offset. Answers one list whose
+ * `total` is the server's (so `rows.length < total` means capped).
+ */
+export async function fetchAllRows(
+  client: UdcClient,
+  args: FetchAllRowsArgs,
+): Promise<ListResponse> {
+  const { collection, filter, max } = args;
+  const sort = args.sort ?? [];
+  const pageLimit = args.pageLimit ?? ALL_ROWS_PAGE;
+  const rows: Row[] = [];
+  let total: number | null = null;
+  let cursor: string | null = null;
+  let byCursor = args.cursor;
+  while (rows.length < max) {
+    const limit = Math.min(pageLimit, max - rows.length);
+    const page = byCursor
+      ? cursor
+        ? { limit, cursor }
+        : { limit }
+      : { limit, offset: rows.length };
+    const res = await client.list(
+      { collection, ...(filter ? { filter } : {}), sort, page },
+      args.signal ? { signal: args.signal } : undefined,
+    );
+    rows.push(...res.rows);
+    total = res.total;
+    args.onProgress?.(rows.length, total);
+    if (res.rows.length === 0 || (total !== null && rows.length >= total)) break;
+    if (byCursor) {
+      if (res.next_cursor) cursor = res.next_cursor;
+      else if (total === null) break;
+      else byCursor = false;
+    } else if (total === null && res.rows.length < limit) {
+      break;
+    }
+  }
+  return { rows, next_cursor: null, total: total ?? rows.length };
+}
+
+export interface UseUdcAllRowsArgs {
+  collection: string;
+  filter?: FilterNode | undefined;
+  sort?: SortKey[];
+  /** Default 2,000. */
+  max?: number;
+  /** From `describe`: whether the source pages by cursor. */
+  capabilities?: Pick<Capabilities, "paging"> | undefined;
+  enabled?: boolean;
+}
+
+export interface UdcAllRowsResult {
+  rows: Row[];
+  total: number | null;
+  isLoading: boolean;
+  isFetching: boolean;
+  error: Error | null;
+  refetch: () => Promise<unknown>;
+  /** More rows match than `max`: only the first `max` are here. */
+  capped: boolean;
+  /** Rows loaded so far by the fetch in flight, for a progress bar. */
+  progress: { loaded: number; total: number | null } | null;
+}
+
+/**
+ * All rows of the current filter in one cached list: what the kanban (and
+ * the calendar, tree, map and charts after it) draw from. The cache entry
+ * sits under `udcKeys.lists(collection)`, so `useUdcMutate`'s optimistic
+ * patches and invalidations reach it like every other list.
+ */
+export function useUdcAllRows(args: UseUdcAllRowsArgs): UdcAllRowsResult {
+  const client = useUdcClient();
+  const { collection, filter } = args;
+  const sort = args.sort ?? [];
+  const max = args.max ?? ALL_ROWS_MAX;
+  const cursor = args.capabilities?.paging?.includes("cursor") ?? true;
+  const [progress, setProgress] = useState<UdcAllRowsResult["progress"]>(null);
+
+  const key: ListKeyParams = { filter, sort, limit: max, mode: "all" };
+  const query = useQuery({
+    queryKey: udcKeys.list(collection, key),
+    queryFn: async ({ signal }) => {
+      setProgress({ loaded: 0, total: null });
+      try {
+        return await fetchAllRows(client, {
+          collection,
+          filter,
+          sort,
+          max,
+          cursor,
+          signal,
+          onProgress: (loaded, total) => setProgress({ loaded, total }),
+        });
+      } finally {
+        setProgress(null);
+      }
+    },
+    placeholderData: keepPreviousData,
+    enabled: args.enabled ?? true,
+  });
+
+  const rows = query.data?.rows ?? [];
+  const total = query.data?.total ?? null;
+  return {
+    rows,
+    total,
+    isLoading: query.isLoading,
+    isFetching: query.isFetching,
+    error: query.error,
+    refetch: () => query.refetch(),
+    capped: total !== null && rows.length < total,
+    progress,
   };
 }
 

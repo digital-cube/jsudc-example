@@ -1,8 +1,8 @@
-import { sql } from "drizzle-orm";
-import { beforeEach, describe, expect, it } from "vitest";
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { type SchemaDocInput, SchemaDocSchema } from "@jsudc/udc-core";
+import { sql } from "drizzle-orm";
+import { beforeEach, describe, expect, it } from "vitest";
 import { COLLECTIONS_DIR } from "../src/config.js";
 import { seedCollection } from "../src/seed.js";
 import { PostgresJsonbSource } from "../src/sources/postgres-jsonb.js";

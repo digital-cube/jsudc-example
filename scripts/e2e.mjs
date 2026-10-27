@@ -3,7 +3,7 @@
  *   npm run e2e [-- <extra cypress run args>]
  *
  * The Cypress run, end to end: migrate and reseed the TEST database (200
- * companies), start the backend on it , start Vite proxying to that backend,
+ * companies), start the backend on it, start Vite proxying to that backend,
  * run Cypress headless, and stop both servers whatever happens.
  *
  * Ports are not the dev ones, so `npm run dev` may keep running alongside:

@@ -68,6 +68,7 @@ export class PostgresJsonbSource implements Source {
     schema_edit: true,
     config_edit: false,
     reindex: true,
+    paging: ["cursor", "offset"],
     supported_filter_ops: ALL_FILTER_OPS,
   };
 

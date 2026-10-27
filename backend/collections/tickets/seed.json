@@ -11,10 +11,7 @@
     "body": "Blocked until the related change is merged.",
     "priority": "normal",
     "tags": [],
-    "assignees": [
-      "Luka Pavlović",
-      "Ivana Lukić"
-    ]
+    "assignees": ["Luka Pavlović", "Ivana Lukić"]
   },
   {
     "__meta": {
@@ -28,9 +25,7 @@
     "body": "Check with the team lead which option we prefer.",
     "priority": "normal",
     "tags": [],
-    "assignees": [
-      "Filip Janković"
-    ],
+    "assignees": ["Filip Janković"],
     "due": "2026-10-26",
     "starts_at": "2026-10-26T08:30:00Z",
     "ends_at": "2026-10-26T10:00:00Z"
@@ -46,14 +41,8 @@
     "title": "Export the current view to CSV",
     "body": "The acceptance criteria are listed in the description of the epic.",
     "priority": "normal",
-    "tags": [
-      "ux"
-    ],
-    "assignees": [
-      "Luka Pavlović",
-      "Ana Petrović",
-      "Mila Đorđević"
-    ],
+    "tags": ["ux"],
+    "assignees": ["Luka Pavlović", "Ana Petrović", "Mila Đorđević"],
     "due": "2026-11-21",
     "starts_at": "2026-11-21T09:45:00Z",
     "ends_at": "2026-11-21T11:00:00Z"
@@ -69,14 +58,8 @@
     "title": "Keyboard shortcuts cheat sheet",
     "body": "Customer asked for an update by the end of the week.",
     "priority": "normal",
-    "tags": [
-      "mobile",
-      "docs"
-    ],
-    "assignees": [
-      "Luka Pavlović",
-      "Mila Đorđević"
-    ]
+    "tags": ["mobile", "docs"],
+    "assignees": ["Luka Pavlović", "Mila Đorđević"]
   },
   {
     "__meta": {
@@ -89,15 +72,8 @@
     "title": "Dark mode for the print layout",
     "body": "Agree on the scope first, then split it into small steps.",
     "priority": "high",
-    "tags": [
-      "performance",
-      "ux"
-    ],
-    "assignees": [
-      "Nikola Stojanović",
-      "Luka Pavlović",
-      "Ana Petrović"
-    ],
+    "tags": ["performance", "ux"],
+    "assignees": ["Nikola Stojanović", "Luka Pavlović", "Ana Petrović"],
     "due": "2026-10-30",
     "starts_at": "2026-10-30T08:00:00Z",
     "ends_at": "2026-10-30T10:45:00Z"
@@ -130,14 +106,8 @@
     "title": "Inline image previews",
     "body": "Low risk; a quick win if someone has an hour.",
     "priority": "normal",
-    "tags": [
-      "a11y",
-      "docs",
-      "ux"
-    ],
-    "assignees": [
-      "Jelena Kovač"
-    ],
+    "tags": ["a11y", "docs", "ux"],
+    "assignees": ["Jelena Kovač"],
     "due": "2026-10-31",
     "starts_at": "2026-10-31T11:30:00Z",
     "ends_at": "2026-10-31T12:00:00Z"
@@ -153,14 +123,8 @@
     "title": "Audit log for schema edits",
     "body": "Check with the team lead which option we prefer.",
     "priority": "normal",
-    "tags": [
-      "docs"
-    ],
-    "assignees": [
-      "Ana Petrović",
-      "Stefan Marković",
-      "Ivana Lukić"
-    ],
+    "tags": ["docs"],
+    "assignees": ["Ana Petrović", "Stefan Marković", "Ivana Lukić"],
     "due": "2026-10-29",
     "starts_at": "2026-10-29T10:15:00Z",
     "ends_at": "2026-10-29T11:00:00Z"
@@ -176,11 +140,7 @@
     "title": "Undo for the last change",
     "body": "Low risk; a quick win if someone has an hour.",
     "priority": "normal",
-    "tags": [
-      "performance",
-      "api",
-      "ux"
-    ],
+    "tags": ["performance", "api", "ux"],
     "assignees": [],
     "due": "2026-11-22",
     "starts_at": "2026-11-22T14:15:00Z",
@@ -197,12 +157,8 @@
     "title": "Shareable view links",
     "body": "Agree on the scope first, then split it into small steps.",
     "priority": "high",
-    "tags": [
-      "mobile"
-    ],
-    "assignees": [
-      "Luka Pavlović"
-    ]
+    "tags": ["mobile"],
+    "assignees": ["Luka Pavlović"]
   },
   {
     "__meta": {
@@ -215,12 +171,8 @@
     "title": "Faster first load on slow networks",
     "body": "Blocked until the related change is merged.",
     "priority": "low",
-    "tags": [
-      "a11y"
-    ],
-    "assignees": [
-      "Mila Đorđević"
-    ],
+    "tags": ["a11y"],
+    "assignees": ["Mila Đorđević"],
     "due": "2026-11-19",
     "starts_at": "2026-11-19T11:30:00Z",
     "ends_at": "2026-11-19T13:30:00Z"
@@ -236,14 +188,8 @@
     "title": "Calendar view for due dates",
     "body": "Steps to reproduce are in the first comment; it happens every time.",
     "priority": "normal",
-    "tags": [
-      "mobile",
-      "a11y"
-    ],
-    "assignees": [
-      "Ivana Lukić",
-      "Nikola Stojanović"
-    ],
+    "tags": ["mobile", "a11y"],
+    "assignees": ["Ivana Lukić", "Nikola Stojanović"],
     "due": "2026-11-01",
     "starts_at": "2026-11-01T08:30:00Z",
     "ends_at": "2026-11-01T09:45:00Z"
@@ -259,11 +205,7 @@
     "title": "Comment threads on rows",
     "body": "Check with the team lead which option we prefer.",
     "priority": "normal",
-    "tags": [
-      "ux",
-      "performance",
-      "a11y"
-    ],
+    "tags": ["ux", "performance", "a11y"],
     "assignees": [],
     "due": "2026-11-17",
     "starts_at": "2026-11-17T12:30:00Z",
@@ -281,11 +223,7 @@
     "body": "Needs a short design review before anyone starts.",
     "priority": "low",
     "tags": [],
-    "assignees": [
-      "Nikola Stojanović",
-      "Filip Janković",
-      "Ana Petrović"
-    ],
+    "assignees": ["Nikola Stojanović", "Filip Janković", "Ana Petrović"],
     "due": "2026-11-24",
     "starts_at": "2026-11-24T14:15:00Z",
     "ends_at": "2026-11-24T16:00:00Z"
@@ -301,13 +239,8 @@
     "title": "Usage analytics dashboard",
     "body": "The acceptance criteria are listed in the description of the epic.",
     "priority": "urgent",
-    "tags": [
-      "docs"
-    ],
-    "assignees": [
-      "Jelena Kovač",
-      "Mila Đorđević"
-    ],
+    "tags": ["docs"],
+    "assignees": ["Jelena Kovač", "Mila Đorđević"],
     "due": "2026-11-20",
     "starts_at": "2026-11-20T12:45:00Z",
     "ends_at": "2026-11-20T13:30:00Z"
@@ -323,16 +256,8 @@
     "title": "Field-level permissions",
     "body": "Customer asked for an update by the end of the week.",
     "priority": "high",
-    "tags": [
-      "performance",
-      "api",
-      "ux"
-    ],
-    "assignees": [
-      "Jelena Kovač",
-      "Mila Đorđević",
-      "Sara Nikolić"
-    ],
+    "tags": ["performance", "api", "ux"],
+    "assignees": ["Jelena Kovač", "Mila Đorđević", "Sara Nikolić"],
     "due": "2026-11-21",
     "starts_at": "2026-11-21T14:30:00Z",
     "ends_at": "2026-11-21T16:00:00Z"
@@ -348,14 +273,8 @@
     "title": "Mobile layout for the toolbar",
     "body": "Needs a short design review before anyone starts.",
     "priority": "high",
-    "tags": [
-      "api"
-    ],
-    "assignees": [
-      "Nikola Stojanović",
-      "Ivana Lukić",
-      "Luka Pavlović"
-    ],
+    "tags": ["api"],
+    "assignees": ["Nikola Stojanović", "Ivana Lukić", "Luka Pavlović"],
     "due": "2026-11-26",
     "starts_at": "2026-11-26T12:15:00Z",
     "ends_at": "2026-11-26T14:00:00Z"
@@ -371,16 +290,8 @@
     "title": "Import rows from a spreadsheet",
     "body": "Steps to reproduce are in the first comment; it happens every time.",
     "priority": "normal",
-    "tags": [
-      "api",
-      "performance",
-      "docs"
-    ],
-    "assignees": [
-      "Filip Janković",
-      "Ana Petrović",
-      "Sara Nikolić"
-    ],
+    "tags": ["api", "performance", "docs"],
+    "assignees": ["Filip Janković", "Ana Petrović", "Sara Nikolić"],
     "due": "2026-10-26",
     "starts_at": "2026-10-26T10:30:00Z",
     "ends_at": "2026-10-26T13:15:00Z"
@@ -396,10 +307,7 @@
     "title": "Relation picker with search",
     "body": "Low risk; a quick win if someone has an hour.",
     "priority": "low",
-    "tags": [
-      "mobile",
-      "ux"
-    ],
+    "tags": ["mobile", "ux"],
     "assignees": [],
     "due": "2026-10-28",
     "starts_at": "2026-10-28T12:45:00Z",
@@ -416,13 +324,8 @@
     "title": "Accessible drag and drop",
     "body": "Needs a short design review before anyone starts.",
     "priority": "normal",
-    "tags": [
-      "mobile",
-      "ux"
-    ],
-    "assignees": [
-      "Ana Petrović"
-    ]
+    "tags": ["mobile", "ux"],
+    "assignees": ["Ana Petrović"]
   },
   {
     "__meta": {
@@ -435,11 +338,7 @@
     "title": "Cannot log in after password reset",
     "body": "Check with the team lead which option we prefer.",
     "priority": "normal",
-    "tags": [
-      "data",
-      "billing",
-      "account"
-    ],
+    "tags": ["data", "billing", "account"],
     "assignees": [],
     "due": "2026-11-21",
     "starts_at": "2026-11-21T13:45:00Z",
@@ -474,11 +373,7 @@
     "body": "Agree on the scope first, then split it into small steps.",
     "priority": "low",
     "tags": [],
-    "assignees": [
-      "Mila Đorđević",
-      "Jelena Kovač",
-      "Ivana Lukić"
-    ],
+    "assignees": ["Mila Đorđević", "Jelena Kovač", "Ivana Lukić"],
     "due": "2026-10-24",
     "starts_at": "2026-10-24T13:30:00Z",
     "ends_at": "2026-10-24T14:15:00Z"
@@ -494,13 +389,8 @@
     "title": "Dates show in the wrong time zone",
     "body": "Check with the team lead which option we prefer.",
     "priority": "low",
-    "tags": [
-      "data"
-    ],
-    "assignees": [
-      "Luka Pavlović",
-      "Jelena Kovač"
-    ],
+    "tags": ["data"],
+    "assignees": ["Luka Pavlović", "Jelena Kovač"],
     "due": "2026-11-16",
     "starts_at": "2026-11-16T15:30:00Z",
     "ends_at": "2026-11-16T16:30:00Z"
@@ -534,10 +424,7 @@
     "body": "Agree on the scope first, then split it into small steps.",
     "priority": "low",
     "tags": [],
-    "assignees": [
-      "Nikola Stojanović",
-      "Ana Petrović"
-    ],
+    "assignees": ["Nikola Stojanović", "Ana Petrović"],
     "due": "2026-11-13",
     "starts_at": "2026-11-13T14:30:00Z",
     "ends_at": "2026-11-13T15:45:00Z"
@@ -553,14 +440,8 @@
     "title": "Dashboard is slow on Mondays",
     "body": "Needs a short design review before anyone starts.",
     "priority": "normal",
-    "tags": [
-      "account",
-      "urgent-customer",
-      "bug"
-    ],
-    "assignees": [
-      "Luka Pavlović"
-    ]
+    "tags": ["account", "urgent-customer", "bug"],
+    "assignees": ["Luka Pavlović"]
   },
   {
     "__meta": {
@@ -574,11 +455,7 @@
     "body": "Check with the team lead which option we prefer.",
     "priority": "normal",
     "tags": [],
-    "assignees": [
-      "Ana Petrović",
-      "Stefan Marković",
-      "Marko Ilić"
-    ],
+    "assignees": ["Ana Petrović", "Stefan Marković", "Marko Ilić"],
     "due": "2026-11-08",
     "starts_at": "2026-11-08T14:30:00Z",
     "ends_at": "2026-11-08T17:30:00Z"
@@ -595,10 +472,7 @@
     "body": "Steps to reproduce are in the first comment; it happens every time.",
     "priority": "low",
     "tags": [],
-    "assignees": [
-      "Marko Ilić",
-      "Filip Janković"
-    ],
+    "assignees": ["Marko Ilić", "Filip Janković"],
     "due": "2026-11-09",
     "starts_at": "2026-11-09T14:15:00Z",
     "ends_at": "2026-11-09T17:00:00Z"
@@ -615,11 +489,7 @@
     "body": "Check with the team lead which option we prefer.",
     "priority": "urgent",
     "tags": [],
-    "assignees": [
-      "Sara Nikolić",
-      "Mila Đorđević",
-      "Marko Ilić"
-    ],
+    "assignees": ["Sara Nikolić", "Mila Đorđević", "Marko Ilić"],
     "due": "2026-11-13",
     "starts_at": "2026-11-13T13:00:00Z",
     "ends_at": "2026-11-13T13:45:00Z"
@@ -635,14 +505,8 @@
     "title": "Need a copy of last year's data",
     "body": "Low risk; a quick win if someone has an hour.",
     "priority": "urgent",
-    "tags": [
-      "account"
-    ],
-    "assignees": [
-      "Sara Nikolić",
-      "Ivana Lukić",
-      "Nikola Stojanović"
-    ]
+    "tags": ["account"],
+    "assignees": ["Sara Nikolić", "Ivana Lukić", "Nikola Stojanović"]
   },
   {
     "__meta": {
@@ -656,10 +520,7 @@
     "body": "Agree on the scope first, then split it into small steps.",
     "priority": "normal",
     "tags": [],
-    "assignees": [
-      "Ivana Lukić",
-      "Filip Janković"
-    ],
+    "assignees": ["Ivana Lukić", "Filip Janković"],
     "due": "2026-10-25",
     "starts_at": "2026-10-25T12:15:00Z",
     "ends_at": "2026-10-25T12:45:00Z"
@@ -675,10 +536,7 @@
     "title": "User cannot see shared views",
     "body": "Agree on the scope first, then split it into small steps.",
     "priority": "normal",
-    "tags": [
-      "question",
-      "data"
-    ],
+    "tags": ["question", "data"],
     "assignees": [],
     "due": "2026-11-25",
     "starts_at": "2026-11-25T09:30:00Z",
@@ -695,11 +553,7 @@
     "title": "Request to rename the workspace",
     "body": "Blocked until the related change is merged.",
     "priority": "normal",
-    "tags": [
-      "question",
-      "account",
-      "urgent-customer"
-    ],
+    "tags": ["question", "account", "urgent-customer"],
     "assignees": [],
     "due": "2026-11-09",
     "starts_at": "2026-11-09T14:00:00Z",
@@ -716,13 +570,8 @@
     "title": "Printing cuts off the last column",
     "body": "Blocked until the related change is merged.",
     "priority": "normal",
-    "tags": [
-      "question",
-      "account"
-    ],
-    "assignees": [
-      "Mila Đorđević"
-    ]
+    "tags": ["question", "account"],
+    "assignees": ["Mila Đorđević"]
   },
   {
     "__meta": {
@@ -736,10 +585,7 @@
     "body": "Customer asked for an update by the end of the week.",
     "priority": "low",
     "tags": [],
-    "assignees": [
-      "Stefan Marković",
-      "Mila Đorđević"
-    ]
+    "assignees": ["Stefan Marković", "Mila Đorđević"]
   },
   {
     "__meta": {
@@ -752,14 +598,8 @@
     "title": "Billing address change",
     "body": "Blocked until the related change is merged.",
     "priority": "low",
-    "tags": [
-      "question",
-      "billing",
-      "account"
-    ],
-    "assignees": [
-      "Marko Ilić"
-    ],
+    "tags": ["question", "billing", "account"],
+    "assignees": ["Marko Ilić"],
     "due": "2026-11-04",
     "starts_at": "2026-11-04T12:00:00Z",
     "ends_at": "2026-11-04T15:00:00Z"
@@ -775,14 +615,8 @@
     "title": "Filter chips reset on reload",
     "body": "Steps to reproduce are in the first comment; it happens every time.",
     "priority": "urgent",
-    "tags": [
-      "urgent-customer"
-    ],
-    "assignees": [
-      "Ivana Lukić",
-      "Sara Nikolić",
-      "Jelena Kovač"
-    ],
+    "tags": ["urgent-customer"],
+    "assignees": ["Ivana Lukić", "Sara Nikolić", "Jelena Kovač"],
     "due": "2026-11-22",
     "starts_at": "2026-11-22T10:15:00Z",
     "ends_at": "2026-11-22T13:15:00Z"
@@ -798,15 +632,8 @@
     "title": "Translation missing in the menu",
     "body": "Check with the team lead which option we prefer.",
     "priority": "urgent",
-    "tags": [
-      "account",
-      "data"
-    ],
-    "assignees": [
-      "Nikola Stojanović",
-      "Ana Petrović",
-      "Mila Đorđević"
-    ],
+    "tags": ["account", "data"],
+    "assignees": ["Nikola Stojanović", "Ana Petrović", "Mila Đorđević"],
     "due": "2026-11-02",
     "starts_at": "2026-11-02T08:00:00Z",
     "ends_at": "2026-11-02T10:30:00Z"
@@ -822,14 +649,8 @@
     "title": "Session expires too quickly",
     "body": "Agree on the scope first, then split it into small steps.",
     "priority": "low",
-    "tags": [
-      "question"
-    ],
-    "assignees": [
-      "Filip Janković",
-      "Mila Đorđević",
-      "Jelena Kovač"
-    ],
+    "tags": ["question"],
+    "assignees": ["Filip Janković", "Mila Đorđević", "Jelena Kovač"],
     "due": "2026-11-09",
     "starts_at": "2026-11-09T13:15:00Z",
     "ends_at": "2026-11-09T14:15:00Z"
@@ -846,11 +667,7 @@
     "body": "Low risk; a quick win if someone has an hour.",
     "priority": "low",
     "tags": [],
-    "assignees": [
-      "Filip Janković",
-      "Jelena Kovač",
-      "Marko Ilić"
-    ]
+    "assignees": ["Filip Janković", "Jelena Kovač", "Marko Ilić"]
   },
   {
     "__meta": {
@@ -880,14 +697,8 @@
     "title": "Write the upgrade guide",
     "body": "The acceptance criteria are listed in the description of the epic.",
     "priority": "low",
-    "tags": [
-      "release",
-      "security",
-      "infra"
-    ],
-    "assignees": [
-      "Mila Đorđević"
-    ]
+    "tags": ["release", "security", "infra"],
+    "assignees": ["Mila Đorđević"]
   },
   {
     "__meta": {
@@ -900,9 +711,7 @@
     "title": "Load test the list endpoint",
     "body": "Check with the team lead which option we prefer.",
     "priority": "urgent",
-    "tags": [
-      "release"
-    ],
+    "tags": ["release"],
     "assignees": [],
     "due": "2026-11-18",
     "starts_at": "2026-11-18T13:45:00Z",
@@ -919,12 +728,8 @@
     "title": "Update third-party licences",
     "body": "Low risk; a quick win if someone has an hour.",
     "priority": "high",
-    "tags": [
-      "qa"
-    ],
-    "assignees": [
-      "Filip Janković"
-    ],
+    "tags": ["qa"],
+    "assignees": ["Filip Janković"],
     "due": "2026-10-23",
     "starts_at": "2026-10-23T09:45:00Z",
     "ends_at": "2026-10-23T12:45:00Z"
@@ -940,15 +745,8 @@
     "title": "Record the release demo",
     "body": "Needs a short design review before anyone starts.",
     "priority": "normal",
-    "tags": [
-      "release",
-      "docs"
-    ],
-    "assignees": [
-      "Nikola Stojanović",
-      "Ana Petrović",
-      "Luka Pavlović"
-    ],
+    "tags": ["release", "docs"],
+    "assignees": ["Nikola Stojanović", "Ana Petrović", "Luka Pavlović"],
     "due": "2026-11-06",
     "starts_at": "2026-11-06T08:30:00Z",
     "ends_at": "2026-11-06T10:45:00Z"
@@ -964,14 +762,8 @@
     "title": "Rotate the signing keys",
     "body": "Customer asked for an update by the end of the week.",
     "priority": "urgent",
-    "tags": [
-      "qa",
-      "security"
-    ],
-    "assignees": [
-      "Sara Nikolić",
-      "Stefan Marković"
-    ],
+    "tags": ["qa", "security"],
+    "assignees": ["Sara Nikolić", "Stefan Marković"],
     "due": "2026-11-06",
     "starts_at": "2026-11-06T14:30:00Z",
     "ends_at": "2026-11-06T17:15:00Z"
@@ -987,9 +779,7 @@
     "title": "Smoke tests on staging",
     "body": "Blocked until the related change is merged.",
     "priority": "normal",
-    "tags": [
-      "infra"
-    ],
+    "tags": ["infra"],
     "assignees": [],
     "due": "2026-11-19",
     "starts_at": "2026-11-19T10:00:00Z",
@@ -1006,9 +796,7 @@
     "title": "Database backup drill",
     "body": "Check with the team lead which option we prefer.",
     "priority": "low",
-    "tags": [
-      "security"
-    ],
+    "tags": ["security"],
     "assignees": [],
     "due": "2026-11-03",
     "starts_at": "2026-11-03T09:30:00Z",
@@ -1025,11 +813,7 @@
     "title": "Changelog for 3.0",
     "body": "The acceptance criteria are listed in the description of the epic.",
     "priority": "low",
-    "tags": [
-      "security",
-      "qa",
-      "docs"
-    ],
+    "tags": ["security", "qa", "docs"],
     "assignees": [],
     "due": "2026-10-28",
     "starts_at": "2026-10-28T12:15:00Z",
@@ -1047,9 +831,7 @@
     "body": "The acceptance criteria are listed in the description of the epic.",
     "priority": "high",
     "tags": [],
-    "assignees": [
-      "Nikola Stojanović"
-    ]
+    "assignees": ["Nikola Stojanović"]
   },
   {
     "__meta": {
@@ -1062,13 +844,8 @@
     "title": "Bump the minimum Node version",
     "body": "The acceptance criteria are listed in the description of the epic.",
     "priority": "high",
-    "tags": [
-      "qa"
-    ],
-    "assignees": [
-      "Ivana Lukić",
-      "Stefan Marković"
-    ],
+    "tags": ["qa"],
+    "assignees": ["Ivana Lukić", "Stefan Marković"],
     "due": "2026-11-23",
     "starts_at": "2026-11-23T10:30:00Z",
     "ends_at": "2026-11-23T13:15:00Z"
@@ -1084,12 +861,8 @@
     "title": "Translate new strings",
     "body": "The acceptance criteria are listed in the description of the epic.",
     "priority": "low",
-    "tags": [
-      "infra"
-    ],
-    "assignees": [
-      "Nikola Stojanović"
-    ],
+    "tags": ["infra"],
+    "assignees": ["Nikola Stojanović"],
     "due": "2026-11-09",
     "starts_at": "2026-11-09T10:00:00Z",
     "ends_at": "2026-11-09T13:00:00Z"
@@ -1105,14 +878,8 @@
     "title": "Security review sign-off",
     "body": "Blocked until the related change is merged.",
     "priority": "low",
-    "tags": [
-      "qa"
-    ],
-    "assignees": [
-      "Stefan Marković",
-      "Jelena Kovač",
-      "Luka Pavlović"
-    ],
+    "tags": ["qa"],
+    "assignees": ["Stefan Marković", "Jelena Kovač", "Luka Pavlović"],
     "due": "2026-10-27",
     "starts_at": "2026-10-27T14:00:00Z",
     "ends_at": "2026-10-27T15:30:00Z"
@@ -1128,11 +895,7 @@
     "title": "Prepare the rollback plan",
     "body": "Needs a short design review before anyone starts.",
     "priority": "low",
-    "tags": [
-      "qa",
-      "docs",
-      "infra"
-    ],
+    "tags": ["qa", "docs", "infra"],
     "assignees": [],
     "due": "2026-11-26",
     "starts_at": "2026-11-26T09:15:00Z",
@@ -1149,13 +912,8 @@
     "title": "Tag the release candidate",
     "body": "Needs a short design review before anyone starts.",
     "priority": "high",
-    "tags": [
-      "docs"
-    ],
-    "assignees": [
-      "Sara Nikolić",
-      "Ivana Lukić"
-    ]
+    "tags": ["docs"],
+    "assignees": ["Sara Nikolić", "Ivana Lukić"]
   },
   {
     "__meta": {
@@ -1168,13 +926,8 @@
     "title": "Announce the maintenance window",
     "body": "Customer asked for an update by the end of the week.",
     "priority": "normal",
-    "tags": [
-      "release"
-    ],
-    "assignees": [
-      "Filip Janković",
-      "Ana Petrović"
-    ]
+    "tags": ["release"],
+    "assignees": ["Filip Janković", "Ana Petrović"]
   },
   {
     "__meta": {
@@ -1187,14 +940,8 @@
     "title": "Verify the metrics dashboards",
     "body": "The acceptance criteria are listed in the description of the epic.",
     "priority": "normal",
-    "tags": [
-      "security",
-      "infra",
-      "qa"
-    ],
-    "assignees": [
-      "Jelena Kovač"
-    ],
+    "tags": ["security", "infra", "qa"],
+    "assignees": ["Jelena Kovač"],
     "due": "2026-11-19",
     "starts_at": "2026-11-19T09:30:00Z",
     "ends_at": "2026-11-19T10:00:00Z"
@@ -1210,15 +957,8 @@
     "title": "Archive the 2.x branch",
     "body": "Blocked until the related change is merged.",
     "priority": "normal",
-    "tags": [
-      "docs",
-      "security",
-      "release"
-    ],
-    "assignees": [
-      "Sara Nikolić",
-      "Luka Pavlović"
-    ],
+    "tags": ["docs", "security", "release"],
+    "assignees": ["Sara Nikolić", "Luka Pavlović"],
     "due": "2026-11-01",
     "starts_at": "2026-11-01T12:15:00Z",
     "ends_at": "2026-11-01T15:00:00Z"
@@ -1235,10 +975,7 @@
     "body": "Steps to reproduce are in the first comment; it happens every time.",
     "priority": "high",
     "tags": [],
-    "assignees": [
-      "Ivana Lukić",
-      "Luka Pavlović"
-    ],
+    "assignees": ["Ivana Lukić", "Luka Pavlović"],
     "due": "2026-11-10",
     "starts_at": "2026-11-10T14:30:00Z",
     "ends_at": "2026-11-10T17:00:00Z"

@@ -44,7 +44,9 @@ const memorySource = async (): Promise<Source> => new MemorySource({ schema, row
 
 async function state(source: Source) {
   const { rows: all } = await source.list({ sort: [{ field: "title" }], page: { limit: 100 } });
-  return Object.fromEntries(all.map((r) => [r.title, { order: r.order, version: r.__meta.version }]));
+  return Object.fromEntries(
+    all.map((r) => [r.title, { order: r.order, version: r.__meta.version }]),
+  );
 }
 
 describe.each([
@@ -74,8 +76,16 @@ describe.each([
   });
 
   it("takes several scope fields, a gap and another order field", async () => {
-    await source.mutate({ op: "update", id: (await idOf(source, "b1")) as string, row: { rank: 2.5 } });
-    await source.mutate({ op: "update", id: (await idOf(source, "b2")) as string, row: { rank: 1 } });
+    await source.mutate({
+      op: "update",
+      id: (await idOf(source, "b1")) as string,
+      row: { rank: 2.5 },
+    });
+    await source.mutate({
+      op: "update",
+      id: (await idOf(source, "b2")) as string,
+      row: { rank: 1 },
+    });
     const res = await source.reindex?.({
       scope: { board_id: "x", done: false, bucket_id: "b" },
       order_field: "rank",

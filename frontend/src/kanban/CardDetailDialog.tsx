@@ -1,0 +1,66 @@
+import type { DescribeResponse, Row } from "@jsudc/udc-core";
+import { Dialog, DialogBody, DialogContent } from "../components/ui/dialog";
+import { tableSection, useI18n } from "../i18n/i18n";
+import { CellValue } from "../table/cells";
+
+/** A card, read-only: its title and body, then every live field as the table formats it. */
+export function CardDetailDialog({
+  row,
+  describe,
+  collection,
+  onClose,
+}: {
+  row: Row | undefined;
+  describe: DescribeResponse;
+  collection: string;
+  onClose: () => void;
+}) {
+  const { t, locale, intlLocale } = useI18n();
+  const { schema, view } = describe;
+  const opts = view.kanban_options;
+  const section = tableSection(collection);
+  const titleField = opts?.card.title_field;
+  const bodyField = opts?.card.body_field;
+  const fields = schema.field_order.filter(
+    (f) => !schema.fields[f]?.deleted && f !== titleField && f !== bodyField,
+  );
+  const body = row && bodyField ? row[bodyField] : null;
+
+  return (
+    <Dialog open={row !== undefined} onOpenChange={(open) => !open && onClose()}>
+      {row ? (
+        <DialogContent
+          data-testid="kanban-detail"
+          className="max-w-lg"
+          title={String((titleField && row[titleField]) || "—")}
+        >
+          <DialogBody>
+            {typeof body === "string" && body ? (
+              <p className="mb-4 text-[13px] leading-relaxed whitespace-pre-wrap text-muted-foreground">
+                {body}
+              </p>
+            ) : null}
+            <dl className="grid grid-cols-[minmax(7rem,auto)_1fr] gap-x-4 border-t border-border">
+              {fields.map((field) => (
+                <div key={field} className="contents" data-testid={`kanban-detail-${field}`}>
+                  <dt className="border-b border-dashed border-border/80 py-2 text-xs text-muted-foreground">
+                    {t(section, field)}
+                  </dt>
+                  <dd className="min-w-0 border-b border-dashed border-border/80 py-2 text-[13px]">
+                    <CellValue
+                      value={row[field]}
+                      column={view.columns.find((c) => c.field === field) ?? { field }}
+                      def={schema.fields[field]}
+                      locale={locale}
+                      intlLocale={intlLocale}
+                    />
+                  </dd>
+                </div>
+              ))}
+            </dl>
+          </DialogBody>
+        </DialogContent>
+      ) : null}
+    </Dialog>
+  );
+}

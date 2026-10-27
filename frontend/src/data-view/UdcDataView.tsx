@@ -1,15 +1,15 @@
 import type { FilterChipConfig } from "@jsudc/udc-core";
-import { InfinityIcon, LayoutGrid, Rows3, Table2 } from "lucide-react";
-import { useCallback, useEffect, useMemo } from "react";
-import { CardRenderer } from "../cards/CardRenderer";
+import { InfinityIcon, Rows3 } from "lucide-react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/misc";
 import { Segmented } from "../components/ui/segmented";
 import { schemaLabelTerms, tableSection, useI18n } from "../i18n/i18n";
 import { humanize } from "../lib/utils";
+import { rendererEntry, rendererTabs } from "../renderers/registry";
+import type { RendererCount } from "../renderers/types";
 import { useSchemaEditor } from "../schema-editor/useSchemaEditor";
 import { ErrorState } from "../table/states";
-import { TableRenderer } from "../table/TableRenderer";
 import { useUdcCollection, useUdcDescribe } from "../udc/hooks";
 import type { PagingMode } from "../udc/keys";
 import { composeFilter } from "./compose";
@@ -64,6 +64,11 @@ export function UdcDataView({ collection }: { collection: string }) {
     [state.search, state.chips, tree, view?.search, view?.filters],
   );
 
+  const entry = rendererEntry(state.tab);
+  const paging = entry?.paging ?? true;
+  // A renderer without paging loads its own rows; the count it reports replaces the list's.
+  const [ownCount, setOwnCount] = useState<RendererCount | null>(null);
+
   const limit = view?.page_size_default ?? 50;
   const data = useUdcCollection({
     collection,
@@ -72,7 +77,7 @@ export function UdcDataView({ collection }: { collection: string }) {
     mode: state.mode,
     pageLimit: limit,
     page: state.page,
-    enabled: describe.isSuccess,
+    enabled: describe.isSuccess && paging,
   });
 
   const fieldLabel = useCallback((field: string) => t(section, field), [t, section]);
@@ -97,7 +102,8 @@ export function UdcDataView({ collection }: { collection: string }) {
 
   const filtered = filter !== undefined;
   const fmt = (n: number) => new Intl.NumberFormat(intlLocale).format(n);
-  const total = data.total;
+  const shown = paging ? data.rows.length : (ownCount?.shown ?? 0);
+  const total = paging ? data.total : (ownCount?.total ?? null);
   const resetKey = JSON.stringify([filter ?? null, sort, state.mode]);
 
   return (
@@ -112,7 +118,7 @@ export function UdcDataView({ collection }: { collection: string }) {
           {description ? <p className="text-[13px] text-muted-foreground">{description}</p> : null}
         </div>
         <div className="flex flex-wrap items-center gap-2">
-          {view ? (
+          {view && paging ? (
             <Segmented<PagingMode>
               aria-label={t("APP", "PAGING")}
               data-testid="paging-toggle"
@@ -142,7 +148,7 @@ export function UdcDataView({ collection }: { collection: string }) {
               ]}
             />
           ) : null}
-          {view && view.available_renderers.length > 1 ? (
+          {view && paging && view.available_renderers.length > 1 ? (
             <span aria-hidden className="mx-1 h-5 w-px bg-border-strong/70" />
           ) : null}
           {view && view.available_renderers.length > 1 ? (
@@ -151,16 +157,21 @@ export function UdcDataView({ collection }: { collection: string }) {
               data-testid="tab-switch"
               value={state.tab}
               onChange={state.setTab}
-              options={view.available_renderers.map((r) => ({
-                value: r,
-                testId: `tab-${r}`,
-                label: (
-                  <>
-                    {r === "cards" ? <LayoutGrid /> : <Table2 />}
-                    {t("APP", `TAB_${r}`)}
-                  </>
-                ),
-              }))}
+              options={rendererTabs(view.available_renderers).map(({ name, entry: e }) => {
+                const Icon = e?.icon;
+                return {
+                  value: name,
+                  testId: `tab-${name}`,
+                  disabled: e === undefined,
+                  ...(e ? {} : { tooltip: t("APP", "TAB_UNAVAILABLE", { name }) }),
+                  label: (
+                    <>
+                      {Icon ? <Icon /> : null}
+                      {e ? t("APP", e.labelKey) : (tMaybe("APP", `TAB_${name}`) ?? humanize(name))}
+                    </>
+                  ),
+                };
+              })}
             />
           ) : null}
         </div>
@@ -201,17 +212,20 @@ export function UdcDataView({ collection }: { collection: string }) {
                   />
                 ) : null}
               </div>
-              <div className="ml-auto flex items-center">
+              <div className="ml-auto flex items-center gap-2">
+                {entry?.toolbar && live ? (
+                  <entry.toolbar collection={collection} describe={live} />
+                ) : null}
                 <span
                   className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
                   data-testid="row-count"
-                  data-shown={data.rows.length}
+                  data-shown={shown}
                   data-total={total ?? undefined}
                 >
                   {total === null ? (
                     <Skeleton className="h-3 w-24" />
                   ) : (
-                    t("APP", "SHOWING", { shown: fmt(data.rows.length), total: fmt(total) })
+                    t("APP", "SHOWING", { shown: fmt(shown), total: fmt(total) })
                   )}
                 </span>
               </div>
@@ -247,34 +261,26 @@ export function UdcDataView({ collection }: { collection: string }) {
           </div>
         ) : null}
 
-        {live && state.tab === "cards" ? (
-          <CardRenderer
+        {live && entry ? (
+          <entry.component
+            key={state.tab}
             collection={collection}
             describe={live}
             data={data}
-            mode={state.mode}
-            page={state.page}
-            limit={limit}
-            onPage={state.setPage}
-            filtered={filtered}
-            onClearFilters={state.clearFilters}
-            resetKey={resetKey}
-          />
-        ) : live ? (
-          <TableRenderer
-            collection={collection}
-            describe={live}
-            data={data}
-            mode={state.mode}
-            page={state.page}
-            limit={limit}
-            onPage={state.setPage}
+            filter={filter}
             sort={sort}
             onSort={(field, multi) => state.setSort(cycleSort(sort, field, multi))}
+            mode={state.mode}
+            page={state.page}
+            limit={limit}
+            onPage={state.setPage}
             filtered={filtered}
             onClearFilters={state.clearFilters}
             resetKey={resetKey}
-            onSchemaAction={live.capabilities.schema_edit ? editor.open : undefined}
+            onSchemaAction={
+              entry.editMode && live.capabilities.schema_edit ? editor.open : undefined
+            }
+            onCount={setOwnCount}
           />
         ) : (
           <div className="flex flex-col gap-3 p-4">
