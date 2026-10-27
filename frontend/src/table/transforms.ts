@@ -4,8 +4,13 @@
  * left to right. Every step is total: input of the wrong shape passes through
  * untouched, and an unknown name is skipped.
  */
+import { zonedParts } from "../time/zoned";
 
 export type TransformSpec = string | readonly string[] | undefined;
+
+/** An instant: a time part and an explicit zone (`Z` or `±HH:MM`). */
+const ZONED_INSTANT =
+  /^\d{4}-\d{2}-\d{2}[T ]\d{2}:\d{2}(?::\d{2}(?:\.\d+)?)?(?:Z|[+-]\d{2}:?\d{2})$/i;
 
 const ISO_DATE = /^(\d{4})-(\d{2})-(\d{2})(?:[T ](\d{2}):(\d{2})(?::(\d{2}))?)?/;
 
@@ -29,9 +34,27 @@ function monthShort(month: number, locale: string): string {
   return fmt.format(new Date(Date.UTC(2000, month - 1, 1))).replace(/\.$/, "");
 }
 
+/**
+ * The parts a pattern prints: an instant (a `datetime` with an offset) as
+ * `timeZone`'s clock reads it when one is given; anything else (a `date`,
+ * a wall time without a zone) literally.
+ */
+function patternParts(v: unknown, timeZone: string | undefined) {
+  if (timeZone && typeof v === "string" && ZONED_INSTANT.test(v)) {
+    const ms = Date.parse(v);
+    if (!Number.isNaN(ms)) return zonedParts(ms, timeZone);
+  }
+  return parseIsoParts(v);
+}
+
 /** `DD.MM.YYYY`, `YYYY-MM-DD`, `MMM YYYY`, also `HH:mm:ss`. Tokens longest first. */
-export function formatDatePattern(v: unknown, pattern: string, locale = "en"): unknown {
-  const p = parseIsoParts(v);
+export function formatDatePattern(
+  v: unknown,
+  pattern: string,
+  locale = "en",
+  timeZone?: string,
+): unknown {
+  const p = patternParts(v, timeZone);
   if (!p) return v;
   return pattern.replace(/YYYY|MMM|MM|DD|HH|mm|ss/g, (tok) => {
     switch (tok) {
@@ -63,7 +86,12 @@ export function truncate(s: string, n: number): string {
   return s.length > n ? `${s.slice(0, n).trimEnd()}…` : s;
 }
 
-function applyOne(value: unknown, spec: string, locale: string): unknown {
+function applyOne(
+  value: unknown,
+  spec: string,
+  locale: string,
+  timeZone: string | undefined,
+): unknown {
   const colon = spec.indexOf(":");
   const name = (colon < 0 ? spec : spec.slice(0, colon)).trim();
   const arg = colon < 0 ? "" : spec.slice(colon + 1);
@@ -76,16 +104,22 @@ function applyOne(value: unknown, spec: string, locale: string): unknown {
       return truncate(value, n);
     }
     case "date_format":
-      return arg ? formatDatePattern(value, arg, locale) : value;
+      return arg ? formatDatePattern(value, arg, locale, timeZone) : value;
     default:
       return value;
   }
 }
 
-export function applyTransforms(value: unknown, spec: TransformSpec, locale = "en"): unknown {
+/** `timeZone`: the zone a `datetime` value is shown in; a `date` value passes none. */
+export function applyTransforms(
+  value: unknown,
+  spec: TransformSpec,
+  locale = "en",
+  timeZone?: string,
+): unknown {
   if (spec === undefined) return value;
   const steps = typeof spec === "string" ? [spec] : spec;
-  return steps.reduce((v, s) => applyOne(v, s, locale), value);
+  return steps.reduce((v, s) => applyOne(v, s, locale, timeZone), value);
 }
 
 export function hasTransforms(spec: TransformSpec): boolean {

@@ -1,5 +1,6 @@
-import type { RendererName } from "@jsudc/udc-core";
-import { Kanban, LayoutGrid, Table2 } from "lucide-react";
+import type { DescribeResponse, RendererName } from "@jsudc/udc-core";
+import { CalendarDays, Kanban, LayoutGrid, Table2 } from "lucide-react";
+import { CalendarRenderer } from "../calendar/CalendarRenderer";
 import { CardRenderer } from "../cards/CardRenderer";
 import { KanbanBoardSwitcher } from "../kanban/KanbanBoardSwitcher";
 import { KanbanRenderer } from "../kanban/KanbanRenderer";
@@ -12,6 +13,11 @@ function TableTab(props: RendererProps) {
 
 function CardsTab(props: RendererProps) {
   return <CardRenderer {...props} />;
+}
+
+/** The calendar of a kanban collection keeps the board switcher: it shows the board's tickets. */
+function CalendarToolbar(props: { collection: string; describe: DescribeResponse }) {
+  return props.describe.view.kanban_options ? <KanbanBoardSwitcher {...props} /> : null;
 }
 
 /**
@@ -35,6 +41,14 @@ export const RENDERERS: Partial<Record<RendererName, RendererEntry>> = {
     paging: false,
     editMode: false,
     toolbar: KanbanBoardSwitcher,
+  },
+  calendar: {
+    component: CalendarRenderer,
+    icon: CalendarDays,
+    labelKey: "TAB_CALENDAR",
+    paging: false,
+    editMode: false,
+    toolbar: CalendarToolbar,
   },
 };
 

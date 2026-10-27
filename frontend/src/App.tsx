@@ -9,6 +9,7 @@ import { I18nProvider, useI18n } from "./i18n/i18n";
 import { ThemeProvider } from "./lib/theme";
 import { AppShell } from "./shell/AppShell";
 import { ErrorState } from "./table/states";
+import { TimezoneProvider } from "./time/timezone";
 import { UdcClient } from "./udc/client";
 import { useUdcCollections } from "./udc/hooks";
 import { createUdcQueryClient, UdcProvider } from "./udc/provider";
@@ -45,23 +46,25 @@ export function App() {
   return (
     <ThemeProvider>
       <I18nProvider>
-        <UdcProvider client={client}>
-          <QueryClientProvider client={queryClient}>
-            <TooltipProvider delayDuration={400}>
-              <Toaster>
-                <BrowserRouter>
-                  <Routes>
-                    <Route element={<AppShell />}>
-                      <Route index element={<FirstCollection />} />
-                      <Route path="udc/:collection" element={<CollectionRoute />} />
-                      <Route path="*" element={<Navigate to="/" replace />} />
-                    </Route>
-                  </Routes>
-                </BrowserRouter>
-              </Toaster>
-            </TooltipProvider>
-          </QueryClientProvider>
-        </UdcProvider>
+        <TimezoneProvider>
+          <UdcProvider client={client}>
+            <QueryClientProvider client={queryClient}>
+              <TooltipProvider delayDuration={400}>
+                <Toaster>
+                  <BrowserRouter>
+                    <Routes>
+                      <Route element={<AppShell />}>
+                        <Route index element={<FirstCollection />} />
+                        <Route path="udc/:collection" element={<CollectionRoute />} />
+                        <Route path="*" element={<Navigate to="/" replace />} />
+                      </Route>
+                    </Routes>
+                  </BrowserRouter>
+                </Toaster>
+              </TooltipProvider>
+            </QueryClientProvider>
+          </UdcProvider>
+        </TimezoneProvider>
       </I18nProvider>
     </ThemeProvider>
   );

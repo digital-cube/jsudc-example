@@ -8,6 +8,7 @@ import { Pager } from "../table/Pager";
 import { EmptyState, ErrorState } from "../table/states";
 import { resolveRowColor } from "../table/style";
 import { useInfiniteSentinel } from "../table/useInfiniteSentinel";
+import { useTimezone } from "../time/timezone";
 import type { UdcCollectionResult } from "../udc/hooks";
 import type { PagingMode } from "../udc/keys";
 import { avatarTone, CARD_MIN_WIDTH, type CardSlots, cardSlots, initials } from "./cardModel";
@@ -164,11 +165,13 @@ function Card({
   accent: ReturnType<typeof resolveRowColor>;
 }) {
   const { t, locale, intlLocale } = useI18n();
+  const { timeZone } = useTimezone();
   const { schema } = describe;
   const text = (col: CardSlots["title"]) => {
     const v = row[col.field];
     if (isBlank(v)) return "";
-    return displayText(v, col, renderKind(col, schema.fields[col.field]), locale, intlLocale);
+    const kind = renderKind(col, schema.fields[col.field]);
+    return displayText(v, col, kind, locale, intlLocale, timeZone);
   };
   const title = text(slots.title);
   const subtitle = slots.subtitle ? text(slots.subtitle) : "";

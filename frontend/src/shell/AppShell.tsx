@@ -1,4 +1,4 @@
-import { Building2, Database, Languages, Moon, Sun } from "lucide-react";
+import { Building2, CalendarDays, Database, Kanban, Languages, Moon, Sun } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
 import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/misc";
@@ -9,8 +9,13 @@ import { LOCALES, type Locale } from "../i18n/translations";
 import { useTheme } from "../lib/theme";
 import { cn } from "../lib/utils";
 import { useUdcCollections } from "../udc/hooks";
+import { TimezonePicker } from "./TimezonePicker";
 
-const COLLECTION_ICONS: Record<string, typeof Database> = { companies: Building2 };
+const COLLECTION_ICONS: Record<string, typeof Database> = {
+  companies: Building2,
+  appointments: CalendarDays,
+  tickets: Kanban,
+};
 
 export function AppShell() {
   return (
@@ -44,6 +49,7 @@ function TopBar() {
         </div>
       </div>
       <div className="flex items-center gap-2">
+        <TimezonePicker />
         <Languages className="size-4 text-muted-foreground" aria-hidden />
         <Segmented<Locale>
           aria-label={t("APP", "LANGUAGE")}
