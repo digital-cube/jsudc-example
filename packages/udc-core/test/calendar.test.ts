@@ -1,4 +1,6 @@
+import { readFileSync } from "node:fs";
 import { describe, expect, it } from "vitest";
+import { parse } from "yaml";
 import {
   CalendarOptionsSchema,
   calendarOptionsProblems,
@@ -69,6 +71,46 @@ describe("CalendarOptions", () => {
       calendar_options: { start_field: "starts_at", end_field: "ends_at" },
     });
     expect(view.calendar_options?.snap_minutes).toBe(15);
+  });
+});
+
+describe("the backend's calendar views", () => {
+  const view = (name: string) =>
+    ViewConfigSchema.parse(
+      parse(
+        readFileSync(
+          new URL(`../../../backend/collections/${name}/view.yaml`, import.meta.url),
+          "utf8",
+        ),
+      ),
+    );
+
+  it("appointments: a work week over start/end, coloured per doctor", () => {
+    const opts = view("appointments").calendar_options;
+    expect(opts).toMatchObject({
+      start_field: "start",
+      end_field: "end",
+      color_field: "doctor",
+      default_preset: "workweek",
+      business_hours: [8, 20],
+      hour_height_px: 64,
+      scroll_to_hour: 7.5,
+      snap_minutes: 15,
+    });
+    expect(Object.keys(opts?.color_map ?? {})).toHaveLength(8);
+    expect(opts?.detail?.delete).toBe(true);
+  });
+
+  it("tickets: a week over starts_at/ends_at, coloured by priority", () => {
+    const v = view("tickets");
+    expect(v.available_renderers).toContain("calendar");
+    expect(v.calendar_options).toMatchObject({
+      start_field: "starts_at",
+      end_field: "ends_at",
+      title_field: "title",
+      color_field: "priority",
+      default_preset: "week",
+    });
   });
 });
 

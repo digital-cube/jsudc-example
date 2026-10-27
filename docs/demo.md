@@ -10,7 +10,8 @@ UDC path, shown as a table and as cards, with columns added from the UI.
 nvm use
 npm install
 npm run db:setup
-npm run seed -- --reset     # 200 companies, 3 boards / 15 buckets / 60 tickets, schemas back to revision 1
+npm run db:migrate -w @jsudc/backend   # once after pulling: the appointments table (migration 0003)
+npm run seed -- --reset     # 200 companies, 3 boards / 15 buckets / 60 tickets, ~640 appointments around today
 npm run dev                 # backend :5100 + Vite (it prints its port)
 ```
 
@@ -102,6 +103,57 @@ view's default; **Table** and **Cards** show the same rows.
 Everything the board does comes from `kanban_options` in
 `backend/collections/tickets/view.yaml`, typed by `KanbanOptionsSchema` in
 `udc-core`.
+
+## The calendar: `appointments` and the time zone switch
+
+`npm run seed` generates the appointments around the day it runs (six weeks
+either side, Belgrade working hours). To show exactly the screens below, seed
+with the day pinned: `SEED_TODAY=2026-10-27 npm run seed -- --reset`, then
+open `http://localhost:<vite port>/udc/appointments?date=2026-10-27`.
+
+1. **The work week.** The calendar opens on the work week (the view's
+   `default_preset`), scrolled to 07:30, one colour per doctor. Overlapping
+   appointments share the column in lanes; the grey bands are outside
+   `business_hours` (8–20); a red line marks now. *Showing N of N* counts the
+   appointments of the visible week: the calendar asked the server for just
+   that window (`between` on `start`, from 00:00 Monday to 23:59:59.999 Friday
+   in the active zone; see the `list` call in the network tab).
+2. **Navigate.** Prev / Next / Today and Day · Work week · Week · Month. The
+   window is `?preset=&date=` in the address bar. In Month, a day shows four
+   chips and *+N more*; click it for the whole day, or click the day number to
+   open that day.
+3. **Move and resize.** Drag an appointment one hour down: it snaps to 15
+   minutes and is saved at once (`mutate update {start, end}` with the row's
+   version; the fields come from `start_field`/`end_field`). Drag it to another
+   day column, or drag its bottom edge to make it longer. Escape during a drag
+   puts it back. In Month, drag a chip to another day: same time, new day.
+4. **Details.** Click an appointment: its time in the active zone, the doctor
+   and patient, and room, status and notes editable in place. *Delete* asks
+   once more. Click empty time to add one: type a title, Enter (the doctor is
+   the one picked in the *Doctor* chip, else the first).
+5. **Filter.** Pick *Ana Vuković* in the Doctor chip: one colour left on the
+   grid. Search and chips combine with the window.
+6. **The time zone.** The header has a zone switch next to the language and
+   theme (it starts on the browser's zone). Find the 08:00 *Check-up · Aleksa
+   Jović* on Tuesday 27th and switch the header to **America/New_York**: it
+   moves to **3:00 AM** at once, without a reload. (On most dates of the year
+   it would be 2:00; on 2026-10-27 Europe has left summer time and New York
+   has not yet, so the gap is five hours.) **Asia/Tokyo** shows it at 4:00 PM;
+   **UTC** at 7:00 AM. The days now run from midnight in that zone, so the
+   next `list` call asks for a different window, ending in `-04:00`. The
+   **Table** tab shows the same shifted times in the *Start* column. Reload:
+   the zone is remembered (this browser, `localStorage`), and it is not part
+   of the link. A drag made while New York is active writes New York's offset
+   (`2026-10-27T04:00:00-04:00`); the server stores the instant, so Belgrade
+   sees it at 09:00.
+7. **Tickets.** `tickets` has a **Calendar** tab too: about 40% of the
+   tickets have a slot in the current or next week, coloured by priority. The
+   board select stays in the toolbar and `?board=` carries over from the
+   board tab.
+
+Everything the calendar does comes from `calendar_options` in each
+`view.yaml`, typed by `CalendarOptionsSchema` in `udc-core`; the server
+refuses to start if `start_field` / `end_field` are not `datetime` fields.
 
 ## What is behind it
 

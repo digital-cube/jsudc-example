@@ -73,7 +73,7 @@ describe("KanbanOptions", () => {
     );
     const view = ViewConfigSchema.parse(raw);
     expect(view.default_renderer).toBe("kanban");
-    expect(view.available_renderers).toEqual(["kanban", "table", "cards"]);
+    expect(view.available_renderers).toEqual(["kanban", "table", "cards", "calendar"]);
     expect(view.kanban_options).toMatchObject({
       bucket_collection: "buckets",
       ticket_bucket_field: "bucket_id",
