@@ -1,9 +1,9 @@
 # jsudc views: analysis and implementation plan
 
-Written 2026-10-27 for ticket TCKMC65N7J ("proširenje view-a"). Status: **draft,
-awaiting the owner's answers** on the question ticket filed with it. The
-implementation tickets (one per phase, below) are queued behind that question
-ticket and read its answers before they start.
+Written 2026-10-27 for ticket TCKMC65N7J ("proširenje view-a"). Status:
+**answered** — the owner answered the question ticket (TCKYX3EPKW) on
+2026-10-27; the answers are in section 5 and the ticket order in section 4
+follows them.
 
 Companion to `2026-10-18-jsudc-design.md` (phase 1: table + cards over Postgres
 jsonb). This document covers phase "views": more renderers (map, kanban,
@@ -148,9 +148,10 @@ catalogue (the owner may swap entries; see the question ticket):
 | `repos` | **http_api** GitHub `users/digital-cube/repos`, no key (60 req/h anonymous, so cache matters) | table, cards | a second net example with nested `field_map`, avatars, topics as chips |
 | `boards`, `buckets`, `tickets` | postgres_jsonb | boards: table; tickets: **kanban**, table, cards, **calendar** | the kanban example, dclabs data model, writable (drag, reorder, quick-add, bucket add/rename), `reindex` |
 | `appointments` | postgres_jsonb | **calendar**, table | a dedicated calendar dataset: 8 "doctors" with a `color_map`, business hours 8–20, ~600 rows around today, drag to move/resize persists |
+| `tree_comments` (or a yaml menu) | postgres_jsonb | **tree**, table | a threaded tree with `parent` + `order`, reusing the kanban's order math and `reindex` for sibling order; drag to re-parent |
+| `tickers` (or a DB metrics collection) | http_api or postgres_jsonb | **chart**, table | line/area/bar over all rows of the current filter (`useUdcAllRows`), time-window presets as relative filters |
 
-Optional, not planned now (a question): `tree` over a yaml menu or
-`tree_comments`, `chart` over `tickers`, an SSE source (`recent_changes`).
+Not planned now: an SSE source (`recent_changes`).
 
 ### 3.2 Architecture additions
 
@@ -166,7 +167,7 @@ Optional, not planned now (a question): `tree` over a yaml menu or
   gap?}` → `{updated}`.
 - `collections` listing gains `source_kind` and an optional `group` so the
   sidebar can group Database / Files / Internet.
-- Renderer name set: `table | cards | map | kanban | calendar` for
+- Renderer name set: `table | cards | kanban | calendar | tree | map | chart` for
   `available_renderers` (others still parse, the UI shows them disabled).
 
 **backend**
@@ -229,7 +230,7 @@ Optional, not planned now (a question): `tree` over a yaml menu or
 - `KanbanRenderer`: columns from `bucket_collection` filtered by
   `bucket_filter_field eq board`, cards from the collection filtered by
   `ticket_board_field`, sorted by order; drag between and within columns
-  (`@dnd-kit` or native, a question), order math and `reindex` on collision,
+  (`@dnd-kit`, answer 6), order math and `reindex` on collision,
   optimistic overlay through the TanStack cache (`useUdcMutate` already patches
   every cached list), quick-add card, add / rename bucket, board switcher
   (`?board=`), card: title, body (2 lines), priority left border, tags chips,
@@ -243,12 +244,12 @@ Optional, not planned now (a question): `tree` over a yaml menu or
   `end_field` **from the options** (fixes the udc-js bug), detail popover with
   title + start + end + delete. **The visible window is sent to the server as
   a `between` filter on `start_field`** (udc-js filters client-side over loaded
-  rows, which breaks past the first page). Viewer timezone = browser timezone
-  in this phase; a picker is a question.
+  rows, which breaks past the first page). Timezone: a header switch that
+  changes the display zone live (answer 7), defaulting to the browser zone.
 
 ### 3.3 Non-goals for this phase
 
-WebSocket push (polling instead), tree / chart / dropdown renderers, SSE and
+WebSocket push (polling instead), the dropdown renderer, SSE and
 OpenSearch sources, per-board config editor and `board_config.*` actions,
 `board` snapshot action, assignees as a collection, calendar validators (no
 double booking) and overridable errors, filesystem writes, image proxy/cache,
@@ -264,31 +265,36 @@ that hits the upstream on every request. Cypress that depends on the internet.
 
 ## 4. Phases → tickets
 
-Each ticket is one session on the `jsudc` worktree, model Opus 5.5, in this
-order; each reads the owner's answers on the question ticket first.
+Each ticket is one session on the `jsudc` worktree, model Opus 5.5. Order as
+the owner set it (answer 1), all before the phase-2 tickets (answer 10):
 
 | # | Ticket | Scope | Size |
 |---|---|---|---|
-| 1 | **Sources: filesystem + http_api, source.yaml, `files` / `quakes` / `repos`, sidebar groups, doc tab, polling** | udc-core `SourceConfig`, backend `ArraySource`, `FilesystemSource`, `HttpApiSource` with TTL cache and fixture mode, registry dispatch, three new collections with README, sidebar groups, doc tab, `refresh_interval_ms`; TDD + Cypress | L |
-| 2 | **Map renderer** | udc-core `MapOptions`, Leaflet renderer, renderer registry, `companies` gets `lat`/`lng` and a map tab, `quakes` map tab; Cypress | M |
-| 3 | **Kanban** | udc-core `KanbanOptions` + `reindex` action, backend `reindex`, `boards`/`buckets`/`tickets` collections + generator, renderer with DnD, order math, quick-add, bucket add/rename, board switcher; Cypress | L |
-| 4 | **Calendar** | udc-core `CalendarOptions`, `appointments` collection + generator, renderer with presets, window filter, drag/resize, detail popover; calendar tab on `tickets`; Cypress | L |
+| 1/6 | **Kanban** (TCK2KN2HP7) | **renderer registry** and **`useUdcAllRows`** (moved here from the map ticket, because this ticket now runs first), udc-core `KanbanOptions` + `reindex` action + shared order math, backend `reindex`, `boards`/`buckets`/`tickets` collections + generator, renderer with `@dnd-kit` DnD, quick-add, bucket add/rename, board switcher (`?board=`); Cypress | L |
+| 2/6 | **Calendar** (TCK397MK2R) | udc-core `CalendarOptions`, `appointments` collection + generator, renderer with presets, server-side window filter, drag/resize, detail popover, header timezone switch that re-renders live (answer 7); calendar tab on `tickets` (uses its `starts_at`/`ends_at`); Cypress | L |
+| 3/6 | **Tree** | udc-core `TreeOptions`, tree renderer over `parent` + `order` using the shared order math and `reindex`, drag to reorder / re-parent, lazy expand; an example collection; Cypress | M |
+| 4/6 | **Map** (TCK2JP6DQ9) | udc-core `MapOptions`, Leaflet renderer registered in the existing registry and fed by `useUdcAllRows`, `companies` gets `lat`/`lng` and a map tab; the `quakes` map tab lands with the sources ticket; Cypress | M |
+| 5/6 | **Sources: filesystem + http_api** (TCKF3U9HCC) | udc-core `SourceConfig`, backend `ArraySource`, `FilesystemSource`, `HttpApiSource` with TTL cache and fixture mode, registry dispatch, `files` / `quakes` (with a map tab) / `repos` with README, sidebar groups, doc tab, polling via `refresh_interval_ms`; TDD + Cypress | L |
+| 6/6 | **Charts** | udc-core `ChartOptions`, a chart renderer (line/area/bar/pie) over `useUdcAllRows`, time-window presets; an example; Cypress | M |
 
-Dependencies: 2 needs 1 (quakes), 3 needs 2 only for the registry (could run
-after 1), 4 needs 3 for the `tickets` calendar tab (the `appointments` part
-does not). They are chained in the queue in this order.
+Moved deliverables: the renderer registry and `useUdcAllRows` go from the map
+ticket to the kanban ticket (1/6); the `quakes` map tab goes with the sources
+ticket (5/6), which now runs after the map. Each later renderer registers
+itself in `renderers/registry.ts` and, when it needs every row of the current
+filter, reads them through `useUdcAllRows`.
 
-## 5. Open questions
+## 5. Owner's answers (TCKYX3EPKW, 2026-10-27)
 
-Filed as the NON-AI question ticket with a suggested answer each (in
-Serbian). Summary: (1) confirm the renderer set map + kanban + calendar now,
-tree/chart later; (2) files example content; (3) which net APIs and whether
-any API keys exist; (4) caching and no-internet policy; (5) Leaflet vs
-MapLibre, and `lat`/`lng` on companies; (6) kanban data model and DnD
-library; (7) calendar dataset, presets, timezone picker, detail panel; (8)
-doc tab + grouped sidebar; (9) polling instead of WebSocket; (10) ordering
-relative to the phase-2 tickets; (11) whether another preparation round is
-wanted after the answers or the queued tickets may start.
+1. Order: kanban, calendar, tree, map, file + internet sources, charts (section 4).
+2. Files example: as proposed (bundled sample directory, `UDC_FILES_ROOT` override, read-only).
+3. Net APIs: `quakes` (USGS) and `repos` (GitHub), no API keys; they come after the map.
+4. Caching and fixtures: as proposed (server-side TTL cache, stale on error, `UDC_HTTP_FIXTURES` for Cypress).
+5. Map: Leaflet, and `lat`/`lng` on `companies`.
+6. Kanban: as proposed — `boards`/`buckets`/`tickets` jsonb collections, `reindex`, drag between and within columns, quick-add, add/rename bucket, `?board=`, assignees as a `string_array`, no per-board config editor — with `@dnd-kit`.
+7. Calendar: timezones matter — a header switch that changes the zone live.
+8. Doc tab and grouped sidebar: yes.
+9. Live updates: polling, no WebSocket.
+10. These view tickets run before the phase-2 tickets (row actions, column prefs, multiselect).
 
 ## 6. Verification across the phase
 
