@@ -3,16 +3,22 @@ import { Dialog, DialogBody, DialogContent } from "../components/ui/dialog";
 import { tableSection, useI18n } from "../i18n/i18n";
 import { CellValue } from "../table/cells";
 
-/** A card, read-only: its title and body, then every live field as the table formats it. */
+/**
+ * A card, read-only: its title and body, then every live field as the table
+ * formats it; the board and bucket ids read as their names.
+ */
 export function CardDetailDialog({
   row,
   describe,
   collection,
+  labels,
   onClose,
 }: {
   row: Row | undefined;
   describe: DescribeResponse;
   collection: string;
+  /** Names for id fields the board knows (the board and the bucket), by field. */
+  labels: Record<string, ReadonlyMap<string, string>>;
   onClose: () => void;
 }) {
   const { t, locale, intlLocale } = useI18n();
@@ -48,7 +54,7 @@ export function CardDetailDialog({
                   </dt>
                   <dd className="min-w-0 border-b border-dashed border-border/80 py-2 text-[13px]">
                     <CellValue
-                      value={row[field]}
+                      value={labels[field]?.get(String(row[field])) ?? row[field]}
                       column={view.columns.find((c) => c.field === field) ?? { field }}
                       def={schema.fields[field]}
                       locale={locale}

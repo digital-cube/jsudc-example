@@ -328,6 +328,9 @@ describe("kanban", () => {
       .should("be.visible")
       .and("contain.text", "Saved filters per user");
     cy.get('[data-testid="kanban-detail-priority"]').should("exist");
+    // Ids read as names.
+    cy.get('[data-testid="kanban-detail-bucket_id"]').should("contain.text", "Backlog");
+    cy.get('[data-testid="kanban-detail-board_id"]').should("contain.text", "Product roadmap");
     cy.get('[data-testid="kanban-detail"] input').should("not.exist");
     cy.get("body").type("{esc}");
     cy.get('[data-testid="kanban-detail"]').should("not.exist");

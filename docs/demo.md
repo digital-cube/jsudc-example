@@ -10,7 +10,7 @@ UDC path, shown as a table and as cards, with columns added from the UI.
 nvm use
 npm install
 npm run db:setup
-npm run seed -- --reset     # 200 companies, schema back to revision 1
+npm run seed -- --reset     # 200 companies, 3 boards / 15 buckets / 60 tickets, schemas back to revision 1
 npm run dev                 # backend :5100 + Vite (it prints its port)
 ```
 
@@ -65,6 +65,43 @@ the column added in step 6.
    show it once the field exists. Each card has the name as title, the PIB as
    subtitle, an initials avatar, and the same formatting as the table
    (thousands separators, the ✓/✗ for Active).
+
+## The kanban: `tickets`
+
+Open `http://localhost:<vite port>/udc/tickets`. The **Board** tab is the
+view's default; **Table** and **Cards** show the same rows.
+
+1. **The board.** It opens on the first board, *Product roadmap*: five
+   columns (Backlog, Ready, In progress, Review, Done) with their counts, cards
+   with a priority edge and dot, tags, due date (red when past), assignee
+   initials and the key. The toolbar says *Showing 20 of 20*: cards on this
+   board. There is no paging toggle here; the board loads every card of the
+   filter.
+2. **Drag.** Drag the first Backlog card to the top of *In progress*. It
+   stays there after a reload: the move is one `mutate update {bucket_id,
+   order}` with `expected_version`. Drag a card within a column, or drag a
+   column by its header to reorder the columns.
+3. **Keyboard.** Tab to a card, press **Space**, move it with the arrow keys,
+   press **Space** again. **Enter** opens the card.
+4. **Quick-add.** *Add ticket* at the bottom of *Review*, type a title, press
+   Enter. A placeholder shows until the server row arrives. Its order is the
+   last card's + 100 (at the top: the first card's − 100).
+5. **Columns.** The `⋯` menu of a column renames it inline; *Delete bucket*
+   only works on an empty column. *Add bucket* after the last column adds
+   one at the end.
+6. **Boards.** Switch boards with the select in the toolbar. The board is
+   `?board=<id>` in the address bar, so a link opens the same board.
+7. **Search and chips.** Type `export` in the search, or pick a Priority or
+   Tags chip: the board narrows to the matching cards (*Showing 1 of 20*).
+8. **Collisions.** Orders are sparse (100, 200, …). If two neighbours end up
+   one apart (say 100 and 101), a drop between them first calls `reindex`,
+   which renumbers that column to 100, 200, …. Then the move is tried once
+   more. To see it, set two orders with `mutate` and drop between them. The
+   Cypress spec `kanban.cy.ts` does exactly that.
+
+Everything the board does comes from `kanban_options` in
+`backend/collections/tickets/view.yaml`, typed by `KanbanOptionsSchema` in
+`udc-core`.
 
 ## What is behind it
 

@@ -181,8 +181,11 @@ describe("companies table", () => {
   });
 
   it("/ redirects to the first collection", () => {
-    cy.visit("/");
-    cy.location("pathname").should("eq", "/udc/companies");
-    cy.get('[data-testid="nav-companies"]').should("have.attr", "aria-current", "page");
+    cy.udc("collections", {}).then(({ collections }) => {
+      const first = collections[0]?.name as string;
+      cy.visit("/");
+      cy.location("pathname").should("eq", `/udc/${first}`);
+      cy.get(`[data-testid="nav-${first}"]`).should("have.attr", "aria-current", "page");
+    });
   });
 });

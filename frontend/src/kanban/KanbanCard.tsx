@@ -146,7 +146,7 @@ export function KanbanCardBody({ row, opts, schema }: KanbanCardBodyProps) {
             </span>
           ) : null}
           {people.length ? (
-            <span className="ml-auto flex -space-x-1.5" data-testid="kanban-card-assignees">
+            <span className="ml-auto flex -space-x-1" data-testid="kanban-card-assignees">
               {people.slice(0, MAX_AVATARS).map((name) => (
                 <span
                   key={name}

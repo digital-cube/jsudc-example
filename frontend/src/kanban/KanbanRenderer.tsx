@@ -469,6 +469,10 @@ function Board({
     board.isLoading || bucketsQ.isLoading || (cardsQ.isLoading && !cardsQ.rows.length);
   const activeRow = active?.type === "card" ? rowById.get(active.id) : undefined;
   const detail = detailId ? rowById.get(detailId) : undefined;
+  const labels = {
+    [opts.ticket_board_field]: new Map(board.boards.map((b) => [b.id, b.label])),
+    [opts.ticket_bucket_field]: new Map(buckets.map((b) => [b.id, b.label])),
+  };
   const noMatches = filtered && !loading && cardsQ.rows.length === 0;
 
   return (
@@ -560,6 +564,7 @@ function Board({
         row={detail}
         describe={describe}
         collection={collection}
+        labels={labels}
         onClose={() => setDetailId(null)}
       />
     </div>
