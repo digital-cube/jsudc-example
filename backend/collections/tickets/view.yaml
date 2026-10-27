@@ -2,7 +2,7 @@
 # cards. Everything the board does is read from `kanban_options`; renaming a
 # field in the schema means changing it here and nowhere else.
 default_renderer: kanban
-available_renderers: [kanban, table, cards]
+available_renderers: [kanban, table, cards, calendar]
 pagination: infinite
 page_size_default: 50
 
@@ -80,3 +80,22 @@ card_options:
   subtitle_field: key
   meta_fields: [priority, tags, due, assignees]
   size: medium
+
+# The calendar tab: the scheduled tickets (~40% have a slot), coloured by
+# priority. The board switcher's `?board=` narrows it as it narrows the board.
+calendar_options:
+  start_field: starts_at
+  end_field: ends_at
+  title_field: title
+  color_field: priority
+  color_map:
+    low: "#64748b"
+    normal: "#2563eb"
+    high: "#d97706"
+    urgent: "#dc2626"
+  default_preset: week
+  business_hours: [9, 17]
+  scroll_to_hour: 8
+  detail:
+    fields: [title, key, priority, assignees, due]
+    delete: false

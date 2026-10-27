@@ -11,7 +11,7 @@
   },
   {
     "__meta": {
-      "id": "9e523662-6123-4f85-8ac7-eab6e3447383"
+      "id": "9193e821-1c9c-4d9e-9236-626123af858a"
     },
     "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
     "name": "Ready",
@@ -21,7 +21,7 @@
   },
   {
     "__meta": {
-      "id": "09eba228-cf4e-4003-a8be-8aa6c54fb294"
+      "id": "3ea35921-7f3f-44f2-a020-b4d59d09eba2"
     },
     "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
     "name": "In progress",
@@ -31,7 +31,7 @@
   },
   {
     "__meta": {
-      "id": "dc0657eb-6002-4ab8-936c-5ca05887e4ae"
+      "id": "e76146d7-7e70-4bf0-b2a2-d922b10533c5"
     },
     "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
     "name": "Review",
@@ -41,7 +41,7 @@
   },
   {
     "__meta": {
-      "id": "96c366c2-5d42-497b-b99e-dfa7dcd40b3c"
+      "id": "4682dca7-1c51-4577-af6b-8cf8b95183f6"
     },
     "board_id": "6c8d4c3b-984f-4cf8-9523-592ed901a69e",
     "name": "Done",
@@ -51,9 +51,9 @@
   },
   {
     "__meta": {
-      "id": "1373d089-e887-4cfd-99c2-057ce44e4674"
+      "id": "af28f964-3fb0-4b63-84f4-a9d140de81c5"
     },
-    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "board_id": "4b10ce75-b18e-4122-8d2d-2e61936e67da",
     "name": "New",
     "color": "info",
     "order": 100,
@@ -61,9 +61,9 @@
   },
   {
     "__meta": {
-      "id": "d32ee38f-8453-44c3-be28-a937b3ff2738"
+      "id": "2ba1053c-4ff6-452d-95aa-841be8471954"
     },
-    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "board_id": "4b10ce75-b18e-4122-8d2d-2e61936e67da",
     "name": "Triage",
     "color": "warning",
     "order": 200,
@@ -71,9 +71,9 @@
   },
   {
     "__meta": {
-      "id": "09833e4a-3533-42ec-ad29-41dc46573212"
+      "id": "1aa42a7a-34eb-48f0-932d-57ad51f0a167"
     },
-    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "board_id": "4b10ce75-b18e-4122-8d2d-2e61936e67da",
     "name": "In progress",
     "color": "accent",
     "order": 300,
@@ -81,9 +81,9 @@
   },
   {
     "__meta": {
-      "id": "76450c19-1dc9-4258-a17e-6621ecd71946"
+      "id": "95105712-2574-4ac1-844a-d2253ce5b253"
     },
-    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "board_id": "4b10ce75-b18e-4122-8d2d-2e61936e67da",
     "name": "Waiting on customer",
     "color": "muted",
     "order": 400,
@@ -91,9 +91,9 @@
   },
   {
     "__meta": {
-      "id": "7c940f92-3b6e-42b3-a6b3-ff7236b89913"
+      "id": "70768979-66ee-4d7d-94a9-f69def41b795"
     },
-    "board_id": "e81c5e0c-34e6-4f51-bf5e-4ee82eb4eaa0",
+    "board_id": "4b10ce75-b18e-4122-8d2d-2e61936e67da",
     "name": "Resolved",
     "color": "success",
     "order": 500,
@@ -101,9 +101,9 @@
   },
   {
     "__meta": {
-      "id": "00bdb844-797e-4143-a17d-61b2dd1ba900"
+      "id": "e4577d77-a14b-486a-8ea9-be5047402cb5"
     },
-    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "board_id": "1783e6ee-db53-456f-8aa7-72709e286814",
     "name": "Planned",
     "color": "muted",
     "order": 100,
@@ -111,9 +111,9 @@
   },
   {
     "__meta": {
-      "id": "43868a92-64c3-47d2-aa02-8cee4f05c593"
+      "id": "961761ef-eb26-4b3d-ba09-5132b4dfa43b"
     },
-    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "board_id": "1783e6ee-db53-456f-8aa7-72709e286814",
     "name": "Building",
     "color": "accent",
     "order": 200,
@@ -121,9 +121,9 @@
   },
   {
     "__meta": {
-      "id": "e227fab6-b6f8-4f05-9142-9786101b82aa"
+      "id": "80b6ccd0-35fb-4b1f-abc2-25d8eb488ab9"
     },
-    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "board_id": "1783e6ee-db53-456f-8aa7-72709e286814",
     "name": "Testing",
     "color": "warning",
     "order": 300,
@@ -131,9 +131,9 @@
   },
   {
     "__meta": {
-      "id": "98b6aa1b-b052-4a8a-8e2b-dde7c76f01e2"
+      "id": "cabba80b-3a99-4e67-8fa9-353ac662e1ec"
     },
-    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "board_id": "1783e6ee-db53-456f-8aa7-72709e286814",
     "name": "Staging",
     "color": "info",
     "order": 400,
@@ -141,9 +141,9 @@
   },
   {
     "__meta": {
-      "id": "c8493018-0689-43d8-bf5b-315463ff68ed"
+      "id": "b4812c06-0279-4eba-b423-e43d665665f1"
     },
-    "board_id": "6a536bcf-db55-4a7e-aa6f-ada1e58a5ef2",
+    "board_id": "1783e6ee-db53-456f-8aa7-72709e286814",
     "name": "Released",
     "color": "success",
     "order": 500,

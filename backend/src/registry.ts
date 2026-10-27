@@ -1,6 +1,7 @@
 import { existsSync, readdirSync, readFileSync } from "node:fs";
 import { join } from "node:path";
 import {
+  calendarOptionsProblems,
   FIELD_NAME_RE,
   type SchemaDoc,
   type SchemaDocInput,
@@ -103,6 +104,15 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
     const schemaJson = readFile(schemaFile, JSON.parse) as SchemaDocInput;
     const schema = validated(schemaFile, SchemaDocSchema, schemaJson);
     assertJsonbSchema(schema, schemaFile);
+    // A calendar over a field that is not a datetime would draw nothing: refuse it at load.
+    const problems = view.calendar_options
+      ? calendarOptionsProblems(view.calendar_options, schema)
+      : [];
+    if (problems.length > 0) {
+      throw new Error(
+        `${viewFile}: calendar_options do not fit schema.json\n${problems.join("\n")}`,
+      );
+    }
     const seedFile = join(base, "seed.json");
     return {
       name,

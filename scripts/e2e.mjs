@@ -2,8 +2,8 @@
 /**
  *   npm run e2e [-- <extra cypress run args>]
  *
- * The Cypress run, end to end: migrate and reseed the TEST database (200
- * companies), start the backend on it, start Vite proxying to that backend,
+ * The Cypress run, end to end: migrate and reseed the TEST database (every
+ * collection; the appointments around SEED_TODAY, default 2026-10-27), start the backend on it, start Vite proxying to that backend,
  * run Cypress headless, and stop both servers whatever happens.
  *
  * Ports are not the dev ones, so `npm run dev` may keep running alongside:
@@ -24,7 +24,9 @@ const backendPort = Number(process.env.E2E_BACKEND_PORT || 5110);
 const webPort = Number(process.env.E2E_WEB_PORT || 5310);
 const backendUrl = `http://127.0.0.1:${backendPort}`;
 const webUrl = `http://127.0.0.1:${webPort}`;
-const seedCmd = `npm run seed --silent -- --reset --db ${testDb}`;
+// The appointments are generated around the seed day: pinned, so every run sees the same week.
+const SEED_TODAY = process.env.SEED_TODAY || "2026-10-27";
+const seedCmd = `SEED_TODAY=${SEED_TODAY} npm run seed --silent -- --reset --db ${testDb}`;
 
 const children = [];
 
@@ -91,7 +93,9 @@ try {
   run("npm", ["run", "db:migrate:test", "--silent", "-w", "@jsudc/backend"], {
     env: { ...process.env, TEST_DATABASE_URL: testDb },
   });
-  log("seeding every collection (200 companies, 3 boards, 15 buckets, 60 tickets)");
+  log(
+    `seeding every collection (200 companies, 3 boards, 15 buckets, 60 tickets, ~640 appointments around ${SEED_TODAY})`,
+  );
   run("sh", ["-c", seedCmd]);
 
   log(`backend on ${backendUrl}`);

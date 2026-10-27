@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { CalendarOptionsSchema } from "./calendar.js";
 import { FilterNodeSchema, FilterOpSchema } from "./filter.js";
 import { KanbanOptionsSchema } from "./kanban.js";
 
@@ -162,6 +163,7 @@ export const ViewConfigSchema = z.looseObject({
   card_options: CardOptionsSchema.optional(),
   /** Validated when present: a typo in a field name fails at load, not on screen. */
   kanban_options: KanbanOptionsSchema.optional(),
+  calendar_options: CalendarOptionsSchema.optional(),
   row_color: RowColorConfigSchema.optional(),
 
   row_actions: z.array(z.string()).default([]),

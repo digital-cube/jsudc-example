@@ -10,6 +10,7 @@ import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { COLLECTIONS_DIR } from "../src/config.js";
+import { belgradeIso, parseDay } from "./generate-appointments.js";
 
 /** mulberry32, as the companies generator. */
 function prng(seed: number) {
@@ -189,12 +190,23 @@ const BODIES = [
   "The acceptance criteria are listed in the description of the epic.",
 ];
 
-/** The day the due dates and calendar slots are spread around. */
+/** The day the due dates are spread around. */
 const BASE_DAY = Date.UTC(2026, 10, 2);
 const DAY = 86_400_000;
 
+/**
+ * The day the committed calendar slots were written for: the current and the
+ * next week of it. `npm run seed` moves them by whole weeks to the week it
+ * runs in (`shiftSlotsToWeekOf`), so the tickets calendar is never empty.
+ */
+export const KANBAN_TODAY = "2026-10-27";
+/** Share of the tickets that get a `starts_at` / `ends_at`. */
+const SCHEDULED_SHARE = 0.4;
+
 const isoDay = (ms: number) => new Date(ms).toISOString().slice(0, 10);
-const isoTime = (ms: number) => new Date(ms).toISOString().replace(".000Z", "Z");
+
+/** Monday of the week `day` (midnight UTC of a calendar day) falls in. */
+export const mondayOf = (day: number) => day - ((new Date(day).getUTCDay() + 6) % 7) * DAY;
 
 export interface SeedRow extends Record<string, unknown> {
   __meta: { id: string };
@@ -225,6 +237,9 @@ function sample<T>(rand: Rand, xs: readonly T[], n: number): T[] {
 
 export function generateKanban(seed: number): KanbanSeed {
   const rand = prng(seed);
+  // Its own stream: the calendar slots do not move the rest of the board around.
+  const slots = prng(seed ^ 0x5ca1ab1e);
+  const firstMonday = mondayOf(parseDay(KANBAN_TODAY));
   const out: KanbanSeed = { boards: [], buckets: [], tickets: [] };
 
   BOARDS.forEach((spec, b) => {
@@ -264,14 +279,15 @@ export function generateKanban(seed: number): KanbanSeed {
           tags: sample(rand, spec.tags, between(rand, 0, 3)),
           assignees: sample(rand, PEOPLE, between(rand, 0, 3)),
         };
-        // Roughly one ticket in five has no due date, and so no calendar slot either.
-        if (rand() < 0.8) {
-          const day = BASE_DAY + between(rand, -10, 24) * DAY;
-          ticket.due = isoDay(day);
-          const start =
-            day + between(rand, 8, 15) * 3_600_000 + pick(rand, [0, 15, 30, 45]) * 60_000;
-          ticket.starts_at = isoTime(start);
-          ticket.ends_at = isoTime(start + between(rand, 2, 12) * 15 * 60_000);
+        // Roughly one ticket in five has no due date.
+        if (rand() < 0.8) ticket.due = isoDay(BASE_DAY + between(rand, -10, 24) * DAY);
+        // ~40% are scheduled: a weekday of this week or the next, 09:00-17:00 Belgrade time.
+        if (slots() < SCHEDULED_SHARE) {
+          const day = firstMonday + between(slots, 0, 9) * DAY;
+          const weekday = day + (day - firstMonday >= 5 * DAY ? 2 * DAY : 0);
+          const start = between(slots, 9 * 4, 15 * 4) * 15;
+          ticket.starts_at = belgradeIso(weekday, start);
+          ticket.ends_at = belgradeIso(weekday, start + between(slots, 2, 8) * 15);
         }
         out.tickets.push(ticket);
       }

@@ -31,10 +31,17 @@ describe("collection registry", () => {
     expect((await books.source.describe()).fields.title?.type).toBe("string");
   });
 
-  it("ships the companies and the kanban collections", () => {
+  it("ships the companies, the kanban and the calendar collections", () => {
     const assets = readCollectionAssets(COLLECTIONS_DIR);
-    expect(assets.map((a) => a.name)).toEqual(["boards", "buckets", "companies", "tickets"]);
-    expect(assets.every((a) => a.seedFile !== null)).toBe(true);
+    expect(assets.map((a) => a.name)).toEqual([
+      "appointments",
+      "boards",
+      "buckets",
+      "companies",
+      "tickets",
+    ]);
+    // The appointments are generated at seed time, around the day it runs.
+    expect(assets.filter((a) => a.seedFile === null).map((a) => a.name)).toEqual(["appointments"]);
     const tickets = assets.find((a) => a.name === "tickets");
     expect(tickets?.view.default_renderer).toBe("kanban");
     expect(tickets?.view.kanban_options?.bucket_collection).toBe("buckets");
@@ -57,6 +64,50 @@ describe("collection registry", () => {
       opts?.bucket_color_field,
     ]) {
       expect(buckets?.schema.fields, String(f)).toHaveProperty(String(f));
+    }
+  });
+
+  it("parses both calendar views, their fields datetime fields of the schema", () => {
+    const assets = readCollectionAssets(COLLECTIONS_DIR);
+    const appointments = assets.find((a) => a.name === "appointments");
+    expect(appointments?.view).toMatchObject({
+      default_renderer: "calendar",
+      available_renderers: ["calendar", "table"],
+      calendar_options: {
+        start_field: "start",
+        end_field: "end",
+        title_field: "title",
+        color_field: "doctor",
+        default_preset: "workweek",
+        business_hours: [8, 20],
+        hour_height_px: 64,
+        scroll_to_hour: 7.5,
+        detail: { delete: true },
+      },
+    });
+    expect(Object.keys(appointments?.view.calendar_options?.color_map ?? {})).toEqual(
+      appointments?.schema.fields.doctor?.values,
+    );
+    expect(appointments?.view.calendar_options?.detail?.fields.map((f) => f.field)).toEqual([
+      "title",
+      "doctor",
+      "patient",
+      "room",
+      "status",
+      "notes",
+    ]);
+    const tickets = assets.find((a) => a.name === "tickets");
+    expect(tickets?.view.available_renderers).toContain("calendar");
+    expect(tickets?.view.calendar_options).toMatchObject({
+      start_field: "starts_at",
+      end_field: "ends_at",
+      color_field: "priority",
+      default_preset: "week",
+    });
+    for (const a of [appointments, tickets]) {
+      const o = a?.view.calendar_options;
+      expect(a?.schema.fields[o?.start_field ?? ""]?.type).toBe("datetime");
+      expect(a?.schema.fields[o?.end_field ?? ""]?.type).toBe("datetime");
     }
   });
 
@@ -97,6 +148,7 @@ describe("collection registry", () => {
     ["no-schema", /lonely\/schema\.json/],
     ["core-fields", /withcore\/schema\.json.*core_fields must be empty/],
     ["bad-name", /Bad-Name.*collection name/],
+    ["bad-calendar", /agenda\/view\.yaml.*calendar_options.*\n.*start_field: day is date/s],
   ])("fails startup on %s, naming the file", (dir, message) => {
     expect(() => readCollectionAssets(fixtures(dir))).toThrow(message);
   });
