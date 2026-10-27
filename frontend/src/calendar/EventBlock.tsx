@@ -29,7 +29,7 @@ export function EventBlock({
   readOnly: boolean;
   dragging: boolean;
   onPointerDown: (e: ReactPointerEvent<HTMLElement>, kind: DragKind) => void;
-  /** From the keyboard; a pointer press without a drag opens it through the grid. */
+  /** A click (or Enter / Space): the grid drops the click that ends a drag. */
   onOpen: (el: HTMLElement) => void;
 }) {
   const short = typeof style.height === "number" && style.height < 36;
@@ -42,12 +42,7 @@ export function EventBlock({
       data-color={ev.color ?? ""}
       aria-label={`${ev.title}, ${timeLabel}`}
       onPointerDown={(e) => onPointerDown(e, "move")}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onOpen(e.currentTarget);
-        }
-      }}
+      onClick={(e) => onOpen(e.currentTarget)}
       className={cn(
         "group/ev absolute z-10 block overflow-hidden rounded-md border-l-[3px] px-1.5 py-0.5 text-left text-foreground select-none",
         "shadow-[0_0_0_1px_var(--surface)] focus-visible:ring-2 focus-visible:ring-ring focus-visible:outline-none",

@@ -52,28 +52,29 @@ export const DATE_PARAM = "date";
 /** `?preset=&date=`: what the calendar shows. The zone is a preference, not URL state. */
 function useCalendarUrl(opts: CalendarOptions, today: CivilDay) {
   const [params, setParams] = useSearchParams();
-  const raw = params.get(PRESET_PARAM);
-  const preset: CalendarPreset =
-    isCalendarPreset(raw) && opts.available_presets.includes(raw) ? raw : opts.default_preset;
-  const anchor = parseDayKey(params.get(DATE_PARAM)) ?? today;
-  const set = useCallback(
-    (edit: Record<string, string>) =>
-      setParams(
-        (prev) => {
-          const next = new URLSearchParams(prev);
-          for (const [k, v] of Object.entries(edit)) next.set(k, v);
-          return next;
-        },
-        { replace: true },
-      ),
-    [setParams],
-  );
+  const presetOf = (p: URLSearchParams): CalendarPreset => {
+    const raw = p.get(PRESET_PARAM);
+    return isCalendarPreset(raw) && opts.available_presets.includes(raw)
+      ? raw
+      : opts.default_preset;
+  };
+  const anchorOf = (p: URLSearchParams) => parseDayKey(p.get(DATE_PARAM)) ?? today;
+  // Every change starts from the address bar as it is now, not as the last render saw it:
+  // navigations render in a transition, so two quick clicks would both step from the same day.
+  const update = (edit: (p: URLSearchParams) => Record<string, string>) => {
+    const now = new URLSearchParams(window.location.search);
+    const next = new URLSearchParams(now);
+    for (const [k, v] of Object.entries(edit(now))) next.set(k, v);
+    setParams(next, { replace: true });
+  };
   return {
-    preset,
-    anchor,
-    setPreset: (p: CalendarPreset) => set({ [PRESET_PARAM]: p }),
-    setAnchor: (d: CivilDay) => set({ [DATE_PARAM]: dayKey(d) }),
-    openDay: (d: CivilDay) => set({ [PRESET_PARAM]: "day", [DATE_PARAM]: dayKey(d) }),
+    preset: presetOf(params),
+    anchor: anchorOf(params),
+    setPreset: (p: CalendarPreset) => update(() => ({ [PRESET_PARAM]: p })),
+    setAnchor: (d: CivilDay) => update(() => ({ [DATE_PARAM]: dayKey(d) })),
+    step: (dir: 1 | -1) =>
+      update((p) => ({ [DATE_PARAM]: dayKey(stepAnchor(presetOf(p), anchorOf(p), dir)) })),
+    openDay: (d: CivilDay) => update(() => ({ [PRESET_PARAM]: "day", [DATE_PARAM]: dayKey(d) })),
   };
 }
 
@@ -305,7 +306,7 @@ function Calendar({
             variant="ghost"
             aria-label={t("APP", "CAL_PREV")}
             data-testid="cal-prev"
-            onClick={() => url.setAnchor(stepAnchor(preset, anchor, -1))}
+            onClick={() => url.step(-1)}
           >
             <ChevronLeft />
           </Button>
@@ -314,7 +315,7 @@ function Calendar({
             variant="ghost"
             aria-label={t("APP", "CAL_NEXT")}
             data-testid="cal-next"
-            onClick={() => url.setAnchor(stepAnchor(preset, anchor, 1))}
+            onClick={() => url.step(1)}
           >
             <ChevronRight />
           </Button>

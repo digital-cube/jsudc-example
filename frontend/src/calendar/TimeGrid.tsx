@@ -46,8 +46,6 @@ interface Drag {
   y: number;
   col: number;
   moved: boolean;
-  /** The element pressed, for the detail popover when the press was a click. */
-  el: HTMLElement;
 }
 
 export interface TimeGridProps {
@@ -117,12 +115,12 @@ export function TimeGrid(props: TimeGridProps) {
       y: e.clientY,
       col: colAt(e.clientX),
       moved: false,
-      el: e.currentTarget.closest<HTMLElement>("[data-testid=cal-event]") ?? e.currentTarget,
     });
   };
 
   // The latest props for the document listeners, without re-binding them on every render.
   const live = useRef({ props, drag, preview });
+  const dropClick = useRef(false);
   live.current = { props, drag, preview };
 
   // biome-ignore lint/correctness/useExhaustiveDependencies: bound once per drag; `live` has the rest
@@ -150,11 +148,13 @@ export function TimeGrid(props: TimeGridProps) {
       const { drag: d, preview: p } = live.current;
       setDrag(null);
       setPreview(null);
-      if (!d) return;
-      if (!d.moved) {
-        live.current.props.onOpen(ev, d.el);
-        return;
-      }
+      // A press without a drag is a click: the block's own click opens it.
+      if (!d?.moved) return;
+      // The click the browser sends after this pointerup is the end of a drag, not a click.
+      dropClick.current = true;
+      setTimeout(() => {
+        dropClick.current = false;
+      }, 0);
       const next = p ?? { id: ev.id, ...where(e.clientX, e.clientY) };
       if (next.start !== ev.start || next.end !== ev.end) {
         live.current.props.onMove(ev, next.start, next.end);
@@ -302,7 +302,7 @@ export function TimeGrid(props: TimeGridProps) {
                           width: `calc(${100 / lane.lanes}% - 4px)`,
                         }}
                         onPointerDown={(e, kind) => startDrag(e, ev, kind)}
-                        onOpen={(el) => props.onOpen(ev, el)}
+                        onOpen={(el) => !dropClick.current && props.onOpen(ev, el)}
                       />
                     );
                   })}
