@@ -7,6 +7,7 @@ import {
   okKind,
   parseKind,
   type ReadResponse,
+  sourceGroup,
   UdcError,
   type UdcMessage,
 } from "@jsudc/udc-core";
@@ -138,12 +139,17 @@ export function createDispatcher(
           ...(c.label === undefined ? {} : { label: c.label }),
           default_renderer: c.view.default_renderer,
           capabilities: c.source.capabilities,
+          source_kind: c.source.kind ?? "postgres_jsonb",
+          group: sourceGroup(c.source.kind ?? "postgres_jsonb"),
         })),
       }),
     )
     .register("describe", ACTIONS.describe.request, async ({ collection }) => {
       const c = registry.get(collection);
-      return buildDescribe(c.name, c.source.capabilities, await c.source.describe(), c.view);
+      return buildDescribe(c.name, c.source.capabilities, await c.source.describe(), c.view, {
+        source_kind: c.source.kind ?? "postgres_jsonb",
+        docs: c.docs,
+      });
     })
     .register(
       "list",

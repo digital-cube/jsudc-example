@@ -1,0 +1,20 @@
+# repos — the public GitHub repositories of digital-cube.
+#
+# Without a token GitHub allows 60 requests an hour per IP; the five-minute
+# cache keeps this collection at 12 an hour however often the UI polls.
+# Set UDC_GITHUB_TOKEN for the 5,000/h limit: without it the Authorization
+# header is dropped, not sent as "Bearer ".
+kind: http_api
+options:
+  base_url: https://api.github.com
+  list_endpoint: /users/digital-cube/repos?per_page=100&sort=updated
+  id_field: name
+  headers:
+    Accept: application/vnd.github+json
+    User-Agent: jsudc-example
+    Authorization: Bearer ${UDC_GITHUB_TOKEN}
+  # Fields named as GitHub names them need no entry; these are the nested ones.
+  field_map:
+    owner_avatar: owner.avatar_url
+  timeout_ms: 10000
+  cache_ttl_ms: 300000

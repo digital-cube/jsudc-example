@@ -39,11 +39,26 @@ describe("collection registry", () => {
       "buckets",
       "comments",
       "companies",
+      "files",
       "org",
+      "quakes",
+      "repos",
       "tickets",
     ]);
-    // The appointments are generated at seed time, around the day it runs.
-    expect(assets.filter((a) => a.seedFile === null).map((a) => a.name)).toEqual(["appointments"]);
+    // The appointments are generated at seed time, around the day it runs; files and the net need no seed.
+    expect(assets.filter((a) => a.seedFile === null).map((a) => a.name)).toEqual([
+      "appointments",
+      "files",
+      "quakes",
+      "repos",
+    ]);
+    expect(Object.fromEntries(assets.map((a) => [a.name, a.source.kind]))).toMatchObject({
+      companies: "postgres_jsonb",
+      tickets: "postgres_jsonb",
+      files: "filesystem",
+      quakes: "http_api",
+      repos: "http_api",
+    });
     const tickets = assets.find((a) => a.name === "tickets");
     expect(tickets?.view.default_renderer).toBe("kanban");
     expect(tickets?.view.kanban_options?.bucket_collection).toBe("buckets");

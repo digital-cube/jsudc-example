@@ -1,0 +1,5 @@
+[
+  { "name": "Ana Petrović", "role": "design", "city": "Novi Sad" },
+  { "name": "Marko Ilić", "role": "backend", "city": "Beograd" },
+  { "name": "Jelena Savić", "role": "support", "city": "Niš" }
+]

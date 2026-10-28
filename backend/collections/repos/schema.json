@@ -1,0 +1,32 @@
+{
+  "version": "v1",
+  "core_fields": [],
+  "fields": {
+    "name": { "type": "string" },
+    "full_name": { "type": "string" },
+    "description": { "type": "text" },
+    "language": { "type": "string" },
+    "stargazers_count": { "type": "integer", "min": 0 },
+    "forks_count": { "type": "integer", "min": 0 },
+    "open_issues_count": { "type": "integer", "min": 0 },
+    "pushed_at": { "type": "datetime", "description": "Last push" },
+    "html_url": { "type": "string" },
+    "owner_avatar": { "type": "string" },
+    "topics": { "type": "string_array" },
+    "archived": { "type": "bool" }
+  },
+  "field_order": [
+    "owner_avatar",
+    "name",
+    "description",
+    "language",
+    "topics",
+    "stargazers_count",
+    "forks_count",
+    "open_issues_count",
+    "pushed_at",
+    "archived",
+    "full_name",
+    "html_url"
+  ]
+}

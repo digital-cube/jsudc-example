@@ -6,6 +6,10 @@
  * collection; the appointments around SEED_TODAY, default 2026-10-27), start the backend on it, start Vite proxying to that backend,
  * run Cypress headless, and stop both servers whatever happens.
  *
+ * The http_api collections (quakes, repos) read the responses recorded under
+ * backend/test/fixtures/http (UDC_HTTP_FIXTURES), so a run never touches the
+ * internet.
+ *
  * Ports are not the dev ones, so `npm run dev` may keep running alongside:
  * E2E_BACKEND_PORT (5110) and E2E_WEB_PORT (5310). TEST_DATABASE_URL comes
  * from the environment, else backend/.env, else the backend's default.
@@ -26,6 +30,7 @@ const backendUrl = `http://127.0.0.1:${backendPort}`;
 const webUrl = `http://127.0.0.1:${webPort}`;
 // The appointments are generated around the seed day: pinned, so every run sees the same week.
 const SEED_TODAY = process.env.SEED_TODAY || "2026-10-27";
+const HTTP_FIXTURES = join(ROOT, "backend", "test", "fixtures", "http");
 const seedCmd = `SEED_TODAY=${SEED_TODAY} npm run seed --silent -- --reset --db ${testDb}`;
 
 const children = [];
@@ -100,7 +105,14 @@ try {
 
   log(`backend on ${backendUrl}`);
   start("backend", "npx", ["tsx", "backend/src/main.ts"], {
-    env: { ...process.env, DATABASE_URL: testDb, PORT: String(backendPort), LOG_LEVEL: "warn" },
+    env: {
+      ...process.env,
+      DATABASE_URL: testDb,
+      PORT: String(backendPort),
+      LOG_LEVEL: "warn",
+      UDC_HTTP_FIXTURES: HTTP_FIXTURES,
+      UDC_HTTP_SOURCES: "on",
+    },
   });
   await waitFor(`${backendUrl}/healthz`, "backend");
 

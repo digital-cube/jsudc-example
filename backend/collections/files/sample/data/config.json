@@ -1,0 +1,9 @@
+{
+  "theme": "auto",
+  "page_size": 100,
+  "locales": ["en", "sr"],
+  "features": {
+    "map": true,
+    "kanban": true
+  }
+}

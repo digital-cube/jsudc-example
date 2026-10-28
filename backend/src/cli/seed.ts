@@ -1,7 +1,7 @@
 /**
  *   npm run seed -- [--reset] [--db <url | database name>] [--test] [--limit N] [--collection NAME]
  *
- * Seeds every collection under backend/collections (or just --collection):
+ * Seeds every Postgres collection under backend/collections (or just --collection):
  * schema.json as active revision 1, then seed.json. Without --reset a
  * collection whose table already has rows is left alone. Rows that depend on
  * the day (the appointments, the tickets' calendar slots) are written around
@@ -41,8 +41,11 @@ if (limit !== undefined && (!Number.isInteger(limit) || limit < 0)) {
 }
 
 const url = targetUrl();
+// Only a database collection has a table to seed; files and the net bring their own rows.
 const assets = readCollectionAssets(COLLECTIONS_DIR).filter(
-  (a) => values.collection === undefined || a.name === values.collection,
+  (a) =>
+    a.source.kind === "postgres_jsonb" &&
+    (values.collection === undefined || a.name === values.collection),
 );
 if (assets.length === 0)
   throw new Error(`no collection to seed (${values.collection ?? "none found"})`);

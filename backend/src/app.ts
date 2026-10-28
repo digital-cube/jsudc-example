@@ -4,7 +4,9 @@ import { ACTIONS, ErrorPayloadSchema, errKind, isActionName, requestKind } from 
 import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
 import { jsonSchemaTransform } from "fastify-type-provider-zod";
 import { z } from "zod";
+import { registerBlobRoute } from "./blob.js";
 import type { Dispatcher } from "./dispatcher.js";
+import type { CollectionRegistry } from "./registry.js";
 
 const MESSAGE_ID_HEADER = "x-udc-message-id";
 
@@ -30,6 +32,8 @@ function envelopeDoc(action: string) {
  */
 export async function buildApp(opts: {
   dispatcher: Dispatcher;
+  /** With it, `GET /udc/files/blob` serves file previews of filesystem collections. */
+  registry?: CollectionRegistry | undefined;
   logger?: FastifyServerOptions["logger"];
 }): Promise<FastifyInstance> {
   const { dispatcher } = opts;
@@ -77,6 +81,7 @@ export async function buildApp(opts: {
   });
 
   app.get("/healthz", { schema: { hide: true } }, async () => ({ ok: true }));
+  if (opts.registry) registerBlobRoute(app, opts.registry);
 
   for (const action of dispatcher.actions()) {
     app.post(

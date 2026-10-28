@@ -1,0 +1,9 @@
+{
+  "action": "list",
+  "payload": {
+    "collection": "files",
+    "filter": { "and": [{ "field": "path", "op": "eq", "value": "docs" }] },
+    "sort": [{ "field": "size", "dir": "desc" }],
+    "page": { "limit": 100 }
+  }
+}

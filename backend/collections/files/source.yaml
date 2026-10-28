@@ -1,0 +1,12 @@
+# files — rows are the entries of one directory on disk, not a table.
+#
+# `root` is relative to this directory (or absolute); UDC_FILES_ROOT in the
+# environment points the collection at another tree. Read-only: no rename,
+# no delete, no schema edits. A `path eq <dir>` condition in the filter picks
+# the directory listed (the UI sets it when a folder row is clicked); the rest
+# of the filter, the sort and the paging run over that directory's entries.
+kind: filesystem
+options:
+  root: sample
+  follow_symlinks: false
+  max_entries: 5000

@@ -1,0 +1,29 @@
+# quakes — the USGS feed of the last month's earthquakes of magnitude 4.5 and
+# up (~500–700 events, ~450 KB, no key). One upstream call answers every row:
+# the server keeps the mapped array for `cache_ttl_ms` and serves filters,
+# sorts and pages from it; when USGS fails after a good fetch, the old copy
+# is served marked stale.
+kind: http_api
+options:
+  base_url: https://earthquake.usgs.gov
+  list_endpoint: /earthquakes/feed/v1.0/summary/4.5_month.geojson
+  # A GeoJSON FeatureCollection: the rows are its `features`.
+  list_unwrap: features
+  id_field: id
+  headers:
+    Accept: application/geo+json
+    User-Agent: jsudc-example
+  # GeoJSON keeps the position as [longitude, latitude, depth]: lng first.
+  field_map:
+    mag: properties.mag
+    place: properties.place
+    time: properties.time
+    depth: geometry.coordinates[2]
+    lat: geometry.coordinates[1]
+    lng: geometry.coordinates[0]
+    alert: properties.alert
+    status: properties.status
+    type: properties.type
+    url: properties.url
+  timeout_ms: 20000
+  cache_ttl_ms: 60000

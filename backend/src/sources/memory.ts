@@ -1,15 +1,7 @@
 import { randomUUID } from "node:crypto";
+import { type Capabilities, ORDER_GAP, type Row, type SchemaDoc, UdcError } from "@jsudc/udc-core";
+import { type ArrayLoad, ArraySource, READ_ONLY_ARRAY_CAPABILITIES } from "./array.js";
 import {
-  type Capabilities,
-  evaluateFilter,
-  type ListResponse,
-  ORDER_GAP,
-  type Row,
-  type SchemaDoc,
-  UdcError,
-} from "@jsudc/udc-core";
-import {
-  assertQueryFields,
   assertValidRow,
   cycleError,
   notFound,
@@ -19,21 +11,12 @@ import {
   withoutMeta,
 } from "./fields.js";
 import {
-  ALL_FILTER_OPS,
   DEFAULT_ORDER_FIELD,
-  DEFAULT_PAGE_SIZE,
-  type Source,
-  type SourceListRequest,
   type SourceMutation,
   type SourceReindex,
   type SourceTreeReparent,
   type TreeReparentResult,
 } from "./source.js";
-
-const readOnlySchema = () =>
-  Promise.reject(
-    new UdcError("unsupported_op", "the memory source cannot edit its schema (schema_edit: false)"),
-  );
 
 interface Stored {
   id: string;
@@ -41,31 +24,21 @@ interface Stored {
   data: Record<string, unknown>;
 }
 
-const isMissing = (v: unknown) => v === null || v === undefined;
-
-function compareValues(a: unknown, b: unknown): number {
-  if (typeof a === "number" && typeof b === "number") return a - b;
-  const x = String(a);
-  const y = String(b);
-  return x < y ? -1 : x > y ? 1 : 0;
-}
-
-/** Rows in an array: filters through udc-core's `evaluateFilter`, offset paging only. */
-export class MemorySource implements Source {
+/**
+ * Rows in an array, writable: the dispatcher tests' source. Filter, sort and
+ * offset paging are `ArraySource`'s; this class adds insert / update /
+ * delete, `reindex` and `tree.reparent`.
+ */
+export class MemorySource extends ArraySource {
   readonly capabilities: Capabilities = {
+    ...READ_ONLY_ARRAY_CAPABILITIES,
     mutate: true,
-    subscribe: false,
-    total_count: true,
-    schema_edit: false,
-    config_edit: false,
     reindex: true,
     tree_reparent: true,
-    paging: ["offset"],
-    supported_filter_ops: ALL_FILTER_OPS,
   };
 
-  private readonly schema: SchemaDoc;
-  private readonly pageSizeDefault: number;
+  readonly kind = "memory";
+  protected readonly label = "the memory source";
   private rows: Stored[];
 
   constructor(opts: {
@@ -73,8 +46,7 @@ export class MemorySource implements Source {
     rows?: Record<string, unknown>[];
     pageSizeDefault?: number;
   }) {
-    this.schema = opts.schema;
-    this.pageSizeDefault = opts.pageSizeDefault ?? DEFAULT_PAGE_SIZE;
+    super(opts);
     // A seed row may fix its id in `__meta.id`, as `npm run seed` allows.
     this.rows = (opts.rows ?? []).map((row) => {
       const meta = row.__meta as { id?: unknown } | undefined;
@@ -86,45 +58,15 @@ export class MemorySource implements Source {
     });
   }
 
-  async describe(): Promise<SchemaDoc> {
-    return this.schema;
+  protected async load(): Promise<ArrayLoad> {
+    return { rows: this.rows.map(serialize) };
   }
 
-  async list(req: SourceListRequest): Promise<ListResponse> {
-    assertQueryFields(this.schema, req.filter, req.sort);
-    if (req.page?.cursor != null) {
-      throw new UdcError("unsupported_op", "the memory source pages by offset only");
-    }
-    const matched = this.rows.filter((r) => evaluateFilter(req.filter, r.data));
-    const keys = req.sort ?? [];
-    matched.sort((a, b) => {
-      for (const { field, dir } of keys) {
-        const x = a.data[field];
-        const y = b.data[field];
-        // NULLS LAST in both directions, as the SQL source.
-        if (isMissing(x) || isMissing(y)) {
-          if (isMissing(x) && isMissing(y)) continue;
-          return isMissing(x) ? 1 : -1;
-        }
-        const c = compareValues(x, y);
-        if (c !== 0) return dir === "desc" ? -c : c;
-      }
-      return a.id < b.id ? -1 : a.id > b.id ? 1 : 0;
-    });
-    const offset = req.page?.offset ?? 0;
-    const limit = req.page?.limit ?? this.pageSizeDefault;
-    return {
-      rows: matched.slice(offset, offset + limit).map(serialize),
-      next_cursor: null,
-      total: matched.length,
-    };
-  }
-
-  async read(id: string): Promise<Row> {
+  override async read(id: string): Promise<Row> {
     return serialize(this.find(id));
   }
 
-  async mutate(m: SourceMutation): Promise<Row> {
+  override async mutate(m: SourceMutation): Promise<Row> {
     if (m.op === "insert") {
       const data = withoutMeta(m.row ?? {});
       assertValidRow(this.schema, data, "insert");
@@ -234,18 +176,6 @@ export class MemorySource implements Source {
     }
     for (const row of touched) row.version += 1;
     return { row: serialize(node), updated: touched.size };
-  }
-
-  addField(): Promise<SchemaDoc> {
-    return readOnlySchema();
-  }
-
-  updateField(): Promise<SchemaDoc> {
-    return readOnlySchema();
-  }
-
-  softDeleteField(): Promise<SchemaDoc> {
-    return readOnlySchema();
   }
 
   private find(id: string): Stored {

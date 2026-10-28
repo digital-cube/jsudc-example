@@ -1,9 +1,11 @@
 import {
   type Capabilities,
+  type CollectionDocs,
   type DescribeResponse,
   type FilterableField,
   filterableForType,
   type SchemaDoc,
+  type SourceKind,
   type ViewConfig,
 } from "@jsudc/udc-core";
 import { deriveColumns, placeUnlisted } from "./columns.js";
@@ -48,17 +50,22 @@ export function filterableFields(view: ViewConfig, schema: SchemaDoc): Filterabl
 
 /**
  * The `describe` payload: the source's active schema without its soft-deleted
- * fields, and the view with its derived columns.
+ * fields, the view with its derived columns, and the README when there is one.
  */
 export function buildDescribe(
   collection: string,
   capabilities: Capabilities,
   active: SchemaDoc,
   view: ViewConfig,
+  about: { source_kind: SourceKind; docs?: CollectionDocs | undefined } = {
+    source_kind: "postgres_jsonb",
+  },
 ): DescribeResponse {
   return {
     collection,
     capabilities,
+    source_kind: about.source_kind,
+    ...(about.docs ? { docs: about.docs } : {}),
     schema: presentedSchema(active),
     view: { ...view, columns: deriveColumns(view.columns, active, view.default_column_width) },
     filterable: { fields: filterableFields(view, active) },

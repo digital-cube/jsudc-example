@@ -66,6 +66,7 @@ export interface PostgresJsonbSourceOptions {
  * schema comes from the collection's active revision on every call.
  */
 export class PostgresJsonbSource implements Source {
+  readonly kind = "postgres_jsonb";
   readonly capabilities: Capabilities = {
     mutate: true,
     subscribe: false,

@@ -9,6 +9,7 @@ import {
   type SchemaDoc,
   type SchemaPosition,
   type SortKey,
+  type SourceKind,
   SUPPORTED_OPS,
   type TreeReparentFields,
 } from "@jsudc/udc-core";
@@ -69,6 +70,8 @@ export interface SourceUpdateField {
  */
 export interface Source {
   readonly capabilities: Capabilities;
+  /** Where the rows live (the `kind` of `source.yaml`); absent reads as `postgres_jsonb`. */
+  readonly kind?: SourceKind;
   /** The active schema document, `version` in its wire form (`"v<n>"`). */
   describe(): Promise<SchemaDoc>;
   list(req: SourceListRequest): Promise<ListResponse>;

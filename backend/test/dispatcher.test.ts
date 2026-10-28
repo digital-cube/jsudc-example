@@ -64,7 +64,13 @@ describe("dispatcher on MemorySource", () => {
       id: "m1",
       payload: {
         collections: [
-          { name: "firms", default_renderer: "table", capabilities: expect.any(Object) },
+          {
+            name: "firms",
+            default_renderer: "table",
+            capabilities: expect.any(Object),
+            source_kind: "memory",
+            group: "database",
+          },
         ],
       },
     });
@@ -78,6 +84,8 @@ describe("dispatcher on MemorySource", () => {
     expect(parsed.success).toBe(true);
     const p = parsed.data as DescribeResponse;
     expect(p.collection).toBe("firms");
+    expect(p.source_kind).toBe("memory");
+    expect(p.docs).toBeUndefined();
     expect(p.schema.version).toBe("v1");
     expect(p.view.columns.map((c) => c.field)).toEqual(["name", "employees", "active", "note"]);
     // No view.filterable: every non-deleted field, in field_order.
