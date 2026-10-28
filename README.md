@@ -114,3 +114,42 @@ is remembered per collection in `localStorage` (`udc:paging:<collection>`).
 (5110) and Vite at `E2E_WEB_PORT` (5310), runs `cypress run`, and stops both. Spec
 files that edit rows reseed first. Extra arguments go to Cypress, e.g.
 `npm run e2e -- --spec frontend/cypress/e2e/edit.cy.ts`.
+
+## Deploy on igor.digitalcube.work
+
+<http://jsudc.igor.digitalcube.work> is the **dev stack with HMR**, on purpose: no
+production build, no `vite preview`, no static files. Everything it needs is in
+[`deploy/`](deploy):
+
+```
+nginx :80 (TLS upstream)  ->  Vite 127.0.0.1:5101  ->  POST /udc/*, /healthz  ->  Fastify 127.0.0.1:5100
+deploy/nginx/jsudc.igor.digitalcube.work.conf   the vhost; /etc/nginx/sites-enabled/ links to it
+deploy/systemd/jsudc-dev.service                user unit running `npm run dev`; ~/.config/systemd/user/ links to it
+```
+
+Vite is on 5101, not 5173: podman's `rootlessport` holds 5170–5189 on this machine.
+The unit runs from the root checkout `/home/digital/work/jsudc` on `main` (never a
+worktree), with Node v24.19.0 from nvm hardcoded, and starts at boot through linger.
+
+- `deploy/deploy.sh [--branch jsudc] [--reset-seed] [--no-merge]` — a normal deploy,
+  from the root checkout: `git merge --ff-only jsudc`, stop the unit, `npm ci`,
+  `npm run build`, migrate, `npm run seed` (new collections only; `--reset-seed`
+  reseeds everything and loses edits made on the site), start the unit, then waits
+  for `/healthz` through nginx and lists one row of every database collection.
+- `deploy/install.sh [--dry-run]` — once, and again whenever the unit or the vhost
+  file is renamed or a link is lost: links both files into the checkout, enables the
+  unit, reloads nginx and checks linger. It refuses to run from anywhere but
+  `/home/digital/work/jsudc`.
+
+```sh
+systemctl --user restart jsudc-dev
+systemctl --user status jsudc-dev
+journalctl --user -u jsudc-dev -f
+tail -f /var/log/nginx/jsudc.igor.access.log /var/log/nginx/jsudc.igor.error.log
+```
+
+`DATABASE_URL` or `PORT` overrides, if ever needed, go into `backend/.env` in the
+root checkout (see [`backend/.env.example`](backend/.env.example)). The unit's own
+`Environment=` lines win over that file, though (the environment beats `.env`), so
+moving the backend off 5100 under the unit means editing `PORT` in
+`deploy/systemd/jsudc-dev.service` (and `UDC_PROXY_TARGET` for Vite's proxy).
