@@ -11,7 +11,7 @@ nvm use
 npm install
 npm run db:setup
 npm run db:migrate -w @jsudc/backend   # once after pulling: the appointments table (migration 0003)
-npm run seed -- --reset     # 200 companies, 3 boards / 15 buckets / 60 tickets, ~640 appointments around today
+npm run seed -- --reset     # 200 companies (with lat / lng), 3 boards / 15 buckets / 60 tickets, ~640 appointments around today
 npm run dev                 # backend :5100 + Vite (it prints its port)
 ```
 
@@ -196,6 +196,38 @@ tree has no `children_count_field`).
 8. **Filters.** *Kind = person* plus a search for *Vođa* lists the matching
    people as roots (their teams did not match); the **Table** tab shows the
    same rows flat.
+
+## The map: `companies` on OpenStreetMap
+
+The same 200 companies, placed: each has a `lat` / `lng` a few km from the
+centre of its city (`backend/scripts/generate-companies.ts`). A database
+seeded before this ticket has no coordinates (and schema revision 1 without
+the two fields): run `npm run seed -- --reset` once. The `map` renderer is
+driven only by `map_options` in `view.yaml` (typed by `MapOptionsSchema` in
+`udc-core`; a view that lists `map` without `map_options`, or names a field
+the schema lacks, stops the server at start).
+
+1. **Open the map.** On **Companies** pick the **Map** tab (`?tab=map`). One
+   circle per company over Serbia, sized by head count
+   (`radius_min + employees * radius_scale`, capped at `radius_max`),
+   inactive companies in grey (the view's `row_color`, the same rule that
+   dims them in the table). The toolbar reads *200 on map of 200*. The tiles
+   come from `tile.openstreetmap.org`, straight from the browser.
+2. **Hover and click.** A circle gets an outline on hover; click one and its
+   popup shows `popup_fields` (name, city, industry, employees) formatted as
+   the table formats them, and the circle stays highlighted until the popup
+   closes.
+3. **Regions.** *Serbia* is pressed: it is the view the map opened on.
+   *Vojvodina* and *South* fly there; *Fit all* frames every company, and no
+   region button is pressed any more (the same happens when you pan by hand).
+4. **Chips move the markers.** *City = Niš*: only the Niš companies stay,
+   *N on map of N*. Add *Employees ≥ 500* or search a name: the circles
+   follow, as the table rows would. The map keeps where you put it.
+5. **Same filter, any tab.** Reload: still the map, still Niš. Switch to
+   **Table**: the same rows, the `lat` / `lng` columns at the end. Search for
+   something that does not exist: the table's empty state, over the map.
+6. **Dark.** Switch the theme: the tiles are inverted by a CSS filter on the
+   tile pane, the circles take the dark theme's colours.
 
 ## What is behind it
 
