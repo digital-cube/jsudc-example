@@ -1,0 +1,53 @@
+{
+  "version": "v1",
+  "core_fields": [],
+  "fields": {
+    "icao24": {
+      "type": "string",
+      "description": "ICAO 24-bit transponder address (hex): the airframe"
+    },
+    "callsign": {
+      "type": "string",
+      "description": "The flight's callsign; OpenSky pads it to 8 characters"
+    },
+    "country": {
+      "type": "string",
+      "description": "Country of registration, inferred from the address"
+    },
+    "lat": { "type": "decimal", "min": -90, "max": 90 },
+    "lng": { "type": "decimal", "min": -180, "max": 180 },
+    "baro_alt": { "type": "decimal", "description": "Barometric altitude, metres" },
+    "geo_alt": { "type": "decimal", "description": "Geometric (GNSS) altitude, metres" },
+    "heading": {
+      "type": "decimal",
+      "min": 0,
+      "max": 360,
+      "description": "True track, degrees clockwise from north"
+    },
+    "velocity": { "type": "decimal", "min": 0, "description": "Ground speed, m/s" },
+    "vert_rate": { "type": "decimal", "description": "Vertical rate, m/s; negative is descending" },
+    "on_ground": { "type": "bool" },
+    "squawk": { "type": "string", "description": "Transponder code" },
+    "time_pos": {
+      "type": "datetime",
+      "description": "When the position was last updated (OpenSky sends Unix seconds)"
+    },
+    "last_seen": { "type": "datetime", "description": "When the aircraft was last heard from" }
+  },
+  "field_order": [
+    "callsign",
+    "icao24",
+    "country",
+    "baro_alt",
+    "geo_alt",
+    "velocity",
+    "vert_rate",
+    "heading",
+    "lat",
+    "lng",
+    "on_ground",
+    "squawk",
+    "time_pos",
+    "last_seen"
+  ]
+}

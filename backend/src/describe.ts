@@ -5,6 +5,7 @@ import {
   type FilterableField,
   filterableForType,
   type SchemaDoc,
+  type SourceInfo,
   type SourceKind,
   type ViewConfig,
 } from "@jsudc/udc-core";
@@ -57,7 +58,11 @@ export function buildDescribe(
   capabilities: Capabilities,
   active: SchemaDoc,
   view: ViewConfig,
-  about: { source_kind: SourceKind; docs?: CollectionDocs | undefined } = {
+  about: {
+    source_kind: SourceKind;
+    docs?: CollectionDocs | undefined;
+    source?: SourceInfo | undefined;
+  } = {
     source_kind: "postgres_jsonb",
   },
 ): DescribeResponse {
@@ -65,6 +70,7 @@ export function buildDescribe(
     collection,
     capabilities,
     source_kind: about.source_kind,
+    ...(about.source ? { source: about.source } : {}),
     ...(about.docs ? { docs: about.docs } : {}),
     schema: presentedSchema(active),
     view: { ...view, columns: deriveColumns(view.columns, active, view.default_column_width) },

@@ -40,6 +40,7 @@ describe("collection registry", () => {
       "comments",
       "companies",
       "files",
+      "flights",
       "menu",
       "metrics",
       "org",
@@ -52,6 +53,7 @@ describe("collection registry", () => {
     expect(assets.filter((a) => a.seedFile === null).map((a) => a.name)).toEqual([
       "appointments",
       "files",
+      "flights",
       "menu",
       "metrics",
       "quakes",
@@ -63,6 +65,7 @@ describe("collection registry", () => {
       files: "filesystem",
       quakes: "http_api",
       repos: "http_api",
+      flights: "http_api",
       menu: "yaml_menu",
     });
     const tickets = assets.find((a) => a.name === "tickets");

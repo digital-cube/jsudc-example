@@ -7,8 +7,13 @@ import { makeSource } from "./sources/factory.js";
 
 const handle = connect(config.databaseUrl);
 // Each collection's source.yaml picks its source: Postgres (the default), files on disk, the net.
+// An http_api source logs every upstream call: the journal shows how often OpenSky is asked.
+const sourceLog = {
+  info: (msg: string) => app.log.info(msg),
+  warn: (msg: string) => app.log.warn(msg),
+};
 const registry = loadRegistry(COLLECTIONS_DIR, (asset, reg) =>
-  makeSource(asset, { db: handle.db, registry: reg }),
+  makeSource(asset, { db: handle.db, registry: reg, log: sourceLog }),
 );
 
 // Dispatcher failures go to Fastify's logger, which exists once the app does.

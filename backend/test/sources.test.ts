@@ -197,6 +197,31 @@ describe("the shipped files, quakes and repos collections", () => {
   });
 });
 
+describe("flights through the dispatcher", () => {
+  it("describes the history fields, anonymous auth and the cache TTL; lists the fixture", async () => {
+    const { call } = serve(COLLECTIONS_DIR, {
+      UDC_HTTP_FIXTURES: fixtures("http"),
+    });
+    const d = await call<DescribeResponse>("describe", { collection: "flights" });
+    expect(d.source_kind).toBe("http_api");
+    expect(d.source).toEqual({ auth: "anonymous", cache_ttl_ms: 240_000 });
+    for (const f of ["baro_alt_history", "lat_history", "lng_history"]) {
+      expect(d.schema.fields[f]?.type).toBe("json");
+    }
+    expect(d.view.columns.find((c) => c.field === "baro_alt_history")?.render).toBe("sparkline");
+    expect(Object.keys(d.docs ?? {})).toEqual(["en", "sr"]);
+    const list = await call<{ rows: Record<string, unknown>[]; total: number }>("list", {
+      collection: "flights",
+      page: { limit: 500 },
+    });
+    expect(list.total).toBeGreaterThan(50);
+    expect(list.rows[0]?.baro_alt_history).toHaveLength(1);
+    // A Postgres collection says nothing about its source.
+    const companies = await call<DescribeResponse>("describe", { collection: "companies" });
+    expect(companies).not.toHaveProperty("source");
+  });
+});
+
 describe("GET /udc/files/blob", () => {
   const tmp = mkdtempSync(join(tmpdir(), "jsudc-blob-"));
   writeFileSync(join(tmp, "small.md"), "# Small\n");

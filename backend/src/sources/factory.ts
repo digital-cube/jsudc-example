@@ -4,7 +4,7 @@ import { sourceGroup } from "@jsudc/udc-core";
 import type { Db } from "../db/client.js";
 import type { CollectionAsset, CollectionRegistry } from "../registry.js";
 import { FilesystemSource } from "./filesystem.js";
-import { type Env, type FetchLike, HttpApiSource } from "./http-api.js";
+import { type Env, type FetchLike, HttpApiSource, type SourceLog } from "./http-api.js";
 import { MemorySource } from "./memory.js";
 import { PostgresJsonbSource } from "./postgres-jsonb.js";
 import type { Source } from "./source.js";
@@ -15,6 +15,10 @@ export function httpSourcesEnabled(env: Env): boolean {
   const v = env.UDC_HTTP_SOURCES?.trim().toLowerCase();
   return !(v === "off" || v === "0" || v === "false" || v === "no");
 }
+
+/** The variable that overrides an http_api collection's cache TTLs: `UDC_FLIGHTS_CACHE_TTL_MS` for `flights`. */
+export const cacheTtlEnvVar = (collection: string) =>
+  `UDC_${collection.toUpperCase()}_CACHE_TTL_MS`;
 
 /** The variable that moves a filesystem collection's root: `UDC_FILES_ROOT` for `files`. */
 export const rootEnvVar = (collection: string) => `UDC_${collection.toUpperCase()}_ROOT`;
@@ -33,13 +37,17 @@ export interface SourceDeps {
   fetch?: FetchLike | undefined;
   /** What a yaml_menu's `udc:collections` branches list; none without it. */
   registry?: CollectionRegistry | undefined;
+  /** An http_api source's line per upstream call and its credential warnings. */
+  log?: SourceLog | undefined;
 }
 
 /**
  * The source `source.yaml` asks for. `null` for an http_api collection when
  * `UDC_HTTP_SOURCES` is off: the registry then does not serve it. With
  * `UDC_HTTP_FIXTURES=<dir>` every http_api collection reads
- * `<dir>/<collection>.json` instead of calling upstream.
+ * `<dir>/<collection>.json` (or `.1.json`, `.2.json`, … one per upstream
+ * call) instead of calling upstream; `UDC_<NAME>_CACHE_TTL_MS` overrides a
+ * collection's cache TTLs.
  */
 export function makeSource(asset: CollectionAsset, deps: SourceDeps): Source | null {
   const env = deps.env ?? process.env;
@@ -73,10 +81,17 @@ export function makeSource(asset: CollectionAsset, deps: SourceDeps): Source | n
     case "http_api": {
       if (!httpSourcesEnabled(env)) return null;
       const fixtures = env.UDC_HTTP_FIXTURES?.trim();
+      // A test (or a demo) that cannot wait out a 4-minute cache sets both TTLs at once.
+      const ttl = Number(env[cacheTtlEnvVar(asset.name)]?.trim() || Number.NaN);
+      const options =
+        Number.isInteger(ttl) && ttl >= 0
+          ? { ...source.options, cache_ttl_ms: ttl, cache_ttl_ms_authenticated: ttl }
+          : source.options;
       return new HttpApiSource({
         name: asset.name,
         schema: asset.schema,
-        options: source.options,
+        options,
+        log: deps.log,
         fetch: deps.fetch,
         env,
         fixturesDir: fixtures ? resolve(fixtures) : undefined,

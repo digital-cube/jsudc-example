@@ -5,6 +5,7 @@ import {
   calendarOptionsProblems,
   chartOptionsProblems,
   FIELD_NAME_RE,
+  httpApiProblems,
   LOCALES_WITH_DOCS,
   MENU_SCHEMA,
   mapOptionsProblems,
@@ -18,6 +19,7 @@ import {
   UdcError,
   type ViewConfig,
   ViewConfigSchema,
+  withHistoryFields,
 } from "@jsudc/udc-core";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
@@ -148,6 +150,13 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
       }
     }
     if (source.kind === "postgres_jsonb") assertJsonbSchema(schema, schemaFile);
+    const history = source.kind === "http_api" ? source.options.history : undefined;
+    if (source.kind === "http_api") {
+      const problems = httpApiProblems(source.options, schema);
+      if (problems.length > 0) {
+        throw new Error(`${sourceFile}: does not fit schema.json\n${problems.join("\n")}`);
+      }
+    }
     // A calendar over a field that is not a datetime would draw nothing, a tree, a map or a
     // chart over a field the schema lacks (or a chart series that is not a number) nothing
     // sensible: refuse any of them at load.
@@ -157,7 +166,12 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
         view.calendar_options && calendarOptionsProblems(view.calendar_options, schema),
       ],
       ["tree_options", view.tree_options && treeOptionsProblems(view.tree_options, schema)],
-      ["map_options", view.map_options && mapOptionsProblems(view.map_options, schema)],
+      // A history's `<field>_history` fields are the server's: the view may name them.
+      [
+        "map_options",
+        view.map_options &&
+          mapOptionsProblems(view.map_options, withHistoryFields(schema, history)),
+      ],
       ["chart_options", view.chart_options && chartOptionsProblems(view.chart_options, schema)],
     ] as const;
     for (const [block, problems] of blocks) {

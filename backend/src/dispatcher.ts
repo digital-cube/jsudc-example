@@ -162,6 +162,7 @@ export function createDispatcher(
       return buildDescribe(c.name, c.source.capabilities, await c.source.describe(), c.view, {
         source_kind: c.source.kind ?? "postgres_jsonb",
         docs: c.docs,
+        source: c.source.info?.(),
       });
     })
     .register(

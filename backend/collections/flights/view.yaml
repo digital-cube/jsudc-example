@@ -1,0 +1,101 @@
+# flights — aircraft over the Balkans (source.yaml), opening on the map:
+# an aeroplane per row, turned along its track, coloured by altitude, and
+# behind the one you point at, the trail it has flown since the server
+# started polling. The page polls every 30 s; the server's cache decides
+# when OpenSky is asked (every 4 minutes anonymous), so most polls answer
+# the same snapshot and the trail grows one point per upstream call.
+default_renderer: map
+available_renderers: [map, table, cards]
+pagination: infinite
+# One upstream answer is every row (a box rarely holds more than 300 aircraft).
+page_size_default: 500
+row_height: 34
+refresh_interval_ms: 30000
+
+map_options:
+  # source.yaml maps [6] → lat and [5] → lng.
+  lat_field: lat
+  lng_field: lng
+  icon: airplane
+  rotate_field: heading
+  icon_size: 22
+  # The histories the server adds (source.yaml `history`). Empty after a
+  # restart: a trail needs two upstream calls, four minutes anonymous.
+  trail:
+    lat_history_field: lat_history
+    lng_history_field: lng_history
+  popup_fields: [callsign, icao24, country, baro_alt, velocity, heading]
+  center: [44.0, 21.0]
+  zoom: 6
+  fit_bounds: false
+  # Viewport presets inside the box the feed covers; they fly, they do not filter.
+  default_region: balkans
+  regions:
+    - {id: balkans, label: Balkans, center: [44.0, 21.0], zoom: 6}
+    - {id: belgrade, label: Belgrade, center: [44.82, 20.29], zoom: 9}
+    - {id: adriatic, label: Adriatic, center: [42.6, 19.0], zoom: 7}
+
+search:
+  fields: [callsign, icao24, country]
+  placeholder: "Callsign, ICAO24 or country…"
+
+filters:
+  - {field: on_ground, kind: bool}
+  - field: country
+    kind: select
+    options: [Serbia, Croatia, Hungary, Romania, Bulgaria, Bosnia and Herzegovina, Montenegro,
+              North Macedonia, Albania, Greece, Turkey, Austria, Germany, Poland, Malta, Israel,
+              United Kingdom, Ireland, France, Italy, Switzerland, United Arab Emirates, Qatar]
+  - {field: baro_alt, kind: range, min: 0, max: 13000, step: 500}
+
+filterable:
+  fields: [callsign, icao24, country, squawk, on_ground, baro_alt, velocity, heading]
+
+columns:
+  - {field: callsign, pin: left, width: 110}
+  - {field: icao24, pin: left, width: 90, color: muted}
+  # The window of barometric altitude, oldest left; one dot until the second upstream call.
+  - {field: baro_alt_history, width: 120, render: sparkline, render_options: {width: 96, height: 22}}
+  # Metres, as OpenSky sends them (aviation talks feet: 10 000 m ≈ FL330).
+  - {field: baro_alt, width: 110, align: right, render: number_format,
+     render_options: {precision: 0, suffix: " m"}}
+  - {field: velocity, width: 100, align: right, render: number_format,
+     render_options: {precision: 0, suffix: " m/s"}}
+  - {field: vert_rate, width: 100, align: right, render: number_format,
+     render_options: {precision: 1, suffix: " m/s"}}
+  # The arrow the aeroplane on the map is turned by; "—" for a missing track, not north.
+  - {field: heading, width: 80, align: center, render: heading_glyph}
+  - {field: country, width: 170}
+  - {field: lat, width: 90, align: right, render: number_format,
+     render_options: {precision: 2, suffix: "°"}}
+  - {field: lng, width: 90, align: right, render: number_format,
+     render_options: {precision: 2, suffix: "°"}}
+  - {field: geo_alt, width: 110, align: right, render: number_format,
+     render_options: {precision: 0, suffix: " m"}}
+  - {field: squawk, width: 90, align: center, color: muted}
+  - {field: on_ground, width: 100, align: center, render: bool}
+  - {field: time_pos, width: 170, color: muted}
+  - {field: last_seen, width: 170, color: muted}
+  # Positions: the map's trail reads them; as a sparkline they mean nothing.
+  - {field: lat_history, width: 160, color: muted}
+  - {field: lng_history, width: 160, color: muted}
+
+card_options:
+  title_field: callsign
+  subtitle_field: country
+  meta_fields: [icao24, velocity, heading, squawk]
+  metric: {field: baro_alt, label: Altitude, unit: " m", precision: 0}
+  sparkline: {field: baro_alt_history}
+  size: medium
+
+# Flight phases by barometric altitude; the same rules colour the aeroplanes.
+# 10 000 m and up is cruise, 6 000–10 000 climb or descent, below that
+# approach and departure, below 100 m the ground.
+row_color:
+  field: baro_alt
+  rules:
+    - {min: 10000, color: info}
+    - {min: 6000, max: 9999.99, color: success}
+    - {min: 100, max: 5999.99, color: warning}
+    - {min: -500, max: 99.99, color: muted}
+    - {else: true, color: default}

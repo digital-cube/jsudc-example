@@ -9,6 +9,7 @@ import {
   type SchemaDoc,
   type SchemaPosition,
   type SortKey,
+  type SourceInfo,
   type SourceKind,
   type SourceReadResponse,
   SUPPORTED_OPS,
@@ -96,6 +97,8 @@ export interface Source {
   reparent?(req: SourceTreeReparent): Promise<TreeReparentResult>;
   /** The file the rows are read from, as written (`source.read`). Present when `capabilities.source_yaml`. */
   readSource?(): Promise<SourceReadResponse>;
+  /** How the source reaches its rows now (an http_api credential, its cache TTL), for `describe`. */
+  info?(): SourceInfo;
 }
 
 export const ALL_FILTER_OPS = [...SUPPORTED_OPS];
