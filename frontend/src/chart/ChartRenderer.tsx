@@ -387,6 +387,7 @@ function CartesianView({ collection, describe, rows, opts, range, timeZone }: Ch
                   type="button"
                   data-testid="chart-legend-item"
                   data-field={s.field}
+                  data-axis={s.axis}
                   data-hidden={off}
                   aria-pressed={!off}
                   onClick={() => toggle(s.field)}
