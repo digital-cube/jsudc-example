@@ -9,8 +9,11 @@ import type { PagingMode } from "../udc/keys";
 export interface RendererCount {
   shown: number;
   total: number | null;
-  /** `nodes`: the toolbar reads "N nodes" (the tree) instead of "Showing N of M". */
-  unit?: "nodes";
+  /**
+   * `nodes`: the toolbar reads "N nodes" (the tree), `map`: "N on map of M"
+   * (rows without a position are not drawn), instead of "Showing N of M".
+   */
+  unit?: "nodes" | "map";
 }
 
 /** What `<UdcDataView>` hands every renderer; each takes the parts it uses. */

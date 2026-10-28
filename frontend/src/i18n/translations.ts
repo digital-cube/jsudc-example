@@ -23,6 +23,14 @@ export const TRANSLATIONS: Translations = {
     TAB_KANBAN: { en: "Board", sr: "Tabla" },
     TAB_CALENDAR: { en: "Calendar", sr: "Kalendar" },
     TAB_TREE: { en: "Tree", sr: "Stablo" },
+    TAB_MAP: { en: "Map", sr: "Mapa" },
+    MAP_NO_OPTIONS: {
+      en: "This view has no map_options.",
+      sr: "Ovaj prikaz nema map_options.",
+    },
+    MAP_ON_MAP: { en: "{shown} on map of {total}", sr: "{shown} na mapi od {total}" },
+    MAP_REGIONS: { en: "Regions", sr: "Regioni" },
+    MAP_FIT_ALL: { en: "Fit all", sr: "Prikaži sve" },
     TREE_NO_OPTIONS: {
       en: "This view has no tree_options.",
       sr: "Ovaj prikaz nema tree_options.",
@@ -430,6 +438,8 @@ export const TRANSLATIONS: Translations = {
     INDUSTRY: { en: "Industry", sr: "Delatnost" },
     EMPLOYEES: { en: "Employees", sr: "Zaposleni" },
     REVENUE_EUR: { en: "Revenue (EUR)", sr: "Prihod (EUR)" },
+    LAT: { en: "Latitude", sr: "Geografska širina" },
+    LNG: { en: "Longitude", sr: "Geografska dužina" },
     FOUNDED: { en: "Founded", sr: "Osnovano" },
     ACTIVE: { en: "Active", sr: "Aktivno" },
   },

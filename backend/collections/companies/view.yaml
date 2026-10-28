@@ -107,6 +107,8 @@ map_options:
   radius_field: employees
   radius_min: 4
   radius_scale: 0.02
+  # 1,000 employees and up: the cap, so Beograd stays a cluster, not a blot.
+  radius_max: 24
   popup_fields: [name, city, industry, employees]
   center: [44.2, 20.9]
   zoom: 7

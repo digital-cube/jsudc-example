@@ -193,3 +193,74 @@
     opacity: 1;
   }
 }
+
+/* The map tab (Leaflet). Unlayered on purpose: leaflet.css is unlayered too, and a
+   layered rule would lose to it whatever its specificity. Marker colours come from
+   the theme's tokens by tone, so a muted row is a muted circle in both themes. */
+.udc-map.leaflet-container {
+  background: var(--muted);
+  font-family: var(--font-sans);
+}
+.dark .udc-map .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.55);
+}
+.udc-map .leaflet-bar a,
+.udc-map .leaflet-bar a:hover {
+  background: var(--surface);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+.udc-map .leaflet-control-attribution {
+  background: color-mix(in oklch, var(--surface) 80%, transparent);
+  color: var(--muted-foreground);
+}
+.udc-map .leaflet-control-attribution a {
+  color: var(--sem-info);
+}
+.udc-map .udc-map-popup .leaflet-popup-content-wrapper,
+.udc-map .udc-map-popup .leaflet-popup-tip {
+  background: var(--surface-raised);
+  color: var(--foreground);
+  box-shadow: 0 6px 24px -6px rgb(0 0 0 / 0.3);
+}
+.udc-map .udc-map-popup .leaflet-popup-content {
+  margin: 12px 14px;
+  font-size: 13px;
+}
+.udc-map .udc-map-popup a.leaflet-popup-close-button {
+  color: var(--muted-foreground);
+}
+.udc-map-marker {
+  stroke: var(--sem-accent);
+  fill: var(--sem-accent);
+  transition: stroke-width 120ms;
+}
+.udc-map-marker.tone-success {
+  stroke: var(--sem-success);
+  fill: var(--sem-success);
+}
+.udc-map-marker.tone-warning {
+  stroke: var(--sem-warning);
+  fill: var(--sem-warning);
+}
+.udc-map-marker.tone-danger {
+  stroke: var(--sem-danger);
+  fill: var(--sem-danger);
+}
+.udc-map-marker.tone-info {
+  stroke: var(--sem-info);
+  fill: var(--sem-info);
+}
+.udc-map-marker.tone-muted {
+  stroke: var(--sem-muted);
+  fill: var(--sem-muted);
+}
+.udc-map-marker:hover {
+  stroke: var(--foreground);
+  stroke-width: 3;
+}
+.udc-map-marker.is-selected {
+  stroke: var(--foreground);
+  stroke-width: 3;
+  fill-opacity: 0.85;
+}

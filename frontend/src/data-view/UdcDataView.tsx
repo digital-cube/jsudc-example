@@ -241,6 +241,8 @@ export function UdcDataView({ collection }: { collection: string }) {
                     ) : (
                       t("APP", "TREE_NODES_OF", { shown: fmt(shown), total: fmt(total) })
                     )
+                  ) : ownCount?.unit === "map" && !paging ? (
+                    t("APP", "MAP_ON_MAP", { shown: fmt(shown), total: fmt(total) })
                   ) : (
                     t("APP", "SHOWING", { shown: fmt(shown), total: fmt(total) })
                   )}
