@@ -5,7 +5,8 @@ import { CellValue } from "../table/cells";
 
 /**
  * A card, read-only: its title and body, then every live field as the table
- * formats it; the board and bucket ids read as their names.
+ * formats it; the board and bucket ids read as their names. The tree opens
+ * its nodes in it too, naming its own title and body fields.
  */
 export function CardDetailDialog({
   row,
@@ -13,6 +14,9 @@ export function CardDetailDialog({
   collection,
   labels,
   onClose,
+  titleField = describe.view.kanban_options?.card.title_field,
+  bodyField = describe.view.kanban_options?.card.body_field,
+  testId = "kanban-detail",
 }: {
   row: Row | undefined;
   describe: DescribeResponse;
@@ -20,13 +24,13 @@ export function CardDetailDialog({
   /** Names for id fields the board knows (the board and the bucket), by field. */
   labels: Record<string, ReadonlyMap<string, string>>;
   onClose: () => void;
+  titleField?: string | undefined;
+  bodyField?: string | undefined;
+  testId?: string;
 }) {
   const { t, locale, intlLocale } = useI18n();
   const { schema, view } = describe;
-  const opts = view.kanban_options;
   const section = tableSection(collection);
-  const titleField = opts?.card.title_field;
-  const bodyField = opts?.card.body_field;
   const fields = schema.field_order.filter(
     (f) => !schema.fields[f]?.deleted && f !== titleField && f !== bodyField,
   );
@@ -36,7 +40,7 @@ export function CardDetailDialog({
     <Dialog open={row !== undefined} onOpenChange={(open) => !open && onClose()}>
       {row ? (
         <DialogContent
-          data-testid="kanban-detail"
+          data-testid={testId}
           className="max-w-lg"
           title={String((titleField && row[titleField]) || "—")}
         >
@@ -48,7 +52,7 @@ export function CardDetailDialog({
             ) : null}
             <dl className="grid grid-cols-[minmax(7rem,auto)_1fr] gap-x-4 border-t border-border">
               {fields.map((field) => (
-                <div key={field} className="contents" data-testid={`kanban-detail-${field}`}>
+                <div key={field} className="contents" data-testid={`${testId}-${field}`}>
                   <dt className="border-b border-dashed border-border/80 py-2 text-xs text-muted-foreground">
                     {t(section, field)}
                   </dt>

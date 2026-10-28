@@ -9,6 +9,8 @@ import type { PagingMode } from "../udc/keys";
 export interface RendererCount {
   shown: number;
   total: number | null;
+  /** `nodes`: the toolbar reads "N nodes" (the tree) instead of "Showing N of M". */
+  unit?: "nodes";
 }
 
 /** What `<UdcDataView>` hands every renderer; each takes the parts it uses. */
@@ -20,6 +22,10 @@ export interface RendererProps {
   data: UdcCollectionResult;
   /** Search, chips and filter tree, composed. */
   filter: FilterNode | undefined;
+  /** Chips and filter tree without the search: for a renderer that searches what it loaded. */
+  baseFilter: FilterNode | undefined;
+  /** The search box, as typed. */
+  search: string;
   sort: SortKey[];
   onSort: (field: string, multi: boolean) => void;
   mode: PagingMode;

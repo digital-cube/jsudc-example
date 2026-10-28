@@ -1,10 +1,11 @@
 import type { DescribeResponse, RendererName } from "@jsudc/udc-core";
-import { CalendarDays, Kanban, LayoutGrid, Table2 } from "lucide-react";
+import { CalendarDays, Kanban, LayoutGrid, ListTree, Table2 } from "lucide-react";
 import { CalendarRenderer } from "../calendar/CalendarRenderer";
 import { CardRenderer } from "../cards/CardRenderer";
 import { KanbanBoardSwitcher } from "../kanban/KanbanBoardSwitcher";
 import { KanbanRenderer } from "../kanban/KanbanRenderer";
 import { TableRenderer } from "../table/TableRenderer";
+import { TreeRenderer } from "../tree/TreeRenderer";
 import type { RendererEntry, RendererProps } from "./types";
 
 function TableTab(props: RendererProps) {
@@ -49,6 +50,13 @@ export const RENDERERS: Partial<Record<RendererName, RendererEntry>> = {
     paging: false,
     editMode: false,
     toolbar: CalendarToolbar,
+  },
+  tree: {
+    component: TreeRenderer,
+    icon: ListTree,
+    labelKey: "TAB_TREE",
+    paging: false,
+    editMode: false,
   },
 };
 

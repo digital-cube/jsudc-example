@@ -63,6 +63,17 @@ export function UdcDataView({ collection }: { collection: string }) {
       }),
     [state.search, state.chips, tree, view?.search, view?.filters],
   );
+  const baseFilter = useMemo(
+    () =>
+      composeFilter({
+        search: "",
+        searchConfig: view?.search,
+        chips: state.chips,
+        chipConfigs: view?.filters,
+        tree,
+      }),
+    [state.chips, tree, view?.search, view?.filters],
+  );
 
   const entry = rendererEntry(state.tab);
   const paging = entry?.paging ?? true;
@@ -224,6 +235,12 @@ export function UdcDataView({ collection }: { collection: string }) {
                 >
                   {total === null ? (
                     <Skeleton className="h-3 w-24" />
+                  ) : ownCount?.unit === "nodes" && !paging ? (
+                    shown === total ? (
+                      t("APP", "TREE_NODES", { count: fmt(total) })
+                    ) : (
+                      t("APP", "TREE_NODES_OF", { shown: fmt(shown), total: fmt(total) })
+                    )
                   ) : (
                     t("APP", "SHOWING", { shown: fmt(shown), total: fmt(total) })
                   )}
@@ -268,6 +285,8 @@ export function UdcDataView({ collection }: { collection: string }) {
             describe={live}
             data={data}
             filter={filter}
+            baseFilter={baseFilter}
+            search={state.search}
             sort={sort}
             onSort={(field, multi) => state.setSort(cycleSort(sort, field, multi))}
             mode={state.mode}

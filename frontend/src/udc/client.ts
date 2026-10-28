@@ -100,6 +100,10 @@ export class UdcClient {
     return this.call("reindex", req);
   }
 
+  treeReparent(req: ActionRequest<"tree.reparent">) {
+    return this.call("tree.reparent", req);
+  }
+
   schemaAddField(req: ActionRequest<"schema.add_field">) {
     return this.call("schema.add_field", req);
   }

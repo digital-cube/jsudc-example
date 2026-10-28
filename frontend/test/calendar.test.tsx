@@ -385,6 +385,8 @@ describe("CalendarRenderer", () => {
       describe,
       data: {} as UdcCollectionResult,
       filter: undefined,
+      baseFilter: undefined,
+      search: "",
       sort: [],
       onSort: () => {},
       mode: "infinite",
