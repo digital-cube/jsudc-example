@@ -155,12 +155,54 @@ Everything the calendar does comes from `calendar_options` in each
 `view.yaml`, typed by `CalendarOptionsSchema` in `udc-core`; the server
 refuses to start if `start_field` / `end_field` are not `datetime` fields.
 
+## The tree: `comments` and `org`
+
+Two collections share one `tree` renderer, driven only by `tree_options` in
+their `view.yaml` (typed by `TreeOptionsSchema` in `udc-core`; the server
+refuses to start when a field it names is not in the schema, or when a lazy
+tree has no `children_count_field`).
+
+1. **A thread.** Open **Comments**: one discussion of 80 comments, read in
+   one page and built in the browser (`lazy: false`), fully expanded
+   (`default_depth: 99`). The toolbar counts *80 nodes*. Up / Down move
+   between comments, Left closes one, Right opens it, Enter shows every
+   field.
+2. **Search.** Type *Beograd*: the matching words are marked, every comment
+   on the way to a match opens and the rest of the thread closes
+   (`on_search: highlight_and_expand`, `collapse_others`). Nothing went to the
+   server: the whole thread is still loaded. Clear the search and the tree is
+   back as you left it.
+3. **Reply.** `⋮` on a comment → *Reply*, write, Enter. The reply appears
+   under it (by "You"), with `parent_id`, `depth` one deeper and the next
+   sparse `order`.
+4. **Chips.** Pick an author in the *Author* chip: the filter runs on the
+   server; a reply whose parent did not match is drawn as a root with a small
+   muted arrow, so nothing disappears just because its parent was filtered.
+5. **One level at a time.** Open **Organisation** (`lazy: true`): the company
+   with its six departments; *1 of 134 nodes*. Open *Inženjering*: one more
+   `list` with `parent_id eq <id>` brings its teams, with a spinner while it
+   loads; the badge is the stored `children_count`. What you open is
+   remembered (`udc:tree:org` in `localStorage`).
+6. **Rename.** Double-click *Podaci*, type, Enter: saved with the row's
+   version; reload, it stays.
+7. **Move.** Drag *Platforma* onto *Prodaja*: it becomes Prodaja's last team.
+   Drop it on the thin gap above a sibling instead to place it between two.
+   One `tree.reparent` call moves it: the server writes `parent_id` and
+   `order`, recomputes `depth` and `ancestor_ids` for the team and every
+   person in it, and recounts both departments' `children_count` — in one
+   transaction (badges: *Inženjering 3*, *Prodaja 4*). Try to drag
+   *Inženjering* onto one of its own teams: the target is refused while you
+   drag and nothing is sent (the server would refuse the cycle too).
+8. **Filters.** *Kind = person* plus a search for *Vođa* lists the matching
+   people as roots (their teams did not match); the **Table** tab shows the
+   same rows flat.
+
 ## What is behind it
 
 - One protocol package, `packages/udc-core`, holds the Zod schemas the server
   validates with and the browser types against.
-- One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate` and
-  `schema.*`. The new column shows up because `describe` derives a column for
+- One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
+  `schema.*`, `reindex` and `tree.reparent`. The new column shows up because `describe` derives a column for
   every schema field that `view.yaml` does not list.
 - Schema edits are revisions in `udc_schema_revisions`. A soft delete marks
   the field `deleted: true` and keeps its values.
