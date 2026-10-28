@@ -122,6 +122,7 @@ export const READ_ONLY_ARRAY_CAPABILITIES: Capabilities = {
   config_edit: false,
   reindex: false,
   tree_reparent: false,
+  source_yaml: false,
   paging: ["offset"],
   supported_filter_ops: ALL_FILTER_OPS,
 };

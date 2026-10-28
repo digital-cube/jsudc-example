@@ -1,0 +1,125 @@
+# The application menu — this file IS the sidebar.
+#
+# Every node is one row of the `menu` collection (source: yaml_menu). The
+# backend flattens this tree on every read whose mtime changed: a node's id
+# is the sha1 of its path of codes from the root ("COLLECTIONS/DATABASE"),
+# so moving a node among its siblings keeps its id, renaming its code (or
+# an ancestor's) gives it a new one. `order` is the position among the
+# siblings, `depth` counts from 0, `children_count` is what the node has
+# after its reference (below) is resolved.
+#
+# Keys of a node:
+#   code             unique among its siblings; letters, digits, _ . -
+#   translation_key  <SECTION>_<TERM>, shown through t(section, term):
+#                    MENU_HOME → t("MENU", "HOME"); the raw key when untranslated
+#   icon             lucide:<kebab-name>, e.g. lucide:calendar-days
+#   url              a route of this app; a node with a url is a link
+#   children         a list of nodes, or a reference string:
+#                    "udc:collections"                 every collection served
+#                    "udc:collections?group=database"  …of one sidebar group
+#                    (database | files | internet). Resolved inside the
+#                    server against the live registry on every read: the
+#                    nodes it adds are `is_dynamic: true`.
+#
+# Edit this file, reload the page: the sidebar has changed.
+
+- code: HOME
+  translation_key: MENU_HOME
+  icon: lucide:house
+  url: /
+
+- code: COLLECTIONS
+  translation_key: MENU_COLLECTIONS
+  icon: lucide:layers
+  children:
+    - code: DATABASE
+      translation_key: MENU_DATABASE
+      icon: lucide:database
+      children: "udc:collections?group=database"
+    - code: FILES
+      translation_key: MENU_FILES
+      icon: lucide:folder-open
+      children: "udc:collections?group=files"
+    - code: INTERNET
+      translation_key: MENU_INTERNET
+      icon: lucide:globe
+      children: "udc:collections?group=internet"
+
+# One entry per renderer the demo shows off, each opening the tab it is about.
+- code: VIEWS
+  translation_key: MENU_VIEWS
+  icon: lucide:layout-grid
+  children:
+    - code: TICKETS_KANBAN
+      translation_key: MENU_VIEW_TICKETS
+      icon: lucide:kanban
+      url: /udc/tickets?tab=kanban
+    - code: APPOINTMENTS_CALENDAR
+      translation_key: MENU_VIEW_APPOINTMENTS
+      icon: lucide:calendar-days
+      url: /udc/appointments?tab=calendar
+    - code: COMPANIES_MAP
+      translation_key: MENU_VIEW_COMPANIES
+      icon: lucide:map
+      url: /udc/companies?tab=map
+    - code: ORG_TREE
+      translation_key: MENU_VIEW_ORG
+      icon: lucide:network
+      url: /udc/org?tab=tree
+    - code: METRICS_CHART
+      translation_key: MENU_VIEW_METRICS
+      icon: lucide:chart-line
+      url: /udc/metrics?tab=chart
+    - code: QUAKES_MAP
+      translation_key: MENU_VIEW_QUAKES
+      icon: lucide:map-pin
+      url: /udc/quakes?tab=map
+
+# The collections that ship a README, straight to their Doc tab.
+- code: DOCS
+  translation_key: MENU_DOCS
+  icon: lucide:book-open
+  children:
+    - code: DOC_APPOINTMENTS
+      translation_key: COLLECTIONS_APPOINTMENTS
+      icon: lucide:file-text
+      url: /udc/appointments?tab=doc
+    - code: DOC_COMMENTS
+      translation_key: COLLECTIONS_COMMENTS
+      icon: lucide:file-text
+      url: /udc/comments?tab=doc
+    - code: DOC_ORG
+      translation_key: COLLECTIONS_ORG
+      icon: lucide:file-text
+      url: /udc/org?tab=doc
+    - code: DOC_FILES
+      translation_key: COLLECTIONS_FILES
+      icon: lucide:file-text
+      url: /udc/files?tab=doc
+    - code: DOC_METRICS
+      translation_key: COLLECTIONS_METRICS
+      icon: lucide:file-text
+      url: /udc/metrics?tab=doc
+    - code: DOC_QUAKES
+      translation_key: COLLECTIONS_QUAKES
+      icon: lucide:file-text
+      url: /udc/quakes?tab=doc
+    - code: DOC_REPOS
+      translation_key: COLLECTIONS_REPOS
+      icon: lucide:file-text
+      url: /udc/repos?tab=doc
+    - code: DOC_MENU
+      translation_key: COLLECTIONS_MENU
+      icon: lucide:file-text
+      url: /udc/menu?tab=doc
+
+# This file, as data: the tree, the table and the Source tab.
+- code: MENU
+  translation_key: MENU_MENU
+  icon: lucide:list-tree
+  url: /udc/menu
+
+- code: ABOUT
+  translation_key: MENU_ABOUT
+  icon: lucide:info
+  url: /about

@@ -75,6 +75,7 @@ export class PostgresJsonbSource implements Source {
     config_edit: false,
     reindex: true,
     tree_reparent: true,
+    source_yaml: false,
     paging: ["cursor", "offset"],
     supported_filter_ops: ALL_FILTER_OPS,
   };

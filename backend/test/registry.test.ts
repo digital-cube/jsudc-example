@@ -40,6 +40,7 @@ describe("collection registry", () => {
       "comments",
       "companies",
       "files",
+      "menu",
       "metrics",
       "org",
       "quakes",
@@ -47,10 +48,11 @@ describe("collection registry", () => {
       "tickets",
     ]);
     // The appointments and the metrics are generated at seed time, around the day it runs;
-    // files and the net need no seed.
+    // files, the menu and the net need no seed.
     expect(assets.filter((a) => a.seedFile === null).map((a) => a.name)).toEqual([
       "appointments",
       "files",
+      "menu",
       "metrics",
       "quakes",
       "repos",
@@ -61,6 +63,7 @@ describe("collection registry", () => {
       files: "filesystem",
       quakes: "http_api",
       repos: "http_api",
+      menu: "yaml_menu",
     });
     const tickets = assets.find((a) => a.name === "tickets");
     expect(tickets?.view.default_renderer).toBe("kanban");

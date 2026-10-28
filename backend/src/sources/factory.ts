@@ -1,12 +1,14 @@
 import { readFileSync } from "node:fs";
-import { isAbsolute, resolve } from "node:path";
+import { dirname, isAbsolute, relative, resolve } from "node:path";
+import { sourceGroup } from "@jsudc/udc-core";
 import type { Db } from "../db/client.js";
-import type { CollectionAsset } from "../registry.js";
+import type { CollectionAsset, CollectionRegistry } from "../registry.js";
 import { FilesystemSource } from "./filesystem.js";
 import { type Env, type FetchLike, HttpApiSource } from "./http-api.js";
 import { MemorySource } from "./memory.js";
 import { PostgresJsonbSource } from "./postgres-jsonb.js";
 import type { Source } from "./source.js";
+import { YamlMenuSource } from "./yaml-menu.js";
 
 /** `UDC_HTTP_SOURCES=off` (or `0`, `false`, `no`): no collection is fetched from the net. */
 export function httpSourcesEnabled(env: Env): boolean {
@@ -29,6 +31,8 @@ export interface SourceDeps {
   db?: Db | undefined;
   env?: Env | undefined;
   fetch?: FetchLike | undefined;
+  /** What a yaml_menu's `udc:collections` branches list; none without it. */
+  registry?: CollectionRegistry | undefined;
 }
 
 /**
@@ -76,6 +80,22 @@ export function makeSource(asset: CollectionAsset, deps: SourceDeps): Source | n
         fetch: deps.fetch,
         env,
         fixturesDir: fixtures ? resolve(fixtures) : undefined,
+        pageSizeDefault,
+      });
+    }
+    case "yaml_menu": {
+      const file = resolve(asset.dir, source.options.file);
+      const { registry } = deps;
+      return new YamlMenuSource({
+        file,
+        displayPath: relative(dirname(asset.dir), file).split("\\").join("/"),
+        dynamic: source.options.dynamic,
+        collectionIcons: source.options.collection_icons,
+        collections: () =>
+          (registry?.list() ?? []).map((c) => ({
+            name: c.name,
+            group: sourceGroup(c.source.kind ?? "postgres_jsonb"),
+          })),
         pageSizeDefault,
       });
     }

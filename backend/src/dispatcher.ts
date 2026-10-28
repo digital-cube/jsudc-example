@@ -124,6 +124,19 @@ function reparentable(c: Collection): Source & Required<Pick<Source, "reparent">
   return source as Source & Required<Pick<Source, "reparent">>;
 }
 
+/** The source of a collection read from a file the UI may show, or `unsupported_op`. */
+function sourceReadable(c: Collection): Source & Required<Pick<Source, "readSource">> {
+  const { source } = c;
+  if (!source.capabilities.source_yaml || !source.readSource) {
+    throw new UdcError(
+      "unsupported_op",
+      `collection ${c.name} has no source file to show (source_yaml: false)`,
+      { collection: c.name },
+    );
+  }
+  return source as Source & Required<Pick<Source, "readSource">>;
+}
+
 /** A dispatcher with every action wired to the registry. */
 export function createDispatcher(
   registry: CollectionRegistry,
@@ -199,5 +212,8 @@ export function createDispatcher(
     }))
     .register("tree.reparent", ACTIONS["tree.reparent"].request, ({ collection, ...req }) =>
       reparentable(registry.get(collection)).reparent(req),
+    )
+    .register("source.read", ACTIONS["source.read"].request, ({ collection }) =>
+      sourceReadable(registry.get(collection)).readSource(),
     );
 }

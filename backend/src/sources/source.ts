@@ -10,6 +10,7 @@ import {
   type SchemaPosition,
   type SortKey,
   type SourceKind,
+  type SourceReadResponse,
   SUPPORTED_OPS,
   type TreeReparentFields,
 } from "@jsudc/udc-core";
@@ -93,6 +94,8 @@ export interface Source {
    * Refuses a cycle. Present when `capabilities.tree_reparent`.
    */
   reparent?(req: SourceTreeReparent): Promise<TreeReparentResult>;
+  /** The file the rows are read from, as written (`source.read`). Present when `capabilities.source_yaml`. */
+  readSource?(): Promise<SourceReadResponse>;
 }
 
 export const ALL_FILTER_OPS = [...SUPPORTED_OPS];

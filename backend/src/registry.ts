@@ -6,7 +6,9 @@ import {
   chartOptionsProblems,
   FIELD_NAME_RE,
   LOCALES_WITH_DOCS,
+  MENU_SCHEMA,
   mapOptionsProblems,
+  menuSchemaProblems,
   type SchemaDoc,
   type SchemaDocInput,
   SchemaDocSchema,
@@ -125,8 +127,6 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
       ViewConfigSchema,
       readFile(viewFile, (t) => parseYaml(t) ?? {}),
     );
-    const schemaJson = readFile(schemaFile, JSON.parse) as SchemaDocInput;
-    const schema = validated(schemaFile, SchemaDocSchema, schemaJson);
     const sourceFile = join(base, "source.yaml");
     const source: SourceConfig = existsSync(sourceFile)
       ? validated(
@@ -135,6 +135,18 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
           readFile(sourceFile, (t) => parseYaml(t) ?? { kind: "postgres_jsonb" }),
         )
       : { kind: "postgres_jsonb", options: {} };
+    // A menu's rows are fixed (MENU_SCHEMA): its schema.json is optional, and must agree.
+    const menu = source.kind === "yaml_menu";
+    const schemaJson = (
+      menu && !existsSync(schemaFile) ? MENU_SCHEMA : readFile(schemaFile, JSON.parse)
+    ) as SchemaDocInput;
+    const schema = validated(schemaFile, SchemaDocSchema, schemaJson);
+    if (menu) {
+      const problems = menuSchemaProblems(schema);
+      if (problems.length > 0) {
+        throw new Error(`${schemaFile}: disagrees with MENU_SCHEMA\n${problems.join("\n")}`);
+      }
+    }
     if (source.kind === "postgres_jsonb") assertJsonbSchema(schema, schemaFile);
     // A calendar over a field that is not a datetime would draw nothing, a tree, a map or a
     // chart over a field the schema lacks (or a chart series that is not a number) nothing
@@ -170,15 +182,16 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
 /**
  * The registry the server starts with: every collection under `dir`, its
  * source made by `makeSource`. A collection for which `makeSource` answers
- * `null` is not served (an http_api one with `UDC_HTTP_SOURCES=off`).
+ * `null` is not served (an http_api one with `UDC_HTTP_SOURCES=off`). The
+ * registry is handed to `makeSource` too: a menu lists its collections live.
  */
 export function loadRegistry(
   dir: string,
-  makeSource: (asset: CollectionAsset) => Source | null,
+  makeSource: (asset: CollectionAsset, registry: CollectionRegistry) => Source | null,
 ): CollectionRegistry {
   const registry = new CollectionRegistry();
   for (const asset of readCollectionAssets(dir)) {
-    const source = makeSource(asset);
+    const source = makeSource(asset, registry);
     if (!source) continue;
     registry.register({
       name: asset.name,

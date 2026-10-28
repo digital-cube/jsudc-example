@@ -7,7 +7,9 @@ import { makeSource } from "./sources/factory.js";
 
 const handle = connect(config.databaseUrl);
 // Each collection's source.yaml picks its source: Postgres (the default), files on disk, the net.
-const registry = loadRegistry(COLLECTIONS_DIR, (asset) => makeSource(asset, { db: handle.db }));
+const registry = loadRegistry(COLLECTIONS_DIR, (asset, reg) =>
+  makeSource(asset, { db: handle.db, registry: reg }),
+);
 
 // Dispatcher failures go to Fastify's logger, which exists once the app does.
 const log = { error: (obj: unknown, msg?: string) => app.log.error(obj, msg) };

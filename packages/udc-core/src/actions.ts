@@ -273,6 +273,8 @@ export const SourceReadResponseSchema = z.object({
   text: z.string(),
   /** Last modification, ISO instant. */
   mtime: z.string(),
+  /** The file as it is now does not parse: why. The rows served are the last good read (`stale`). */
+  error: z.string().optional(),
 });
 
 export type SourceReadResponse = z.infer<typeof SourceReadResponseSchema>;
