@@ -14,26 +14,22 @@ const expectIds = (ids: string[]) =>
   );
 
 describe("sidebar", () => {
+  // The grouped sidebar is the fallback for a deployment without a menu collection (Vitest);
+  // here the menu's COLLECTIONS branch groups the same way, from the registry.
   it("groups the collections by where their rows live", () => {
     cy.visit("/udc/files");
-    cy.get('[data-testid="nav-group-database"]').within(() => {
-      cy.contains("Database");
-      cy.get('[data-testid="nav-companies"]');
-      cy.get('[data-testid="nav-tickets"]');
-    });
-    cy.get('[data-testid="nav-group-files"]').within(() => {
-      cy.contains("Files");
-      cy.get("a").should("have.length", 1);
-      cy.get('[data-testid="nav-files"]');
-    });
-    cy.get('[data-testid="nav-group-internet"]').within(() => {
-      cy.contains("Internet");
-      cy.get('[data-testid="nav-quakes"]').should("contain", "Earthquakes");
-      cy.get('[data-testid="nav-repos"]').should("contain", "Repositories");
-    });
+    // The way to the active collection is open on load.
+    cy.get('[data-testid="menu-FILES"]').should("have.attr", "aria-expanded", "true");
+    cy.get('[data-testid="nav-files"]').should("have.attr", "aria-current", "page");
+    cy.get('[data-testid="menu-DATABASE"]').should("contain", "Database").click();
+    cy.get('[data-testid="nav-companies"]');
+    cy.get('[data-testid="nav-tickets"]');
+    cy.get('[data-testid="menu-INTERNET"]').should("contain", "Internet").click();
+    cy.get('[data-testid="nav-quakes"]').should("contain", "Earthquakes");
+    cy.get('[data-testid="nav-repos"]').should("contain", "Repositories");
     cy.get('[data-testid="locale-sr"]').click();
-    cy.get('[data-testid="nav-group-database"]').should("contain", "Baza");
-    cy.get('[data-testid="nav-group-files"]').should("contain", "Fajlovi");
+    cy.get('[data-testid="menu-DATABASE"]').should("contain", "Baza");
+    cy.get('[data-testid="menu-FILES"]').should("contain", "Fajlovi");
     cy.get('[data-testid="locale-en"]').click();
   });
 });
@@ -214,6 +210,8 @@ describe("quakes: USGS earthquakes on the map", () => {
 
   it("marks a stale copy", () => {
     cy.intercept("POST", "/udc/list", (req) => {
+      // Only the table's list: the sidebar reads the menu collection through /udc/list too.
+      if (req.body?.collection !== "quakes") return;
       req.continue((res) => {
         res.body.payload.stale = true;
         res.body.payload.fetched_at = new Date(Date.now() - 125_000).toISOString();

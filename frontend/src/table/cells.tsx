@@ -239,7 +239,7 @@ export function CellValue({
   if (kind === "icon") {
     const Icon = resolveIcon(value);
     return Icon ? (
-      <span title={String(value)} data-testid="cell-icon" data-icon={String(value)}>
+      <span title={String(value)} data-testid="icon-value" data-icon={String(value)}>
         <Icon className="size-4 text-muted-foreground" aria-hidden />
       </span>
     ) : null;

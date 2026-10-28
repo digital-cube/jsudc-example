@@ -100,7 +100,9 @@ export function parseMenuUrl(url: string): { pathname: string; tab: string | nul
  * The leaf the location activates: its path equals the current one and,
  * when its url has `?tab=`, the current tab is that one. A leaf naming the
  * tab beats one that does not (on `/udc/tickets?tab=kanban` the Views entry
- * wins over the collection's); among equals the first in menu order.
+ * wins over the collection's), then a written leaf beats one a `udc:`
+ * reference added (`/udc/menu` lights MENU, not the collection's leaf);
+ * among equals the first in menu order.
  */
 export function activeLeaf(
   items: readonly MenuItem[],
@@ -109,13 +111,13 @@ export function activeLeaf(
   const path = location.pathname.replace(/(.)\/+$/, "$1");
   const tab = new URLSearchParams(location.search).get("tab");
   let best: MenuItem | null = null;
-  let bestScore = 0;
+  let bestScore = -1;
   for (const item of walkMenu(items)) {
     if (!item.url) continue;
     const want = parseMenuUrl(item.url);
     if (want.pathname !== path) continue;
     if (want.tab !== null && want.tab !== tab) continue;
-    const score = want.tab === null ? 1 : 2;
+    const score = (want.tab === null ? 0 : 2) + (item.isDynamic ? 0 : 1);
     if (score > bestScore) {
       best = item;
       bestScore = score;

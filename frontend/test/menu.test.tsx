@@ -95,6 +95,12 @@ const ROWS: Row[] = [
     url: "/udc/tickets?tab=kanban",
   }),
   node("VIEWS/DOC_ORG", 1, { translation_key: "UNTRANSLATED_THING", url: "/udc/org?tab=doc" }),
+  node("VIEWS/ORG_PLAIN", 2, { translation_key: "MENU_ORG", url: "/udc/org/" }),
+  node("COLLECTIONS/DATABASE/COLLECTION_ORG", 2, {
+    translation_key: "COLLECTIONS_ORG",
+    url: "/udc/org",
+    is_dynamic: true,
+  }),
   node("ORPHAN", 0, { parent_id: "NOWHERE", url: "/x" }),
 ];
 
@@ -162,6 +168,7 @@ describe("the menu tree from flat rows", () => {
     expect(db?.children.map((c) => [c.code, c.isDynamic])).toEqual([
       ["COLLECTION_COMPANIES", true],
       ["COLLECTION_TICKETS", true],
+      ["COLLECTION_ORG", true],
     ]);
     expect(items[0]).toMatchObject({ label: "Home", icon: "lucide:house", url: "/" });
     expect(db?.children[1]?.label).toBe("Tickets");
@@ -189,7 +196,7 @@ describe("the active leaf", () => {
   });
 
   it("without ?tab= in its url a leaf matches the path on any tab", () => {
-    expect(at("/udc/companies")).toBe("COLLECTIONS/DATABASE/COLLECTION_COMPANIES");
+    expect(at("/udc/tickets")).toBe("COLLECTIONS/DATABASE/COLLECTION_TICKETS");
     expect(at("/udc/companies", "?tab=map&q=x")).toBe("COLLECTIONS/DATABASE/COLLECTION_COMPANIES");
     expect(at("/udc/tickets", "?tab=table")).toBe("COLLECTIONS/DATABASE/COLLECTION_TICKETS");
   });
@@ -198,7 +205,12 @@ describe("the active leaf", () => {
     expect(at("/udc/tickets", "?tab=kanban")).toBe("VIEWS/TICKETS_KANBAN");
     expect(at("/udc/tickets", "?q=a&tab=kanban")).toBe("VIEWS/TICKETS_KANBAN");
     expect(at("/udc/org", "?tab=doc")).toBe("VIEWS/DOC_ORG");
-    expect(at("/udc/org", "?tab=tree")).toBeUndefined();
+    expect(at("/udc/tickets", "?tab=calendar")).toBe("COLLECTIONS/DATABASE/COLLECTION_TICKETS");
+  });
+
+  it("a written leaf beats a dynamic one on the same path, trailing slash or not", () => {
+    expect(at("/udc/org")).toBe("VIEWS/ORG_PLAIN");
+    expect(at("/udc/org/", "?tab=tree&q=x")).toBe("VIEWS/ORG_PLAIN");
   });
 
   it("matches the root path, and nothing elsewhere", () => {
