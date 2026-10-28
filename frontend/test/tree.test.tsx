@@ -398,6 +398,7 @@ describe("<TreeRenderer>", () => {
         },
       }),
       filterable: { fields: [] },
+      source_kind: "postgres_jsonb",
     };
     const onCount = vi.fn();
     const props: RendererProps = {

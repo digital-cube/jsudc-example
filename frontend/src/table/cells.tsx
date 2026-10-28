@@ -1,4 +1,4 @@
-import type { ColumnConfig, FieldDef } from "@jsudc/udc-core";
+import { COLUMN_COLORS, type ColumnColor, type ColumnConfig, type FieldDef } from "@jsudc/udc-core";
 import { Check, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "../lib/utils";
@@ -6,7 +6,15 @@ import { useTimezone } from "../time/timezone";
 import { zonedFormat } from "../time/zoned";
 import { applyTransforms, hasTransforms, parseIsoParts } from "./transforms";
 
-export type RenderKind = "text" | "number_format" | "bool" | "date" | "datetime" | "number";
+export type RenderKind =
+  | "text"
+  | "number_format"
+  | "bool"
+  | "date"
+  | "datetime"
+  | "number"
+  | "bytes"
+  | "badge";
 
 /** The column's `render`, or the one its field type implies. */
 export function renderKind(column: ColumnConfig, def: FieldDef | undefined): RenderKind {
@@ -16,6 +24,8 @@ export function renderKind(column: ColumnConfig, def: FieldDef | undefined): Ren
     case "bool":
     case "date":
     case "datetime":
+    case "bytes":
+    case "badge":
       return column.render;
   }
   switch (def?.type) {
@@ -47,6 +57,35 @@ export function formatNumber(v: unknown, intlLocale: string, decimals?: number):
     maximumFractionDigits: decimals ?? 2,
     ...(decimals === undefined ? {} : { minimumFractionDigits: decimals }),
   }).format(n);
+}
+
+const BYTE_UNITS = ["B", "KB", "MB", "GB", "TB"] as const;
+
+/** A size in bytes as people read it: `512 B`, `1.5 KB`, `12 MB` (powers of 1024). */
+export function formatBytes(v: unknown, intlLocale: string): string {
+  const n = typeof v === "number" ? v : Number(v);
+  if (!Number.isFinite(n) || n < 0) return String(v);
+  let unit = 0;
+  let size = n;
+  while (size >= 1024 && unit < BYTE_UNITS.length - 1) {
+    size /= 1024;
+    unit += 1;
+  }
+  const digits = unit === 0 || size >= 100 ? 0 : 1;
+  const text = new Intl.NumberFormat(intlLocale, { maximumFractionDigits: digits }).format(size);
+  return `${text} ${BYTE_UNITS[unit]}`;
+}
+
+const isTone = (v: unknown): v is ColumnColor =>
+  typeof v === "string" && (COLUMN_COLORS as readonly string[]).includes(v);
+
+/** The tone of one badge value: `render_options.map[value]`, else `render_options.default`, else muted. */
+export function badgeTone(value: unknown, options: ColumnConfig["render_options"]): ColumnColor {
+  const map = options?.map;
+  const mapped =
+    map && typeof map === "object" ? (map as Record<string, unknown>)[String(value)] : undefined;
+  if (isTone(mapped)) return mapped;
+  return isTone(options?.default) ? options.default : "muted";
 }
 
 /** A date is a calendar day: formatted in UTC so no time zone moves it. */
@@ -88,6 +127,8 @@ export function displayText(
   switch (kind) {
     case "number_format":
       return formatNumber(value, intlLocale, typeof decimals === "number" ? decimals : undefined);
+    case "bytes":
+      return formatBytes(value, intlLocale);
     case "date":
       return formatDate(value, intlLocale);
     case "datetime":
@@ -132,6 +173,43 @@ function BoolValue({ value, style }: { value: unknown; style: unknown }) {
   );
 }
 
+/** Badge tone → classes. Literal strings so Tailwind sees them. */
+const BADGE: Record<ColumnColor, string> = {
+  default: "bg-muted text-foreground",
+  accent: "bg-sem-accent-bg text-sem-accent",
+  success: "bg-sem-success-bg text-sem-success",
+  warning: "bg-sem-warning-bg text-sem-warning",
+  danger: "bg-sem-danger-bg text-sem-danger",
+  info: "bg-sem-info-bg text-sem-info",
+  muted: "bg-muted text-muted-foreground",
+};
+
+/** One pill per value (a `string_array` is several), toned by `render_options.map`. */
+export function Badges({ value, column }: { value: unknown; column: ColumnConfig }) {
+  const values = (Array.isArray(value) ? value : [value]).filter((v) => !isBlank(v));
+  return (
+    <span className="flex min-w-0 items-center gap-1 overflow-hidden">
+      {values.map((v, i) => {
+        const tone = badgeTone(v, column.render_options);
+        return (
+          <span
+            // biome-ignore lint/suspicious/noArrayIndexKey: values may repeat
+            key={i}
+            data-testid="badge"
+            data-tone={tone}
+            className={cn(
+              "inline-flex h-5 shrink-0 items-center rounded-full px-2 text-[11px] font-medium whitespace-nowrap",
+              BADGE[tone],
+            )}
+          >
+            {typeof v === "object" ? JSON.stringify(v) : String(v)}
+          </span>
+        );
+      })}
+    </span>
+  );
+}
+
 /** What one table cell shows. */
 export function CellValue({
   value,
@@ -151,13 +229,16 @@ export function CellValue({
   if (kind === "bool" && !isBlank(value)) {
     return <BoolValue value={value} style={column.render_options?.style} />;
   }
-  if (isBlank(value)) return <span className="text-muted-foreground/50">—</span>;
+  if (isBlank(value) || (Array.isArray(value) && value.length === 0)) {
+    return <span className="text-muted-foreground/50">—</span>;
+  }
+  if (kind === "badge") return <Badges value={value} column={column} />;
   const text = displayText(value, column, kind, locale, intlLocale, timeZone);
   return (
     <span
       className={cn(
         "block truncate",
-        kind === "number_format" || kind === "number" ? "tabular-nums" : "",
+        kind === "number_format" || kind === "number" || kind === "bytes" ? "tabular-nums" : "",
       )}
       title={typeof value === "string" && value.length > 24 ? value : undefined}
     >

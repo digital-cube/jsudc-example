@@ -264,3 +264,100 @@
   stroke-width: 3;
   fill-opacity: 0.85;
 }
+
+/* The Doc tab: a collection's README. Theme tokens only, so it follows light and dark. */
+.udc-prose {
+  color: var(--color-foreground);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.udc-prose > :first-child {
+  margin-top: 0;
+}
+.udc-prose h1 {
+  font-size: 1.6rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0 0 0.9rem;
+}
+.udc-prose h2 {
+  font-size: 1.15rem;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+  margin: 1.8rem 0 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.udc-prose h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.4rem 0 0.4rem;
+}
+.udc-prose p,
+.udc-prose ul,
+.udc-prose ol,
+.udc-prose pre,
+.udc-prose table,
+.udc-prose blockquote {
+  margin: 0.75rem 0;
+}
+.udc-prose ul,
+.udc-prose ol {
+  padding-left: 1.4rem;
+}
+.udc-prose ul {
+  list-style: disc;
+}
+.udc-prose ol {
+  list-style: decimal;
+}
+.udc-prose li {
+  margin: 0.3rem 0;
+}
+.udc-prose li::marker {
+  color: var(--color-muted-foreground);
+}
+.udc-prose a:any-link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.udc-prose strong {
+  font-weight: 620;
+}
+.udc-prose em {
+  color: var(--color-foreground);
+}
+.udc-prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: var(--color-muted);
+}
+.udc-prose pre {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  background: var(--color-muted);
+  overflow-x: auto;
+}
+.udc-prose pre code {
+  padding: 0;
+  background: none;
+}
+.udc-prose blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid var(--color-border-strong);
+  color: var(--color-muted-foreground);
+}
+.udc-prose table {
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.udc-prose th,
+.udc-prose td {
+  border: 1px solid var(--color-border);
+  padding: 0.35rem 0.7rem;
+  text-align: left;
+}

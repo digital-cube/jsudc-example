@@ -58,6 +58,7 @@ function describeOf(v: ViewConfig): DescribeResponse {
     schema,
     view: v,
     filterable: { fields: [] },
+    source_kind: "postgres_jsonb",
   } as DescribeResponse;
 }
 
@@ -72,6 +73,8 @@ function result(rows: ReturnType<typeof row>[], extra: Partial<UdcCollectionResu
     hasNextPage: false,
     isFetchingNextPage: false,
     fetchNextPage: () => {},
+    fetchedAt: null,
+    stale: false,
     ...extra,
   } satisfies UdcCollectionResult;
 }

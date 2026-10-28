@@ -66,13 +66,24 @@ function MapView({
     sort,
     capabilities: describe.capabilities,
     max: opts.max_rows,
+    refetchInterval: describe.view.refresh_interval_ms,
   });
   const rowColor = describe.view.row_color;
   const markers = useMemo(() => toMarkers(q.rows, opts, rowColor), [q.rows, opts, rowColor]);
 
   useEffect(() => {
-    onCount(q.total === null ? null : { shown: markers.length, total: q.total, unit: "map" });
-  }, [onCount, markers.length, q.total]);
+    onCount(
+      q.total === null
+        ? null
+        : {
+            shown: markers.length,
+            total: q.total,
+            unit: "map",
+            fetchedAt: q.fetchedAt,
+            stale: q.stale,
+          },
+    );
+  }, [onCount, markers.length, q.total, q.fetchedAt, q.stale]);
   useEffect(() => () => onCount(null), [onCount]);
 
   // --- the Leaflet map: one per mount -----------------------------------------------

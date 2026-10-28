@@ -341,6 +341,7 @@ describe("KanbanRenderer read-only gating", () => {
           }),
           view: ViewConfigSchema.parse({}),
           filterable: { fields: [] },
+          source_kind: "postgres_jsonb",
         },
       }),
       list: (body: Record<string, unknown>) => {
@@ -410,6 +411,7 @@ describe("KanbanRenderer read-only gating", () => {
       schema,
       view,
       filterable: { fields: [] },
+      source_kind: "postgres_jsonb",
     };
   }
 

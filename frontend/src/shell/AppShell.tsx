@@ -1,4 +1,23 @@
-import { Building2, CalendarDays, Database, Kanban, Languages, Moon, Sun } from "lucide-react";
+import {
+  type CollectionListing,
+  SOURCE_GROUPS,
+  type SourceGroup,
+  sourceGroup,
+} from "@jsudc/udc-core";
+import {
+  Activity,
+  Building2,
+  CalendarDays,
+  Database,
+  FolderGit2,
+  FolderOpen,
+  Globe,
+  Kanban,
+  Languages,
+  type LucideIcon,
+  Moon,
+  Sun,
+} from "lucide-react";
 import { NavLink, Outlet } from "react-router";
 import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/misc";
@@ -11,11 +30,46 @@ import { cn } from "../lib/utils";
 import { useUdcCollections } from "../udc/hooks";
 import { TimezonePicker } from "./TimezonePicker";
 
-const COLLECTION_ICONS: Record<string, typeof Database> = {
+const COLLECTION_ICONS: Record<string, LucideIcon> = {
   companies: Building2,
   appointments: CalendarDays,
   tickets: Kanban,
+  quakes: Activity,
+  repos: FolderGit2,
 };
+
+/** Where the rows live, as the sidebar heads its groups. */
+export const GROUP_ICONS: Record<SourceGroup, LucideIcon> = {
+  database: Database,
+  files: FolderOpen,
+  internet: Globe,
+};
+
+const GROUP_LABEL: Record<SourceGroup, string> = {
+  database: "GROUP_DATABASE",
+  files: "GROUP_FILES",
+  internet: "GROUP_INTERNET",
+};
+
+export interface SidebarGroup {
+  group: SourceGroup;
+  collections: CollectionListing[];
+}
+
+/**
+ * The collections by group (database, files, internet, in that order),
+ * each in server order; a group without collections is left out. A listing
+ * without `group` is placed by its `source_kind`, without either it is a
+ * database one.
+ */
+export function groupCollections(collections: readonly CollectionListing[]): SidebarGroup[] {
+  const groupOf = (c: CollectionListing): SourceGroup =>
+    c.group ?? sourceGroup(c.source_kind ?? "postgres_jsonb");
+  return SOURCE_GROUPS.map((group) => ({
+    group,
+    collections: collections.filter((c) => groupOf(c) === group),
+  })).filter((g) => g.collections.length > 0);
+}
 
 export function AppShell() {
   return (
@@ -86,11 +140,8 @@ function Sidebar() {
     <nav
       aria-label={t("APP", "COLLECTIONS")}
       data-testid="sidebar"
-      className="hidden w-48 shrink-0 flex-col border-r border-border bg-surface/60 p-3 md:flex lg:w-56"
+      className="scroll-thin hidden w-48 shrink-0 flex-col overflow-y-auto border-r border-border bg-surface/60 p-3 pt-4 md:flex lg:w-56"
     >
-      <div className="px-2 pt-1 pb-2 text-[11px] font-semibold tracking-wide text-muted-foreground uppercase">
-        {t("APP", "COLLECTIONS")}
-      </div>
       {collections.isLoading ? (
         <div className="flex flex-col gap-2 px-2">
           <Skeleton className="h-6" />
@@ -100,35 +151,65 @@ function Sidebar() {
       {collections.data?.collections.length === 0 ? (
         <div className="px-2 text-xs text-muted-foreground">{t("APP", "NO_COLLECTIONS")}</div>
       ) : null}
-      <ul className="flex flex-col gap-0.5">
-        {collections.data?.collections.map((c) => {
-          const Icon = COLLECTION_ICONS[c.name] ?? Database;
-          return (
-            <li key={c.name}>
-              <NavLink
-                to={`/udc/${c.name}`}
-                data-testid={`nav-${c.name}`}
-                className={({ isActive }) =>
-                  cn(
-                    "flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px] font-medium transition-colors",
-                    "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
-                    isActive
-                      ? "bg-selected text-foreground"
-                      : "text-muted-foreground hover:bg-hover hover:text-foreground",
-                  )
-                }
+      <div className="flex flex-col gap-3">
+        {groupCollections(collections.data?.collections ?? []).map(
+          ({ group, collections: list }) => {
+            const GroupIcon = GROUP_ICONS[group];
+            return (
+              <section
+                key={group}
+                data-testid={`nav-group-${group}`}
+                aria-labelledby={`nav-group-${group}-label`}
               >
-                {({ isActive }) => (
-                  <>
-                    <Icon className={cn("size-4", isActive && "text-primary")} />
-                    {t("COLLECTIONS", c.name)}
-                  </>
-                )}
-              </NavLink>
-            </li>
-          );
-        })}
-      </ul>
+                <h2
+                  id={`nav-group-${group}-label`}
+                  className="flex items-center gap-1.5 px-2 pb-1 text-[11px] font-semibold tracking-wide text-muted-foreground/80 uppercase"
+                >
+                  <GroupIcon className="size-3.5" aria-hidden />
+                  {t("APP", GROUP_LABEL[group])}
+                </h2>
+                <ul className="flex flex-col gap-0.5">
+                  {list.map((c) => (
+                    <SidebarItem
+                      key={c.name}
+                      name={c.name}
+                      icon={COLLECTION_ICONS[c.name] ?? GroupIcon}
+                    />
+                  ))}
+                </ul>
+              </section>
+            );
+          },
+        )}
+      </div>
     </nav>
+  );
+}
+
+function SidebarItem({ name, icon: Icon }: { name: string; icon: LucideIcon }) {
+  const { t } = useI18n();
+  return (
+    <li>
+      <NavLink
+        to={`/udc/${name}`}
+        data-testid={`nav-${name}`}
+        className={({ isActive }) =>
+          cn(
+            "flex h-8 items-center gap-2.5 rounded-md px-2 text-[13px] font-medium transition-colors",
+            "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring",
+            isActive
+              ? "bg-selected text-foreground"
+              : "text-muted-foreground hover:bg-hover hover:text-foreground",
+          )
+        }
+      >
+        {({ isActive }) => (
+          <>
+            <Icon className={cn("size-4", isActive && "text-primary")} />
+            {t("COLLECTIONS", name)}
+          </>
+        )}
+      </NavLink>
+    </li>
   );
 }

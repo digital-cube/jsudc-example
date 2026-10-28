@@ -21,6 +21,8 @@ export default defineConfig({
   server: {
     port: Number(process.env.VITE_PORT || 5173),
     proxy: {
+      // The file preview is a GET; it must reach the backend before the rule below sends GETs to the app.
+      "/udc/files/blob": { target: proxyTarget, changeOrigin: true },
       // `/udc/<collection>` is also an app route: only the RPC (always a POST)
       // goes to the backend, a page load gets the app.
       "/udc": {

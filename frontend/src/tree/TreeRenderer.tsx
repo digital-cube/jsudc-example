@@ -169,6 +169,7 @@ function Tree({
     sort: opts.sibling_sort,
     capabilities,
     enabled: !lazy,
+    refetchInterval: describe.view.refresh_interval_ms,
   });
   const rootsQ = lazyRootsQuery(opts, dataFilter);
   const roots = useUdcCollection({

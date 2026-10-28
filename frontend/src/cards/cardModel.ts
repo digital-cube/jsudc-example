@@ -23,6 +23,8 @@ export interface CardSlots {
   title: ColumnConfig;
   subtitle: ColumnConfig | null;
   image: string | null;
+  /** `cover` across the top, or `avatar` in the avatar's place. */
+  imageStyle: "cover" | "avatar";
   meta: ColumnConfig[];
   size: CardSize;
 }
@@ -47,6 +49,7 @@ export function cardSlots(view: ViewConfig): CardSlots {
     title: column(titleField),
     subtitle: opts.subtitle_field ? column(opts.subtitle_field) : null,
     image: opts.image_field ?? null,
+    imageStyle: opts.image_style ?? "cover",
     meta: (opts.meta_fields ?? []).map(column),
     size: cardSize(opts.size),
   };

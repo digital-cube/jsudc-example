@@ -1,5 +1,5 @@
-import type { FilterChipConfig } from "@jsudc/udc-core";
-import { InfinityIcon, Rows3 } from "lucide-react";
+import type { FilterChipConfig, FilterNode, Row } from "@jsudc/udc-core";
+import { BookOpen, InfinityIcon, Rows3 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/misc";
@@ -7,18 +7,23 @@ import { Segmented } from "../components/ui/segmented";
 import { schemaLabelTerms, tableSection, useI18n } from "../i18n/i18n";
 import { humanize } from "../lib/utils";
 import { rendererEntry, rendererTabs } from "../renderers/registry";
-import type { RendererCount } from "../renderers/types";
+import type { FolderNav, RendererCount } from "../renderers/types";
 import { useSchemaEditor } from "../schema-editor/useSchemaEditor";
 import { ErrorState } from "../table/states";
 import { useUdcCollection, useUdcDescribe } from "../udc/hooks";
 import type { PagingMode } from "../udc/keys";
 import { composeFilter } from "./compose";
+import { DocTab } from "./DocTab";
+import { FilePreview } from "./FilePreview";
 import { FilterBuilder, FilterPills } from "./FilterBuilder";
 import { FilterChips } from "./FilterChips";
+import { FolderBar } from "./FolderBar";
+import { Freshness } from "./Freshness";
+import { joinFolder, splitFolder } from "./folder";
 import { liveDescribe, liveSort, pruneTree } from "./liveView";
 import { SearchBox } from "./SearchBox";
 import { cycleSort } from "./urlState";
-import { useDataViewState } from "./useDataViewState";
+import { DOC_TAB, useDataViewState } from "./useDataViewState";
 
 /**
  * One collection: toolbar (search, chips, filter builder, paging mode, count,
@@ -26,7 +31,7 @@ import { useDataViewState } from "./useDataViewState";
  * in the URL (see `useDataViewState`).
  */
 export function UdcDataView({ collection }: { collection: string }) {
-  const { t, tMaybe, intlLocale, setSectionTerms } = useI18n();
+  const { t, tMaybe, locale, intlLocale, setSectionTerms } = useI18n();
   const describe = useUdcDescribe(collection);
   // Soft-deleted fields leave the chips, search, cards and any sort or filter in the URL.
   const live = useMemo(
@@ -35,7 +40,10 @@ export function UdcDataView({ collection }: { collection: string }) {
   );
   const view = live?.view;
   const schema = live?.schema;
-  const state = useDataViewState(collection, view);
+  // The README in the UI's language, else the English one.
+  const docText = live?.docs?.[locale] ?? live?.docs?.en;
+  const state = useDataViewState(collection, view, { doc: Boolean(docText) });
+  const onDoc = state.tab === DOC_TAB;
   const section = tableSection(collection);
 
   // Labels typed in the field form live in the schema; the headers read them through i18n.
@@ -50,6 +58,32 @@ export function UdcDataView({ collection }: { collection: string }) {
   const tree = useMemo(
     () => (schema ? pruneTree(state.tree, schema) : state.tree),
     [state.tree, schema],
+  );
+
+  // A folder listing: the open folder is a condition of the tree, shown as the breadcrumb
+  // instead of a filter pill; the builder and the pills edit the rest of the tree.
+  const folderOpts = view?.folder_options;
+  const { folder, rest: userTree } = useMemo(
+    () => (folderOpts ? splitFolder(tree, folderOpts.path_field) : { folder: null, rest: tree }),
+    [tree, folderOpts],
+  );
+  const { setTree } = state;
+  const setUserTree = useCallback(
+    (next: FilterNode | null) =>
+      setTree(folderOpts ? joinFolder(next, folderOpts.path_field, folder) : next),
+    [setTree, folderOpts, folder],
+  );
+  const [previewRow, setPreviewRow] = useState<Row | null>(null);
+  const folderNav = useMemo<FolderNav | undefined>(
+    () =>
+      folderOpts
+        ? {
+            options: folderOpts,
+            open: (path) => setTree(joinFolder(userTree, folderOpts.path_field, path || null)),
+            openFile: folderOpts.preview ? setPreviewRow : undefined,
+          }
+        : undefined,
+    [folderOpts, userTree, setTree],
   );
 
   const filter = useMemo(
@@ -75,8 +109,8 @@ export function UdcDataView({ collection }: { collection: string }) {
     [state.chips, tree, view?.search, view?.filters],
   );
 
-  const entry = rendererEntry(state.tab);
-  const paging = entry?.paging ?? true;
+  const entry = onDoc ? undefined : rendererEntry(state.tab);
+  const paging = !onDoc && (entry?.paging ?? true);
   // A renderer without paging loads its own rows; the count it reports replaces the list's.
   const [ownCount, setOwnCount] = useState<RendererCount | null>(null);
 
@@ -89,6 +123,8 @@ export function UdcDataView({ collection }: { collection: string }) {
     pageLimit: limit,
     page: state.page,
     enabled: describe.isSuccess && paging,
+    capabilities: live?.capabilities,
+    refetchInterval: view?.refresh_interval_ms,
   });
 
   const fieldLabel = useCallback((field: string) => t(section, field), [t, section]);
@@ -115,6 +151,14 @@ export function UdcDataView({ collection }: { collection: string }) {
   const fmt = (n: number) => new Intl.NumberFormat(intlLocale).format(n);
   const shown = paging ? data.rows.length : (ownCount?.shown ?? 0);
   const total = paging ? data.total : (ownCount?.total ?? null);
+  const fetchedAt = paging ? data.fetchedAt : (ownCount?.fetchedAt ?? null);
+  const stale = paging ? data.stale : ownCount?.stale === true;
+  const tabs = view
+    ? [
+        ...(docText ? [{ name: DOC_TAB, entry: undefined, doc: true }] : []),
+        ...rendererTabs(view.available_renderers).map((tab) => ({ ...tab, doc: false })),
+      ]
+    : [];
   const resetKey = JSON.stringify([filter ?? null, sort, state.mode]);
 
   return (
@@ -159,16 +203,28 @@ export function UdcDataView({ collection }: { collection: string }) {
               ]}
             />
           ) : null}
-          {view && paging && view.available_renderers.length > 1 ? (
+          {view && paging && tabs.length > 1 ? (
             <span aria-hidden className="mx-1 h-5 w-px bg-border-strong/70" />
           ) : null}
-          {view && view.available_renderers.length > 1 ? (
+          {view && tabs.length > 1 ? (
             <Segmented
               aria-label="Renderer"
               data-testid="tab-switch"
               value={state.tab}
               onChange={state.setTab}
-              options={rendererTabs(view.available_renderers).map(({ name, entry: e }) => {
+              options={tabs.map(({ name, entry: e, doc }) => {
+                if (doc) {
+                  return {
+                    value: name,
+                    testId: `tab-${name}`,
+                    label: (
+                      <>
+                        <BookOpen />
+                        {t("APP", "TAB_DOC")}
+                      </>
+                    ),
+                  };
+                }
                 const Icon = e?.icon;
                 return {
                   value: name,
@@ -191,7 +247,11 @@ export function UdcDataView({ collection }: { collection: string }) {
       <div className="mx-6 mb-6 flex min-h-0 flex-1 flex-col overflow-hidden rounded-xl border border-border bg-surface shadow-sm shadow-black/[0.03]">
         <div
           data-testid="toolbar"
-          className="flex flex-wrap items-center gap-2 border-b border-border px-3 py-2.5"
+          className={
+            onDoc
+              ? "hidden"
+              : "flex flex-wrap items-center gap-2 border-b border-border px-3 py-2.5"
+          }
         >
           {view ? (
             <>
@@ -217,8 +277,8 @@ export function UdcDataView({ collection }: { collection: string }) {
                 {live?.filterable.fields.length ? (
                   <FilterBuilder
                     fields={live.filterable.fields}
-                    tree={tree}
-                    onChange={state.setTree}
+                    tree={userTree}
+                    onChange={setUserTree}
                     fieldLabel={fieldLabel}
                   />
                 ) : null}
@@ -227,6 +287,7 @@ export function UdcDataView({ collection }: { collection: string }) {
                 {entry?.toolbar && live ? (
                   <entry.toolbar collection={collection} describe={live} />
                 ) : null}
+                <Freshness fetchedAt={fetchedAt} stale={stale} />
                 <span
                   className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
                   data-testid="row-count"
@@ -258,29 +319,28 @@ export function UdcDataView({ collection }: { collection: string }) {
           )}
         </div>
 
-        {live && tree ? (
+        {live && userTree && !onDoc ? (
           <div
             data-testid="filter-pills"
             className="flex flex-wrap items-center gap-1.5 border-b border-border bg-muted/40 px-3 py-2"
           >
             <FilterPills
               fields={live.filterable.fields}
-              tree={tree}
-              onChange={state.setTree}
+              tree={userTree}
+              onChange={setUserTree}
               fieldLabel={fieldLabel}
             />
-            <Button
-              size="sm"
-              variant="ghost"
-              className="ml-auto"
-              onClick={() => state.setTree(null)}
-            >
+            <Button size="sm" variant="ghost" className="ml-auto" onClick={() => setUserTree(null)}>
               {t("APP", "CLEAR")}
             </Button>
           </div>
         ) : null}
 
-        {live && entry ? (
+        {folderNav && !onDoc ? <FolderBar folder={folder} onOpen={folderNav.open} /> : null}
+
+        {live && onDoc && docText ? (
+          <DocTab markdown={docText} />
+        ) : live && entry ? (
           <entry.component
             key={state.tab}
             collection={collection}
@@ -302,6 +362,7 @@ export function UdcDataView({ collection }: { collection: string }) {
               entry.editMode && live.capabilities.schema_edit ? editor.open : undefined
             }
             onCount={setOwnCount}
+            folder={folderNav}
           />
         ) : (
           <div className="flex flex-col gap-3 p-4">
@@ -313,6 +374,14 @@ export function UdcDataView({ collection }: { collection: string }) {
         )}
       </div>
       {editor.dialogs}
+      {folderOpts?.preview ? (
+        <FilePreview
+          collection={collection}
+          row={previewRow}
+          pathField={folderOpts.path_field}
+          onClose={() => setPreviewRow(null)}
+        />
+      ) : null}
     </div>
   );
 }

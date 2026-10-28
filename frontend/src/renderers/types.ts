@@ -1,4 +1,4 @@
-import type { DescribeResponse, FilterNode, SortKey } from "@jsudc/udc-core";
+import type { DescribeResponse, FilterNode, FolderOptions, Row, SortKey } from "@jsudc/udc-core";
 import type { LucideIcon } from "lucide-react";
 import type { ComponentType } from "react";
 import type { SchemaAction } from "../schema-editor/fieldForm";
@@ -14,6 +14,23 @@ export interface RendererCount {
    * (rows without a position are not drawn), instead of "Showing N of M".
    */
   unit?: "nodes" | "map";
+  /** A source serving a fetched copy (http_api): when it was fetched, and whether it is stale. */
+  fetchedAt?: string | null;
+  stale?: boolean;
+}
+
+/** A folder-shaped collection (`folder_options`): what a folder row or a file row does on click. */
+export interface FolderNav {
+  options: FolderOptions;
+  /** Open a folder by its path (`""`: the root). */
+  open: (path: string) => void;
+  /** Preview a file row; absent when the view has no preview. */
+  openFile?: ((row: Row) => void) | undefined;
+}
+
+/** Is `row` a folder of `nav`'s listing (the `..` row included)? */
+export function isFolderRow(row: Row, nav: FolderNav): boolean {
+  return row[nav.options.kind_field] === nav.options.dir_value;
 }
 
 /** What `<UdcDataView>` hands every renderer; each takes the parts it uses. */
@@ -42,6 +59,8 @@ export interface RendererProps {
   onSchemaAction?: ((a: SchemaAction) => void) | undefined;
   /** For a renderer without `paging`: the count the toolbar shows. */
   onCount: (count: RendererCount | null) => void;
+  /** Set when the view has `folder_options`. */
+  folder?: FolderNav | undefined;
 }
 
 export interface RendererEntry {

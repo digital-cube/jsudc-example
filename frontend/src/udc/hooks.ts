@@ -45,6 +45,10 @@ export interface UseUdcCollectionArgs {
   /** 1-based; pages mode only. */
   page?: number;
   enabled?: boolean;
+  /** From `describe`: a source without `cursor` paging is walked by offset in infinite mode too. */
+  capabilities?: Pick<Capabilities, "paging"> | undefined;
+  /** Poll: refetch the loaded rows this often (the view's `refresh_interval_ms`). */
+  refetchInterval?: number | undefined;
 }
 
 export interface UdcCollectionResult {
@@ -58,6 +62,22 @@ export interface UdcCollectionResult {
   hasNextPage: boolean;
   isFetchingNextPage: boolean;
   fetchNextPage: () => void;
+  /** A source serving a fetched copy: when it was fetched, and whether the last refresh failed. */
+  fetchedAt: string | null;
+  stale: boolean;
+}
+
+/** `refetchInterval` for TanStack: a positive number of ms, else off. */
+export function pollInterval(ms: number | undefined): number | false {
+  return typeof ms === "number" && ms > 0 ? ms : false;
+}
+
+/** The freshness of a list answer: `fetched_at` and `stale` when the source sent them. */
+export function freshnessOf(res: Pick<ListResponse, "fetched_at" | "stale"> | undefined): {
+  fetchedAt: string | null;
+  stale: boolean;
+} {
+  return { fetchedAt: res?.fetched_at ?? null, stale: res?.stale === true };
 }
 
 /** The `offset` a 1-based page asks for. */
@@ -67,9 +87,11 @@ export function pageOffset(page: number, limit: number): number {
 
 /**
  * Rows of one collection. Infinite mode follows `next_cursor` page by page
- * (`useInfiniteQuery`); pages mode asks for one `offset` page (`useQuery`).
- * Both hooks are always mounted and the inactive one is disabled, so
- * switching modes keeps each cache warm.
+ * (`useInfiniteQuery`), or the next `offset` while rows remain when the
+ * source pages by offset only; pages mode asks for one `offset` page
+ * (`useQuery`). Both hooks are always mounted and the inactive one is
+ * disabled, so switching modes keeps each cache warm. `refetchInterval`
+ * polls the active one.
  */
 export function useUdcCollection(args: UseUdcCollectionArgs): UdcCollectionResult {
   const client = useUdcClient();
@@ -77,6 +99,8 @@ export function useUdcCollection(args: UseUdcCollectionArgs): UdcCollectionResul
   const sort = args.sort ?? [];
   const page = Math.max(1, args.page ?? 1);
   const enabled = args.enabled ?? true;
+  const byCursor = args.capabilities?.paging?.includes("cursor") ?? true;
+  const refetchInterval = pollInterval(args.refetchInterval);
 
   const infiniteParams: ListKeyParams = { filter, sort, limit, mode: "infinite" };
   const infinite = useInfiniteQuery({
@@ -87,14 +111,26 @@ export function useUdcCollection(args: UseUdcCollectionArgs): UdcCollectionResul
           collection,
           ...(filter ? { filter } : {}),
           sort,
-          page: pageParam ? { limit, cursor: pageParam } : { limit },
+          page:
+            typeof pageParam === "number"
+              ? { limit, offset: pageParam }
+              : pageParam
+                ? { limit, cursor: pageParam }
+                : { limit },
         },
         { signal },
       ),
-    initialPageParam: null as string | null,
-    getNextPageParam: (last) => last.next_cursor ?? undefined,
+    initialPageParam: null as string | number | null,
+    getNextPageParam: (last, all) => {
+      if (byCursor) return last.next_cursor ?? undefined;
+      const loaded = all.reduce((n, p) => n + p.rows.length, 0);
+      return last.rows.length > 0 && last.total !== null && loaded < last.total
+        ? loaded
+        : undefined;
+    },
     placeholderData: keepPreviousData,
     enabled: enabled && mode === "infinite",
+    refetchInterval,
   });
 
   const pagesParams: ListKeyParams = { filter, sort, limit, mode: "pages", page };
@@ -112,6 +148,7 @@ export function useUdcCollection(args: UseUdcCollectionArgs): UdcCollectionResul
       ),
     placeholderData: keepPreviousData,
     enabled: enabled && mode === "pages",
+    refetchInterval,
   });
 
   if (mode === "infinite") {
@@ -126,6 +163,7 @@ export function useUdcCollection(args: UseUdcCollectionArgs): UdcCollectionResul
       hasNextPage: infinite.hasNextPage,
       isFetchingNextPage: infinite.isFetchingNextPage,
       fetchNextPage: () => void infinite.fetchNextPage(),
+      ...freshnessOf(pages[0]),
     };
   }
   return {
@@ -138,6 +176,7 @@ export function useUdcCollection(args: UseUdcCollectionArgs): UdcCollectionResul
     hasNextPage: false,
     isFetchingNextPage: false,
     fetchNextPage: () => {},
+    ...freshnessOf(paged.data),
   };
 }
 
@@ -162,7 +201,8 @@ export interface FetchAllRowsArgs {
  * Every row of a filter, `list` page after page, until `total` or `max`.
  * Follows `next_cursor` when keyset paging is on; a source that answers no
  * cursor while rows remain is walked on by offset. Answers one list whose
- * `total` is the server's (so `rows.length < total` means capped).
+ * `total` is the server's (so `rows.length < total` means capped), with the
+ * first page's `fetched_at` and `stale`.
  */
 export async function fetchAllRows(
   client: UdcClient,
@@ -173,6 +213,7 @@ export async function fetchAllRows(
   const pageLimit = args.pageLimit ?? ALL_ROWS_PAGE;
   const rows: Row[] = [];
   let total: number | null = null;
+  let freshness: Pick<ListResponse, "fetched_at" | "stale"> = {};
   let cursor: string | null = null;
   let byCursor = args.cursor;
   while (rows.length < max) {
@@ -186,6 +227,12 @@ export async function fetchAllRows(
       { collection, ...(filter ? { filter } : {}), sort, page },
       args.signal ? { signal: args.signal } : undefined,
     );
+    if (rows.length === 0) {
+      freshness = {
+        ...(res.fetched_at === undefined ? {} : { fetched_at: res.fetched_at }),
+        ...(res.stale === undefined ? {} : { stale: res.stale }),
+      };
+    }
     rows.push(...res.rows);
     total = res.total;
     args.onProgress?.(rows.length, total);
@@ -198,7 +245,7 @@ export async function fetchAllRows(
       break;
     }
   }
-  return { rows, next_cursor: null, total: total ?? rows.length };
+  return { ...freshness, rows, next_cursor: null, total: total ?? rows.length };
 }
 
 export interface UseUdcAllRowsArgs {
@@ -210,6 +257,8 @@ export interface UseUdcAllRowsArgs {
   /** From `describe`: whether the source pages by cursor. */
   capabilities?: Pick<Capabilities, "paging"> | undefined;
   enabled?: boolean;
+  /** Poll: refetch every row this often (the view's `refresh_interval_ms`). */
+  refetchInterval?: number | undefined;
 }
 
 export interface UdcAllRowsResult {
@@ -223,6 +272,8 @@ export interface UdcAllRowsResult {
   capped: boolean;
   /** Rows loaded so far by the fetch in flight, for a progress bar. */
   progress: { loaded: number; total: number | null } | null;
+  fetchedAt: string | null;
+  stale: boolean;
 }
 
 /**
@@ -260,6 +311,7 @@ export function useUdcAllRows(args: UseUdcAllRowsArgs): UdcAllRowsResult {
     },
     placeholderData: keepPreviousData,
     enabled: args.enabled ?? true,
+    refetchInterval: pollInterval(args.refetchInterval),
   });
 
   const rows = query.data?.rows ?? [];
@@ -273,6 +325,7 @@ export function useUdcAllRows(args: UseUdcAllRowsArgs): UdcAllRowsResult {
     refetch: () => query.refetch(),
     capped: total !== null && rows.length < total,
     progress,
+    ...freshnessOf(query.data),
   };
 }
 

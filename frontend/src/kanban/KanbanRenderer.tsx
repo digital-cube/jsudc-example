@@ -150,6 +150,7 @@ function Board({
     sort: [{ field: opts.ticket_order_field }],
     capabilities,
     enabled: boardId !== null,
+    refetchInterval: describe.view.refresh_interval_ms,
   });
   // Every card on the board, whatever the filter: the "of N" in the toolbar.
   const boardTotal = useUdcCollection({

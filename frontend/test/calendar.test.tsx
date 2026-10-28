@@ -379,6 +379,7 @@ describe("CalendarRenderer", () => {
       schema,
       view,
       filterable: { fields: [] },
+      source_kind: "postgres_jsonb",
     };
     const props: RendererProps = {
       collection: "appointments",

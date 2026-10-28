@@ -13,8 +13,10 @@ import { ArrowDown, ArrowUp, ChevronsUpDown, Plus } from "lucide-react";
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";
 import { Skeleton, Spinner } from "../components/ui/misc";
 import { useToast } from "../components/ui/toast";
+import { FolderEntry } from "../data-view/FolderEntry";
 import { tableSection, useI18n } from "../i18n/i18n";
 import { cn } from "../lib/utils";
+import type { FolderNav } from "../renderers/types";
 import { ColumnHeaderMenu } from "../schema-editor/ColumnHeaderMenu";
 import type { SchemaAction } from "../schema-editor/fieldForm";
 import type { UdcCollectionResult } from "../udc/hooks";
@@ -76,6 +78,8 @@ export interface TableRendererProps {
   resetKey: string;
   /** Set when the schema may be edited: shows the column menus and the trailing `+`. */
   onSchemaAction?: ((a: SchemaAction) => void) | undefined;
+  /** A folder listing: the label column opens folders and previews files. */
+  folder?: FolderNav | undefined;
 }
 
 type EditTarget = { rowId: string; colId: string };
@@ -493,13 +497,25 @@ export function TableRenderer(props: TableRendererProps) {
                     )}
                   >
                     <div className={cn("flex min-w-0 items-center", alignClass(c))}>
-                      <CellValue
-                        value={row[config.field]}
-                        column={config}
-                        def={def}
-                        locale={locale}
-                        intlLocale={intlLocale}
-                      />
+                      {props.folder && config.field === props.folder.options.label_field ? (
+                        <FolderEntry row={row} nav={props.folder}>
+                          <CellValue
+                            value={row[config.field]}
+                            column={config}
+                            def={def}
+                            locale={locale}
+                            intlLocale={intlLocale}
+                          />
+                        </FolderEntry>
+                      ) : (
+                        <CellValue
+                          value={row[config.field]}
+                          column={config}
+                          def={def}
+                          locale={locale}
+                          intlLocale={intlLocale}
+                        />
+                      )}
                     </div>
                     {editing ? (
                       <CellEditor

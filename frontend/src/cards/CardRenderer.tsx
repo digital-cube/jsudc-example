@@ -1,8 +1,10 @@
 import type { ColumnColor, DescribeResponse, Row } from "@jsudc/udc-core";
 import { useEffect, useMemo, useRef } from "react";
 import { Skeleton, Spinner } from "../components/ui/misc";
+import { FolderEntry } from "../data-view/FolderEntry";
 import { tableSection, useI18n } from "../i18n/i18n";
 import { cn } from "../lib/utils";
+import type { FolderNav } from "../renderers/types";
 import { CellValue, displayText, isBlank, renderKind } from "../table/cells";
 import { Pager } from "../table/Pager";
 import { EmptyState, ErrorState } from "../table/states";
@@ -48,6 +50,8 @@ export interface CardRendererProps {
   onClearFilters: () => void;
   /** Changes whenever the cards are a different query; scrolls back to the top. */
   resetKey: string;
+  /** A folder listing: a folder card opens the folder, a file card its preview. */
+  folder?: FolderNav | undefined;
 }
 
 /**
@@ -113,6 +117,7 @@ export function CardRenderer(props: CardRendererProps) {
                     describe={describe}
                     section={section}
                     accent={resolveRowColor(row, view.row_color)}
+                    folder={props.folder}
                   />
                 ))}
           </div>
@@ -157,12 +162,14 @@ function Card({
   describe,
   section,
   accent,
+  folder,
 }: {
   row: Row;
   slots: CardSlots;
   describe: DescribeResponse;
   section: string;
   accent: ReturnType<typeof resolveRowColor>;
+  folder?: FolderNav | undefined;
 }) {
   const { t, locale, intlLocale } = useI18n();
   const { timeZone } = useTimezone();
@@ -176,6 +183,8 @@ function Card({
   const title = text(slots.title);
   const subtitle = slots.subtitle ? text(slots.subtitle) : "";
   const image = slots.image ? row[slots.image] : null;
+  const hasImage = typeof image === "string" && image !== "";
+  const cover = hasImage && slots.imageStyle === "cover";
   const tone = accent?.color ?? accent?.bg;
 
   return (
@@ -195,9 +204,9 @@ function Card({
           className={cn("absolute inset-y-0 left-0 w-[3px]", ACCENT_BAR[tone])}
         />
       ) : null}
-      {typeof image === "string" && image ? (
+      {cover ? (
         <img
-          src={image}
+          src={image as string}
           alt=""
           loading="lazy"
           data-testid="card-cover"
@@ -205,7 +214,16 @@ function Card({
         />
       ) : null}
       <div className="flex items-center gap-3 px-4 pt-3.5 pb-3">
-        {typeof image === "string" && image ? null : (
+        {hasImage && !cover ? (
+          <img
+            src={image as string}
+            alt=""
+            loading="lazy"
+            data-testid="card-image-avatar"
+            className="size-9 shrink-0 rounded-full border border-border bg-muted object-cover"
+          />
+        ) : null}
+        {hasImage ? null : (
           <span
             aria-hidden
             data-testid="card-avatar"
@@ -223,7 +241,13 @@ function Card({
             className="truncate text-sm leading-5 font-semibold tracking-tight"
             title={title}
           >
-            {title || <span className="text-muted-foreground/60">—</span>}
+            {folder ? (
+              <FolderEntry row={row} nav={folder}>
+                <span className="truncate">{title}</span>
+              </FolderEntry>
+            ) : (
+              title || <span className="text-muted-foreground/60">—</span>
+            )}
           </h3>
           {slots.subtitle ? (
             <p

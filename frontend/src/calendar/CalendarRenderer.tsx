@@ -164,6 +164,7 @@ function Calendar({
     sort: [{ field: opts.start_field }],
     capabilities,
     enabled: !kanban || boardId !== null,
+    refetchInterval: describe.view.refresh_interval_ms,
   });
 
   // Moves in flight: drawn where they were dropped until the server answers.

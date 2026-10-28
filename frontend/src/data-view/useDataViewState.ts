@@ -52,7 +52,14 @@ export interface DataViewState {
  * (replace, not push: a filter tweak is not a history entry). A change to
  * what the rows are (search, chips, tree, sort) drops `?p=` back to page 1.
  */
-export function useDataViewState(collection: string, view: ViewConfig | undefined): DataViewState {
+/** The pseudo-tab of a collection's README; offered when `describe.docs` has text. */
+export const DOC_TAB = "doc";
+
+export function useDataViewState(
+  collection: string,
+  view: ViewConfig | undefined,
+  opts: { doc?: boolean } = {},
+): DataViewState {
   const [params, setParams] = useSearchParams();
 
   const update = useCallback(
@@ -87,7 +94,11 @@ export function useDataViewState(collection: string, view: ViewConfig | undefine
   const sort = useMemo(() => decodeSortParam(raw.sort), [raw.sort]);
 
   const renderers = view?.available_renderers ?? ["table"];
-  const tab = resolveTab(raw.tab ?? "", renderers, view?.default_renderer ?? "table");
+  // The Doc tab is chosen, never the default: the view's default_renderer opens.
+  const tab =
+    opts.doc && raw.tab === DOC_TAB
+      ? DOC_TAB
+      : resolveTab(raw.tab ?? "", renderers, view?.default_renderer ?? "table");
   const mode = resolvePagingMode(
     decodeModeParam(raw.mode),
     storage.get(pagingStorageKey(collection)),
