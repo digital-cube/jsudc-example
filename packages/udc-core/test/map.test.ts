@@ -20,6 +20,8 @@ describe("MapOptions", () => {
       zoom: 2,
       fit_bounds: true,
       max_rows: 2000,
+      icon: "circle",
+      icon_size: 22,
     });
   });
 

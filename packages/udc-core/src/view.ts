@@ -49,9 +49,13 @@ export const ColumnConfigSchema = z.looseObject({
   editable: z.boolean().optional(),
   width: z.number().positive().optional(),
   /**
-   * Open: `text | number_format | bool | date | datetime | bytes | badge`.
-   * `bytes` reads a number as a size (`1.2 KB`); `badge` draws a pill whose
-   * tone is `render_options.map[value]` (else `render_options.default`).
+   * Open: `text | number_format | bool | date | datetime | bytes | badge |
+   * icon | sparkline | heading_glyph`. `number_format` takes
+   * `render_options {precision (or decimals), suffix}`; `bytes` reads a
+   * number as a size (`1.2 KB`); `badge` draws a pill whose tone is
+   * `render_options.map[value]` (else `render_options.default`);
+   * `sparkline` draws a number array as a line (`render_options {width,
+   * height}`); `heading_glyph` an arrow turned by degrees from north.
    */
   render: z.string().optional(),
   render_options: z.record(z.string(), z.unknown()).optional(),
@@ -113,6 +117,23 @@ export const CardOptionsSchema = z.looseObject({
   image_style: z.enum(["cover", "avatar"]).optional(),
   /** dclabs spells the ends `sm` / `lg`; both spellings parse. */
   size: z.enum(["sm", "small", "medium", "lg", "large"]).optional(),
+  /** One number large under the header: `unit` after it, `precision` decimals. */
+  metric: z
+    .looseObject({
+      field: z.string().min(1),
+      label: z.string().optional(),
+      unit: z.string().optional(),
+      precision: z.number().int().min(0).max(10).optional(),
+    })
+    .optional(),
+  /** A number array (an http_api history) drawn as a line under the meta fields. */
+  sparkline: z
+    .looseObject({
+      field: z.string().min(1),
+      width: z.number().int().min(16).max(800).optional(),
+      height: z.number().int().min(8).max(200).optional(),
+    })
+    .optional(),
 });
 
 export type CardOptions = z.infer<typeof CardOptionsSchema>;

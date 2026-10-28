@@ -1,4 +1,5 @@
 import { z } from "zod";
+import type { FieldDef, SchemaDoc } from "./schema.js";
 
 /*
  * Where a collection's rows come from: `source.yaml` next to its `view.yaml`.
@@ -43,8 +44,9 @@ const STEP_RE = /^([A-Za-z_$][\w$-]*)?((?:\[(?:\d+|\*)\])*)$/;
 
 /**
  * `owner.login`, `geometry.coordinates[1]`, `authors[*].name`: dotted keys
- * with `[N]` indices and `[*]` projections, the udc-py syntax. `null` for a
- * malformed path.
+ * with `[N]` indices and `[*]` projections, the udc-py syntax. An index may
+ * open the path (`[0]`, `[5]`): the item itself is an array (OpenSky's
+ * positional state vectors). `null` for a malformed path.
  */
 export function parseFieldPath(path: string): PathStep[] | null {
   if (path.trim() === "") return null;
@@ -117,6 +119,80 @@ export const FilesystemOptionsSchema = z.looseObject({
 
 const ENV_NAME = z.string().regex(/^[A-Z_][A-Z0-9_]*$/, "an environment variable name");
 
+/**
+ * An OAuth2 client-credentials grant: with both variables set the source
+ * asks `token_url` for a bearer token and refreshes it before it expires;
+ * with either unset it calls upstream without `Authorization` (anonymous).
+ */
+export const HttpApiAuthSchema = z.discriminatedUnion("kind", [
+  z.looseObject({
+    kind: z.literal("oauth2_client_credentials"),
+    token_url: z.url(),
+    client_id_env: ENV_NAME,
+    client_secret_env: ENV_NAME,
+    scope: z.string().min(1).optional(),
+  }),
+]);
+export type HttpApiAuth = z.output<typeof HttpApiAuthSchema>;
+
+/**
+ * A sliding window over a stateless upstream: per row id, the last `size`
+ * values of each of `fields` (numbers of the schema), oldest first, served
+ * as `<field>_history`. An id absent for `ttl_polls` polls drops its window.
+ */
+export const HttpApiHistorySchema = z.looseObject({
+  fields: z.array(z.string().min(1)).min(1),
+  size: z.number().int().min(1).max(600).default(60),
+  ttl_polls: z.number().int().min(1).max(100).default(10),
+});
+export type HttpApiHistory = z.output<typeof HttpApiHistorySchema>;
+
+/** The row field a history window of `field` is served under. */
+export const historyFieldName = (field: string) => `${field}_history`;
+
+const HISTORY_NUMBER_TYPES = new Set(["integer", "decimal", "year", "rating"]);
+
+/** What a schema says against a `history` block: every field a live number, no derived name taken by a non-json field. */
+export function historyProblems(history: HttpApiHistory, schema: SchemaDoc): string[] {
+  const problems: string[] = [];
+  history.fields.forEach((f, i) => {
+    const def = schema.fields[f];
+    if (!def || def.deleted)
+      problems.push(`history.fields[${i}]: ${f} is not a field of the schema`);
+    else if (!HISTORY_NUMBER_TYPES.has(def.type)) {
+      problems.push(`history.fields[${i}]: ${f} is ${def.type}, a history needs a number`);
+    }
+    const taken = schema.fields[historyFieldName(f)];
+    if (taken && !taken.deleted && taken.type !== "json") {
+      problems.push(
+        `history.fields[${i}]: ${historyFieldName(f)} is a ${taken.type} field of the schema, the history needs it as json`,
+      );
+    }
+  });
+  return problems;
+}
+
+/**
+ * The schema the server describes for a source with `history`: every
+ * `<field>_history` added as a `json` field after the schema's own (one
+ * schema.json already declares keeps its place).
+ */
+export function withHistoryFields(
+  schema: SchemaDoc,
+  history: HttpApiHistory | undefined,
+): SchemaDoc {
+  if (!history) return schema;
+  const fields: Record<string, FieldDef> = { ...schema.fields };
+  const order = [...schema.field_order];
+  for (const f of history.fields) {
+    const name = historyFieldName(f);
+    const label = `Last values of ${f}, oldest first`;
+    fields[name] = { description: label, ...fields[name], type: "json" } as FieldDef;
+    if (!order.includes(name)) order.push(name);
+  }
+  return { ...schema, fields, field_order: order };
+}
+
 export const HttpApiOptionsSchema = z.looseObject({
   base_url: z.url(),
   /** Appended to `base_url`; may carry a query string. */
@@ -127,11 +203,19 @@ export const HttpApiOptionsSchema = z.looseObject({
   list_unwrap: FieldPathSchema.optional(),
   /** Schema field → path in one item. A field without an entry reads `item[field]`. */
   field_map: z.record(z.string().min(1), FieldPathSchema).default({}),
+  /** datetime / date fields whose upstream number is Unix seconds (OpenSky), not milliseconds (USGS). */
+  epoch_seconds: z.array(z.string().min(1)).optional(),
   /** `${VAR}` is read from the environment; a header whose variable is unset is dropped. */
   headers: z.record(z.string().min(1), z.string()).optional(),
   timeout_ms: z.number().int().min(100).max(120_000).default(15_000),
   /** How long a fetched list is served from memory. 0 fetches every time. */
   cache_ttl_ms: z.number().int().min(0).default(60_000),
+  /** The TTL while the `auth` client is active (a larger budget); `cache_ttl_ms` otherwise. */
+  cache_ttl_ms_authenticated: z.number().int().min(0).optional(),
+  /** An optional credential; without its variables the source runs anonymous. */
+  auth: HttpApiAuthSchema.optional(),
+  /** A per-row window of past values, kept across polls (the upstream keeps none). */
+  history: HttpApiHistorySchema.optional(),
   /** Without every one of these set the source refuses to call upstream (`unsupported_op`). */
   env_required: z.array(ENV_NAME).optional(),
   /** The most items one fetch maps into rows. */
@@ -195,4 +279,22 @@ export const DEFAULT_SOURCE_CONFIG: SourceConfig = { kind: "postgres_jsonb", opt
 export function parseSourceConfig(raw: unknown): SourceConfig {
   if (raw === undefined || raw === null) return DEFAULT_SOURCE_CONFIG;
   return SourceConfigSchema.parse(raw);
+}
+
+/**
+ * What a schema says against an http_api options block: the `history`
+ * fields (see `historyProblems`) and the `epoch_seconds` fields, each a
+ * live datetime or date. Empty when it fits; the registry refuses otherwise.
+ */
+export function httpApiProblems(opts: HttpApiOptions, schema: SchemaDoc): string[] {
+  const problems = opts.history ? historyProblems(opts.history, schema) : [];
+  (opts.epoch_seconds ?? []).forEach((f, i) => {
+    const def = schema.fields[f];
+    if (!def || def.deleted)
+      problems.push(`epoch_seconds[${i}]: ${f} is not a field of the schema`);
+    else if (def.type !== "datetime" && def.type !== "date") {
+      problems.push(`epoch_seconds[${i}]: ${f} is ${def.type}, not a datetime or a date`);
+    }
+  });
+  return problems;
 }

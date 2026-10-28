@@ -1,5 +1,6 @@
 import { z } from "zod";
 import type { SchemaDoc } from "./schema.js";
+import { historyFieldName } from "./source.js";
 
 const Field = z.string().min(1);
 
@@ -18,9 +19,21 @@ export const MapRegionSchema = z.looseObject({
 });
 export type MapRegion = z.infer<typeof MapRegionSchema>;
 
+/**
+ * The line a marker has flown: the positions of two history fields (the
+ * server's `<field>_history`, oldest first), the last `max_points` of them.
+ */
+export const MapTrailSchema = z.looseObject({
+  lat_history_field: Field,
+  lng_history_field: Field,
+  max_points: z.number().int().min(2).max(600).default(60),
+});
+export type MapTrail = z.output<typeof MapTrailSchema>;
+
 // Loose, as every view block: a dclabs `map_options` carries keys jsudc does
-// not read (icon, rotate_field, icon_size, trail) and must still parse.
-// Every key declared here is one the map renderer reads.
+// not read and must still parse. Every key declared here is one the map
+// renderer reads. dclabs writes `trail: true`: the histories of lat_field
+// and lng_field.
 export const MapOptionsSchema = z
   .looseObject({
     /** A number field: the marker's latitude. */
@@ -46,6 +59,13 @@ export const MapOptionsSchema = z
     regions: z.array(MapRegionSchema).optional(),
     /** A region id: where the map opens instead of `center`. */
     default_region: Field.optional(),
+    /** `airplane`: an aeroplane (nose north) turned by `rotate_field`, in place of the circle. */
+    icon: z.enum(["circle", "airplane"]).default("circle"),
+    /** A number field: degrees clockwise from north the icon is turned by. */
+    rotate_field: Field.optional(),
+    /** The icon's width and height, px. */
+    icon_size: z.number().int().min(8).max(64).default(22),
+    trail: z.union([z.boolean(), MapTrailSchema]).optional(),
   })
   .superRefine((o, ctx) => {
     if (o.radius_max < o.radius_min) {
@@ -69,7 +89,21 @@ export const MapOptionsSchema = z
       });
     }
   })
-  .transform((o) => ({ ...o, fit_bounds: o.fit_bounds ?? o.center === undefined }));
+  .transform(({ trail, ...o }) => {
+    const resolved: MapTrail | undefined =
+      trail === true
+        ? {
+            lat_history_field: historyFieldName(o.lat_field),
+            lng_history_field: historyFieldName(o.lng_field),
+            max_points: 60,
+          }
+        : trail || undefined;
+    return {
+      ...o,
+      fit_bounds: o.fit_bounds ?? o.center === undefined,
+      ...(resolved ? { trail: resolved } : {}),
+    };
+  });
 
 export type MapOptionsInput = z.input<typeof MapOptionsSchema>;
 export type MapOptions = z.output<typeof MapOptionsSchema>;
@@ -78,7 +112,8 @@ const NUMBER_TYPES = new Set(["integer", "decimal", "year", "rating"]);
 
 /**
  * What a schema says against a map block: every field the map reads must be
- * a live field of the schema, and the coordinates and the radius numbers.
+ * a live field of the schema, the coordinates, the radius and the rotation
+ * numbers, the trail's histories json.
  * Empty when the block fits; the registry refuses a collection otherwise.
  */
 export function mapOptionsProblems(opts: MapOptions, schema: SchemaDoc): string[] {
@@ -91,6 +126,7 @@ export function mapOptionsProblems(opts: MapOptions, schema: SchemaDoc): string[
     ["lat_field", opts.lat_field],
     ["lng_field", opts.lng_field],
     ["radius_field", opts.radius_field],
+    ["rotate_field", opts.rotate_field],
   ];
   for (const [key, field] of numeric) {
     if (!field) continue;
@@ -98,6 +134,17 @@ export function mapOptionsProblems(opts: MapOptions, schema: SchemaDoc): string[
     if (!def) problems.push(`${key}: ${field} is not a field of the schema`);
     else if (!NUMBER_TYPES.has(def.type)) {
       problems.push(`${key}: ${field} is ${def.type}, a map needs a number`);
+    }
+  }
+  if (opts.trail) {
+    // The histories are json arrays (an http_api `history` adds them to the schema).
+    for (const key of ["lat_history_field", "lng_history_field"] as const) {
+      const field = opts.trail[key];
+      const def = live(field);
+      if (!def) problems.push(`trail.${key}: ${field} is not a field of the schema`);
+      else if (def.type !== "json") {
+        problems.push(`trail.${key}: ${field} is ${def.type}, a trail needs a json array`);
+      }
     }
   }
   (opts.popup_fields ?? []).forEach((field, i) => {

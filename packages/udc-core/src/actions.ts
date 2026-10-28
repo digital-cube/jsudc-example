@@ -83,10 +83,24 @@ export const CollectionDocsSchema = z.object({
 
 export type CollectionDocs = z.infer<typeof CollectionDocsSchema>;
 
+/**
+ * What a source says about how it reaches its rows, for the freshness pill:
+ * an http_api source's credential (`anonymous` or `oauth2`) and the TTL its
+ * server cache uses now.
+ */
+export const SourceInfoSchema = z.looseObject({
+  auth: z.enum(["anonymous", "oauth2"]).optional(),
+  cache_ttl_ms: z.number().int().min(0).optional(),
+});
+
+export type SourceInfo = z.infer<typeof SourceInfoSchema>;
+
 export const DescribeResponseSchema = z.object({
   collection: z.string().min(1),
   capabilities: CapabilitiesSchema,
   source_kind: SourceKindSchema,
+  /** Absent for a source with nothing to say (every source but http_api). */
+  source: SourceInfoSchema.optional(),
   /** Present when the collection directory has a README; the UI shows a Doc tab. */
   docs: CollectionDocsSchema.optional(),
   schema: SchemaDocSchema,
