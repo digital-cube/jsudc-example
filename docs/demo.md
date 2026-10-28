@@ -10,8 +10,8 @@ UDC path, shown as a table and as cards, with columns added from the UI.
 nvm use
 npm install
 npm run db:setup
-npm run db:migrate -w @jsudc/backend   # once after pulling: the appointments table (migration 0003)
-npm run seed -- --reset     # 200 companies (with lat / lng), 3 boards / 15 buckets / 60 tickets, ~640 appointments around today
+npm run db:migrate -w @jsudc/backend   # once after pulling: new collection tables (0003 appointments … 0005 metrics)
+npm run seed -- --reset     # 200 companies (with lat / lng), 3 boards / 15 buckets / 60 tickets, ~640 appointments around today, 30 days of metrics up to now
 npm run dev                 # backend :5100 + Vite (it prints its port)
 ```
 
@@ -262,6 +262,65 @@ one, Postgres). The sidebar groups the collections that way: **Database**,
    error. `UDC_HTTP_SOURCES=off npm run dev` leaves the Internet group out;
    `UDC_HTTP_FIXTURES=backend/test/fixtures/http` serves recorded answers
    (what `npm run e2e` does, so Cypress never needs the network).
+
+## Charts: `metrics`, the `repos` pie, the `quakes` bars
+
+The **chart** tab draws whatever `chart_options` in `view.yaml` says (typed by
+`ChartOptionsSchema` in `udc-core`; the server refuses to start when a series
+is not a number field or a field is missing). `metrics` is a dedicated
+dataset: three servers sampled every 15 minutes for the 30 days before
+`npm run seed` ran (generated at seed time, ~8,600 rows). The short windows
+end at the seed, so reseed (`npm run seed -- --reset`) before showing it on
+another day.
+
+1. **The 24h window.** Open **Server metrics**: CPU and memory as lines on the
+   left axis (0–80 %, round ticks), the load average on the right axis framed
+   on its own numbers. Without a host chip each point is the mean of the three
+   hosts at that quarter hour; the spike three hours before the end is
+   `web-1`'s incident. The toolbar reads *N points in window of 8,640*: the
+   chart asked the server only for its window — in the network tab the
+   `list` call carries `{"field":"ts","op":"between","value":[…]}` from 24
+   hours ago to now, written with the header zone's offset, ANDed with the
+   chips and the filter tree.
+2. **Presets.** 1h · 6h · 24h · 7d sit in the toolbar row; the choice is
+   `?win=7d` in the address bar. 7d is the last seven *calendar days* in the
+   active zone (midnight six days ago to the end of today): the axis turns to
+   days, the weekend dips show, and the rows are averaged into half hours so
+   the line stays readable. *Custom* opens a from / to pair (`?from=&to=`,
+   wall times read in the header's zone).
+3. **Hover and legend.** Hover the plot: a tooltip with the time and each
+   series formatted as the table formats them (`27.10.2026 18:30`, `50.4`).
+   Click *Memory %* in the legend to hide it; the left axis re-frames on what
+   is left.
+4. **One host.** Pick *db-1* in the **Host** chip: the lines are now one
+   server's samples (the database's memory sits nearly flat, 71–74 %), and the
+   tooltip shows that row's values exactly.
+5. **The time zone and the window.** With 6h picked, switch the header zone
+   from **Europe/Belgrade** to **Asia/Tokyo**. The axis relabels at once
+   (at noon in Belgrade, 06:00–12:00 becomes 14:00–20:00), and the next `list` call's `between`
+   reads `…T14:00:00.000+09:00` – `…T20:00:00.000+09:00`: the hour presets
+   are the same instants in every zone, written in its offset. Pick **7d**:
+   now the zone moves the instants themselves — Tokyo's week starts at
+   `2026-10-21T00:00:00.000+09:00`, seven hours before Belgrade's
+   `…+02:00` (dates as with `SEED_TODAY=2026-10-27`). Reload: the zone
+   (`localStorage`) and the preset (the URL) are both kept.
+6. **The same window in the table.** Switch to **Table** with a preset picked:
+   the table asks for the same `between` and shows those rows (the window
+   control stays in the toolbar, with a × to drop it and see all 8,640).
+7. **Repositories as a pie.** Open **Repositories** → **Chart**: stars per
+   repository, the ten largest as slices with their percentage and the rest
+   folded into **Other** (`max_slices: 10`). The recorded fixture has star
+   counts set on sixteen repositories for this; the live GitHub account has
+   only three starred ones, so live it is a three-slice pie.
+8. **Earthquakes as bars.** **Earthquakes** → **Chart**: one bar per quake
+   over the last 7 days, height = magnitude, the axis framed on the
+   magnitudes (`baseline: data`) rather than on zero. 24h · 7d · 30d move the
+   window; the page polls every minute as the map does.
+
+Light and dark use the categorical palette `--chart-1 … --chart-8` in
+`index.css`, a validated order with its own dark steps. Cypress
+(`frontend/cypress/e2e/chart.cy.ts`) freezes the browser clock at the
+seed's noon, so every `between` above is checked to the millisecond.
 
 ## What is behind it
 

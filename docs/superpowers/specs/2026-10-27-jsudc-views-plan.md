@@ -144,12 +144,12 @@ catalogue (the owner may swap entries; see the question ticket):
 |---|---|---|---|
 | `companies` (exists) | postgres_jsonb | table, cards, **map** | add `lat`/`lng` (city coordinate + jitter) to the seed so a **DB-backed map** exists and chips/filters visibly move the markers |
 | `files` | **filesystem** (bundled sample dir, `UDC_FILES_ROOT` override) | table, cards | the "source is files" example: folder drill-down, size/mtime/ext, type colours, read-only |
-| `quakes` | **http_api** USGS GeoJSON, no key, 60 s TTL | **map**, table, cards | the "source is the net" example that also exercises the map: `radius_field: mag`, popups, `row_color` by magnitude |
-| `repos` | **http_api** GitHub `users/digital-cube/repos`, no key (60 req/h anonymous, so cache matters) | table, cards | a second net example with nested `field_map`, avatars, topics as chips |
+| `quakes` | **http_api** USGS GeoJSON, no key, 60 s TTL | **map**, table, cards, **chart** | the "source is the net" example that also exercises the map: `radius_field: mag`, popups, `row_color` by magnitude |
+| `repos` | **http_api** GitHub `users/digital-cube/repos`, no key (60 req/h anonymous, so cache matters) | table, cards, **chart** | a second net example with nested `field_map`, avatars, topics as chips |
 | `boards`, `buckets`, `tickets` | postgres_jsonb | boards: table; tickets: **kanban**, table, cards, **calendar** | the kanban example, dclabs data model, writable (drag, reorder, quick-add, bucket add/rename), `reindex` |
 | `appointments` | postgres_jsonb | **calendar**, table | a dedicated calendar dataset: 8 "doctors" with a `color_map`, business hours 8–20, ~600 rows around today, drag to move/resize persists |
 | `tree_comments` (or a yaml menu) | postgres_jsonb | **tree**, table | a threaded tree with `parent` + `order`, reusing the kanban's order math and `reindex` for sibling order; drag to re-parent |
-| `tickers` (or a DB metrics collection) | http_api or postgres_jsonb | **chart**, table | line/area/bar over all rows of the current filter (`useUdcAllRows`), time-window presets as relative filters |
+| `metrics` (TCKMQ39XMT; no `tickers`, it needs a key) | postgres_jsonb, generated at seed time (3 hosts × 15 min × 30 days, ~8,640 rows, `SEED_TODAY` pins the end to noon in Belgrade) | **chart**, table | the chart example: cpu / mem lines on a left axis in %, load on a right axis framed on its own values; window presets 1h / 6h / 24h / 7d + custom sent as an absolute `between` on `ts` computed in the header's zone (no relative `gte`, the server stays dumb), `?win=` / `?from=&to=` in the URL and applied to the table tab too; rows from `useUdcAllRows` merged per instant and bucketed past ~600 points. Also a **chart** tab on `repos` (pie of stars, 10 slices + Other) and on `quakes` (bars of magnitude, 7d) |
 
 Not planned now: an SSE source (`recent_changes`).
 
