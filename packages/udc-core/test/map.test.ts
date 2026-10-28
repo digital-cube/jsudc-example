@@ -16,6 +16,7 @@ describe("MapOptions", () => {
       lng_field: "lng",
       radius_min: 4,
       radius_scale: 1,
+      radius_max: 40,
       zoom: 2,
       fit_bounds: true,
       max_rows: 2000,
@@ -62,6 +63,7 @@ describe("MapOptions", () => {
     [{ zoom: 30 }, "zoom"],
     [{ radius_scale: -1 }, "radius_scale"],
     [{ max_rows: 0 }, "max_rows"],
+    [{ radius_min: 10, radius_max: 5 }, "radius_max"],
     [{ regions: [{ id: "a", label: "A", center: [0, 0] }] }, "regions"],
     [
       {

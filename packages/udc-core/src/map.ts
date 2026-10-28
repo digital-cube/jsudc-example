@@ -32,6 +32,8 @@ export const MapOptionsSchema = z
     /** The radius in px of a marker without (or with a zero) `radius_field` value. */
     radius_min: z.number().min(0).default(4),
     radius_scale: z.number().min(0).default(1),
+    /** The cap, in px: one huge value must not cover its neighbours. */
+    radius_max: z.number().min(0).default(40),
     /** The popup's rows, in order, formatted as the table formats them. */
     popup_fields: z.array(Field).optional(),
     /** Where the map opens; without one it fits every marker. */
@@ -46,6 +48,13 @@ export const MapOptionsSchema = z
     default_region: Field.optional(),
   })
   .superRefine((o, ctx) => {
+    if (o.radius_max < o.radius_min) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["radius_max"],
+        message: "radius_max must not be below radius_min",
+      });
+    }
     const ids = (o.regions ?? []).map((r) => r.id);
     ids.forEach((id, i) => {
       if (ids.indexOf(id) !== i) {
