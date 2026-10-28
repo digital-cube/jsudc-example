@@ -23,6 +23,7 @@ const caps = {
   config_edit: false,
   reindex: false,
   tree_reparent: false,
+  source_yaml: false,
   paging: ["offset" as const],
   supported_filter_ops: [],
 };

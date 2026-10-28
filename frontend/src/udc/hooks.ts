@@ -36,6 +36,17 @@ export function useUdcDescribe(collection: string, opts: { enabled?: boolean } =
   });
 }
 
+/** The file a `source_yaml` collection is read from (`source.read`); fetched again on every mount. */
+export function useUdcSource(collection: string, opts: { enabled?: boolean } = {}) {
+  const client = useUdcClient();
+  return useQuery({
+    queryKey: udcKeys.source(collection),
+    queryFn: () => client.sourceRead(collection),
+    staleTime: 0,
+    enabled: (opts.enabled ?? true) && collection !== "",
+  });
+}
+
 export interface UseUdcCollectionArgs {
   collection: string;
   filter?: FilterNode | undefined;

@@ -384,6 +384,7 @@ describe("<TreeRenderer>", () => {
         config_edit: false,
         reindex: true,
         tree_reparent: true,
+        source_yaml: false,
         supported_filter_ops: [],
       },
       schema,

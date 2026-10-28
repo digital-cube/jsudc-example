@@ -1,15 +1,6 @@
 import { useDraggable, useDroppable } from "@dnd-kit/core";
 import type { Row } from "@jsudc/udc-core";
-import {
-  Building2,
-  ChevronRight,
-  Circle,
-  CornerLeftUp,
-  type LucideIcon,
-  MoreVertical,
-  User,
-  Users,
-} from "lucide-react";
+import { ChevronRight, CornerLeftUp, MoreVertical } from "lucide-react";
 import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import {
   DropdownMenu,
@@ -20,13 +11,12 @@ import {
 import { Spinner } from "../components/ui/misc";
 import { Tip } from "../components/ui/tooltip";
 import { useI18n } from "../i18n/i18n";
+import { resolveIcon } from "../icons/resolve";
 import { cn } from "../lib/utils";
 import { canDrop, dropId, highlightParts, i18nKey, idOf, numberOf } from "./model";
 import { LazyChildren, NodeList, useTree } from "./TreeRenderer";
 
 const INDENT = 20;
-
-const ICONS: Record<string, LucideIcon> = { building: Building2, users: Users, user: User };
 
 /** The label as text: `label_i18n` reads `<SECTION>_<TERM>` through `t`, else the raw value. */
 function useLabel(row: Row): string {
@@ -127,7 +117,7 @@ export function TreeNode({ row, depth }: { row: Row; depth: number }) {
 
   const avatar = opts.avatar_field ? row[opts.avatar_field] : undefined;
   const iconName = opts.icon_field ? row[opts.icon_field] : undefined;
-  const Icon = typeof iconName === "string" ? (ICONS[iconName] ?? Circle) : null;
+  const Icon = resolveIcon(iconName);
   const path = opts.path_field ? row[opts.path_field] : undefined;
   const menu = [
     { key: "details", label: t("APP", "TREE_DETAILS"), run: () => ctx.onOpenDetail(row) },

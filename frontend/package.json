@@ -8,6 +8,7 @@
     "dev": "vite",
     "build": "tsc -p tsconfig.json && vite build",
     "preview": "vite preview",
+    "generate:icons": "node scripts/generate-icons.mjs",
     "typecheck": "tsc -p tsconfig.json --noEmit && tsc -p cypress/tsconfig.json --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",

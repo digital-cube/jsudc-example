@@ -407,6 +407,7 @@ describe("KanbanRenderer read-only gating", () => {
         config_edit: false,
         reindex: true,
         tree_reparent: false,
+        source_yaml: false,
         supported_filter_ops: [],
       },
       schema,

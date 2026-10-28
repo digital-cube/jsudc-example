@@ -115,4 +115,9 @@ export class UdcClient {
   schemaSoftDeleteField(req: ActionRequest<"schema.soft_delete_field">) {
     return this.call("schema.soft_delete_field", req);
   }
+
+  /** The file a `source_yaml` collection is read from, as written. */
+  sourceRead(collection: string) {
+    return this.call("source.read", { collection });
+  }
 }

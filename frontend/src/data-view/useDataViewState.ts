@@ -55,10 +55,13 @@ export interface DataViewState {
 /** The pseudo-tab of a collection's README; offered when `describe.docs` has text. */
 export const DOC_TAB = "doc";
 
+/** The pseudo-tab of the file a collection is read from; offered when `capabilities.source_yaml`. */
+export const SOURCE_TAB = "source";
+
 export function useDataViewState(
   collection: string,
   view: ViewConfig | undefined,
-  opts: { doc?: boolean } = {},
+  opts: { doc?: boolean; source?: boolean } = {},
 ): DataViewState {
   const [params, setParams] = useSearchParams();
 
@@ -94,11 +97,13 @@ export function useDataViewState(
   const sort = useMemo(() => decodeSortParam(raw.sort), [raw.sort]);
 
   const renderers = view?.available_renderers ?? ["table"];
-  // The Doc tab is chosen, never the default: the view's default_renderer opens.
+  // The Doc and Source tabs are chosen, never the default: the view's default_renderer opens.
   const tab =
     opts.doc && raw.tab === DOC_TAB
       ? DOC_TAB
-      : resolveTab(raw.tab ?? "", renderers, view?.default_renderer ?? "table");
+      : opts.source && raw.tab === SOURCE_TAB
+        ? SOURCE_TAB
+        : resolveTab(raw.tab ?? "", renderers, view?.default_renderer ?? "table");
   const mode = resolvePagingMode(
     decodeModeParam(raw.mode),
     storage.get(pagingStorageKey(collection)),

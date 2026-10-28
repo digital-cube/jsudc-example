@@ -29,6 +29,7 @@ import { LOCALES, type Locale } from "../i18n/translations";
 import { useTheme } from "../lib/theme";
 import { cn } from "../lib/utils";
 import { useUdcCollections } from "../udc/hooks";
+import { MENU_COLLECTION, MenuTree } from "./MenuTree";
 import { TimezonePicker } from "./TimezonePicker";
 
 const COLLECTION_ICONS: Record<string, LucideIcon> = {
@@ -135,15 +136,31 @@ function TopBar() {
   );
 }
 
+/**
+ * The sidebar: the menu collection (`VITE_MENU_COLLECTION`, default `menu`)
+ * drawn as a tree when the server serves one; the collections grouped by
+ * where their rows live otherwise.
+ */
 function Sidebar() {
   const { t } = useI18n();
   const collections = useUdcCollections();
+  const menu = collections.data?.collections.find((c) => c.name === MENU_COLLECTION);
   return (
     <nav
-      aria-label={t("APP", "COLLECTIONS")}
+      aria-label={t("APP", menu ? "NAV_MENU" : "COLLECTIONS")}
       data-testid="sidebar"
-      className="scroll-thin hidden w-48 shrink-0 flex-col overflow-y-auto border-r border-border bg-surface/60 p-3 pt-4 md:flex lg:w-56"
+      data-sidebar={menu ? "menu" : "groups"}
+      className="scroll-thin hidden w-52 shrink-0 flex-col overflow-y-auto border-r border-border bg-surface/60 p-3 pt-4 md:flex lg:w-60"
     >
+      {menu ? <MenuTree listing={menu} /> : <GroupedSidebar collections={collections} />}
+    </nav>
+  );
+}
+
+function GroupedSidebar({ collections }: { collections: ReturnType<typeof useUdcCollections> }) {
+  const { t } = useI18n();
+  return (
+    <>
       {collections.isLoading ? (
         <div className="flex flex-col gap-2 px-2">
           <Skeleton className="h-6" />
@@ -184,7 +201,7 @@ function Sidebar() {
           },
         )}
       </div>
-    </nav>
+    </>
   );
 }
 

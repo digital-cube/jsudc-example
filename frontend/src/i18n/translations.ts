@@ -26,6 +26,14 @@ export const TRANSLATIONS: Translations = {
     TAB_MAP: { en: "Map", sr: "Mapa" },
     TAB_CHART: { en: "Chart", sr: "Grafikon" },
     TAB_DOC: { en: "Doc", sr: "Opis" },
+    TAB_SOURCE: { en: "Source", sr: "Izvor" },
+    SOURCE_MODIFIED: { en: "Modified {when}", sr: "Izmenjen {when}" },
+    SOURCE_LINES: { en: "{count} lines", sr: "Redova: {count}" },
+    SOURCE_STALE: {
+      en: "The file does not parse; the rows shown are from its last good version",
+      sr: "Fajl ne može da se pročita; prikazani redovi su iz poslednje ispravne verzije",
+    },
+    NAV_MENU: { en: "Application menu", sr: "Meni aplikacije" },
     GROUP_DATABASE: { en: "Database", sr: "Baza" },
     GROUP_FILES: { en: "Files", sr: "Fajlovi" },
     GROUP_INTERNET: { en: "Internet", sr: "Internet" },
@@ -378,6 +386,52 @@ export const TRANSLATIONS: Translations = {
     QUAKES: { en: "Earthquakes", sr: "Zemljotresi" },
     REPOS: { en: "Repositories", sr: "Repozitorijumi" },
     METRICS: { en: "Server metrics", sr: "Metrike servera" },
+    MENU: { en: "Menu", sr: "Meni" },
+  },
+  // The /about page. README is the repository README's first section in Serbian; the English
+  // page renders README.md itself, so its `en` is only what a missing import would show.
+  ABOUT: {
+    TITLE: { en: "About jsudc", sr: "O aplikaciji jsudc" },
+    LEAD: {
+      en: "From the repository's README. The sidebar you are using is the menu collection, drawn from a YAML file.",
+      sr: "Iz README fajla repozitorijuma. Bočna traka koju koristite je kolekcija menu, nacrtana iz YAML fajla.",
+    },
+    README: {
+      en: "jsudc re-implements the core of UDC in TypeScript.",
+      sr: `# jsudc
+
+jsudc ponovo implementira jezgro DigitalCube-ovog **UDC-a (Universal Data Collection)**
+u jednoj TypeScript bazi koda: Node.js backend (Fastify + Drizzle), React frontend
+(Vite) i Postgres, sa redovima kolekcija uglavnom sačuvanim kao \`jsonb\`. Kolekcija
+je opisana dokumentom šeme i konfiguracijom prikaza (\`schema.json\` i \`view.yaml\`,
+isti dijalekt kao u dclabs-u). Server je služi kroz jedan generički protokol:
+\`describe\`, \`list\` sa filtriranjem, sortiranjem i straničenjem na serveru,
+\`mutate\` i izmene šeme koje dodaju kolonu iz korisničkog interfejsa.
+
+Poenta vežbe je **zajednički interfejs**. U današnjem UDC-u protokol je deklarisan
+dva puta, jednom u Python-u i jednom u TypeScript-u, i ta dva se razilaze. U jsudc-u
+on postoji jednom, u \`packages/udc-core\`: envelope-i, filter DSL i evaluator u
+memoriji, tipovi šeme i prikaza, validacija redova i svaki payload akcije, kao Zod
+šeme sa izvedenim tipovima. I server i pregledač ga uvoze.`,
+    },
+  },
+  // The application menu (backend/collections/menu/data/menu.yaml): translation_key MENU_<TERM>.
+  MENU: {
+    HOME: { en: "Home", sr: "Početna" },
+    COLLECTIONS: { en: "Collections", sr: "Kolekcije" },
+    DATABASE: { en: "Database", sr: "Baza" },
+    FILES: { en: "Files", sr: "Fajlovi" },
+    INTERNET: { en: "Internet", sr: "Internet" },
+    VIEWS: { en: "Views", sr: "Prikazi" },
+    VIEW_TICKETS: { en: "Tickets board", sr: "Tabla tiketa" },
+    VIEW_APPOINTMENTS: { en: "Appointments calendar", sr: "Kalendar termina" },
+    VIEW_COMPANIES: { en: "Companies map", sr: "Mapa preduzeća" },
+    VIEW_ORG: { en: "Organisation tree", sr: "Stablo organizacije" },
+    VIEW_METRICS: { en: "Metrics chart", sr: "Grafikon metrika" },
+    VIEW_QUAKES: { en: "Earthquakes map", sr: "Mapa zemljotresa" },
+    DOCS: { en: "Docs", sr: "Dokumentacija" },
+    MENU: { en: "Menu", sr: "Meni" },
+    ABOUT: { en: "About", sr: "O aplikaciji" },
   },
   TBL_METRICS: {
     __DESCRIPTION: {
@@ -391,6 +445,24 @@ export const TRANSLATIONS: Translations = {
     LOAD: { en: "Load", sr: "Opterećenje" },
     REQ_PER_S: { en: "Requests/s", sr: "Zahteva/s" },
     ERRORS: { en: "Errors", sr: "Greške" },
+  },
+  TBL_MENU: {
+    __DESCRIPTION: {
+      en: "The sidebar, as data: a YAML file flattened into tree rows, its collections branch live",
+      sr: "Bočna traka kao podaci: YAML fajl izravnat u redove stabla, grana kolekcija uživo",
+    },
+    SEARCH_PLACEHOLDER: {
+      en: "Search a key, a code or a url",
+      sr: "Pretraga po ključu, kodu ili url-u",
+    },
+    ICON: { en: "Icon", sr: "Ikonica" },
+    TRANSLATION_KEY: { en: "Translation key", sr: "Ključ prevoda" },
+    CODE: { en: "Code", sr: "Kod" },
+    URL: { en: "URL", sr: "URL" },
+    ORDER: { en: "Order", sr: "Redosled" },
+    DEPTH: { en: "Depth", sr: "Dubina" },
+    CHILDREN_COUNT: { en: "Children", sr: "Dece" },
+    IS_DYNAMIC: { en: "Dynamic", sr: "Dinamički" },
   },
   TBL_FILES: {
     __DESCRIPTION: {

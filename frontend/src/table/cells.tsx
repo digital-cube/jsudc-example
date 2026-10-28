@@ -1,6 +1,7 @@
 import { COLUMN_COLORS, type ColumnColor, type ColumnConfig, type FieldDef } from "@jsudc/udc-core";
 import { Check, X } from "lucide-react";
 import type { ReactNode } from "react";
+import { resolveIcon } from "../icons/resolve";
 import { cn } from "../lib/utils";
 import { useTimezone } from "../time/timezone";
 import { zonedFormat } from "../time/zoned";
@@ -14,7 +15,8 @@ export type RenderKind =
   | "datetime"
   | "number"
   | "bytes"
-  | "badge";
+  | "badge"
+  | "icon";
 
 /** The column's `render`, or the one its field type implies. */
 export function renderKind(column: ColumnConfig, def: FieldDef | undefined): RenderKind {
@@ -26,6 +28,7 @@ export function renderKind(column: ColumnConfig, def: FieldDef | undefined): Ren
     case "datetime":
     case "bytes":
     case "badge":
+    case "icon":
       return column.render;
   }
   switch (def?.type) {
@@ -233,6 +236,14 @@ export function CellValue({
     return <span className="text-muted-foreground/50">—</span>;
   }
   if (kind === "badge") return <Badges value={value} column={column} />;
+  if (kind === "icon") {
+    const Icon = resolveIcon(value);
+    return Icon ? (
+      <span title={String(value)} data-testid="cell-icon" data-icon={String(value)}>
+        <Icon className="size-4 text-muted-foreground" aria-hidden />
+      </span>
+    ) : null;
+  }
   const text = displayText(value, column, kind, locale, intlLocale, timeZone);
   return (
     <span

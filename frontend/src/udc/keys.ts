@@ -16,6 +16,7 @@ export const udcKeys = {
   all: ["udc"] as const,
   collections: () => ["udc", "collections"] as const,
   describe: (collection: string) => ["udc", "describe", collection] as const,
+  source: (collection: string) => ["udc", "source", collection] as const,
   lists: (collection: string) => ["udc", "list", collection] as const,
   list: (collection: string, params: ListKeyParams) => ["udc", "list", collection, params] as const,
 };

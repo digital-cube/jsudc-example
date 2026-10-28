@@ -1,5 +1,5 @@
 import type { FilterChipConfig, FilterNode, Row } from "@jsudc/udc-core";
-import { BookOpen, InfinityIcon, Rows3 } from "lucide-react";
+import { BookOpen, FileCode2, InfinityIcon, Rows3 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChartWindowControl } from "../chart/ChartWindowControl";
 import { useChartWindow } from "../chart/useChartWindow";
@@ -25,8 +25,9 @@ import { Freshness } from "./Freshness";
 import { joinFolder, splitFolder } from "./folder";
 import { liveDescribe, liveSort, pruneTree } from "./liveView";
 import { SearchBox } from "./SearchBox";
+import { SourceTab } from "./SourceTab";
 import { cycleSort } from "./urlState";
-import { DOC_TAB, useDataViewState } from "./useDataViewState";
+import { DOC_TAB, SOURCE_TAB, useDataViewState } from "./useDataViewState";
 
 /**
  * One collection: toolbar (search, chips, filter builder, paging mode, count,
@@ -45,8 +46,12 @@ export function UdcDataView({ collection }: { collection: string }) {
   const schema = live?.schema;
   // The README in the UI's language, else the English one.
   const docText = live?.docs?.[locale] ?? live?.docs?.en;
-  const state = useDataViewState(collection, view, { doc: Boolean(docText) });
+  const hasSource = live?.capabilities.source_yaml === true;
+  const state = useDataViewState(collection, view, { doc: Boolean(docText), source: hasSource });
+  // The README and the source file are pages of their own: no rows, no toolbar.
+  const onSource = state.tab === SOURCE_TAB;
   const onDoc = state.tab === DOC_TAB;
+  const onPage = onDoc || onSource;
   const section = tableSection(collection);
 
   // Labels typed in the field form live in the schema; the headers read them through i18n.
@@ -116,7 +121,7 @@ export function UdcDataView({ collection }: { collection: string }) {
   // once the URL picked one, so the table shows the rows the chart draws.
   const win = useChartWindow(view);
   const onChart = state.tab === "chart";
-  const chartWindow = win && !onDoc && (onChart || win.explicit) ? win : undefined;
+  const chartWindow = win && !onPage && (onChart || win.explicit) ? win : undefined;
   const windowCond = chartWindow?.cond;
   const filter = useMemo(() => andWindow(userFilter, windowCond), [userFilter, windowCond]);
   const baseFilter = useMemo(
@@ -124,8 +129,8 @@ export function UdcDataView({ collection }: { collection: string }) {
     [userBaseFilter, windowCond],
   );
 
-  const entry = onDoc ? undefined : rendererEntry(state.tab);
-  const paging = !onDoc && (entry?.paging ?? true);
+  const entry = onPage ? undefined : rendererEntry(state.tab);
+  const paging = !onPage && (entry?.paging ?? true);
   // A renderer without paging loads its own rows; the count it reports replaces the list's.
   const [ownCount, setOwnCount] = useState<RendererCount | null>(null);
 
@@ -173,6 +178,7 @@ export function UdcDataView({ collection }: { collection: string }) {
     ? [
         ...(docText ? [{ name: DOC_TAB, entry: undefined, doc: true }] : []),
         ...rendererTabs(view.available_renderers).map((tab) => ({ ...tab, doc: false })),
+        ...(hasSource ? [{ name: SOURCE_TAB, entry: undefined, doc: true }] : []),
       ]
     : [];
   const resetKey = JSON.stringify([filter ?? null, sort, state.mode]);
@@ -230,13 +236,14 @@ export function UdcDataView({ collection }: { collection: string }) {
               onChange={state.setTab}
               options={tabs.map(({ name, entry: e, doc }) => {
                 if (doc) {
+                  const PageIcon = name === SOURCE_TAB ? FileCode2 : BookOpen;
                   return {
                     value: name,
                     testId: `tab-${name}`,
                     label: (
                       <>
-                        <BookOpen />
-                        {t("APP", "TAB_DOC")}
+                        <PageIcon />
+                        {t("APP", name === SOURCE_TAB ? "TAB_SOURCE" : "TAB_DOC")}
                       </>
                     ),
                   };
@@ -264,7 +271,7 @@ export function UdcDataView({ collection }: { collection: string }) {
         <div
           data-testid="toolbar"
           className={
-            onDoc
+            onPage
               ? "hidden"
               : "flex flex-wrap items-center gap-2 border-b border-border px-3 py-2.5"
           }
@@ -341,7 +348,7 @@ export function UdcDataView({ collection }: { collection: string }) {
           )}
         </div>
 
-        {live && userTree && !onDoc ? (
+        {live && userTree && !onPage ? (
           <div
             data-testid="filter-pills"
             className="flex flex-wrap items-center gap-1.5 border-b border-border bg-muted/40 px-3 py-2"
@@ -358,10 +365,12 @@ export function UdcDataView({ collection }: { collection: string }) {
           </div>
         ) : null}
 
-        {folderNav && !onDoc ? <FolderBar folder={folder} onOpen={folderNav.open} /> : null}
+        {folderNav && !onPage ? <FolderBar folder={folder} onOpen={folderNav.open} /> : null}
 
         {live && onDoc && docText ? (
           <DocTab markdown={docText} />
+        ) : live && onSource ? (
+          <SourceTab collection={collection} />
         ) : live && entry ? (
           <entry.component
             key={state.tab}

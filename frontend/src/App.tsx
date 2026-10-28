@@ -7,6 +7,7 @@ import { TooltipProvider } from "./components/ui/tooltip";
 import { UdcDataView } from "./data-view/UdcDataView";
 import { I18nProvider, useI18n } from "./i18n/i18n";
 import { ThemeProvider } from "./lib/theme";
+import { AboutPage } from "./shell/AboutPage";
 import { AppShell } from "./shell/AppShell";
 import { ErrorState } from "./table/states";
 import { TimezoneProvider } from "./time/timezone";
@@ -56,6 +57,7 @@ export function App() {
                       <Route element={<AppShell />}>
                         <Route index element={<FirstCollection />} />
                         <Route path="udc/:collection" element={<CollectionRoute />} />
+                        <Route path="about" element={<AboutPage />} />
                         <Route path="*" element={<Navigate to="/" replace />} />
                       </Route>
                     </Routes>
