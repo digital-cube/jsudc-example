@@ -3,7 +3,8 @@
  *   npm run e2e [-- <extra cypress run args>]
  *
  * The Cypress run, end to end: migrate and reseed the TEST database (every
- * collection; the appointments around SEED_TODAY, default 2026-10-27), start the backend on it, start Vite proxying to that backend,
+ * collection; the appointments around SEED_TODAY, default 2026-10-27, and the metrics ending at
+ * its noon in Belgrade), start the backend on it, start Vite proxying to that backend,
  * run Cypress headless, and stop both servers whatever happens.
  *
  * The http_api collections (quakes, repos) read the responses recorded under
@@ -99,7 +100,7 @@ try {
     env: { ...process.env, TEST_DATABASE_URL: testDb },
   });
   log(
-    `seeding every collection (200 companies, 3 boards, 15 buckets, 60 tickets, ~640 appointments around ${SEED_TODAY}, 80 comments, 134 org nodes)`,
+    `seeding every collection (200 companies, 3 boards, 15 buckets, 60 tickets, ~640 appointments around ${SEED_TODAY}, 80 comments, 134 org nodes, 8,640 metrics ending at its noon)`,
   );
   run("sh", ["-c", seedCmd]);
 

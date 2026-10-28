@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { CalendarOptionsSchema } from "./calendar.js";
+import { ChartOptionsSchema } from "./chart.js";
 import { FilterNodeSchema, FilterOpSchema } from "./filter.js";
 import { KanbanOptionsSchema } from "./kanban.js";
 import { MapOptionsSchema } from "./map.js";
@@ -193,6 +194,7 @@ export const ViewConfigSchema = z
     calendar_options: CalendarOptionsSchema.optional(),
     tree_options: TreeOptionsSchema.optional(),
     map_options: MapOptionsSchema.optional(),
+    chart_options: ChartOptionsSchema.optional(),
     folder_options: FolderOptionsSchema.optional(),
     row_color: RowColorConfigSchema.optional(),
 
@@ -217,6 +219,14 @@ export const ViewConfigSchema = z
         code: "custom",
         path: ["map_options"],
         message: "available_renderers lists map, so map_options (lat_field, lng_field) is required",
+      });
+    }
+    // Nor the chart: without its block it knows neither the axis nor the series.
+    if (v.available_renderers.includes("chart") && !v.chart_options) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["chart_options"],
+        message: "available_renderers lists chart, so chart_options is required",
       });
     }
   });

@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { belgradeIso, generateAppointments, parseDay } from "../scripts/generate-appointments.js";
 import { KANBAN_TODAY, mondayOf } from "../scripts/generate-kanban.js";
+import { generateMetrics, noonOf } from "../scripts/generate-metrics.js";
 import type { CollectionAsset } from "./registry.js";
 
 const DAY = 86_400_000;
@@ -24,12 +25,18 @@ export function weeksBetween(from: string, to: string): number {
 
 /**
  * The rows `npm run seed` writes for one collection, on the day `today`:
- * `appointments` are generated around it; the tickets' calendar slots are
- * moved from the week they were committed for to its week; everything else
- * is `seed.json` as committed.
+ * `appointments` are generated around it; `metrics` are the 30 days ending at
+ * `metricsEnd` (noon of `today` in Belgrade unless given); the tickets'
+ * calendar slots are moved from the week they were committed for to its week;
+ * everything else is `seed.json` as committed.
  */
-export function seedRowsFor(asset: CollectionAsset, today: string): Record<string, unknown>[] {
+export function seedRowsFor(
+  asset: CollectionAsset,
+  today: string,
+  opts: { metricsEnd?: number } = {},
+): Record<string, unknown>[] {
   if (asset.name === "appointments") return generateAppointments({ today });
+  if (asset.name === "metrics") return generateMetrics({ end: opts.metricsEnd ?? noonOf(today) });
   const rows: Record<string, unknown>[] = asset.seedFile
     ? JSON.parse(readFileSync(asset.seedFile, "utf8"))
     : [];

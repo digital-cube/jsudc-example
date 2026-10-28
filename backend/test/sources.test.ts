@@ -163,7 +163,7 @@ describe("the shipped files, quakes and repos collections", () => {
     const quakes = asset("quakes");
     expect(quakes.view).toMatchObject({
       default_renderer: "map",
-      available_renderers: ["map", "table", "cards"],
+      available_renderers: ["map", "table", "cards", "chart"],
       refresh_interval_ms: 60_000,
       map_options: {
         lat_field: "lat",

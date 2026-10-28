@@ -30,6 +30,7 @@ export const tickets = collectionTable("tickets");
 export const appointments = collectionTable("appointments");
 export const comments = collectionTable("comments");
 export const org = collectionTable("org");
+export const metrics = collectionTable("metrics");
 
 export const udcSchemaRevisions = pgTable(
   "udc_schema_revisions",

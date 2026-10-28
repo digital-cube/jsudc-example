@@ -5,10 +5,12 @@
  * schema.json as active revision 1, then seed.json. Without --reset a
  * collection whose table already has rows is left alone. Rows that depend on
  * the day (the appointments, the tickets' calendar slots) are written around
- * today in Belgrade, or `SEED_TODAY=YYYY-MM-DD` when set.
+ * today in Belgrade, or `SEED_TODAY=YYYY-MM-DD` when set; the metrics end at
+ * the quarter hour the seed runs in, or at noon of `SEED_TODAY`.
  */
 import { parseArgs } from "node:util";
 import { seedToday } from "../../scripts/generate-appointments.js";
+import { metricsEnd } from "../../scripts/generate-metrics.js";
 import { COLLECTIONS_DIR, config } from "../config.js";
 import { connect } from "../db/client.js";
 import { readCollectionAssets } from "../registry.js";
@@ -51,10 +53,11 @@ if (assets.length === 0)
   throw new Error(`no collection to seed (${values.collection ?? "none found"})`);
 
 const today = seedToday();
+const end = metricsEnd();
 const handle = connect(url);
 try {
   for (const asset of assets) {
-    const rows = seedRowsFor(asset, today);
+    const rows = seedRowsFor(asset, today, { metricsEnd: end });
     const res = await seedCollection(handle.db, {
       table: asset.name,
       schema: asset.schemaJson,

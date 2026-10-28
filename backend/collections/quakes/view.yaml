@@ -1,7 +1,7 @@
 # quakes — a month of M4.5+ earthquakes from USGS (source.yaml), opening on the map.
 # The page polls every minute; the server's 60 s cache decides when USGS is asked again.
 default_renderer: map
-available_renderers: [map, table, cards]
+available_renderers: [map, table, cards, chart]
 pagination: infinite
 page_size_default: 100
 row_height: 36
@@ -22,6 +22,21 @@ map_options:
     - {id: world, label: World, center: [20, 0], zoom: 2}
     - {id: europe, label: Europe, center: [48, 15], zoom: 4}
     - {id: pacific, label: Pacific, center: [5, 160], zoom: 3}
+
+# Magnitude per event over the window: one bar per quake, framed on the
+# magnitudes rather than on zero. When more quakes fall in the window than the
+# width can draw, the time buckets show their strongest (`agg: max`).
+chart_options:
+  type: bar
+  x_field: time
+  series:
+    - {field: mag, agg: max}
+  y_axis:
+    left: {baseline: data}
+  window:
+    field: time
+    presets: ["24h", "7d", "30d"]
+    default: "7d"
 
 search:
   fields: [place]

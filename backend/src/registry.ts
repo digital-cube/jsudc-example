@@ -3,6 +3,7 @@ import { join } from "node:path";
 import {
   type CollectionDocs,
   calendarOptionsProblems,
+  chartOptionsProblems,
   FIELD_NAME_RE,
   LOCALES_WITH_DOCS,
   mapOptionsProblems,
@@ -135,8 +136,9 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
         )
       : { kind: "postgres_jsonb", options: {} };
     if (source.kind === "postgres_jsonb") assertJsonbSchema(schema, schemaFile);
-    // A calendar over a field that is not a datetime would draw nothing, a tree or a map
-    // over a field the schema lacks nothing sensible: refuse any of them at load.
+    // A calendar over a field that is not a datetime would draw nothing, a tree, a map or a
+    // chart over a field the schema lacks (or a chart series that is not a number) nothing
+    // sensible: refuse any of them at load.
     const blocks = [
       [
         "calendar_options",
@@ -144,6 +146,7 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
       ],
       ["tree_options", view.tree_options && treeOptionsProblems(view.tree_options, schema)],
       ["map_options", view.map_options && mapOptionsProblems(view.map_options, schema)],
+      ["chart_options", view.chart_options && chartOptionsProblems(view.chart_options, schema)],
     ] as const;
     for (const [block, problems] of blocks) {
       if (problems && problems.length > 0) {

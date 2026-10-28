@@ -2,7 +2,7 @@
 # Polled every five minutes, which is also the server's cache: at most 12
 # GitHub calls an hour, inside the anonymous limit of 60.
 default_renderer: cards
-available_renderers: [cards, table]
+available_renderers: [cards, table, chart]
 pagination: infinite
 page_size_default: 60
 row_height: 40
@@ -32,6 +32,13 @@ columns:
   - {field: pushed_at, width: 170, transform: "date_format:DD.MM.YYYY HH:mm"}
   - {field: archived, width: 90, align: center}
   - {field: html_url, width: 300, color: muted}
+
+# Stars per repository: the ten most starred as slices, the rest folded into "Other".
+chart_options:
+  type: pie
+  category_field: name
+  value_field: stargazers_count
+  max_slices: 10
 
 card_options:
   title_field: name

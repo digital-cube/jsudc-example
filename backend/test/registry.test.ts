@@ -40,15 +40,18 @@ describe("collection registry", () => {
       "comments",
       "companies",
       "files",
+      "metrics",
       "org",
       "quakes",
       "repos",
       "tickets",
     ]);
-    // The appointments are generated at seed time, around the day it runs; files and the net need no seed.
+    // The appointments and the metrics are generated at seed time, around the day it runs;
+    // files and the net need no seed.
     expect(assets.filter((a) => a.seedFile === null).map((a) => a.name)).toEqual([
       "appointments",
       "files",
+      "metrics",
       "quakes",
       "repos",
     ]);
@@ -170,6 +173,8 @@ describe("collection registry", () => {
     ["lazy-tree", /chart\/view\.yaml.*invalid.*children_count_field/s],
     ["bad-map", /places\/view\.yaml.*map_options.*\n.*popup_fields\[1\]: website is not a field/s],
     ["map-without-options", /plain\/view\.yaml.*invalid.*lists map, so map_options/s],
+    ["bad-chart", /series\/view\.yaml.*chart_options.*\n.*series\[1\]\.field: mem is not a field/s],
+    ["bad-pie", /stars\/view\.yaml.*invalid.*a pie needs value_field/s],
   ])("fails startup on %s, naming the file", (dir, message) => {
     expect(() => readCollectionAssets(fixtures(dir))).toThrow(message);
   });

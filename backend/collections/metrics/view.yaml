@@ -1,0 +1,43 @@
+# The chart example: three servers' metrics, one sample per host every 15
+# minutes for the 30 days before the database was seeded (there is no
+# seed.json: `npm run seed` generates them, see
+# backend/scripts/generate-metrics.ts). Everything the chart does is read from
+# `chart_options`; the window is a `between` on `ts` in the header's zone.
+default_renderer: chart
+available_renderers: [chart, table]
+pagination: infinite
+page_size_default: 100
+row_height: 34
+
+chart_options:
+  type: line
+  x_field: ts
+  series:
+    - {field: cpu, axis: left}
+    - {field: mem, axis: left}
+    - {field: load, axis: right, color: "var(--chart-7)"}
+  window:
+    field: ts
+    presets: ["1h", "6h", "24h", "7d"]
+    default: "24h"
+    allow_custom: true
+  y_axis:
+    left: {baseline: zero, format: percent}
+    right: {baseline: data}
+  empty_label: No samples in this window — pick a longer one, or reseed (npm run seed -- --reset).
+
+columns:
+  - {field: ts, pin: left, width: 170, transform: "date_format:DD.MM.YYYY HH:mm"}
+  - {field: host, pin: left, width: 90, render: badge,
+     render_options: {map: {web-1: info, web-2: accent, db-1: warning}}}
+  - {field: cpu, width: 90, align: right, render: number_format, render_options: {decimals: 1}}
+  - {field: mem, width: 90, align: right, render: number_format, render_options: {decimals: 1}}
+  - {field: load, width: 90, align: right, render: number_format, render_options: {decimals: 2}}
+  - {field: req_per_s, width: 100, align: right, render: number_format}
+  - {field: errors, width: 90, align: right, render: number_format}
+
+filters:
+  - {field: host, kind: select, options: [web-1, web-2, db-1]}
+
+filterable:
+  fields: [ts, host, cpu, mem, load, req_per_s, errors]

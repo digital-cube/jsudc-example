@@ -11,4 +11,6 @@ backend with it, so Cypress never touches the internet.
   recorded 2026-10-28 (45 repositories), each item cut to the keys the
   collection reads plus a few more. The account had no topics on any
   repository that day; topics were added to five items so the cards' topic
-  chips have something to show.
+  chips have something to show. Only three repositories had stars (6, 1, 1);
+  `stargazers_count` was set on thirteen more (1–14) so the chart tab's pie
+  has more than its ten slices and folds the rest into "Other".
