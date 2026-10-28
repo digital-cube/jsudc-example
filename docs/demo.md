@@ -229,6 +229,40 @@ the schema lacks, stops the server at start).
 6. **Dark.** Switch the theme: the tiles are inverted by a CSS filter on the
    tile pane, the circles take the dark theme's colours.
 
+## Files and the internet: `files`, `quakes`, `repos`
+
+Not every collection is a table. A `source.yaml` next to `view.yaml` says
+where the rows come from (`backend/collections/<name>/source.yaml`; without
+one, Postgres). The sidebar groups the collections that way: **Database**,
+**Files**, **Internet**. Each of the three new ones has a **Doc** tab, its
+`README.md` (or `README.sr.md` in Serbian).
+
+1. **Files.** Open **Files**: the entries of `backend/collections/files/sample/`,
+   folders first, sizes as `167 B` / `29.6 KB`, read-only (no inline edit,
+   no column menus, no `+`). Click `docs`, then `archive`: the address bar's
+   `?f=` holds `path eq docs/archive`, the breadcrumb above the table is that
+   condition, and a reload (or the link sent to someone) opens the same
+   folder. `..` and the breadcrumb go back up. *Ext = csv* and the search box
+   work inside the open folder. Click `notes.md` or `logo.png`: a preview
+   (`GET /udc/files/blob`, text and images up to 256 KB). Point it elsewhere
+   with `UDC_FILES_ROOT=/some/folder npm run dev`.
+2. **Earthquakes.** Opens on the **map**: every M4.5+ earthquake of the last
+   month, live from USGS, sized by magnitude and coloured by class (the same
+   `row_color` tints the table). *Europe* / *Pacific* fly there. *Mag* is a
+   range chip (6 – 8 leaves the strong ones), *Alert* a select. The toolbar
+   reads *updated N s ago*: the server keeps the feed for 60 s and the page
+   polls every minute (`refresh_interval_ms`), without moving the map. Switch
+   to **Table**: the same filter, alert and status as coloured badges.
+3. **Repositories.** The public repositories of `digital-cube`, from the
+   GitHub API, as cards with the owner's avatar, the language and the topics.
+   Without `UDC_GITHUB_TOKEN` GitHub allows 60 calls an hour; the five-minute
+   cache keeps this collection at 12 at most.
+4. **Offline.** If an upstream fails after a good fetch, the last copy is
+   served with a **stale** pill; if it never answered, the view shows the
+   error. `UDC_HTTP_SOURCES=off npm run dev` leaves the Internet group out;
+   `UDC_HTTP_FIXTURES=backend/test/fixtures/http` serves recorded answers
+   (what `npm run e2e` does, so Cypress never needs the network).
+
 ## What is behind it
 
 - One protocol package, `packages/udc-core`, holds the Zod schemas the server
@@ -238,3 +272,6 @@ the schema lacks, stops the server at start).
   every schema field that `view.yaml` does not list.
 - Schema edits are revisions in `udc_schema_revisions`. A soft delete marks
   the field `deleted: true` and keeps its values.
+- Files and the internet go through the same `list`: `FilesystemSource` and
+  `HttpApiSource` produce an array and `ArraySource` filters it with the
+  same `evaluateFilter`, sorts it by schema type and pages it by offset.
