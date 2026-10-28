@@ -8,7 +8,7 @@ import {
   generateAppointments,
   seedToday,
 } from "../scripts/generate-appointments.js";
-import { generateCompanies } from "../scripts/generate-companies.js";
+import { CITY_COORDS, generateCompanies } from "../scripts/generate-companies.js";
 import { generateKanban } from "../scripts/generate-kanban.js";
 import { COLLECTIONS_DIR } from "../src/config.js";
 import { readCollectionAssets } from "../src/registry.js";
@@ -18,6 +18,34 @@ import { companiesSeed } from "./helpers.js";
 describe("generate-companies", () => {
   it("reproduces the committed seed.json from its default seed", () => {
     expect(generateCompanies(200, 20261018)).toEqual(companiesSeed);
+  });
+
+  /** Great-circle distance in km. */
+  const km = (a: readonly [number, number], b: readonly [number, number]) => {
+    const rad = (d: number) => (d * Math.PI) / 180;
+    const h =
+      Math.sin(rad(b[0] - a[0]) / 2) ** 2 +
+      Math.cos(rad(a[0])) * Math.cos(rad(b[0])) * Math.sin(rad(b[1] - a[1]) / 2) ** 2;
+    return 2 * 6371 * Math.asin(Math.sqrt(h));
+  };
+
+  it("puts every company within 10 km of its city, and not all on the centre", () => {
+    expect(companiesSeed).toHaveLength(200);
+    const distances = companiesSeed.map((row) => {
+      const city = CITY_COORDS[row.city as string];
+      expect(city, `${row.city}`).toBeDefined();
+      return km([row.lat as number, row.lng as number], city as readonly [number, number]);
+    });
+    expect(Math.max(...distances)).toBeLessThan(10);
+    expect(distances.filter((d) => d > 0.5).length).toBeGreaterThan(150);
+  });
+
+  it("knows a coordinate for every city chip of the view", () => {
+    const [companies] = readCollectionAssets(COLLECTIONS_DIR).filter((a) => a.name === "companies");
+    const chip = companies?.view.filters?.find((f) => f.field === "city");
+    expect(Object.keys(CITY_COORDS).sort()).toEqual(
+      [...((chip?.options ?? []) as string[])].sort(),
+    );
   });
 });
 

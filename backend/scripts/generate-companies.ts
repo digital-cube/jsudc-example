@@ -116,6 +116,48 @@ const CITIES: [string, number][] = [
   ["Pirot", 2],
 ];
 
+/** `[lat, lng]` of each city's centre, so the map has a place per chip. */
+export const CITY_COORDS: Record<string, readonly [number, number]> = {
+  Beograd: [44.8176, 20.4569],
+  "Novi Sad": [45.2671, 19.8335],
+  Niš: [43.3209, 21.8958],
+  Kragujevac: [44.0128, 20.9114],
+  Subotica: [46.1003, 19.6658],
+  Zrenjanin: [45.3816, 20.3813],
+  Pančevo: [44.8708, 20.6403],
+  Čačak: [43.8914, 20.3497],
+  Kraljevo: [43.7234, 20.687],
+  "Novi Pazar": [43.1367, 20.5122],
+  Smederevo: [44.6628, 20.93],
+  Leskovac: [42.9981, 21.9461],
+  Valjevo: [44.2751, 19.8982],
+  Kruševac: [43.58, 21.3339],
+  Šabac: [44.7489, 19.6908],
+  Užice: [43.8586, 19.8488],
+  Sombor: [45.7742, 19.1122],
+  Požarevac: [44.6213, 21.1878],
+  Vranje: [42.5514, 21.9003],
+  Pirot: [43.1531, 22.5861],
+};
+
+/** How far from its city's centre a company may sit. */
+export const JITTER_KM = 4;
+
+const KM_PER_DEG_LAT = 111.32;
+
+/**
+ * A point uniformly inside a disc of `JITTER_KM` around `[lat, lng]`, rounded
+ * to 5 decimals (about a metre).
+ */
+function jitter([lat, lng]: readonly [number, number], rand: () => number): [number, number] {
+  const r = JITTER_KM * Math.sqrt(rand());
+  const a = 2 * Math.PI * rand();
+  const dLat = (r * Math.sin(a)) / KM_PER_DEG_LAT;
+  const dLng = (r * Math.cos(a)) / (KM_PER_DEG_LAT * Math.cos((lat * Math.PI) / 180));
+  const round = (x: number) => Math.round(x * 1e5) / 1e5;
+  return [round(lat + dLat), round(lng + dLng)];
+}
+
 const INDUSTRIES = [
   "Građevinarstvo",
   "Trgovina",
@@ -153,10 +195,14 @@ export interface Company {
   revenue_eur: number;
   founded: string;
   active: boolean;
+  lat: number;
+  lng: number;
 }
 
 export function generateCompanies(count: number, seed: number): Company[] {
   const rand = prng(seed);
+  // The coordinates draw from a stream of their own: every other value stays what it was before they existed.
+  const place = prng(seed ^ 0x6c61746c);
   const int = (lo: number, hi: number) => lo + Math.floor(rand() * (hi - lo + 1));
   const pick = <T>(xs: readonly T[]): T => xs[Math.floor(rand() * xs.length)] as T;
   const weighted = (xs: [string, number][]) => {
@@ -195,17 +241,25 @@ export function generateCompanies(count: number, seed: number): Company[] {
     const founded = new Date(start + Math.floor(rand() * (end - start + 1)))
       .toISOString()
       .slice(0, 10);
+    const pib = unique(pibs, () => digits(9));
+    const mb = unique(mbs, () => digits(8));
+    const city = weighted(CITIES);
+    const industry = pick(INDUSTRIES);
+    const active = rand() >= 0.1;
+    const [lat, lng] = jitter(CITY_COORDS[city] as readonly [number, number], place);
     rows.push({
-      pib: unique(pibs, () => digits(9)),
-      mb: unique(mbs, () => digits(8)),
+      pib,
+      mb,
       name,
       legal_form,
-      city: weighted(CITIES),
-      industry: pick(INDUSTRIES),
+      city,
+      industry,
       employees,
       revenue_eur,
       founded,
-      active: rand() >= 0.1,
+      active,
+      lat,
+      lng,
     });
   }
   return rows;

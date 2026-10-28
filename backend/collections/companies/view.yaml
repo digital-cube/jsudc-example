@@ -1,7 +1,7 @@
 # The companies demo view. Same dialect as dclabs serbian_companies, but the
 # business columns are editable so inline edit can be shown.
 default_renderer: table
-available_renderers: [table, cards]
+available_renderers: [table, cards, map]
 pagination: infinite
 page_size_default: 50
 row_height: 48
@@ -97,6 +97,23 @@ card_options:
   subtitle_field: pib
   meta_fields: [city, industry, employees, revenue_eur, active, website]
   size: medium
+
+# The map: one circle per company at its lat / lng (the city's centre plus a few km,
+# see scripts/generate-companies.ts), growing with the head count. The chips and
+# the search move the markers as they narrow the table.
+map_options:
+  lat_field: lat
+  lng_field: lng
+  radius_field: employees
+  radius_min: 4
+  radius_scale: 0.02
+  popup_fields: [name, city, industry, employees]
+  center: [44.2, 20.9]
+  zoom: 7
+  regions:
+    - {id: serbia, label: Serbia, center: [44.2, 20.9], zoom: 7}
+    - {id: vojvodina, label: Vojvodina, center: [45.4, 19.9], zoom: 8}
+    - {id: south, label: South, center: [43.15, 21.9], zoom: 8}
 
 # Inactive companies are muted: dimmer text in the table, a grey accent bar on the cards.
 row_color:

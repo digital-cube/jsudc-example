@@ -9,7 +9,9 @@
     "employees": 10,
     "revenue_eur": 557485,
     "founded": "2002-07-14",
-    "active": true
+    "active": true,
+    "lat": 43.33058,
+    "lng": 21.89484
   },
   {
     "pib": "266368140",
@@ -21,7 +23,9 @@
     "employees": 25,
     "revenue_eur": 1520875,
     "founded": "2007-01-05",
-    "active": false
+    "active": false,
+    "lat": 43.92375,
+    "lng": 20.35947
   },
   {
     "pib": "171069145",
@@ -33,7 +37,9 @@
     "employees": 429,
     "revenue_eur": 15259137,
     "founded": "2023-09-21",
-    "active": true
+    "active": true,
+    "lat": 43.32061,
+    "lng": 21.866
   },
   {
     "pib": "125227257",
@@ -45,7 +51,9 @@
     "employees": 83,
     "revenue_eur": 9423941,
     "founded": "2005-12-16",
-    "active": true
+    "active": true,
+    "lat": 45.2743,
+    "lng": 19.80808
   },
   {
     "pib": "644968597",
@@ -57,7 +65,9 @@
     "employees": 1280,
     "revenue_eur": 151420972,
     "founded": "1990-11-13",
-    "active": true
+    "active": true,
+    "lat": 43.55855,
+    "lng": 21.30059
   },
   {
     "pib": "846171666",
@@ -69,7 +79,9 @@
     "employees": 3,
     "revenue_eur": 154867,
     "founded": "2012-08-14",
-    "active": true
+    "active": true,
+    "lat": 43.29683,
+    "lng": 21.90168
   },
   {
     "pib": "691996760",
@@ -81,7 +93,9 @@
     "employees": 7,
     "revenue_eur": 279484,
     "founded": "2021-12-01",
-    "active": true
+    "active": true,
+    "lat": 46.09728,
+    "lng": 19.63271
   },
   {
     "pib": "287797724",
@@ -93,7 +107,9 @@
     "employees": 86,
     "revenue_eur": 3498072,
     "founded": "2003-06-18",
-    "active": true
+    "active": true,
+    "lat": 43.75157,
+    "lng": 20.68215
   },
   {
     "pib": "325709579",
@@ -105,7 +121,9 @@
     "employees": 1,
     "revenue_eur": 131825,
     "founded": "2002-06-30",
-    "active": true
+    "active": true,
+    "lat": 46.11382,
+    "lng": 19.70932
   },
   {
     "pib": "813241395",
@@ -117,7 +135,9 @@
     "employees": 99,
     "revenue_eur": 4702345,
     "founded": "2013-05-01",
-    "active": true
+    "active": true,
+    "lat": 44.84186,
+    "lng": 20.47782
   },
   {
     "pib": "956830645",
@@ -129,7 +149,9 @@
     "employees": 6,
     "revenue_eur": 735128,
     "founded": "2021-04-15",
-    "active": false
+    "active": false,
+    "lat": 43.57824,
+    "lng": 21.36128
   },
   {
     "pib": "921831108",
@@ -141,7 +163,9 @@
     "employees": 10,
     "revenue_eur": 349804,
     "founded": "1991-01-11",
-    "active": true
+    "active": true,
+    "lat": 45.26331,
+    "lng": 19.84505
   },
   {
     "pib": "143157217",
@@ -153,7 +177,9 @@
     "employees": 1579,
     "revenue_eur": 85211158,
     "founded": "2020-09-13",
-    "active": true
+    "active": true,
+    "lat": 45.3723,
+    "lng": 20.39753
   },
   {
     "pib": "960794655",
@@ -165,7 +191,9 @@
     "employees": 49,
     "revenue_eur": 3139224,
     "founded": "2014-03-15",
-    "active": true
+    "active": true,
+    "lat": 46.09702,
+    "lng": 19.6583
   },
   {
     "pib": "106591968",
@@ -177,7 +205,9 @@
     "employees": 33,
     "revenue_eur": 3764444,
     "founded": "2010-12-27",
-    "active": true
+    "active": true,
+    "lat": 43.14427,
+    "lng": 22.6127
   },
   {
     "pib": "169079527",
@@ -189,7 +219,9 @@
     "employees": 10,
     "revenue_eur": 898880,
     "founded": "2023-12-06",
-    "active": true
+    "active": true,
+    "lat": 43.86719,
+    "lng": 19.87034
   },
   {
     "pib": "021215067",
@@ -201,7 +233,9 @@
     "employees": 2660,
     "revenue_eur": 211905523,
     "founded": "2001-03-05",
-    "active": true
+    "active": true,
+    "lat": 43.31425,
+    "lng": 21.93433
   },
   {
     "pib": "025353224",
@@ -213,7 +247,9 @@
     "employees": 99,
     "revenue_eur": 6999269,
     "founded": "2001-04-25",
-    "active": true
+    "active": true,
+    "lat": 44.84115,
+    "lng": 20.47364
   },
   {
     "pib": "692647086",
@@ -225,7 +261,9 @@
     "employees": 115,
     "revenue_eur": 3389580,
     "founded": "2024-07-07",
-    "active": true
+    "active": true,
+    "lat": 45.26277,
+    "lng": 19.87394
   },
   {
     "pib": "779225430",
@@ -237,7 +275,9 @@
     "employees": 6,
     "revenue_eur": 567391,
     "founded": "1990-08-28",
-    "active": true
+    "active": true,
+    "lat": 43.35245,
+    "lng": 21.88216
   },
   {
     "pib": "054388195",
@@ -249,7 +289,9 @@
     "employees": 96,
     "revenue_eur": 2111062,
     "founded": "2010-04-18",
-    "active": true
+    "active": true,
+    "lat": 45.29409,
+    "lng": 19.84383
   },
   {
     "pib": "137554770",
@@ -261,7 +303,9 @@
     "employees": 40,
     "revenue_eur": 4277568,
     "founded": "2001-08-24",
-    "active": true
+    "active": true,
+    "lat": 43.75305,
+    "lng": 20.70141
   },
   {
     "pib": "287742337",
@@ -273,7 +317,9 @@
     "employees": 3,
     "revenue_eur": 278576,
     "founded": "2009-01-31",
-    "active": true
+    "active": true,
+    "lat": 43.32579,
+    "lng": 21.93615
   },
   {
     "pib": "668922769",
@@ -285,7 +331,9 @@
     "employees": 30,
     "revenue_eur": 3512117,
     "founded": "2019-08-18",
-    "active": true
+    "active": true,
+    "lat": 44.80863,
+    "lng": 20.43293
   },
   {
     "pib": "526127891",
@@ -297,7 +345,9 @@
     "employees": 17,
     "revenue_eur": 1626308,
     "founded": "2010-02-11",
-    "active": true
+    "active": true,
+    "lat": 43.84715,
+    "lng": 19.87772
   },
   {
     "pib": "502888297",
@@ -309,7 +359,9 @@
     "employees": 12,
     "revenue_eur": 760524,
     "founded": "1998-12-24",
-    "active": true
+    "active": true,
+    "lat": 44.83766,
+    "lng": 20.4963
   },
   {
     "pib": "627621933",
@@ -321,7 +373,9 @@
     "employees": 8,
     "revenue_eur": 933305,
     "founded": "2007-08-06",
-    "active": true
+    "active": true,
+    "lat": 43.12182,
+    "lng": 20.53172
   },
   {
     "pib": "885868559",
@@ -333,7 +387,9 @@
     "employees": 3,
     "revenue_eur": 446310,
     "founded": "2024-03-29",
-    "active": true
+    "active": true,
+    "lat": 44.81345,
+    "lng": 20.49872
   },
   {
     "pib": "619558065",
@@ -345,7 +401,9 @@
     "employees": 64,
     "revenue_eur": 7250856,
     "founded": "2002-05-17",
-    "active": true
+    "active": true,
+    "lat": 44.6303,
+    "lng": 21.17329
   },
   {
     "pib": "196950413",
@@ -357,7 +415,9 @@
     "employees": 58,
     "revenue_eur": 6729106,
     "founded": "1998-03-22",
-    "active": false
+    "active": false,
+    "lat": 45.39695,
+    "lng": 20.34629
   },
   {
     "pib": "287223026",
@@ -369,7 +429,9 @@
     "employees": 86,
     "revenue_eur": 3995842,
     "founded": "2019-12-03",
-    "active": true
+    "active": true,
+    "lat": 44.806,
+    "lng": 20.42938
   },
   {
     "pib": "788846158",
@@ -381,7 +443,9 @@
     "employees": 4395,
     "revenue_eur": 255524999,
     "founded": "2014-08-22",
-    "active": true
+    "active": true,
+    "lat": 44.78652,
+    "lng": 20.44948
   },
   {
     "pib": "965253509",
@@ -393,7 +457,9 @@
     "employees": 36,
     "revenue_eur": 1440288,
     "founded": "2004-12-25",
-    "active": true
+    "active": true,
+    "lat": 44.88947,
+    "lng": 20.65868
   },
   {
     "pib": "726392622",
@@ -405,7 +471,9 @@
     "employees": 2,
     "revenue_eur": 180583,
     "founded": "2006-05-20",
-    "active": true
+    "active": true,
+    "lat": 44.78785,
+    "lng": 20.46695
   },
   {
     "pib": "562946761",
@@ -417,7 +485,9 @@
     "employees": 2,
     "revenue_eur": 237570,
     "founded": "2001-07-30",
-    "active": true
+    "active": true,
+    "lat": 44.83986,
+    "lng": 20.47059
   },
   {
     "pib": "191751775",
@@ -429,7 +499,9 @@
     "employees": 353,
     "revenue_eur": 27738900,
     "founded": "2020-04-06",
-    "active": false
+    "active": false,
+    "lat": 42.99343,
+    "lng": 21.95399
   },
   {
     "pib": "713297975",
@@ -441,7 +513,9 @@
     "employees": 666,
     "revenue_eur": 50790279,
     "founded": "1991-03-06",
-    "active": true
+    "active": true,
+    "lat": 43.86638,
+    "lng": 20.35333
   },
   {
     "pib": "707746393",
@@ -453,7 +527,9 @@
     "employees": 16,
     "revenue_eur": 822086,
     "founded": "2005-08-21",
-    "active": false
+    "active": false,
+    "lat": 44.80426,
+    "lng": 20.4729
   },
   {
     "pib": "950184490",
@@ -465,7 +541,9 @@
     "employees": 2,
     "revenue_eur": 330232,
     "founded": "2005-04-22",
-    "active": true
+    "active": true,
+    "lat": 44.80748,
+    "lng": 20.46236
   },
   {
     "pib": "554478504",
@@ -477,7 +555,9 @@
     "employees": 371,
     "revenue_eur": 43980919,
     "founded": "1992-06-26",
-    "active": true
+    "active": true,
+    "lat": 43.33818,
+    "lng": 21.86104
   },
   {
     "pib": "820700306",
@@ -489,7 +569,9 @@
     "employees": 276,
     "revenue_eur": 12494604,
     "founded": "2010-04-05",
-    "active": true
+    "active": true,
+    "lat": 44.0184,
+    "lng": 20.87206
   },
   {
     "pib": "899199599",
@@ -501,7 +583,9 @@
     "employees": 698,
     "revenue_eur": 34030503,
     "founded": "2020-10-06",
-    "active": true
+    "active": true,
+    "lat": 43.89036,
+    "lng": 20.38058
   },
   {
     "pib": "324123070",
@@ -513,7 +597,9 @@
     "employees": 1,
     "revenue_eur": 111021,
     "founded": "2014-04-25",
-    "active": true
+    "active": true,
+    "lat": 43.99545,
+    "lng": 20.93459
   },
   {
     "pib": "661979256",
@@ -525,7 +611,9 @@
     "employees": 16,
     "revenue_eur": 1409602,
     "founded": "1998-09-01",
-    "active": true
+    "active": true,
+    "lat": 45.25445,
+    "lng": 19.7859
   },
   {
     "pib": "933932690",
@@ -537,7 +625,9 @@
     "employees": 9,
     "revenue_eur": 644240,
     "founded": "2003-01-10",
-    "active": true
+    "active": true,
+    "lat": 45.355,
+    "lng": 20.40389
   },
   {
     "pib": "730332775",
@@ -549,7 +639,9 @@
     "employees": 14,
     "revenue_eur": 315238,
     "founded": "2008-12-10",
-    "active": true
+    "active": true,
+    "lat": 45.24561,
+    "lng": 19.81963
   },
   {
     "pib": "775307033",
@@ -561,7 +653,9 @@
     "employees": 2375,
     "revenue_eur": 276056376,
     "founded": "1991-11-18",
-    "active": true
+    "active": true,
+    "lat": 43.70132,
+    "lng": 20.70073
   },
   {
     "pib": "204088332",
@@ -573,7 +667,9 @@
     "employees": 416,
     "revenue_eur": 17957518,
     "founded": "2020-02-03",
-    "active": false
+    "active": false,
+    "lat": 46.09701,
+    "lng": 19.61962
   },
   {
     "pib": "102716048",
@@ -585,7 +681,9 @@
     "employees": 7,
     "revenue_eur": 456836,
     "founded": "2009-03-19",
-    "active": true
+    "active": true,
+    "lat": 44.84528,
+    "lng": 20.45457
   },
   {
     "pib": "294126685",
@@ -597,7 +695,9 @@
     "employees": 39,
     "revenue_eur": 1975380,
     "founded": "1995-11-27",
-    "active": true
+    "active": true,
+    "lat": 44.83038,
+    "lng": 20.4249
   },
   {
     "pib": "050267307",
@@ -609,7 +709,9 @@
     "employees": 20,
     "revenue_eur": 771735,
     "founded": "2012-06-05",
-    "active": false
+    "active": false,
+    "lat": 43.89387,
+    "lng": 20.37151
   },
   {
     "pib": "365774927",
@@ -621,7 +723,9 @@
     "employees": 43,
     "revenue_eur": 3180978,
     "founded": "2014-09-14",
-    "active": true
+    "active": true,
+    "lat": 46.10884,
+    "lng": 19.66798
   },
   {
     "pib": "731904505",
@@ -633,7 +737,9 @@
     "employees": 5,
     "revenue_eur": 447864,
     "founded": "1997-03-18",
-    "active": true
+    "active": true,
+    "lat": 43.56245,
+    "lng": 21.36794
   },
   {
     "pib": "614334482",
@@ -645,7 +751,9 @@
     "employees": 156,
     "revenue_eur": 6398814,
     "founded": "2018-12-29",
-    "active": true
+    "active": true,
+    "lat": 44.84229,
+    "lng": 20.63739
   },
   {
     "pib": "357821442",
@@ -657,7 +765,9 @@
     "employees": 265,
     "revenue_eur": 15144769,
     "founded": "1994-05-13",
-    "active": true
+    "active": true,
+    "lat": 44.90022,
+    "lng": 20.6432
   },
   {
     "pib": "087480797",
@@ -669,7 +779,9 @@
     "employees": 3093,
     "revenue_eur": 359195012,
     "founded": "2017-05-19",
-    "active": true
+    "active": true,
+    "lat": 44.2599,
+    "lng": 19.87103
   },
   {
     "pib": "720022587",
@@ -681,7 +793,9 @@
     "employees": 3732,
     "revenue_eur": 221213391,
     "founded": "2017-12-14",
-    "active": true
+    "active": true,
+    "lat": 44.80053,
+    "lng": 20.4595
   },
   {
     "pib": "612235351",
@@ -693,7 +807,9 @@
     "employees": 40,
     "revenue_eur": 3056186,
     "founded": "2015-04-04",
-    "active": true
+    "active": true,
+    "lat": 44.78383,
+    "lng": 20.46014
   },
   {
     "pib": "589436835",
@@ -705,7 +821,9 @@
     "employees": 14,
     "revenue_eur": 831571,
     "founded": "1994-11-29",
-    "active": true
+    "active": true,
+    "lat": 43.3273,
+    "lng": 21.92374
   },
   {
     "pib": "038911900",
@@ -717,7 +835,9 @@
     "employees": 8,
     "revenue_eur": 447911,
     "founded": "2016-09-10",
-    "active": true
+    "active": true,
+    "lat": 44.83022,
+    "lng": 20.41464
   },
   {
     "pib": "637377228",
@@ -729,7 +849,9 @@
     "employees": 83,
     "revenue_eur": 3161408,
     "founded": "2013-06-08",
-    "active": true
+    "active": true,
+    "lat": 42.99722,
+    "lng": 21.97039
   },
   {
     "pib": "595437622",
@@ -741,7 +863,9 @@
     "employees": 9,
     "revenue_eur": 357574,
     "founded": "2010-01-22",
-    "active": false
+    "active": false,
+    "lat": 45.24254,
+    "lng": 19.84385
   },
   {
     "pib": "522989670",
@@ -753,7 +877,9 @@
     "employees": 7,
     "revenue_eur": 403401,
     "founded": "1991-11-16",
-    "active": true
+    "active": true,
+    "lat": 43.3184,
+    "lng": 21.88975
   },
   {
     "pib": "140016012",
@@ -765,7 +891,9 @@
     "employees": 229,
     "revenue_eur": 27051160,
     "founded": "2006-08-04",
-    "active": false
+    "active": false,
+    "lat": 44.83782,
+    "lng": 20.41786
   },
   {
     "pib": "305957024",
@@ -777,7 +905,9 @@
     "employees": 2,
     "revenue_eur": 250015,
     "founded": "2017-01-21",
-    "active": false
+    "active": false,
+    "lat": 46.1213,
+    "lng": 19.63468
   },
   {
     "pib": "290287818",
@@ -789,7 +919,9 @@
     "employees": 748,
     "revenue_eur": 56652233,
     "founded": "2002-05-11",
-    "active": true
+    "active": true,
+    "lat": 43.31376,
+    "lng": 21.85928
   },
   {
     "pib": "010989014",
@@ -801,7 +933,9 @@
     "employees": 14,
     "revenue_eur": 1267463,
     "founded": "1999-01-12",
-    "active": true
+    "active": true,
+    "lat": 45.77225,
+    "lng": 19.11722
   },
   {
     "pib": "719748968",
@@ -813,7 +947,9 @@
     "employees": 128,
     "revenue_eur": 14915905,
     "founded": "1991-09-19",
-    "active": true
+    "active": true,
+    "lat": 43.32702,
+    "lng": 21.8656
   },
   {
     "pib": "460117694",
@@ -825,7 +961,9 @@
     "employees": 1037,
     "revenue_eur": 79320348,
     "founded": "2018-10-05",
-    "active": true
+    "active": true,
+    "lat": 46.10702,
+    "lng": 19.61538
   },
   {
     "pib": "530245723",
@@ -837,7 +975,9 @@
     "employees": 3,
     "revenue_eur": 215283,
     "founded": "1996-12-21",
-    "active": true
+    "active": true,
+    "lat": 44.82937,
+    "lng": 20.48591
   },
   {
     "pib": "828757372",
@@ -849,7 +989,9 @@
     "employees": 3,
     "revenue_eur": 375413,
     "founded": "2005-11-13",
-    "active": true
+    "active": true,
+    "lat": 45.28019,
+    "lng": 19.8024
   },
   {
     "pib": "659439231",
@@ -861,7 +1003,9 @@
     "employees": 31,
     "revenue_eur": 3450918,
     "founded": "2008-08-08",
-    "active": true
+    "active": true,
+    "lat": 44.80116,
+    "lng": 20.42618
   },
   {
     "pib": "280312051",
@@ -873,7 +1017,9 @@
     "employees": 2,
     "revenue_eur": 221269,
     "founded": "2007-04-23",
-    "active": true
+    "active": true,
+    "lat": 44.79709,
+    "lng": 20.46438
   },
   {
     "pib": "798342043",
@@ -885,7 +1031,9 @@
     "employees": 5,
     "revenue_eur": 469401,
     "founded": "1996-05-24",
-    "active": true
+    "active": true,
+    "lat": 44.65027,
+    "lng": 20.97428
   },
   {
     "pib": "093283241",
@@ -897,7 +1045,9 @@
     "employees": 9,
     "revenue_eur": 787575,
     "founded": "2005-12-20",
-    "active": false
+    "active": false,
+    "lat": 43.8737,
+    "lng": 19.87244
   },
   {
     "pib": "565528876",
@@ -909,7 +1059,9 @@
     "employees": 1741,
     "revenue_eur": 45296795,
     "founded": "2011-02-18",
-    "active": false
+    "active": false,
+    "lat": 43.87787,
+    "lng": 19.87329
   },
   {
     "pib": "614940042",
@@ -921,7 +1073,9 @@
     "employees": 10,
     "revenue_eur": 1066679,
     "founded": "2015-05-27",
-    "active": true
+    "active": true,
+    "lat": 44.83688,
+    "lng": 20.48977
   },
   {
     "pib": "175172008",
@@ -933,7 +1087,9 @@
     "employees": 1459,
     "revenue_eur": 144472599,
     "founded": "1994-02-17",
-    "active": true
+    "active": true,
+    "lat": 43.99387,
+    "lng": 20.89058
   },
   {
     "pib": "278599824",
@@ -945,7 +1101,9 @@
     "employees": 85,
     "revenue_eur": 3502608,
     "founded": "2013-09-09",
-    "active": true
+    "active": true,
+    "lat": 44.84229,
+    "lng": 20.44724
   },
   {
     "pib": "797097146",
@@ -957,7 +1115,9 @@
     "employees": 5,
     "revenue_eur": 525421,
     "founded": "2003-01-24",
-    "active": false
+    "active": false,
+    "lat": 44.81165,
+    "lng": 20.41085
   },
   {
     "pib": "354401680",
@@ -969,7 +1129,9 @@
     "employees": 98,
     "revenue_eur": 8734755,
     "founded": "2004-06-17",
-    "active": true
+    "active": true,
+    "lat": 45.27733,
+    "lng": 19.84147
   },
   {
     "pib": "969586476",
@@ -981,7 +1143,9 @@
     "employees": 125,
     "revenue_eur": 9787616,
     "founded": "1990-02-07",
-    "active": true
+    "active": true,
+    "lat": 43.98814,
+    "lng": 20.93025
   },
   {
     "pib": "257050320",
@@ -993,7 +1157,9 @@
     "employees": 11,
     "revenue_eur": 1091187,
     "founded": "2011-09-18",
-    "active": true
+    "active": true,
+    "lat": 44.87365,
+    "lng": 20.62799
   },
   {
     "pib": "712526184",
@@ -1005,7 +1171,9 @@
     "employees": 4,
     "revenue_eur": 227236,
     "founded": "2009-09-25",
-    "active": true
+    "active": true,
+    "lat": 44.01784,
+    "lng": 20.86583
   },
   {
     "pib": "900599548",
@@ -1017,7 +1185,9 @@
     "employees": 5,
     "revenue_eur": 505731,
     "founded": "2007-09-01",
-    "active": true
+    "active": true,
+    "lat": 43.98732,
+    "lng": 20.92048
   },
   {
     "pib": "638563721",
@@ -1029,7 +1199,9 @@
     "employees": 3,
     "revenue_eur": 250590,
     "founded": "1996-12-04",
-    "active": true
+    "active": true,
+    "lat": 43.13959,
+    "lng": 20.4697
   },
   {
     "pib": "991547442",
@@ -1041,7 +1213,9 @@
     "employees": 647,
     "revenue_eur": 74484082,
     "founded": "2009-11-14",
-    "active": true
+    "active": true,
+    "lat": 44.82395,
+    "lng": 20.45533
   },
   {
     "pib": "302913335",
@@ -1053,7 +1227,9 @@
     "employees": 480,
     "revenue_eur": 24597210,
     "founded": "1996-06-23",
-    "active": true
+    "active": true,
+    "lat": 44.8016,
+    "lng": 20.41553
   },
   {
     "pib": "548577500",
@@ -1065,7 +1241,9 @@
     "employees": 14,
     "revenue_eur": 816444,
     "founded": "1999-01-19",
-    "active": true
+    "active": true,
+    "lat": 43.72944,
+    "lng": 20.69699
   },
   {
     "pib": "234686298",
@@ -1077,7 +1255,9 @@
     "employees": 14,
     "revenue_eur": 1316845,
     "founded": "2018-05-15",
-    "active": true
+    "active": true,
+    "lat": 44.81312,
+    "lng": 20.49794
   },
   {
     "pib": "115482091",
@@ -1089,7 +1269,9 @@
     "employees": 164,
     "revenue_eur": 11731028,
     "founded": "1990-04-01",
-    "active": false
+    "active": false,
+    "lat": 44.02918,
+    "lng": 20.94259
   },
   {
     "pib": "903614986",
@@ -1101,7 +1283,9 @@
     "employees": 25,
     "revenue_eur": 1770663,
     "founded": "2006-10-02",
-    "active": true
+    "active": true,
+    "lat": 43.30487,
+    "lng": 21.87677
   },
   {
     "pib": "683670024",
@@ -1113,7 +1297,9 @@
     "employees": 4,
     "revenue_eur": 229514,
     "founded": "1992-12-03",
-    "active": true
+    "active": true,
+    "lat": 45.76666,
+    "lng": 19.09513
   },
   {
     "pib": "878797395",
@@ -1125,7 +1311,9 @@
     "employees": 1139,
     "revenue_eur": 61408813,
     "founded": "2017-07-20",
-    "active": true
+    "active": true,
+    "lat": 43.58671,
+    "lng": 21.35659
   },
   {
     "pib": "128977178",
@@ -1137,7 +1325,9 @@
     "employees": 6,
     "revenue_eur": 136970,
     "founded": "2014-09-06",
-    "active": true
+    "active": true,
+    "lat": 45.26801,
+    "lng": 19.8328
   },
   {
     "pib": "258885783",
@@ -1149,7 +1339,9 @@
     "employees": 20,
     "revenue_eur": 1066129,
     "founded": "2003-02-10",
-    "active": true
+    "active": true,
+    "lat": 44.02352,
+    "lng": 20.93575
   },
   {
     "pib": "060281062",
@@ -1161,7 +1353,9 @@
     "employees": 69,
     "revenue_eur": 5124701,
     "founded": "2003-10-09",
-    "active": true
+    "active": true,
+    "lat": 45.27788,
+    "lng": 19.87767
   },
   {
     "pib": "728299733",
@@ -1173,7 +1367,9 @@
     "employees": 8,
     "revenue_eur": 397829,
     "founded": "2021-07-17",
-    "active": true
+    "active": true,
+    "lat": 44.02571,
+    "lng": 20.87978
   },
   {
     "pib": "309299600",
@@ -1185,7 +1381,9 @@
     "employees": 4256,
     "revenue_eur": 156386043,
     "founded": "2023-03-28",
-    "active": true
+    "active": true,
+    "lat": 44.24448,
+    "lng": 19.88506
   },
   {
     "pib": "841053252",
@@ -1197,7 +1395,9 @@
     "employees": 2,
     "revenue_eur": 124379,
     "founded": "2007-03-03",
-    "active": false
+    "active": false,
+    "lat": 43.32785,
+    "lng": 21.85248
   },
   {
     "pib": "849155092",
@@ -1209,7 +1409,9 @@
     "employees": 286,
     "revenue_eur": 21771498,
     "founded": "1991-10-01",
-    "active": true
+    "active": true,
+    "lat": 43.31207,
+    "lng": 21.91836
   },
   {
     "pib": "018140668",
@@ -1221,7 +1423,9 @@
     "employees": 279,
     "revenue_eur": 24271881,
     "founded": "1992-05-24",
-    "active": true
+    "active": true,
+    "lat": 45.40566,
+    "lng": 20.39781
   },
   {
     "pib": "447265516",
@@ -1233,7 +1437,9 @@
     "employees": 3,
     "revenue_eur": 274606,
     "founded": "1998-10-28",
-    "active": true
+    "active": true,
+    "lat": 44.82412,
+    "lng": 20.47582
   },
   {
     "pib": "418356340",
@@ -1245,7 +1451,9 @@
     "employees": 2,
     "revenue_eur": 198470,
     "founded": "2003-09-14",
-    "active": true
+    "active": true,
+    "lat": 45.26455,
+    "lng": 19.81724
   },
   {
     "pib": "214450171",
@@ -1257,7 +1465,9 @@
     "employees": 2,
     "revenue_eur": 110929,
     "founded": "1991-07-13",
-    "active": true
+    "active": true,
+    "lat": 44.59304,
+    "lng": 21.19299
   },
   {
     "pib": "684456902",
@@ -1269,7 +1479,9 @@
     "employees": 3,
     "revenue_eur": 234770,
     "founded": "2016-12-16",
-    "active": true
+    "active": true,
+    "lat": 43.11117,
+    "lng": 20.49157
   },
   {
     "pib": "246357471",
@@ -1281,7 +1493,9 @@
     "employees": 33,
     "revenue_eur": 1166086,
     "founded": "1994-10-24",
-    "active": true
+    "active": true,
+    "lat": 43.11493,
+    "lng": 20.54004
   },
   {
     "pib": "623978117",
@@ -1293,7 +1507,9 @@
     "employees": 9,
     "revenue_eur": 721256,
     "founded": "2012-04-12",
-    "active": true
+    "active": true,
+    "lat": 44.80906,
+    "lng": 20.43784
   },
   {
     "pib": "804569625",
@@ -1305,7 +1521,9 @@
     "employees": 82,
     "revenue_eur": 5882580,
     "founded": "2007-02-19",
-    "active": true
+    "active": true,
+    "lat": 44.87611,
+    "lng": 20.62685
   },
   {
     "pib": "452232114",
@@ -1317,7 +1535,9 @@
     "employees": 439,
     "revenue_eur": 35620589,
     "founded": "1999-01-02",
-    "active": true
+    "active": true,
+    "lat": 42.52353,
+    "lng": 21.90703
   },
   {
     "pib": "511007315",
@@ -1329,7 +1549,9 @@
     "employees": 4260,
     "revenue_eur": 259026201,
     "founded": "2002-08-17",
-    "active": true
+    "active": true,
+    "lat": 45.41058,
+    "lng": 20.40632
   },
   {
     "pib": "109522467",
@@ -1341,7 +1563,9 @@
     "employees": 4,
     "revenue_eur": 329339,
     "founded": "1993-04-16",
-    "active": true
+    "active": true,
+    "lat": 45.24553,
+    "lng": 19.85143
   },
   {
     "pib": "562121355",
@@ -1353,7 +1577,9 @@
     "employees": 192,
     "revenue_eur": 10414184,
     "founded": "1998-10-19",
-    "active": true
+    "active": true,
+    "lat": 43.01362,
+    "lng": 21.95963
   },
   {
     "pib": "636069680",
@@ -1365,7 +1591,9 @@
     "employees": 12,
     "revenue_eur": 1134871,
     "founded": "2020-04-17",
-    "active": true
+    "active": true,
+    "lat": 45.36336,
+    "lng": 20.36825
   },
   {
     "pib": "119761325",
@@ -1377,7 +1605,9 @@
     "employees": 1,
     "revenue_eur": 135863,
     "founded": "2011-12-20",
-    "active": true
+    "active": true,
+    "lat": 44.79664,
+    "lng": 20.4934
   },
   {
     "pib": "804319178",
@@ -1389,7 +1619,9 @@
     "employees": 2,
     "revenue_eur": 88010,
     "founded": "2010-04-25",
-    "active": true
+    "active": true,
+    "lat": 42.5451,
+    "lng": 21.8942
   },
   {
     "pib": "346168357",
@@ -1401,7 +1633,9 @@
     "employees": 3,
     "revenue_eur": 285171,
     "founded": "2019-12-18",
-    "active": true
+    "active": true,
+    "lat": 43.11851,
+    "lng": 20.53617
   },
   {
     "pib": "015857665",
@@ -1413,7 +1647,9 @@
     "employees": 1936,
     "revenue_eur": 136868791,
     "founded": "2004-04-13",
-    "active": false
+    "active": false,
+    "lat": 44.74427,
+    "lng": 19.69236
   },
   {
     "pib": "269212827",
@@ -1425,7 +1661,9 @@
     "employees": 6,
     "revenue_eur": 331889,
     "founded": "2008-10-18",
-    "active": true
+    "active": true,
+    "lat": 43.75354,
+    "lng": 20.67255
   },
   {
     "pib": "794472748",
@@ -1437,7 +1675,9 @@
     "employees": 21,
     "revenue_eur": 932780,
     "founded": "2005-02-05",
-    "active": true
+    "active": true,
+    "lat": 43.31002,
+    "lng": 21.9222
   },
   {
     "pib": "217737700",
@@ -1449,7 +1689,9 @@
     "employees": 690,
     "revenue_eur": 80243777,
     "founded": "1999-06-11",
-    "active": true
+    "active": true,
+    "lat": 44.81799,
+    "lng": 20.43179
   },
   {
     "pib": "368768712",
@@ -1461,7 +1703,9 @@
     "employees": 83,
     "revenue_eur": 2686646,
     "founded": "1995-09-01",
-    "active": true
+    "active": true,
+    "lat": 45.2718,
+    "lng": 19.80676
   },
   {
     "pib": "045366538",
@@ -1473,7 +1717,9 @@
     "employees": 3,
     "revenue_eur": 211541,
     "founded": "1993-07-28",
-    "active": true
+    "active": true,
+    "lat": 44.00734,
+    "lng": 20.95955
   },
   {
     "pib": "873733995",
@@ -1485,7 +1731,9 @@
     "employees": 1,
     "revenue_eur": 150091,
     "founded": "2007-10-16",
-    "active": true
+    "active": true,
+    "lat": 44.02513,
+    "lng": 20.8984
   },
   {
     "pib": "560156279",
@@ -1497,7 +1745,9 @@
     "employees": 332,
     "revenue_eur": 24607224,
     "founded": "2022-06-12",
-    "active": true
+    "active": true,
+    "lat": 43.755,
+    "lng": 20.67137
   },
   {
     "pib": "706701402",
@@ -1509,7 +1759,9 @@
     "employees": 13,
     "revenue_eur": 873732,
     "founded": "2005-10-09",
-    "active": true
+    "active": true,
+    "lat": 44.63268,
+    "lng": 20.92143
   },
   {
     "pib": "885948400",
@@ -1521,7 +1773,9 @@
     "employees": 104,
     "revenue_eur": 6631704,
     "founded": "2013-11-30",
-    "active": true
+    "active": true,
+    "lat": 43.3365,
+    "lng": 21.90402
   },
   {
     "pib": "821163346",
@@ -1533,7 +1787,9 @@
     "employees": 3294,
     "revenue_eur": 394364899,
     "founded": "1993-10-28",
-    "active": true
+    "active": true,
+    "lat": 44.811,
+    "lng": 20.42627
   },
   {
     "pib": "324084704",
@@ -1545,7 +1801,9 @@
     "employees": 803,
     "revenue_eur": 23206914,
     "founded": "1995-01-03",
-    "active": true
+    "active": true,
+    "lat": 44.63175,
+    "lng": 21.20451
   },
   {
     "pib": "837814931",
@@ -1557,7 +1815,9 @@
     "employees": 1815,
     "revenue_eur": 74760183,
     "founded": "2007-05-25",
-    "active": true
+    "active": true,
+    "lat": 43.58588,
+    "lng": 21.365
   },
   {
     "pib": "216334935",
@@ -1569,7 +1829,9 @@
     "employees": 634,
     "revenue_eur": 32604138,
     "founded": "2013-04-03",
-    "active": true
+    "active": true,
+    "lat": 44.82647,
+    "lng": 20.40863
   },
   {
     "pib": "891976147",
@@ -1581,7 +1843,9 @@
     "employees": 8,
     "revenue_eur": 727180,
     "founded": "1998-09-19",
-    "active": true
+    "active": true,
+    "lat": 44.79414,
+    "lng": 20.46729
   },
   {
     "pib": "784975549",
@@ -1593,7 +1857,9 @@
     "employees": 73,
     "revenue_eur": 4196958,
     "founded": "2001-06-23",
-    "active": true
+    "active": true,
+    "lat": 43.98866,
+    "lng": 20.89035
   },
   {
     "pib": "719668759",
@@ -1605,7 +1871,9 @@
     "employees": 121,
     "revenue_eur": 6937154,
     "founded": "1990-06-22",
-    "active": true
+    "active": true,
+    "lat": 43.1753,
+    "lng": 22.55767
   },
   {
     "pib": "085064813",
@@ -1617,7 +1885,9 @@
     "employees": 2162,
     "revenue_eur": 224792442,
     "founded": "1990-10-25",
-    "active": true
+    "active": true,
+    "lat": 44.80285,
+    "lng": 20.46182
   },
   {
     "pib": "223634974",
@@ -1629,7 +1899,9 @@
     "employees": 27,
     "revenue_eur": 3258097,
     "founded": "1993-07-23",
-    "active": true
+    "active": true,
+    "lat": 44.83229,
+    "lng": 20.47757
   },
   {
     "pib": "377534179",
@@ -1641,7 +1913,9 @@
     "employees": 24,
     "revenue_eur": 2490205,
     "founded": "2003-10-11",
-    "active": true
+    "active": true,
+    "lat": 43.99924,
+    "lng": 20.92182
   },
   {
     "pib": "764926814",
@@ -1653,7 +1927,9 @@
     "employees": 24,
     "revenue_eur": 1529218,
     "founded": "2021-04-22",
-    "active": true
+    "active": true,
+    "lat": 43.3082,
+    "lng": 21.86554
   },
   {
     "pib": "034626494",
@@ -1665,7 +1941,9 @@
     "employees": 9,
     "revenue_eur": 272064,
     "founded": "2002-10-02",
-    "active": true
+    "active": true,
+    "lat": 45.24219,
+    "lng": 19.82457
   },
   {
     "pib": "541602148",
@@ -1677,7 +1955,9 @@
     "employees": 3810,
     "revenue_eur": 230574432,
     "founded": "2001-01-27",
-    "active": true
+    "active": true,
+    "lat": 45.76428,
+    "lng": 19.09755
   },
   {
     "pib": "802047696",
@@ -1689,7 +1969,9 @@
     "employees": 556,
     "revenue_eur": 39417484,
     "founded": "2000-01-30",
-    "active": false
+    "active": false,
+    "lat": 45.24006,
+    "lng": 19.819
   },
   {
     "pib": "523082834",
@@ -1701,7 +1983,9 @@
     "employees": 9,
     "revenue_eur": 1106817,
     "founded": "1991-09-12",
-    "active": false
+    "active": false,
+    "lat": 44.65119,
+    "lng": 20.91487
   },
   {
     "pib": "154469633",
@@ -1713,7 +1997,9 @@
     "employees": 2,
     "revenue_eur": 131372,
     "founded": "1998-01-21",
-    "active": false
+    "active": false,
+    "lat": 44.67362,
+    "lng": 20.92887
   },
   {
     "pib": "775663336",
@@ -1725,7 +2011,9 @@
     "employees": 8,
     "revenue_eur": 830589,
     "founded": "1993-08-03",
-    "active": false
+    "active": false,
+    "lat": 44.29804,
+    "lng": 19.89467
   },
   {
     "pib": "558341586",
@@ -1737,7 +2025,9 @@
     "employees": 179,
     "revenue_eur": 13964318,
     "founded": "2018-04-20",
-    "active": true
+    "active": true,
+    "lat": 44.8375,
+    "lng": 20.46209
   },
   {
     "pib": "442986229",
@@ -1749,7 +2039,9 @@
     "employees": 5,
     "revenue_eur": 153585,
     "founded": "1999-12-14",
-    "active": true
+    "active": true,
+    "lat": 45.35008,
+    "lng": 20.3893
   },
   {
     "pib": "795021108",
@@ -1761,7 +2053,9 @@
     "employees": 11,
     "revenue_eur": 416914,
     "founded": "2000-05-23",
-    "active": true
+    "active": true,
+    "lat": 43.60464,
+    "lng": 21.30475
   },
   {
     "pib": "239740564",
@@ -1773,7 +2067,9 @@
     "employees": 285,
     "revenue_eur": 28314175,
     "founded": "2004-12-11",
-    "active": true
+    "active": true,
+    "lat": 43.59374,
+    "lng": 21.37279
   },
   {
     "pib": "874503049",
@@ -1785,7 +2081,9 @@
     "employees": 4991,
     "revenue_eur": 537661615,
     "founded": "2002-11-26",
-    "active": true
+    "active": true,
+    "lat": 44.25595,
+    "lng": 19.89128
   },
   {
     "pib": "432433360",
@@ -1797,7 +2095,9 @@
     "employees": 6,
     "revenue_eur": 509165,
     "founded": "1998-01-08",
-    "active": true
+    "active": true,
+    "lat": 43.7179,
+    "lng": 20.70189
   },
   {
     "pib": "771041394",
@@ -1809,7 +2109,9 @@
     "employees": 53,
     "revenue_eur": 5072232,
     "founded": "2005-07-17",
-    "active": true
+    "active": true,
+    "lat": 43.1569,
+    "lng": 22.55854
   },
   {
     "pib": "134785450",
@@ -1821,7 +2123,9 @@
     "employees": 20,
     "revenue_eur": 1349276,
     "founded": "2020-03-06",
-    "active": true
+    "active": true,
+    "lat": 45.25036,
+    "lng": 19.80033
   },
   {
     "pib": "167328490",
@@ -1833,7 +2137,9 @@
     "employees": 14,
     "revenue_eur": 398317,
     "founded": "2012-11-12",
-    "active": true
+    "active": true,
+    "lat": 44.81949,
+    "lng": 20.45751
   },
   {
     "pib": "238269939",
@@ -1845,7 +2151,9 @@
     "employees": 142,
     "revenue_eur": 11023607,
     "founded": "1993-03-10",
-    "active": false
+    "active": false,
+    "lat": 44.81141,
+    "lng": 20.4287
   },
   {
     "pib": "211437626",
@@ -1857,7 +2165,9 @@
     "employees": 11,
     "revenue_eur": 720523,
     "founded": "2013-02-09",
-    "active": true
+    "active": true,
+    "lat": 45.23711,
+    "lng": 19.84996
   },
   {
     "pib": "332494807",
@@ -1869,7 +2179,9 @@
     "employees": 4,
     "revenue_eur": 552847,
     "founded": "1992-11-12",
-    "active": true
+    "active": true,
+    "lat": 44.83386,
+    "lng": 20.45872
   },
   {
     "pib": "921635415",
@@ -1881,7 +2193,9 @@
     "employees": 365,
     "revenue_eur": 43485751,
     "founded": "1999-07-11",
-    "active": true
+    "active": true,
+    "lat": 43.9998,
+    "lng": 20.88777
   },
   {
     "pib": "502966201",
@@ -1893,7 +2207,9 @@
     "employees": 148,
     "revenue_eur": 14857487,
     "founded": "1998-12-28",
-    "active": true
+    "active": true,
+    "lat": 44.86929,
+    "lng": 20.65879
   },
   {
     "pib": "879820338",
@@ -1905,7 +2221,9 @@
     "employees": 340,
     "revenue_eur": 15533025,
     "founded": "2022-02-20",
-    "active": false
+    "active": false,
+    "lat": 43.29204,
+    "lng": 21.90756
   },
   {
     "pib": "880525969",
@@ -1917,7 +2235,9 @@
     "employees": 23,
     "revenue_eur": 2256712,
     "founded": "2001-01-16",
-    "active": true
+    "active": true,
+    "lat": 45.37132,
+    "lng": 20.42884
   },
   {
     "pib": "406377142",
@@ -1929,7 +2249,9 @@
     "employees": 211,
     "revenue_eur": 13702073,
     "founded": "2009-11-05",
-    "active": false
+    "active": false,
+    "lat": 44.81508,
+    "lng": 20.48322
   },
   {
     "pib": "289620205",
@@ -1941,7 +2263,9 @@
     "employees": 10,
     "revenue_eur": 1191515,
     "founded": "2007-04-02",
-    "active": true
+    "active": true,
+    "lat": 43.32254,
+    "lng": 21.85208
   },
   {
     "pib": "104350093",
@@ -1953,7 +2277,9 @@
     "employees": 31,
     "revenue_eur": 3057893,
     "founded": "2004-09-24",
-    "active": true
+    "active": true,
+    "lat": 44.60842,
+    "lng": 21.21057
   },
   {
     "pib": "907623705",
@@ -1965,7 +2291,9 @@
     "employees": 1105,
     "revenue_eur": 63022349,
     "founded": "1994-11-19",
-    "active": true
+    "active": true,
+    "lat": 44.84318,
+    "lng": 20.4579
   },
   {
     "pib": "318059459",
@@ -1977,7 +2305,9 @@
     "employees": 845,
     "revenue_eur": 67200690,
     "founded": "2006-08-27",
-    "active": true
+    "active": true,
+    "lat": 44.80183,
+    "lng": 20.50123
   },
   {
     "pib": "855628660",
@@ -1989,7 +2319,9 @@
     "employees": 48,
     "revenue_eur": 5438024,
     "founded": "2003-02-19",
-    "active": true
+    "active": true,
+    "lat": 45.25041,
+    "lng": 19.85489
   },
   {
     "pib": "592028267",
@@ -2001,7 +2333,9 @@
     "employees": 1316,
     "revenue_eur": 36545795,
     "founded": "2017-09-19",
-    "active": true
+    "active": true,
+    "lat": 44.81022,
+    "lng": 20.45088
   },
   {
     "pib": "817730843",
@@ -2013,7 +2347,9 @@
     "employees": 11,
     "revenue_eur": 1259784,
     "founded": "2006-05-30",
-    "active": true
+    "active": true,
+    "lat": 44.88782,
+    "lng": 20.63785
   },
   {
     "pib": "610271747",
@@ -2025,7 +2361,9 @@
     "employees": 4,
     "revenue_eur": 429635,
     "founded": "2011-05-22",
-    "active": true
+    "active": true,
+    "lat": 44.02911,
+    "lng": 20.87166
   },
   {
     "pib": "557052623",
@@ -2037,7 +2375,9 @@
     "employees": 29,
     "revenue_eur": 3195865,
     "founded": "2015-06-02",
-    "active": true
+    "active": true,
+    "lat": 44.82219,
+    "lng": 20.44813
   },
   {
     "pib": "172546355",
@@ -2049,7 +2389,9 @@
     "employees": 6,
     "revenue_eur": 352147,
     "founded": "1993-07-31",
-    "active": true
+    "active": true,
+    "lat": 42.56098,
+    "lng": 21.87902
   },
   {
     "pib": "875220532",
@@ -2061,7 +2403,9 @@
     "employees": 1278,
     "revenue_eur": 113219313,
     "founded": "2000-11-07",
-    "active": true
+    "active": true,
+    "lat": 45.24055,
+    "lng": 19.8427
   },
   {
     "pib": "666452296",
@@ -2073,7 +2417,9 @@
     "employees": 252,
     "revenue_eur": 16675126,
     "founded": "1995-05-19",
-    "active": true
+    "active": true,
+    "lat": 45.26029,
+    "lng": 19.8407
   },
   {
     "pib": "190136431",
@@ -2085,7 +2431,9 @@
     "employees": 679,
     "revenue_eur": 38367291,
     "founded": "1992-12-25",
-    "active": true
+    "active": true,
+    "lat": 43.30443,
+    "lng": 21.90015
   },
   {
     "pib": "289130883",
@@ -2097,7 +2445,9 @@
     "employees": 3,
     "revenue_eur": 228780,
     "founded": "2019-08-23",
-    "active": true
+    "active": true,
+    "lat": 43.01349,
+    "lng": 21.96267
   },
   {
     "pib": "783389225",
@@ -2109,7 +2459,9 @@
     "employees": 1,
     "revenue_eur": 177803,
     "founded": "1993-09-29",
-    "active": true
+    "active": true,
+    "lat": 46.11226,
+    "lng": 19.71448
   },
   {
     "pib": "585862287",
@@ -2121,7 +2473,9 @@
     "employees": 2,
     "revenue_eur": 105263,
     "founded": "2001-03-10",
-    "active": true
+    "active": true,
+    "lat": 44.26625,
+    "lng": 19.85849
   },
   {
     "pib": "862176361",
@@ -2133,7 +2487,9 @@
     "employees": 5,
     "revenue_eur": 318537,
     "founded": "2018-05-24",
-    "active": true
+    "active": true,
+    "lat": 45.27304,
+    "lng": 19.85613
   },
   {
     "pib": "214877798",
@@ -2145,7 +2501,9 @@
     "employees": 9,
     "revenue_eur": 682396,
     "founded": "1991-05-03",
-    "active": true
+    "active": true,
+    "lat": 45.385,
+    "lng": 20.43127
   },
   {
     "pib": "261355934",
@@ -2157,7 +2515,9 @@
     "employees": 1250,
     "revenue_eur": 69243735,
     "founded": "1999-02-15",
-    "active": true
+    "active": true,
+    "lat": 44.67961,
+    "lng": 20.89244
   },
   {
     "pib": "597476277",
@@ -2169,7 +2529,9 @@
     "employees": 3,
     "revenue_eur": 324970,
     "founded": "2005-07-07",
-    "active": true
+    "active": true,
+    "lat": 43.99048,
+    "lng": 20.9363
   },
   {
     "pib": "767439850",
@@ -2181,7 +2543,9 @@
     "employees": 2,
     "revenue_eur": 251618,
     "founded": "1994-09-19",
-    "active": false
+    "active": false,
+    "lat": 45.40244,
+    "lng": 20.39488
   },
   {
     "pib": "094316492",
@@ -2193,7 +2557,9 @@
     "employees": 385,
     "revenue_eur": 42430084,
     "founded": "2014-03-31",
-    "active": true
+    "active": true,
+    "lat": 44.81219,
+    "lng": 20.48261
   },
   {
     "pib": "269341506",
@@ -2205,7 +2571,9 @@
     "employees": 3,
     "revenue_eur": 260185,
     "founded": "1991-07-26",
-    "active": false
+    "active": false,
+    "lat": 44.80941,
+    "lng": 20.45687
   },
   {
     "pib": "782014137",
@@ -2217,7 +2585,9 @@
     "employees": 4408,
     "revenue_eur": 376654730,
     "founded": "2000-12-24",
-    "active": true
+    "active": true,
+    "lat": 44.28796,
+    "lng": 19.94335
   },
   {
     "pib": "946430564",
@@ -2229,7 +2599,9 @@
     "employees": 151,
     "revenue_eur": 12725443,
     "founded": "1999-06-11",
-    "active": true
+    "active": true,
+    "lat": 46.08838,
+    "lng": 19.68497
   },
   {
     "pib": "290178926",
@@ -2241,7 +2613,9 @@
     "employees": 4,
     "revenue_eur": 206927,
     "founded": "2003-12-21",
-    "active": true
+    "active": true,
+    "lat": 43.86113,
+    "lng": 19.80357
   },
   {
     "pib": "045693198",
@@ -2253,7 +2627,9 @@
     "employees": 5,
     "revenue_eur": 387977,
     "founded": "2016-11-13",
-    "active": true
+    "active": true,
+    "lat": 44.79388,
+    "lng": 20.453
   },
   {
     "pib": "719306912",
@@ -2265,7 +2641,9 @@
     "employees": 81,
     "revenue_eur": 8894532,
     "founded": "1994-09-25",
-    "active": true
+    "active": true,
+    "lat": 43.30082,
+    "lng": 21.92084
   },
   {
     "pib": "969073498",
@@ -2277,7 +2655,9 @@
     "employees": 33,
     "revenue_eur": 2144182,
     "founded": "1997-01-27",
-    "active": true
+    "active": true,
+    "lat": 43.15273,
+    "lng": 22.62935
   },
   {
     "pib": "970452370",
@@ -2289,7 +2669,9 @@
     "employees": 2590,
     "revenue_eur": 241340385,
     "founded": "1990-10-15",
-    "active": true
+    "active": true,
+    "lat": 44.8277,
+    "lng": 20.49433
   },
   {
     "pib": "639786624",
@@ -2301,7 +2683,9 @@
     "employees": 19,
     "revenue_eur": 2030054,
     "founded": "1999-08-24",
-    "active": true
+    "active": true,
+    "lat": 44.79864,
+    "lng": 20.4433
   },
   {
     "pib": "346535146",
@@ -2313,7 +2697,9 @@
     "employees": 1513,
     "revenue_eur": 34411549,
     "founded": "2024-02-21",
-    "active": true
+    "active": true,
+    "lat": 43.90817,
+    "lng": 20.35158
   },
   {
     "pib": "958016568",
@@ -2325,7 +2711,9 @@
     "employees": 10,
     "revenue_eur": 776822,
     "founded": "2017-08-10",
-    "active": true
+    "active": true,
+    "lat": 45.38646,
+    "lng": 20.41988
   },
   {
     "pib": "069337220",
@@ -2337,7 +2725,9 @@
     "employees": 721,
     "revenue_eur": 54865044,
     "founded": "2016-10-27",
-    "active": true
+    "active": true,
+    "lat": 43.32602,
+    "lng": 21.9218
   },
   {
     "pib": "870028311",
@@ -2349,7 +2739,9 @@
     "employees": 25,
     "revenue_eur": 2716341,
     "founded": "1993-01-10",
-    "active": true
+    "active": true,
+    "lat": 45.2551,
+    "lng": 19.83708
   },
   {
     "pib": "543062646",
@@ -2361,7 +2753,9 @@
     "employees": 463,
     "revenue_eur": 47220359,
     "founded": "1998-01-23",
-    "active": false
+    "active": false,
+    "lat": 43.73001,
+    "lng": 20.678
   },
   {
     "pib": "461690367",
@@ -2373,7 +2767,9 @@
     "employees": 25,
     "revenue_eur": 2526526,
     "founded": "2003-07-01",
-    "active": true
+    "active": true,
+    "lat": 43.32542,
+    "lng": 21.8573
   },
   {
     "pib": "453250032",
@@ -2385,7 +2781,9 @@
     "employees": 2628,
     "revenue_eur": 80759350,
     "founded": "2010-10-15",
-    "active": true
+    "active": true,
+    "lat": 44.0083,
+    "lng": 20.8929
   },
   {
     "pib": "634826729",
@@ -2397,6 +2795,8 @@
     "employees": 19,
     "revenue_eur": 426138,
     "founded": "2014-07-02",
-    "active": true
+    "active": true,
+    "lat": 43.86699,
+    "lng": 20.32479
   }
 ]

@@ -117,7 +117,7 @@ describe("collection registry", () => {
     const companies = readCollectionAssets(COLLECTIONS_DIR).find((a) => a.name === "companies");
     expect(companies?.name).toBe("companies");
     expect(companies?.view).toMatchObject({
-      available_renderers: ["table", "cards"],
+      available_renderers: ["table", "cards", "map"],
       pagination: "infinite",
       page_size_default: 50,
       row_height: 48,
@@ -153,6 +153,8 @@ describe("collection registry", () => {
     ["bad-calendar", /agenda\/view\.yaml.*calendar_options.*\n.*start_field: day is date/s],
     ["bad-tree", /thread\/view\.yaml.*tree_options.*\n.*label_field: title is not a field/s],
     ["lazy-tree", /chart\/view\.yaml.*invalid.*children_count_field/s],
+    ["bad-map", /places\/view\.yaml.*map_options.*\n.*popup_fields\[1\]: website is not a field/s],
+    ["map-without-options", /plain\/view\.yaml.*invalid.*lists map, so map_options/s],
   ])("fails startup on %s, naming the file", (dir, message) => {
     expect(() => readCollectionAssets(fixtures(dir))).toThrow(message);
   });

@@ -2,6 +2,7 @@ import { z } from "zod";
 import { CalendarOptionsSchema } from "./calendar.js";
 import { FilterNodeSchema, FilterOpSchema } from "./filter.js";
 import { KanbanOptionsSchema } from "./kanban.js";
+import { MapOptionsSchema } from "./map.js";
 import { TreeOptionsSchema } from "./tree.js";
 
 // Every block is loose: dclabs views carry renderer-specific option blocks
@@ -150,33 +151,45 @@ export const PreviewConfigSchema = z.looseObject({
   renderer: z.string().optional(),
 });
 
-export const ViewConfigSchema = z.looseObject({
-  default_renderer: z.string().min(1).default("table"),
-  available_renderers: z.array(z.string().min(1)).default(["table"]),
-  columns: z.array(ColumnConfigSchema).default([]),
-  page_size_default: z.number().int().min(1).max(1000).default(50),
-  pagination: z.enum(["infinite", "pages"]).default("infinite"),
-  row_height: z.number().positive().optional(),
-  default_column_width: z.number().positive().default(160),
-  search: SearchConfigSchema.optional(),
-  filters: z.array(FilterChipConfigSchema).optional(),
-  filterable: FilterableConfigSchema.optional(),
-  card_options: CardOptionsSchema.optional(),
-  /** Validated when present: a typo in a field name fails at load, not on screen. */
-  kanban_options: KanbanOptionsSchema.optional(),
-  calendar_options: CalendarOptionsSchema.optional(),
-  tree_options: TreeOptionsSchema.optional(),
-  row_color: RowColorConfigSchema.optional(),
+export const ViewConfigSchema = z
+  .looseObject({
+    default_renderer: z.string().min(1).default("table"),
+    available_renderers: z.array(z.string().min(1)).default(["table"]),
+    columns: z.array(ColumnConfigSchema).default([]),
+    page_size_default: z.number().int().min(1).max(1000).default(50),
+    pagination: z.enum(["infinite", "pages"]).default("infinite"),
+    row_height: z.number().positive().optional(),
+    default_column_width: z.number().positive().default(160),
+    search: SearchConfigSchema.optional(),
+    filters: z.array(FilterChipConfigSchema).optional(),
+    filterable: FilterableConfigSchema.optional(),
+    card_options: CardOptionsSchema.optional(),
+    /** Validated when present: a typo in a field name fails at load, not on screen. */
+    kanban_options: KanbanOptionsSchema.optional(),
+    calendar_options: CalendarOptionsSchema.optional(),
+    tree_options: TreeOptionsSchema.optional(),
+    map_options: MapOptionsSchema.optional(),
+    row_color: RowColorConfigSchema.optional(),
 
-  row_actions: z.array(z.string()).default([]),
-  row_action_defs: z.array(ActionDefSchema).optional(),
-  bulk_actions: z.array(ActionDefSchema).optional(),
-  multiselect: z.boolean().optional(),
-  row_actions_display: z.enum(["inline", "menu"]).optional(),
-  edit_mode: EditModeConfigSchema.optional(),
-  preview: PreviewConfigSchema.optional(),
-  refresh_interval_ms: z.number().int().positive().optional(),
-});
+    row_actions: z.array(z.string()).default([]),
+    row_action_defs: z.array(ActionDefSchema).optional(),
+    bulk_actions: z.array(ActionDefSchema).optional(),
+    multiselect: z.boolean().optional(),
+    row_actions_display: z.enum(["inline", "menu"]).optional(),
+    edit_mode: EditModeConfigSchema.optional(),
+    preview: PreviewConfigSchema.optional(),
+    refresh_interval_ms: z.number().int().positive().optional(),
+  })
+  .superRefine((v, ctx) => {
+    // The map has no defaults to fall back on: without lat / lng fields it cannot place a row.
+    if (v.available_renderers.includes("map") && !v.map_options) {
+      ctx.addIssue({
+        code: "custom",
+        path: ["map_options"],
+        message: "available_renderers lists map, so map_options (lat_field, lng_field) is required",
+      });
+    }
+  });
 
 export type ViewConfigInput = z.input<typeof ViewConfigSchema>;
 export type ViewConfig = z.output<typeof ViewConfigSchema>;

@@ -3,6 +3,7 @@ import { join } from "node:path";
 import {
   calendarOptionsProblems,
   FIELD_NAME_RE,
+  mapOptionsProblems,
   type SchemaDoc,
   type SchemaDocInput,
   SchemaDocSchema,
@@ -105,14 +106,15 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
     const schemaJson = readFile(schemaFile, JSON.parse) as SchemaDocInput;
     const schema = validated(schemaFile, SchemaDocSchema, schemaJson);
     assertJsonbSchema(schema, schemaFile);
-    // A calendar over a field that is not a datetime would draw nothing, a tree over a
-    // field the schema lacks nothing sensible: refuse either at load.
+    // A calendar over a field that is not a datetime would draw nothing, a tree or a map
+    // over a field the schema lacks nothing sensible: refuse any of them at load.
     const blocks = [
       [
         "calendar_options",
         view.calendar_options && calendarOptionsProblems(view.calendar_options, schema),
       ],
       ["tree_options", view.tree_options && treeOptionsProblems(view.tree_options, schema)],
+      ["map_options", view.map_options && mapOptionsProblems(view.map_options, schema)],
     ] as const;
     for (const [block, problems] of blocks) {
       if (problems && problems.length > 0) {
