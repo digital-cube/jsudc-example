@@ -54,14 +54,15 @@ const schema = SchemaDocSchema.parse({
 });
 
 describe("renderer registry", () => {
-  it("knows table, cards, kanban, calendar, tree and map; other names have no component", () => {
+  it("knows table, cards, kanban, calendar, tree, map and chart; other names have no component", () => {
     expect(rendererEntry("kanban")?.paging).toBe(false);
     expect(rendererEntry("table")).toMatchObject({ paging: true, editMode: true });
     expect(rendererEntry("cards")).toMatchObject({ paging: true, editMode: false });
     expect(rendererEntry("calendar")?.paging).toBe(false);
     expect(rendererEntry("tree")).toMatchObject({ paging: false, editMode: false });
     expect(rendererEntry("map")).toMatchObject({ paging: false, editMode: false });
-    expect(rendererEntry("chart")).toBeUndefined();
+    expect(rendererEntry("chart")).toMatchObject({ paging: false, editMode: false });
+    expect(rendererEntry("gantt")).toBeUndefined();
     expect(rendererEntry("toString")).toBeUndefined();
   });
 

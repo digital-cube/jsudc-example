@@ -1,7 +1,16 @@
 import type { DescribeResponse, RendererName } from "@jsudc/udc-core";
-import { CalendarDays, Kanban, LayoutGrid, ListTree, MapPinned, Table2 } from "lucide-react";
+import {
+  CalendarDays,
+  ChartLine,
+  Kanban,
+  LayoutGrid,
+  ListTree,
+  MapPinned,
+  Table2,
+} from "lucide-react";
 import { CalendarRenderer } from "../calendar/CalendarRenderer";
 import { CardRenderer } from "../cards/CardRenderer";
+import { ChartRenderer } from "../chart/ChartRenderer";
 import { KanbanBoardSwitcher } from "../kanban/KanbanBoardSwitcher";
 import { KanbanRenderer } from "../kanban/KanbanRenderer";
 import { MapRenderer } from "../map/MapRenderer";
@@ -63,6 +72,14 @@ export const RENDERERS: Partial<Record<RendererName, RendererEntry>> = {
     component: MapRenderer,
     icon: MapPinned,
     labelKey: "TAB_MAP",
+    paging: false,
+    editMode: false,
+  },
+  // The window control is drawn by the data view: it also follows the other tabs once picked.
+  chart: {
+    component: ChartRenderer,
+    icon: ChartLine,
+    labelKey: "TAB_CHART",
     paging: false,
     editMode: false,
   },

@@ -1,6 +1,7 @@
 import type { DescribeResponse, FilterNode, FolderOptions, Row, SortKey } from "@jsudc/udc-core";
 import type { LucideIcon } from "lucide-react";
 import type { ComponentType } from "react";
+import type { ChartWindowState } from "../chart/useChartWindow";
 import type { SchemaAction } from "../schema-editor/fieldForm";
 import type { UdcCollectionResult } from "../udc/hooks";
 import type { PagingMode } from "../udc/keys";
@@ -11,9 +12,10 @@ export interface RendererCount {
   total: number | null;
   /**
    * `nodes`: the toolbar reads "N nodes" (the tree), `map`: "N on map of M"
-   * (rows without a position are not drawn), instead of "Showing N of M".
+   * (rows without a position are not drawn), `chart`: "N points in window of
+   * M" (M counts the filter without the window), instead of "Showing N of M".
    */
-  unit?: "nodes" | "map";
+  unit?: "nodes" | "map" | "chart";
   /** A source serving a fetched copy (http_api): when it was fetched, and whether it is stale. */
   fetchedAt?: string | null;
   stale?: boolean;
@@ -44,6 +46,14 @@ export interface RendererProps {
   filter: FilterNode | undefined;
   /** Chips and filter tree without the search: for a renderer that searches what it loaded. */
   baseFilter: FilterNode | undefined;
+  /**
+   * The chart window, when the view has one and it applies (on the chart tab,
+   * or on any tab once the URL picked it): already ANDed into `filter` and
+   * `baseFilter`.
+   */
+  chartWindow?: ChartWindowState | undefined;
+  /** `filter` without the chart window: what "of M" counts. */
+  unwindowedFilter?: FilterNode | undefined;
   /** The search box, as typed. */
   search: string;
   sort: SortKey[];

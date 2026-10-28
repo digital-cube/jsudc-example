@@ -8,6 +8,7 @@ import {
   Activity,
   Building2,
   CalendarDays,
+  ChartLine,
   Database,
   FolderGit2,
   FolderOpen,
@@ -36,6 +37,7 @@ const COLLECTION_ICONS: Record<string, LucideIcon> = {
   tickets: Kanban,
   quakes: Activity,
   repos: FolderGit2,
+  metrics: ChartLine,
 };
 
 /** Where the rows live, as the sidebar heads its groups. */

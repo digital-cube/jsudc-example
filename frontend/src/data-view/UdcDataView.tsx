@@ -1,6 +1,9 @@
 import type { FilterChipConfig, FilterNode, Row } from "@jsudc/udc-core";
 import { BookOpen, InfinityIcon, Rows3 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
+import { ChartWindowControl } from "../chart/ChartWindowControl";
+import { useChartWindow } from "../chart/useChartWindow";
+import { andWindow } from "../chart/window";
 import { Button } from "../components/ui/button";
 import { Skeleton } from "../components/ui/misc";
 import { Segmented } from "../components/ui/segmented";
@@ -86,7 +89,7 @@ export function UdcDataView({ collection }: { collection: string }) {
     [folderOpts, userTree, setTree],
   );
 
-  const filter = useMemo(
+  const userFilter = useMemo(
     () =>
       composeFilter({
         search: state.search,
@@ -97,7 +100,7 @@ export function UdcDataView({ collection }: { collection: string }) {
       }),
     [state.search, state.chips, tree, view?.search, view?.filters],
   );
-  const baseFilter = useMemo(
+  const userBaseFilter = useMemo(
     () =>
       composeFilter({
         search: "",
@@ -107,6 +110,18 @@ export function UdcDataView({ collection }: { collection: string }) {
         tree,
       }),
     [state.chips, tree, view?.search, view?.filters],
+  );
+
+  // A chart window applies on the chart tab (its default preset), and on every tab of the view
+  // once the URL picked one, so the table shows the rows the chart draws.
+  const win = useChartWindow(view);
+  const onChart = state.tab === "chart";
+  const chartWindow = win && !onDoc && (onChart || win.explicit) ? win : undefined;
+  const windowCond = chartWindow?.cond;
+  const filter = useMemo(() => andWindow(userFilter, windowCond), [userFilter, windowCond]);
+  const baseFilter = useMemo(
+    () => andWindow(userBaseFilter, windowCond),
+    [userBaseFilter, windowCond],
   );
 
   const entry = onDoc ? undefined : rendererEntry(state.tab);
@@ -147,7 +162,8 @@ export function UdcDataView({ collection }: { collection: string }) {
     );
   }
 
-  const filtered = filter !== undefined;
+  // The window is not a filter the user can clear: "clear filters" leaves it.
+  const filtered = userFilter !== undefined;
   const fmt = (n: number) => new Intl.NumberFormat(intlLocale).format(n);
   const shown = paging ? data.rows.length : (ownCount?.shown ?? 0);
   const total = paging ? data.total : (ownCount?.total ?? null);
@@ -255,15 +271,18 @@ export function UdcDataView({ collection }: { collection: string }) {
         >
           {view ? (
             <>
-              <SearchBox
-                value={state.search}
-                onChange={onSearch}
-                placeholder={
-                  tMaybe(section, "SEARCH_PLACEHOLDER") ??
-                  view.search?.placeholder ??
-                  t("APP", "SEARCH")
-                }
-              />
+              {/* A view without a `search` block has nothing to search: no box. */}
+              {view.search ? (
+                <SearchBox
+                  value={state.search}
+                  onChange={onSearch}
+                  placeholder={
+                    tMaybe(section, "SEARCH_PLACEHOLDER") ??
+                    view.search.placeholder ??
+                    t("APP", "SEARCH")
+                  }
+                />
+              ) : null}
               {/* Its natural width: on a narrow screen the chips wrap as one group, under the search. */}
               <div className="flex flex-wrap items-center gap-1.5">
                 {view.filters?.length ? (
@@ -287,6 +306,7 @@ export function UdcDataView({ collection }: { collection: string }) {
                 {entry?.toolbar && live ? (
                   <entry.toolbar collection={collection} describe={live} />
                 ) : null}
+                {chartWindow ? <ChartWindowControl win={chartWindow} clearable={!onChart} /> : null}
                 <Freshness fetchedAt={fetchedAt} stale={stale} />
                 <span
                   className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
@@ -304,6 +324,8 @@ export function UdcDataView({ collection }: { collection: string }) {
                     )
                   ) : ownCount?.unit === "map" && !paging ? (
                     t("APP", "MAP_ON_MAP", { shown: fmt(shown), total: fmt(total) })
+                  ) : ownCount?.unit === "chart" && !paging ? (
+                    t("APP", "CHART_IN_WINDOW", { shown: fmt(shown), total: fmt(total) })
                   ) : (
                     t("APP", "SHOWING", { shown: fmt(shown), total: fmt(total) })
                   )}
@@ -348,6 +370,8 @@ export function UdcDataView({ collection }: { collection: string }) {
             data={data}
             filter={filter}
             baseFilter={baseFilter}
+            chartWindow={chartWindow}
+            unwindowedFilter={userFilter}
             search={state.search}
             sort={sort}
             onSort={(field, multi) => state.setSort(cycleSort(sort, field, multi))}

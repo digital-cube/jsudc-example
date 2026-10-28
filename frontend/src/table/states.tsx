@@ -36,14 +36,23 @@ function Panel({
   );
 }
 
-export function EmptyState({ filtered, onClear }: { filtered: boolean; onClear: () => void }) {
+/** `body` replaces the default text (a view's `empty_label`). */
+export function EmptyState({
+  filtered,
+  onClear,
+  body,
+}: {
+  filtered: boolean;
+  onClear: () => void;
+  body?: string | undefined;
+}) {
   const { t } = useI18n();
   return filtered ? (
     <Panel
       testId="table-empty"
       icon={<SearchX className="size-5" />}
       title={t("APP", "EMPTY_TITLE")}
-      body={t("APP", "EMPTY_BODY")}
+      body={body ?? t("APP", "EMPTY_BODY")}
       action={
         <Button size="sm" onClick={onClear}>
           {t("APP", "CLEAR_FILTERS")}
@@ -55,7 +64,7 @@ export function EmptyState({ filtered, onClear }: { filtered: boolean; onClear: 
       testId="table-empty"
       icon={<Table2 className="size-5" />}
       title={t("APP", "EMPTY_TITLE")}
-      body={t("APP", "EMPTY_PLAIN")}
+      body={body ?? t("APP", "EMPTY_PLAIN")}
     />
   );
 }
