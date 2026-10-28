@@ -15,8 +15,15 @@ export interface MapMarker {
   lng: number;
   radius: number;
   tone: ColumnColor;
+  /** Degrees clockwise from north for an `airplane` icon; `null` draws the circle. */
+  rotation: number | null;
+  /** The positions it has flown, oldest first (`trail`); empty without one. */
+  trail: LatLng[];
   row: Row;
 }
+
+/** More rows than this and a trail is drawn only for the hovered and the selected marker. */
+export const TRAILS_FOR_ALL_MAX = 300;
 
 /** A finite number from a number or a numeric string (a decimal may arrive as either). */
 export function toNumber(v: unknown): number | null {
@@ -50,6 +57,71 @@ export function markerTone(
 }
 
 /**
+ * The turn of a row's aeroplane, `[0, 360)`: `rotate_field` of an
+ * `icon: airplane` map. `null` (a circle) for the circle icon or a row
+ * without a usable value — a missing track is not north.
+ */
+export function rotationOf(row: Record<string, unknown>, opts: MapOptions): number | null {
+  if (opts.icon !== "airplane") return null;
+  if (!opts.rotate_field) return 0;
+  const v = toNumber(row[opts.rotate_field]);
+  return v === null ? null : ((v % 360) + 360) % 360;
+}
+
+const numbers = (v: unknown): (number | null)[] => (Array.isArray(v) ? v.map(toNumber) : []);
+
+/**
+ * The trail of a row: its lat and lng histories paired from the newest end
+ * (both are appended together), pairs out of range dropped, the last
+ * `max_points`, oldest first. Empty without a `trail` block.
+ */
+export function trailOf(row: Record<string, unknown>, opts: MapOptions): LatLng[] {
+  const trail = opts.trail;
+  if (!trail) return [];
+  const lats = numbers(row[trail.lat_history_field]);
+  const lngs = numbers(row[trail.lng_history_field]);
+  const n = Math.min(lats.length, lngs.length);
+  const out: LatLng[] = [];
+  for (let i = 0; i < n; i++) {
+    const lat = lats[lats.length - n + i];
+    const lng = lngs[lngs.length - n + i];
+    if (lat == null || lng == null || Math.abs(lat) > 90 || Math.abs(lng) > 180) continue;
+    out.push([lat, lng]);
+  }
+  return out.slice(-trail.max_points);
+}
+
+/**
+ * The markers whose trail is drawn: all of them up to `TRAILS_FOR_ALL_MAX`,
+ * above it only the hovered and the selected one. A trail needs two points.
+ */
+export function trailMarkers(
+  markers: readonly MapMarker[],
+  hovered: string | null,
+  selected: string | null,
+): MapMarker[] {
+  const drawn = markers.filter((m) => m.trail.length >= 2);
+  if (markers.length <= TRAILS_FOR_ALL_MAX) return drawn;
+  return drawn.filter((m) => m.id === hovered || m.id === selected);
+}
+
+/**
+ * An aeroplane seen from above, nose up (north), in a 24×24 box: filled
+ * with `currentColor`, so the tone's CSS colour paints it.
+ */
+export const AIRPLANE_PATH =
+  "M12 1.5 L13.5 9 L22.5 13 L22.5 14.5 L13.5 13.5 L13 18.5 L16 20.5 L16 21.5 L12 20.5 L8 21.5 L8 20.5 L11 18.5 L10.5 13.5 L1.5 14.5 L1.5 13 L10.5 9 Z";
+
+/** The inner HTML of an aeroplane marker: turned by CSS, sized by `icon_size`. */
+export function airplaneHtml(rotation: number, size: number): string {
+  return (
+    `<div class="udc-map-plane-glyph" style="width:${size}px;height:${size}px;transform:rotate(${rotation}deg)">` +
+    `<svg viewBox="0 0 24 24" width="${size}" height="${size}" aria-hidden="true">` +
+    `<path d="${AIRPLANE_PATH}"/></svg></div>`
+  );
+}
+
+/**
  * The rows that can be placed, biggest first: drawn in that order, a small
  * marker sits on top of a large one around it and stays clickable.
  */
@@ -68,6 +140,8 @@ export function toMarkers(
       lng: at[1],
       radius: markerRadius(row, opts),
       tone: markerTone(row, rowColor),
+      rotation: rotationOf(row, opts),
+      trail: trailOf(row, opts),
       row,
     });
   }

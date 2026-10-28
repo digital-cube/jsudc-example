@@ -286,6 +286,76 @@
   fill-opacity: 0.85;
 }
 
+/* An aeroplane marker (icon: airplane): a divIcon whose SVG is filled with currentColor, so
+   the tone sets it; the background-coloured outline keeps it legible on the tiles. */
+.udc-map-plane {
+  color: var(--sem-accent);
+  cursor: pointer;
+}
+.udc-map-plane.tone-success {
+  color: var(--sem-success);
+}
+.udc-map-plane.tone-warning {
+  color: var(--sem-warning);
+}
+.udc-map-plane.tone-danger {
+  color: var(--sem-danger);
+}
+.udc-map-plane.tone-info {
+  color: var(--sem-info);
+}
+.udc-map-plane.tone-muted {
+  color: var(--sem-muted);
+}
+.udc-map-plane-glyph {
+  line-height: 0;
+  transition: transform 300ms ease-out;
+}
+.udc-map-plane svg {
+  overflow: visible;
+}
+.udc-map-plane path {
+  fill: currentColor;
+  stroke: var(--background);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  transition:
+    stroke 120ms,
+    stroke-width 120ms;
+}
+.udc-map-plane:hover path,
+.udc-map-plane.is-selected path {
+  stroke: var(--foreground);
+  stroke-width: 1.6;
+}
+/* A trail: muted under the markers, the tone of its aeroplane when it is hovered or selected. */
+.udc-map-trail {
+  stroke: var(--sem-muted);
+  stroke-opacity: 0.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+.udc-map-trail.is-active {
+  stroke-opacity: 0.95;
+}
+.udc-map-trail.is-active.tone-success {
+  stroke: var(--sem-success);
+}
+.udc-map-trail.is-active.tone-warning {
+  stroke: var(--sem-warning);
+}
+.udc-map-trail.is-active.tone-danger {
+  stroke: var(--sem-danger);
+}
+.udc-map-trail.is-active.tone-info,
+.udc-map-trail.is-active.tone-accent {
+  stroke: var(--sem-info);
+}
+.udc-map-trail.is-active.tone-muted {
+  stroke: var(--foreground);
+}
+
 /* The Doc tab: a collection's README. Theme tokens only, so it follows light and dark. */
 .udc-prose {
   color: var(--color-foreground);

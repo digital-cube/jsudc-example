@@ -20,4 +20,5 @@ options:
     files: lucide:folder-open
     menu: lucide:list-tree
     quakes: lucide:activity
+    flights: lucide:plane
     repos: lucide:folder-git-2

@@ -97,7 +97,11 @@ describe("cells", () => {
     expect(renderKind({ field: "x" }, { type: "integer" })).toBe("number_format");
     expect(renderKind({ field: "x" }, { type: "date" })).toBe("date");
     expect(renderKind({ field: "x", render: "bool" }, { type: "string" })).toBe("bool");
-    expect(renderKind({ field: "x", render: "sparkline" }, { type: "string" })).toBe("text");
+    expect(renderKind({ field: "x", render: "radar" }, { type: "string" })).toBe("text");
+    expect(renderKind({ field: "x", render: "sparkline" }, { type: "json" })).toBe("sparkline");
+    expect(renderKind({ field: "x", render: "heading_glyph" }, { type: "decimal" })).toBe(
+      "heading_glyph",
+    );
   });
 
   it("formats numbers with locale grouping and lets transforms win", () => {

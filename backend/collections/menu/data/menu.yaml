@@ -74,6 +74,10 @@
       translation_key: MENU_VIEW_QUAKES
       icon: lucide:map-pin
       url: /udc/quakes?tab=map
+    - code: FLIGHTS_MAP
+      translation_key: MENU_VIEW_FLIGHTS
+      icon: lucide:plane
+      url: /udc/flights?tab=map
 
 # The collections that ship a README, straight to their Doc tab.
 - code: DOCS
@@ -104,6 +108,10 @@
       translation_key: COLLECTIONS_QUAKES
       icon: lucide:file-text
       url: /udc/quakes?tab=doc
+    - code: DOC_FLIGHTS
+      translation_key: COLLECTIONS_FLIGHTS
+      icon: lucide:file-text
+      url: /udc/flights?tab=doc
     - code: DOC_REPOS
       translation_key: COLLECTIONS_REPOS
       icon: lucide:file-text

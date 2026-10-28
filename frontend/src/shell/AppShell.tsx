@@ -17,6 +17,7 @@ import {
   Languages,
   type LucideIcon,
   Moon,
+  Plane,
   Sun,
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
@@ -37,6 +38,7 @@ const COLLECTION_ICONS: Record<string, LucideIcon> = {
   appointments: CalendarDays,
   tickets: Kanban,
   quakes: Activity,
+  flights: Plane,
   repos: FolderGit2,
   metrics: ChartLine,
 };

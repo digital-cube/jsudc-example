@@ -27,6 +27,37 @@ export interface CardSlots {
   imageStyle: "cover" | "avatar";
   meta: ColumnConfig[];
   size: CardSize;
+  /** One number shown large under the header. */
+  metric: NonNullable<CardOptions["metric"]> | null;
+  /** A number array drawn under the meta fields. */
+  sparkline: { field: string; width: number; height: number } | null;
+}
+
+/** The card's sparkline box when `card_options.sparkline` gives none, px. */
+export const CARD_SPARKLINE = { width: 240, height: 36 };
+
+/**
+ * The metric as text: `precision` fraction digits (the locale's grouping),
+ * then `unit`. `null` when the value is not a number.
+ */
+export function metricText(
+  value: unknown,
+  metric: NonNullable<CardOptions["metric"]>,
+  intlLocale: string,
+): string | null {
+  const n =
+    typeof value === "number"
+      ? value
+      : typeof value === "string" && value.trim()
+        ? Number(value)
+        : NaN;
+  if (!Number.isFinite(n)) return null;
+  const digits = metric.precision;
+  const text = new Intl.NumberFormat(intlLocale, {
+    maximumFractionDigits: digits ?? 2,
+    ...(digits === undefined ? {} : { minimumFractionDigits: digits }),
+  }).format(n);
+  return `${text}${metric.unit ?? ""}`;
 }
 
 /**
@@ -52,6 +83,14 @@ export function cardSlots(view: ViewConfig): CardSlots {
     imageStyle: opts.image_style ?? "cover",
     meta: (opts.meta_fields ?? []).map(column),
     size: cardSize(opts.size),
+    metric: opts.metric ?? null,
+    sparkline: opts.sparkline
+      ? {
+          field: opts.sparkline.field,
+          width: opts.sparkline.width ?? CARD_SPARKLINE.width,
+          height: opts.sparkline.height ?? CARD_SPARKLINE.height,
+        }
+      : null,
   };
 }
 

@@ -5,6 +5,7 @@ import { resolveIcon } from "../icons/resolve";
 import { cn } from "../lib/utils";
 import { useTimezone } from "../time/timezone";
 import { zonedFormat } from "../time/zoned";
+import { HeadingGlyph, Sparkline } from "./sparkline";
 import { applyTransforms, hasTransforms, parseIsoParts } from "./transforms";
 
 export type RenderKind =
@@ -16,7 +17,9 @@ export type RenderKind =
   | "number"
   | "bytes"
   | "badge"
-  | "icon";
+  | "icon"
+  | "sparkline"
+  | "heading_glyph";
 
 /** The column's `render`, or the one its field type implies. */
 export function renderKind(column: ColumnConfig, def: FieldDef | undefined): RenderKind {
@@ -29,6 +32,8 @@ export function renderKind(column: ColumnConfig, def: FieldDef | undefined): Ren
     case "bytes":
     case "badge":
     case "icon":
+    case "sparkline":
+    case "heading_glyph":
       return column.render;
   }
   switch (def?.type) {
@@ -60,6 +65,17 @@ export function formatNumber(v: unknown, intlLocale: string, decimals?: number):
     maximumFractionDigits: decimals ?? 2,
     ...(decimals === undefined ? {} : { minimumFractionDigits: decimals }),
   }).format(n);
+}
+
+/**
+ * A `number_format` value: `render_options.precision` (or `decimals`, the
+ * older spelling) fraction digits and `suffix` after it (`" m"`, `"°"`).
+ */
+export function formatNumberColumn(v: unknown, column: ColumnConfig, intlLocale: string): string {
+  const o = column.render_options;
+  const digits = o?.precision ?? o?.decimals;
+  const text = formatNumber(v, intlLocale, typeof digits === "number" ? digits : undefined);
+  return typeof o?.suffix === "string" ? `${text}${o.suffix}` : text;
 }
 
 const BYTE_UNITS = ["B", "KB", "MB", "GB", "TB"] as const;
@@ -126,10 +142,9 @@ export function displayText(
   if (hasTransforms(column.transform)) {
     return String(applyTransforms(value, column.transform, locale, zone));
   }
-  const decimals = column.render_options?.decimals;
   switch (kind) {
     case "number_format":
-      return formatNumber(value, intlLocale, typeof decimals === "number" ? decimals : undefined);
+      return formatNumberColumn(value, column, intlLocale);
     case "bytes":
       return formatBytes(value, intlLocale);
     case "date":
@@ -236,6 +251,18 @@ export function CellValue({
     return <span className="text-muted-foreground/50">—</span>;
   }
   if (kind === "badge") return <Badges value={value} column={column} />;
+  if (kind === "sparkline") {
+    const o = column.render_options;
+    return (
+      <Sparkline
+        value={value}
+        width={typeof o?.width === "number" ? o.width : undefined}
+        height={typeof o?.height === "number" ? o.height : undefined}
+        format={(n) => formatNumber(n, intlLocale, 0)}
+      />
+    );
+  }
+  if (kind === "heading_glyph") return <HeadingGlyph value={value} />;
   if (kind === "icon") {
     const Icon = resolveIcon(value);
     return Icon ? (

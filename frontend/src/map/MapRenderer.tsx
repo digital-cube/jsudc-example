@@ -13,7 +13,16 @@ import type { RendererProps } from "../renderers/types";
 import { CellValue } from "../table/cells";
 import { EmptyState, ErrorState } from "../table/states";
 import { useUdcAllRows } from "../udc/hooks";
-import { boundsOf, initialView, type MapMarker, regionAt, regionById, toMarkers } from "./model";
+import {
+  airplaneHtml,
+  boundsOf,
+  initialView,
+  type MapMarker,
+  regionAt,
+  regionById,
+  toMarkers,
+  trailMarkers,
+} from "./model";
 
 const OSM_TILES = "https://tile.openstreetmap.org/{z}/{x}/{y}.png";
 const OSM_ATTRIBUTION =
@@ -29,7 +38,37 @@ function fitMarkers(map: L.Map | null, list: readonly MapMarker[], animate: bool
     map.fitBounds(bounds, { padding: FIT_PADDING, maxZoom: FIT_MAX_ZOOM, animate });
 }
 
-/** The `map` tab: every row with a position as a circle, over OpenStreetMap tiles. */
+/** A marker on the map: a circle, or an aeroplane (a divIcon) turned along its track. */
+type MarkerLayer = L.CircleMarker | L.Marker;
+
+const isPlane = (layer: MarkerLayer): layer is L.Marker => layer instanceof L.Marker;
+
+/** The element a test and the selection styles read: the circle's path, the plane's icon. */
+const markerElement = (layer: MarkerLayer): Element | undefined =>
+  isPlane(layer) ? layer.getElement() : layer.getElement();
+
+function planeIcon(m: MapMarker, size: number): L.DivIcon {
+  return L.divIcon({
+    html: airplaneHtml(m.rotation ?? 0, size),
+    // No leaflet-div-icon: its white box and border would frame the plane.
+    className: `udc-map-plane tone-${m.tone}`,
+    iconSize: [size, size],
+    iconAnchor: [size / 2, size / 2],
+  });
+}
+
+/** Turn and recolour a plane in place: its element (and a hover on it) stays. */
+function updatePlane(layer: L.Marker, m: MapMarker) {
+  const el = layer.getElement();
+  if (!el) return;
+  for (const c of [...el.classList]) if (c.startsWith("tone-")) el.classList.remove(c);
+  el.classList.add(`tone-${m.tone}`);
+  el.setAttribute("data-rotation", String(m.rotation ?? 0));
+  const glyph = el.querySelector<HTMLElement>(".udc-map-plane-glyph");
+  if (glyph) glyph.style.transform = `rotate(${m.rotation ?? 0}deg)`;
+}
+
+/** The `map` tab: every row with a position as a circle (or an aeroplane), over OpenStreetMap tiles. */
 export function MapRenderer(props: RendererProps) {
   const opts = props.describe.view.map_options;
   const { t } = useI18n();
@@ -90,13 +129,16 @@ function MapView({
   const containerRef = useRef<HTMLElement>(null);
   const mapRef = useRef<L.Map | null>(null);
   const layerRef = useRef<L.LayerGroup | null>(null);
+  const trailLayerRef = useRef<L.LayerGroup | null>(null);
+  const trailRendererRef = useRef<L.Renderer | null>(null);
   const popupRef = useRef<L.Popup | null>(null);
-  const byId = useRef(new Map<string, L.CircleMarker>());
+  const byId = useRef(new Map<string, MarkerLayer>());
   const optsRef = useRef(opts);
   optsRef.current = opts;
   const [popupEl] = useState(() => document.createElement("div"));
   const [view, setView] = useState<ViewState>(() => initialView(opts));
   const [selected, setSelected] = useState<string | null>(null);
+  const [hovered, setHovered] = useState<string | null>(null);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -104,6 +146,10 @@ function MapView({
     const start = initialView(optsRef.current);
     const map = L.map(el, { center: start.center, zoom: start.zoom, worldCopyJump: true });
     L.tileLayer(OSM_TILES, { attribution: OSM_ATTRIBUTION, maxZoom: 19 }).addTo(map);
+    // Trails under every marker (circles are in the overlay pane, z 400; planes above it).
+    map.createPane("udc-trails").style.zIndex = "350";
+    trailRendererRef.current = L.svg({ pane: "udc-trails" });
+    trailLayerRef.current = L.layerGroup().addTo(map);
     layerRef.current = L.layerGroup().addTo(map);
     popupRef.current = L.popup({ className: "udc-map-popup", maxWidth: 320, minWidth: 200 });
     popupRef.current.setContent(popupEl);
@@ -124,33 +170,71 @@ function MapView({
       map.remove();
       mapRef.current = null;
       layerRef.current = null;
+      trailLayerRef.current = null;
+      trailRendererRef.current = null;
       popupRef.current = null;
       byId.current.clear();
     };
   }, [popupEl]);
 
-  // --- markers, redrawn whenever the rows change ---------------------------------------
+  // --- markers, kept by id: a poll moves them in place ---------------------------------
   const fitted = useRef(false);
   useEffect(() => {
     const layer = layerRef.current;
     if (!layer) return;
-    layer.clearLayers();
-    byId.current.clear();
+    const size = optsRef.current.icon_size;
+    const seen = new Set<string>();
     for (const m of markers) {
-      const circle = L.circleMarker([m.lat, m.lng], {
-        radius: m.radius,
-        weight: 1.5,
-        fillOpacity: 0.4,
-        // The colour comes from the theme's tokens in index.css, by tone.
-        className: `udc-map-marker tone-${m.tone}`,
-        bubblingMouseEvents: false,
-      });
-      circle.on("click", () => setSelected(m.id));
-      circle.addTo(layer);
-      const path = circle.getElement();
-      path?.setAttribute("data-testid", "map-marker");
-      path?.setAttribute("data-id", m.id);
-      byId.current.set(m.id, circle);
+      seen.add(m.id);
+      const plane = m.rotation !== null;
+      let marker = byId.current.get(m.id);
+      // A row that gained or lost its track changes kind: drawn anew.
+      if (marker && isPlane(marker) !== plane) {
+        layer.removeLayer(marker);
+        marker = undefined;
+      }
+      if (marker) {
+        marker.setLatLng([m.lat, m.lng]);
+        if (isPlane(marker)) updatePlane(marker, m);
+        else {
+          marker.setRadius(m.radius);
+          const path = marker.getElement();
+          path?.setAttribute("class", `leaflet-interactive udc-map-marker tone-${m.tone}`);
+        }
+        continue;
+      }
+      const id = m.id;
+      marker = plane
+        ? L.marker([m.lat, m.lng], {
+            icon: planeIcon(m, size),
+            keyboard: false,
+            bubblingMouseEvents: false,
+          })
+        : L.circleMarker([m.lat, m.lng], {
+            radius: m.radius,
+            weight: 1.5,
+            fillOpacity: 0.4,
+            // The colour comes from the theme's tokens in index.css, by tone.
+            className: `udc-map-marker tone-${m.tone}`,
+            bubblingMouseEvents: false,
+          });
+      marker.on("click", () => setSelected(id));
+      marker.on("mouseover", () => setHovered(id));
+      marker.on("mouseout", () => setHovered((h) => (h === id ? null : h)));
+      marker.addTo(layer);
+      const el = markerElement(marker);
+      el?.setAttribute("data-testid", "map-marker");
+      el?.setAttribute("data-id", m.id);
+      if (plane) {
+        el?.setAttribute("data-icon", "airplane");
+        el?.setAttribute("data-rotation", String(m.rotation ?? 0));
+      }
+      byId.current.set(m.id, marker);
+    }
+    for (const [id, marker] of byId.current) {
+      if (seen.has(id)) continue;
+      layer.removeLayer(marker);
+      byId.current.delete(id);
     }
     // Fit once, when the first rows arrive; later filters leave the view where the user put it.
     if (optsRef.current.fit_bounds && !fitted.current && markers.length > 0) {
@@ -159,24 +243,56 @@ function MapView({
     }
   }, [markers]);
 
+  // --- trails: every one up to TRAILS_FOR_ALL_MAX markers, else the hovered and the selected
+  useEffect(() => {
+    const layer = trailLayerRef.current;
+    const renderer = trailRendererRef.current;
+    if (!layer || !renderer) return;
+    layer.clearLayers();
+    for (const m of trailMarkers(markers, hovered, selected)) {
+      const active = m.id === hovered || m.id === selected;
+      const line = L.polyline(m.trail, {
+        renderer,
+        interactive: false,
+        weight: active ? 2.5 : 1.5,
+        className: `udc-map-trail tone-${m.tone}${active ? " is-active" : ""}`,
+      }).addTo(layer);
+      const path = line.getElement();
+      path?.setAttribute("data-testid", "map-trail");
+      path?.setAttribute("data-id", m.id);
+      path?.setAttribute("data-points", String(m.trail.length));
+      if (active) path?.setAttribute("data-active", "true");
+    }
+  }, [markers, hovered, selected]);
+
   // --- the selected marker: highlighted, on top, its popup open ------------------------
   const selectedMarker = selected ? markers.find((m) => m.id === selected) : undefined;
   useEffect(() => {
     const map = mapRef.current;
     const popup = popupRef.current;
     if (!map || !popup) return;
-    const circle = selectedMarker ? byId.current.get(selectedMarker.id) : undefined;
-    if (!selectedMarker || !circle) {
+    const marker = selectedMarker ? byId.current.get(selectedMarker.id) : undefined;
+    if (!selectedMarker || !marker) {
       if (map.hasLayer(popup)) map.closePopup(popup);
       return;
     }
-    circle.getElement()?.classList.add("is-selected");
-    circle.bringToFront();
-    popup.setLatLng(circle.getLatLng());
-    if (!map.hasLayer(popup)) popup.openOn(map);
+    const el = markerElement(marker);
+    el?.classList.add("is-selected");
+    if (isPlane(marker)) marker.setZIndexOffset(1000);
+    else marker.bringToFront();
+    // Opened by a click, it pans the map to fit; moved by a poll (setLatLng and update pan
+    // too), it follows its marker and the viewport stays where the user put it.
+    const open = map.hasLayer(popup);
+    popup.options.autoPan = !open;
+    popup.options.offset = isPlane(marker) ? [0, -opts.icon_size / 2] : [0, 7];
+    popup.setLatLng(marker.getLatLng());
+    if (!open) popup.openOn(map);
     else popup.update();
-    return () => circle.getElement()?.classList.remove("is-selected");
-  }, [selectedMarker]);
+    return () => {
+      el?.classList.remove("is-selected");
+      if (isPlane(marker)) marker.setZIndexOffset(0);
+    };
+  }, [selectedMarker, opts.icon_size]);
 
   // A selection the filter took away goes with it.
   useEffect(() => {

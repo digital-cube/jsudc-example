@@ -7,13 +7,21 @@ import { cn } from "../lib/utils";
 import type { FolderNav } from "../renderers/types";
 import { CellValue, displayText, isBlank, renderKind } from "../table/cells";
 import { Pager } from "../table/Pager";
+import { Sparkline } from "../table/sparkline";
 import { EmptyState, ErrorState } from "../table/states";
 import { resolveRowColor } from "../table/style";
 import { useInfiniteSentinel } from "../table/useInfiniteSentinel";
 import { useTimezone } from "../time/timezone";
 import type { UdcCollectionResult } from "../udc/hooks";
 import type { PagingMode } from "../udc/keys";
-import { avatarTone, CARD_MIN_WIDTH, type CardSlots, cardSlots, initials } from "./cardModel";
+import {
+  avatarTone,
+  CARD_MIN_WIDTH,
+  type CardSlots,
+  cardSlots,
+  initials,
+  metricText,
+} from "./cardModel";
 
 /** The `row_color` accent bar on the left edge. Literal classes so Tailwind sees them. */
 const ACCENT_BAR: Record<ColumnColor, string> = {
@@ -268,6 +276,24 @@ function Card({
           ) : null}
         </div>
       </div>
+      {slots.metric ? (
+        <div
+          data-testid="card-metric"
+          className="flex items-baseline justify-between gap-3 border-t border-border/70 px-4 py-2.5"
+        >
+          <span className="text-xs text-muted-foreground">
+            {slots.metric.label ?? t(section, slots.metric.field)}
+          </span>
+          <span
+            data-testid="card-metric-value"
+            className="text-xl leading-7 font-semibold tracking-tight tabular-nums"
+          >
+            {metricText(row[slots.metric.field], slots.metric, intlLocale) ?? (
+              <span className="text-muted-foreground/50">—</span>
+            )}
+          </span>
+        </div>
+      ) : null}
       {slots.meta.length ? (
         <dl className="mt-auto flex flex-col border-t border-border/70 px-4 py-2">
           {slots.meta.map((col) => (
@@ -289,6 +315,19 @@ function Card({
             </div>
           ))}
         </dl>
+      ) : null}
+      {slots.sparkline ? (
+        <div data-testid="card-sparkline" className="border-t border-border/70 px-4 py-2.5">
+          <Sparkline
+            value={row[slots.sparkline.field]}
+            width={slots.sparkline.width}
+            height={slots.sparkline.height}
+            format={(n) =>
+              slots.metric ? (metricText(n, slots.metric, intlLocale) ?? "") : String(n)
+            }
+            className="h-auto max-w-full"
+          />
+        </div>
       ) : null}
     </article>
   );

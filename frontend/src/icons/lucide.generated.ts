@@ -25,6 +25,7 @@ import {
   MapPinIcon,
   MessagesSquareIcon,
   NetworkIcon,
+  PlaneIcon,
   TableIcon,
 } from "lucide-react";
 
@@ -52,5 +53,6 @@ export const LUCIDE_ICONS: Readonly<Record<string, LucideIcon>> = {
   "map-pin": MapPinIcon,
   "messages-square": MessagesSquareIcon,
   network: NetworkIcon,
+  plane: PlaneIcon,
   table: TableIcon,
 };

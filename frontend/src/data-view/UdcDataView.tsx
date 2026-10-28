@@ -314,7 +314,7 @@ export function UdcDataView({ collection }: { collection: string }) {
                   <entry.toolbar collection={collection} describe={live} />
                 ) : null}
                 {chartWindow ? <ChartWindowControl win={chartWindow} clearable={!onChart} /> : null}
-                <Freshness fetchedAt={fetchedAt} stale={stale} />
+                <Freshness fetchedAt={fetchedAt} stale={stale} source={live?.source} />
                 <span
                   className="text-xs whitespace-nowrap text-muted-foreground tabular-nums"
                   data-testid="row-count"
