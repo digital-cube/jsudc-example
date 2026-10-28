@@ -3,6 +3,7 @@ import { FilterNodeSchema, FilterOpSchema } from "./filter.js";
 import { PageRequestSchema, SortKeySchema } from "./query.js";
 import { RowSchema } from "./row.js";
 import { FieldDefSchema, FieldNameSchema, FieldTypeSchema, SchemaDocSchema } from "./schema.js";
+import { SourceGroupSchema, SourceKindSchema } from "./source.js";
 import { ViewConfigSchema } from "./view.js";
 
 const CollectionName = z.string().min(1);
@@ -17,7 +18,11 @@ export const CapabilitiesSchema = z.looseObject({
   reindex: z.boolean(),
   /** The source moves a tree node and keeps its structure fields consistent (`tree.reparent`). */
   tree_reparent: z.boolean(),
-  /** How `list` pages: keyset `cursor`, `offset`, or both. Absent means both. */
+  /**
+   * How `list` pages: keyset `cursor`, `offset`, or both. Absent means both.
+   * An array-backed source (memory, filesystem, http_api) answers `["offset"]`:
+   * the infinite list and `useUdcAllRows` then walk it by offset.
+   */
   paging: z.array(z.enum(["cursor", "offset"])).optional(),
   supported_filter_ops: z.array(FilterOpSchema),
 });
@@ -34,6 +39,10 @@ export const CollectionListingSchema = z.looseObject({
   label: z.string().optional(),
   default_renderer: z.string(),
   capabilities: CapabilitiesSchema,
+  /** The `kind` of its `source.yaml` (`postgres_jsonb` without one). */
+  source_kind: SourceKindSchema,
+  /** The sidebar group, derived from `source_kind` (`sourceGroup`). */
+  group: SourceGroupSchema.optional(),
 });
 
 export type CollectionListing = z.infer<typeof CollectionListingSchema>;
@@ -61,9 +70,23 @@ export const FilterableFieldSchema = z.looseObject({
 
 export type FilterableField = z.infer<typeof FilterableFieldSchema>;
 
+/** The locales a collection README may be written in. */
+export const LOCALES_WITH_DOCS = ["en", "sr"] as const;
+
+/** A collection's README per locale (markdown): `README.md` is `en`, `README.<locale>.md` the others. */
+export const CollectionDocsSchema = z.object({
+  en: z.string().optional(),
+  sr: z.string().optional(),
+});
+
+export type CollectionDocs = z.infer<typeof CollectionDocsSchema>;
+
 export const DescribeResponseSchema = z.object({
   collection: z.string().min(1),
   capabilities: CapabilitiesSchema,
+  source_kind: SourceKindSchema,
+  /** Present when the collection directory has a README; the UI shows a Doc tab. */
+  docs: CollectionDocsSchema.optional(),
   schema: SchemaDocSchema,
   view: ViewConfigSchema,
   filterable: z.object({ fields: z.array(FilterableFieldSchema) }),
@@ -86,6 +109,13 @@ export const ListResponseSchema = z.object({
   rows: z.array(RowSchema),
   next_cursor: z.string().nullable(),
   total: z.number().int().min(0).nullable(),
+  /**
+   * A source that serves a fetched copy (http_api): when that copy was
+   * fetched (ISO instant), and `stale` when the last refresh failed and the
+   * copy is older than its TTL. Absent for a live source.
+   */
+  fetched_at: z.string().optional(),
+  stale: z.boolean().optional(),
 });
 
 export type ListResponse = z.infer<typeof ListResponseSchema>;

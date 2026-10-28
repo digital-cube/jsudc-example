@@ -47,7 +47,11 @@ export const ColumnConfigSchema = z.looseObject({
   pin: z.enum(["left", "right"]).nullable().optional(),
   editable: z.boolean().optional(),
   width: z.number().positive().optional(),
-  /** Open: `text | number_format | bool | date` in phase 1, more later. */
+  /**
+   * Open: `text | number_format | bool | date | datetime | bytes | badge`.
+   * `bytes` reads a number as a size (`1.2 KB`); `badge` draws a pill whose
+   * tone is `render_options.map[value]` (else `render_options.default`).
+   */
   render: z.string().optional(),
   render_options: z.record(z.string(), z.unknown()).optional(),
   align: z.enum(["left", "right", "center"]).optional(),
@@ -104,6 +108,8 @@ export const CardOptionsSchema = z.looseObject({
   subtitle_field: z.string().optional(),
   image_field: z.string().optional(),
   meta_fields: z.array(z.string()).optional(),
+  /** `cover` (default): the image across the top; `avatar`: a round image in the avatar's place. */
+  image_style: z.enum(["cover", "avatar"]).optional(),
   /** dclabs spells the ends `sm` / `lg`; both spellings parse. */
   size: z.enum(["sm", "small", "medium", "lg", "large"]).optional(),
 });
@@ -126,6 +132,24 @@ export const RowColorConfigSchema = z.looseObject({
 });
 
 export type RowColorConfig = z.infer<typeof RowColorConfigSchema>;
+
+/**
+ * Folder navigation over a directory-shaped collection (the filesystem
+ * source): a row whose `kind_field` equals `dir_value` is a folder, its
+ * `label_field` cell reads as a link, and a click sets the
+ * `path_field eq <row.path_field>` condition of the URL filter (an empty
+ * path drops it: the root). The breadcrumb is that condition.
+ */
+export const FolderOptionsSchema = z.looseObject({
+  path_field: z.string().min(1).default("path"),
+  kind_field: z.string().min(1).default("kind"),
+  dir_value: z.string().min(1).default("dir"),
+  label_field: z.string().min(1).default("name"),
+  /** A file row opens a preview from `GET /udc/files/blob` (text and images up to 256 KB). */
+  preview: z.boolean().default(false),
+});
+
+export type FolderOptions = z.output<typeof FolderOptionsSchema>;
 
 // Phase 2: declared so dclabs views parse; the phase-1 renderers ignore them.
 
@@ -169,6 +193,7 @@ export const ViewConfigSchema = z
     calendar_options: CalendarOptionsSchema.optional(),
     tree_options: TreeOptionsSchema.optional(),
     map_options: MapOptionsSchema.optional(),
+    folder_options: FolderOptionsSchema.optional(),
     row_color: RowColorConfigSchema.optional(),
 
     row_actions: z.array(z.string()).default([]),
@@ -178,6 +203,11 @@ export const ViewConfigSchema = z
     row_actions_display: z.enum(["inline", "menu"]).optional(),
     edit_mode: EditModeConfigSchema.optional(),
     preview: PreviewConfigSchema.optional(),
+    /**
+     * The polling interval: the UI refetches the open view's rows this often
+     * (no WebSocket). The server's cache (`cache_ttl_ms` of an http_api
+     * source) decides whether a poll reaches upstream.
+     */
     refresh_interval_ms: z.number().int().positive().optional(),
   })
   .superRefine((v, ctx) => {

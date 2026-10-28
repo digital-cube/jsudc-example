@@ -47,13 +47,25 @@ describe("ACTIONS registry", () => {
     [
       "collections",
       {},
-      { collections: [{ name: "companies", default_renderer: "table", capabilities }] },
+      {
+        collections: [
+          {
+            name: "companies",
+            default_renderer: "table",
+            capabilities,
+            source_kind: "postgres_jsonb",
+            group: "database",
+          },
+        ],
+      },
     ],
     [
       "describe",
       { collection: "companies" },
       {
         collection: "companies",
+        source_kind: "postgres_jsonb",
+        docs: { en: "# Companies" },
         capabilities,
         schema,
         view: {},

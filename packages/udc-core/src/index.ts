@@ -10,6 +10,7 @@ export * from "./order.js";
 export * from "./query.js";
 export * from "./row.js";
 export * from "./schema.js";
+export * from "./source.js";
 export * from "./tree.js";
 export * from "./validate.js";
 export * from "./view.js";
