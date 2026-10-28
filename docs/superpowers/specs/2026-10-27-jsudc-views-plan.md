@@ -147,6 +147,7 @@ catalogue (the owner may swap entries; see the question ticket):
 | `quakes` | **http_api** USGS GeoJSON, no key, 60 s TTL | **map**, table, cards, **chart** | the "source is the net" example that also exercises the map: `radius_field: mag`, popups, `row_color` by magnitude |
 | `repos` | **http_api** GitHub `users/digital-cube/repos`, no key (60 req/h anonymous, so cache matters) | table, cards, **chart** | a second net example with nested `field_map`, avatars, topics as chips |
 | `boards`, `buckets`, `tickets` | postgres_jsonb | boards: table; tickets: **kanban**, table, cards, **calendar** | the kanban example, dclabs data model, writable (drag, reorder, quick-add, bucket add/rename), `reindex` |
+| `menu` | **yaml_menu** (`data/menu.yaml`, a `udc:collections` branch per group) | **tree**, table, Source | the application's own sidebar, as data: the same rows the sidebar is drawn from (TCKHPW6JRN) |
 | `appointments` | postgres_jsonb | **calendar**, table | a dedicated calendar dataset: 8 "doctors" with a `color_map`, business hours 8–20, ~600 rows around today, drag to move/resize persists |
 | `tree_comments` (or a yaml menu) | postgres_jsonb | **tree**, table | a threaded tree with `parent` + `order`, reusing the kanban's order math and `reindex` for sibling order; drag to re-parent |
 | `metrics` (TCKMQ39XMT; no `tickers`, it needs a key) | postgres_jsonb, generated at seed time (3 hosts × 15 min × 30 days, ~8,640 rows, `SEED_TODAY` pins the end to noon in Belgrade) | **chart**, table | the chart example: cpu / mem lines on a left axis in %, load on a right axis framed on its own values; window presets 1h / 6h / 24h / 7d + custom sent as an absolute `between` on `ts` computed in the header's zone (no relative `gte`, the server stays dumb), `?win=` / `?from=&to=` in the URL and applied to the table tab too; rows from `useUdcAllRows` merged per instant and bucketed past ~600 points. Also a **chart** tab on `repos` (pie of stars, 10 slices + Other) and on `quakes` (bars of magnitude, 7d) |
@@ -158,7 +159,7 @@ Not planned now: an SSE source (`recent_changes`).
 **udc-core**
 
 - `SourceConfig` Zod schema: `{kind: "postgres_jsonb" | "memory" | "filesystem"
-  | "http_api", options}` with a typed options object per kind.
+  | "http_api" | "yaml_menu", options}` with a typed options object per kind.
 - Typed option blocks: `MapOptions`, `KanbanOptions`, `CalendarOptions` (the
   keys udc-js actually reads, section 1.1; declared-but-unread keys are
   dropped). `ViewConfig` keeps `looseObject` so dclabs files still parse, but
@@ -171,6 +172,24 @@ Not planned now: an SSE source (`recent_changes`).
   `available_renderers` (others still parse, the UI shows them disabled).
 
 **backend**
+
+The source kinds jsudc serves (compare udc-py's in section 1.2):
+
+| kind | options | filter | sort | paging | write | sidebar group |
+|---|---|---|---|---|---|---|
+| `postgres_jsonb` | `table` | SQL pushdown, every op | SQL, typed casts | keyset cursor and offset | full, versioned, `reindex`, `tree.reparent` | database |
+| `memory` | — (`seed.json`) | `ArraySource`, every op | `ArraySource` | offset | full | database |
+| `filesystem` | `root`, `follow_symlinks`, `max_entries` | `path eq` picks the folder, rest `ArraySource` | `ArraySource` | offset | none | files |
+| `http_api` | `base_url`, `list_endpoint`, `id_field`, `list_unwrap`, `field_map`, `headers`, `timeout_ms`, `cache_ttl_ms`, `env_required`, `max_rows` | `ArraySource` over the cached copy | `ArraySource` | offset | none | internet |
+| `yaml_menu` | `file` (in the collection directory, no `..`), `dynamic`, `collection_icons` | `ArraySource`, every op (udc-py: `eq` / `is_null` on `parent_id`) | file order, or `ArraySource` | offset | none; `source.read` serves the file (`capabilities.source_yaml`) | files |
+
+`yaml_menu` (TCKHPW6JRN) flattens a nested YAML into `MENU_SCHEMA` rows with
+udc-py's rules (id = sha1 of the code path, `order`, `depth`,
+`ancestor_ids`, `children_count`), re-reads the file when its mtime or size
+changes and keeps the last good read (`stale`) when it breaks. A branch whose
+`children` is `udc:collections[?group=…]` is resolved inside the server from
+the live registry (`is_dynamic: true`); udc-py's `api:` HTTP self-call is
+refused at startup. The `menu` collection is this application's sidebar.
 
 - `source.yaml` per collection directory, optional; absent means
   `postgres_jsonb` (today's behaviour). `makeSource(asset)` dispatches on

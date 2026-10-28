@@ -322,12 +322,55 @@ Light and dark use the categorical palette `--chart-1 … --chart-8` in
 (`frontend/cypress/e2e/chart.cy.ts`) freezes the browser clock at the
 seed's noon, so every `between` above is checked to the millisecond.
 
+## The menu: the sidebar is a collection
+
+The sidebar on the left is not hard-coded: it is the `menu` collection
+(source `yaml_menu`), whose rows come from one checked-in file,
+`backend/collections/menu/data/menu.yaml`. The frontend lists every row once,
+builds the tree and draws it as chrome (`frontend/src/shell/MenuTree.tsx`).
+
+1. **The shape.** Six roots: **Home**, **Collections**, **Views**, **Docs**,
+   **Menu**, **About**, each with a lucide icon named in the YAML
+   (`icon: lucide:layout-grid`). Open **Collections**: **Database**, **Files**
+   and **Internet** list the collections the server serves — nobody wrote
+   them. Each of the three nodes says `children: "udc:collections?group=…"`
+   and the backend splices in one leaf per collection of that group from its
+   own registry on every read.
+2. **The active leaf.** Click **Views ▸ Tickets board**: `/udc/tickets?tab=kanban`
+   opens and that leaf is lit. Expand **Collections ▸ Database**: **Tickets**
+   there points at the same path without a tab, so it stays dark — a leaf
+   naming the tab wins. Switch the data view to **Table**: now the Views leaf
+   no longer matches and the collection's leaf lights up. Reload: what you
+   had open stays open (`localStorage`, `udc:menu:expanded`), and the way to
+   the active leaf is always opened.
+3. **Languages.** Switch to **SR**: every label is a `translation_key`
+   (`MENU_VIEWS` → `t("MENU", "VIEWS")` → *Prikazi*); the collection leaves
+   use `COLLECTIONS_<NAME>`, which the old sidebar's names already translate.
+4. **The same rows as data.** Click **Menu**: `/udc/menu` opens on the
+   **Tree** tab with the same nodes. **Table** shows the columns the tree is
+   built from — `parent_id`, `order`, `depth`, `ancestor_ids`,
+   `children_count` — and `is_dynamic` ticked (and the row tinted) on every
+   row the registry added. Search `view` finds the Views entries by key,
+   code or url: the whole `ArraySource` filter set works on a file.
+5. **The file.** **Source** shows `menu/data/menu.yaml` as written, with its
+   modification time. Edit the file — move **About** above **Menu**, rename a
+   `translation_key` — and reload the page: the sidebar has changed, and the
+   ids of moved nodes have not (an id is the sha1 of the code path), so what
+   was expanded stays expanded. Break the YAML and reload: the sidebar keeps
+   the last good version, and the Source tab names the parse error.
+6. **About.** The last root, `/about`, renders the README's first section
+   (in Serbian from the translations).
+
+A deployment without a `menu` collection (or with `VITE_MENU_COLLECTION`
+naming none) gets the previous sidebar, the collections grouped by
+Database / Files / Internet.
+
 ## What is behind it
 
 - One protocol package, `packages/udc-core`, holds the Zod schemas the server
   validates with and the browser types against.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
-  `schema.*`, `reindex` and `tree.reparent`. The new column shows up because `describe` derives a column for
+  `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for
   every schema field that `view.yaml` does not list.
 - Schema edits are revisions in `udc_schema_revisions`. A soft delete marks
   the field `deleted: true` and keeps its values.
