@@ -7,9 +7,9 @@
  * its noon in Belgrade), start the backend on it, start Vite proxying to that backend,
  * run Cypress headless, and stop both servers whatever happens.
  *
- * The http_api collections (quakes, repos) read the responses recorded under
- * backend/test/fixtures/http (UDC_HTTP_FIXTURES), so a run never touches the
- * internet.
+ * The http_api collections (quakes, repos, flights) read the responses recorded
+ * under backend/test/fixtures/http (UDC_HTTP_FIXTURES), so a run never touches
+ * the internet.
  *
  * Ports are not the dev ones, so `npm run dev` may keep running alongside:
  * E2E_BACKEND_PORT (5110) and E2E_WEB_PORT (5310). TEST_DATABASE_URL comes
@@ -113,6 +113,9 @@ try {
       LOG_LEVEL: "warn",
       UDC_HTTP_FIXTURES: HTTP_FIXTURES,
       UDC_HTTP_SOURCES: "on",
+      // flights steps through two recordings, one per upstream call: a 1 s cache lets the
+      // spec reach the second without waiting out the real 4 minutes.
+      UDC_FLIGHTS_CACHE_TTL_MS: "1000",
     },
   });
   await waitFor(`${backendUrl}/healthz`, "backend");
