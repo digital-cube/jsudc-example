@@ -110,6 +110,19 @@ function reindexable(c: Collection): Source & Required<Pick<Source, "reindex">> 
   return source as Source & Required<Pick<Source, "reindex">>;
 }
 
+/** The source of a collection that moves tree nodes, or `unsupported_op`. */
+function reparentable(c: Collection): Source & Required<Pick<Source, "reparent">> {
+  const { source } = c;
+  if (!source.capabilities.tree_reparent || !source.reparent) {
+    throw new UdcError(
+      "unsupported_op",
+      `collection ${c.name} does not support tree.reparent (tree_reparent: false)`,
+      { collection: c.name },
+    );
+  }
+  return source as Source & Required<Pick<Source, "reparent">>;
+}
+
 /** A dispatcher with every action wired to the registry. */
 export function createDispatcher(
   registry: CollectionRegistry,
@@ -177,5 +190,8 @@ export function createDispatcher(
     )
     .register("reindex", ACTIONS.reindex.request, async ({ collection, ...req }) => ({
       updated: await reindexable(registry.get(collection)).reindex(req),
-    }));
+    }))
+    .register("tree.reparent", ACTIONS["tree.reparent"].request, ({ collection, ...req }) =>
+      reparentable(registry.get(collection)).reparent(req),
+    );
 }

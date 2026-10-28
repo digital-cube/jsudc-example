@@ -6,6 +6,7 @@ import {
   type RowProblem,
   type SchemaDoc,
   type SortKey,
+  type TreeReparentFields,
   UdcError,
   type ValidateMode,
   validateRow,
@@ -55,6 +56,65 @@ export function reindexPlan(
     throw new UdcError("validation_error", `invalid reindex scope: ${summary}`, { problems });
   }
   return { filter: { and: conds }, orderField, orderDef: def };
+}
+
+const NUMERIC = new Set(["integer", "decimal"]);
+
+/** The allowlisted structure fields of a `tree.reparent`, absent ones left out. */
+export interface ReparentPlan {
+  parentField: string;
+  orderField: string;
+  depthField: string | undefined;
+  ancestorIdsField: string | undefined;
+  childrenCountField: string | undefined;
+}
+
+/**
+ * Check a `tree.reparent` before anything runs: every name in `fields` a
+ * live schema field (order, depth and children count numeric, ancestor ids
+ * json or string_array), and the new parent and order values the schema
+ * accepts for those fields. Only names that got through here reach the SQL.
+ */
+export function reparentPlan(
+  schema: SchemaDoc,
+  fields: TreeReparentFields,
+  values: { parent: string | null; order: number },
+): ReparentPlan {
+  const where = "tree.reparent fields";
+  const field = (name: string | undefined, kinds?: ReadonlySet<string>) => {
+    if (name === undefined) return undefined;
+    const def = allowedField(schema, name, where);
+    if (kinds && !kinds.has(def.type)) {
+      throw new UdcError("validation_error", `${where}: ${name} is ${def.type}`, {
+        field: name,
+        type: def.type,
+      });
+    }
+    return name;
+  };
+  const plan: ReparentPlan = {
+    parentField: field(fields.parent_field) as string,
+    orderField: field(fields.order_field, NUMERIC) as string,
+    depthField: field(fields.depth_field, NUMERIC),
+    ancestorIdsField: field(fields.ancestor_ids_field, new Set(["json", "string_array"])),
+    childrenCountField: field(fields.children_count_field, NUMERIC),
+  };
+  assertValidRow(
+    schema,
+    { [plan.parentField]: values.parent, [plan.orderField]: values.order },
+    "patch",
+  );
+  return plan;
+}
+
+export function cycleError(id: string, parent: string): UdcError {
+  return new UdcError(
+    "validation_error",
+    parent === id
+      ? `cycle: row ${id} cannot be its own parent`
+      : `cycle: ${parent} is inside the subtree of ${id}`,
+    { id, parent },
+  );
 }
 
 export function filterFields(node: FilterNode | null | undefined): string[] {

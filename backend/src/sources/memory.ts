@@ -11,8 +11,10 @@ import {
 import {
   assertQueryFields,
   assertValidRow,
+  cycleError,
   notFound,
   reindexPlan,
+  reparentPlan,
   versionConflict,
   withoutMeta,
 } from "./fields.js";
@@ -24,6 +26,8 @@ import {
   type SourceListRequest,
   type SourceMutation,
   type SourceReindex,
+  type SourceTreeReparent,
+  type TreeReparentResult,
 } from "./source.js";
 
 const readOnlySchema = () =>
@@ -55,6 +59,7 @@ export class MemorySource implements Source {
     schema_edit: false,
     config_edit: false,
     reindex: true,
+    tree_reparent: true,
     paging: ["offset"],
     supported_filter_ops: ALL_FILTER_OPS,
   };
@@ -70,11 +75,15 @@ export class MemorySource implements Source {
   }) {
     this.schema = opts.schema;
     this.pageSizeDefault = opts.pageSizeDefault ?? DEFAULT_PAGE_SIZE;
-    this.rows = (opts.rows ?? []).map((data) => ({
-      id: randomUUID(),
-      version: 1,
-      data: { ...data },
-    }));
+    // A seed row may fix its id in `__meta.id`, as `npm run seed` allows.
+    this.rows = (opts.rows ?? []).map((row) => {
+      const meta = row.__meta as { id?: unknown } | undefined;
+      return {
+        id: typeof meta?.id === "string" ? meta.id : randomUUID(),
+        version: 1,
+        data: withoutMeta(row),
+      };
+    });
   }
 
   async describe(): Promise<SchemaDoc> {
@@ -158,6 +167,73 @@ export class MemorySource implements Source {
       stored.version += 1;
     });
     return rows.length;
+  }
+
+  async reparent(req: SourceTreeReparent): Promise<TreeReparentResult> {
+    const plan = reparentPlan(this.schema, req.fields, req);
+    const node = this.find(req.id);
+    if (req.expected_version !== undefined && req.expected_version !== node.version) {
+      throw versionConflict(req.id, req.expected_version, node.version);
+    }
+    const parentOf = (r: Stored) => {
+      const p = r.data[plan.parentField];
+      return typeof p === "string" ? p : null;
+    };
+    // The new parent's chain up to its root, nearest first; the node in it is a cycle.
+    const chain: string[] = [];
+    if (req.parent !== null) {
+      const seen = new Set<string>();
+      for (let at: Stored | undefined = this.find(req.parent); at && !seen.has(at.id); ) {
+        if (at.id === node.id) throw cycleError(node.id, req.parent);
+        seen.add(at.id);
+        chain.push(at.id);
+        const up = parentOf(at);
+        at = up === null ? undefined : this.rows.find((r) => r.id === up);
+      }
+    }
+    const oldParent = parentOf(node);
+    const moved = oldParent !== req.parent;
+    const touched = new Set<Stored>([node]);
+    node.data = { ...node.data, [plan.parentField]: req.parent, [plan.orderField]: req.order };
+
+    if (moved && (plan.depthField || plan.ancestorIdsField)) {
+      // Breadth first from the node: each level's depth and ancestors from the one above.
+      let level: { row: Stored; ancestors: string[] }[] = [
+        { row: node, ancestors: [...chain].reverse() },
+      ];
+      while (level.length > 0) {
+        const next: typeof level = [];
+        for (const { row, ancestors } of level) {
+          row.data = {
+            ...row.data,
+            ...(plan.depthField ? { [plan.depthField]: ancestors.length } : {}),
+            ...(plan.ancestorIdsField ? { [plan.ancestorIdsField]: ancestors } : {}),
+          };
+          touched.add(row);
+          for (const child of this.rows) {
+            if (parentOf(child) === row.id && !touched.has(child)) {
+              next.push({ row: child, ancestors: [...ancestors, row.id] });
+            }
+          }
+        }
+        level = next;
+      }
+    }
+
+    if (moved && plan.childrenCountField) {
+      const field = plan.childrenCountField;
+      for (const id of [oldParent, req.parent]) {
+        const parent = id === null ? undefined : this.rows.find((r) => r.id === id);
+        if (!parent) continue;
+        parent.data = {
+          ...parent.data,
+          [field]: this.rows.filter((r) => parentOf(r) === parent.id).length,
+        };
+        touched.add(parent);
+      }
+    }
+    for (const row of touched) row.version += 1;
+    return { row: serialize(node), updated: touched.size };
   }
 
   addField(): Promise<SchemaDoc> {

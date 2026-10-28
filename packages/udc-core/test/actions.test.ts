@@ -20,6 +20,7 @@ const capabilities = {
   schema_edit: true,
   config_edit: false,
   reindex: false,
+  tree_reparent: false,
   supported_filter_ops: [...SUPPORTED_OPS],
 };
 const row = { __meta: { id: "r1", version: 2 }, name: "Alfa" };
@@ -36,6 +37,7 @@ describe("ACTIONS registry", () => {
       "schema.update_field",
       "schema.soft_delete_field",
       "reindex",
+      "tree.reparent",
     ]);
     expect(isActionName("list")).toBe(true);
     expect(isActionName("toString")).toBe(false);

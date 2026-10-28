@@ -1,0 +1,1042 @@
+[
+  {
+    "__meta": {
+      "id": "6038b4c9-565a-46c5-bef5-600469e46c5a"
+    },
+    "parent_id": null,
+    "order": 100,
+    "depth": 0,
+    "body": "Moram da dodam, zajednički prostori za rad su se pokazali kao dobro rešenje. Možda grešim.",
+    "author": "Tamara Kostić",
+    "author_initials": "TK",
+    "score": 10,
+    "created_at": "2026-10-20T07:54:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "92e2895c-d976-4a7e-9198-c612b09d6ca8"
+    },
+    "parent_id": null,
+    "order": 200,
+    "depth": 0,
+    "body": "Tačno tako, hibridni model sa dva dana u kancelariji je najbolji kompromis. Prevoz u Subotica se popravio ove godine. Možda grešim.",
+    "author": "Tamara Kostić",
+    "author_initials": "TK",
+    "score": 25,
+    "created_at": "2026-10-20T09:15:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "a98ca033-5a85-43c3-a1d1-de71e2b96ebd"
+    },
+    "parent_id": null,
+    "order": 300,
+    "depth": 0,
+    "body": "Slažem se, posle tri godine na daljinu teško je vratiti se. Bar je tako kod nas.",
+    "author": "Tamara Kostić",
+    "author_initials": "TK",
+    "score": 16,
+    "created_at": "2026-10-20T10:43:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "d8725c30-36f1-49d2-80ef-bbc4d7cf676c"
+    },
+    "parent_id": null,
+    "order": 400,
+    "depth": 0,
+    "body": "Kod nas je isto, nov tim je mnogo lakše uvesti u posao uživo. U Beograd ima sve više coworking prostora.",
+    "author": "Jelena Nikolić",
+    "author_initials": "JN",
+    "score": 19,
+    "created_at": "2026-10-20T11:37:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "aad3e0f2-f66b-46c9-a3a0-1414d7be15fe"
+    },
+    "parent_id": null,
+    "order": 500,
+    "depth": 0,
+    "body": "Slažem se, zajednički prostori za rad su se pokazali kao dobro rešenje. Šta vi mislite?",
+    "author": "Luka Pavlović",
+    "author_initials": "LP",
+    "score": 26,
+    "created_at": "2026-10-20T12:45:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "bcdbc835-b1c6-486b-b5e3-de5f7048c190"
+    },
+    "parent_id": null,
+    "order": 600,
+    "depth": 0,
+    "body": "Dobra poenta, putovanje do posla je najveći gubitak vremena. Šta vi mislite?",
+    "author": "Vuk Milosavljević",
+    "author_initials": "VM",
+    "score": 24,
+    "created_at": "2026-10-20T13:46:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "afc85cee-f1fa-427c-a1fb-68d00eeaec2b"
+    },
+    "parent_id": null,
+    "order": 700,
+    "depth": 0,
+    "body": "Hvala na ovome, putovanje do posla je najveći gubitak vremena. Bar je tako kod nas.",
+    "author": "Ana Petrović",
+    "author_initials": "AP",
+    "score": 10,
+    "created_at": "2026-10-20T15:16:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "d75c3ba2-27e4-4651-a305-fc8757531216"
+    },
+    "parent_id": null,
+    "order": 800,
+    "depth": 0,
+    "body": "Slažem se, nov tim je mnogo lakše uvesti u posao uživo. U Zrenjanin ima sve više coworking prostora. Videćemo kako će biti dogodine.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 35,
+    "created_at": "2026-10-20T15:44:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "672622ca-bbee-483c-8576-ba5aca1bfc65"
+    },
+    "parent_id": "aad3e0f2-f66b-46c9-a3a0-1414d7be15fe",
+    "order": 100,
+    "depth": 1,
+    "body": "Ne bih se složio, nov tim je mnogo lakše uvesti u posao uživo.",
+    "author": "Marko Jovanović",
+    "author_initials": "MJ",
+    "score": 33,
+    "created_at": "2026-10-20T13:15:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "50589b0c-36a6-480c-b75e-1d80d7e3b154"
+    },
+    "parent_id": "672622ca-bbee-483c-8576-ba5aca1bfc65",
+    "order": 100,
+    "depth": 2,
+    "body": "Zanimljivo, rad od kuće meni štedi sat vremena dnevno.",
+    "author": "Luka Pavlović",
+    "author_initials": "LP",
+    "score": 13,
+    "created_at": "2026-10-20T13:33:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "9387a926-dc6e-457f-8aea-d6fe4a9dffe8"
+    },
+    "parent_id": "50589b0c-36a6-480c-b75e-1d80d7e3b154",
+    "order": 100,
+    "depth": 3,
+    "body": "Tačno tako, rad od kuće meni štedi sat vremena dnevno. Videćemo kako će biti dogodine.",
+    "author": "Vuk Milosavljević",
+    "author_initials": "VM",
+    "score": 31,
+    "created_at": "2026-10-20T15:15:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "5707970d-b924-4946-9241-b0deb139f57d"
+    },
+    "parent_id": "9387a926-dc6e-457f-8aea-d6fe4a9dffe8",
+    "order": 100,
+    "depth": 4,
+    "body": "Hvala na ovome, nov tim je mnogo lakše uvesti u posao uživo. U Beograd su cene stanova u centru porasle. Šta vi mislite?",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 21,
+    "created_at": "2026-10-20T15:39:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "f3fd89b2-c19c-4ab9-a008-532a8180181e"
+    },
+    "parent_id": "5707970d-b924-4946-9241-b0deb139f57d",
+    "order": 100,
+    "depth": 5,
+    "body": "Kod nas je isto, rad od kuće meni štedi sat vremena dnevno.",
+    "author": "Milica Stojanović",
+    "author_initials": "MS",
+    "score": 22,
+    "created_at": "2026-10-20T17:33:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "8b456f0e-9de4-4b6f-9f06-90244de7ea53"
+    },
+    "parent_id": "f3fd89b2-c19c-4ab9-a008-532a8180181e",
+    "order": 100,
+    "depth": 6,
+    "body": "Slažem se, deca i rad od kuće ne idu zajedno. Možda grešim.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 28,
+    "created_at": "2026-10-20T17:38:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "8d90a63d-db19-42e4-807c-ef84779eb4b6"
+    },
+    "parent_id": "672622ca-bbee-483c-8576-ba5aca1bfc65",
+    "order": 200,
+    "depth": 2,
+    "body": "Moram da dodam, sastanci su kraći kad su na daljinu. Možda grešim.",
+    "author": "Stefan Ilić",
+    "author_initials": "SI",
+    "score": 27,
+    "created_at": "2026-10-20T13:36:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "e503d7c4-4bed-4e88-8fa8-66c9f87013a9"
+    },
+    "parent_id": "9387a926-dc6e-457f-8aea-d6fe4a9dffe8",
+    "order": 200,
+    "depth": 4,
+    "body": "Tačno tako, fleksibilno radno vreme je važnije od mesta rada. Bar je tako kod nas.",
+    "author": "Stefan Ilić",
+    "author_initials": "SI",
+    "score": 26,
+    "created_at": "2026-10-20T15:39:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "255b611a-50f1-4f71-9fa5-14053eb70e4a"
+    },
+    "parent_id": "e503d7c4-4bed-4e88-8fa8-66c9f87013a9",
+    "order": 100,
+    "depth": 5,
+    "body": "Ne bih se složio, fleksibilno radno vreme je važnije od mesta rada. Firme iz Subotica sve češće nude rad na daljinu. To mi je presudilo.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 2,
+    "created_at": "2026-10-20T17:07:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "8604818c-9064-4ce2-b180-7676fdf91d7d"
+    },
+    "parent_id": "50589b0c-36a6-480c-b75e-1d80d7e3b154",
+    "order": 200,
+    "depth": 3,
+    "body": "Tačno tako, kancelarija mi fali zbog ljudi, ne zbog posla. Možda grešim.",
+    "author": "Ana Petrović",
+    "author_initials": "AP",
+    "score": 12,
+    "created_at": "2026-10-20T18:25:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "07d1c741-97d4-40b6-81b3-3aab1e2fc509"
+    },
+    "parent_id": "d8725c30-36f1-49d2-80ef-bbc4d7cf676c",
+    "order": 100,
+    "depth": 1,
+    "body": "Slažem se, kancelarija mi fali zbog ljudi, ne zbog posla. To mi je presudilo.",
+    "author": "Jelena Nikolić",
+    "author_initials": "JN",
+    "score": 12,
+    "created_at": "2026-10-20T21:07:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "1a44460f-fe25-4c8e-ba67-306f978ac299"
+    },
+    "parent_id": "8d90a63d-db19-42e4-807c-ef84779eb4b6",
+    "order": 100,
+    "depth": 3,
+    "body": "Hvala na ovome, internet kod kuće ume da zakaže baš kad je bitno.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 19,
+    "created_at": "2026-10-20T20:38:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "e028c80e-33ee-468f-91fe-4ec155a380e5"
+    },
+    "parent_id": "aad3e0f2-f66b-46c9-a3a0-1414d7be15fe",
+    "order": 200,
+    "depth": 1,
+    "body": "Kod nas je isto, zajednički prostori za rad su se pokazali kao dobro rešenje. U Kragujevac su cene stanova u centru porasle. Možda grešim.",
+    "author": "Vuk Milosavljević",
+    "author_initials": "VM",
+    "score": 23,
+    "created_at": "2026-10-20T13:32:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "2da51f64-56a2-4a3b-8c57-fd0a5379dd6b"
+    },
+    "parent_id": "9387a926-dc6e-457f-8aea-d6fe4a9dffe8",
+    "order": 300,
+    "depth": 4,
+    "body": "Hvala na ovome, deca i rad od kuće ne idu zajedno. U Novi Sad gužve ujutru traju sve duže. To mi je presudilo.",
+    "author": "Tamara Kostić",
+    "author_initials": "TK",
+    "score": 3,
+    "created_at": "2026-10-20T22:38:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "ed1b089b-fa48-4d6e-89c6-0a4b6c0c9614"
+    },
+    "parent_id": "9387a926-dc6e-457f-8aea-d6fe4a9dffe8",
+    "order": 400,
+    "depth": 4,
+    "body": "Dobra poenta, internet kod kuće ume da zakaže baš kad je bitno.",
+    "author": "Vuk Milosavljević",
+    "author_initials": "VM",
+    "score": 8,
+    "created_at": "2026-10-21T00:40:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "7fb4d0c7-d996-45d1-88b1-e81fa19e4644"
+    },
+    "parent_id": "afc85cee-f1fa-427c-a1fb-68d00eeaec2b",
+    "order": 100,
+    "depth": 1,
+    "body": "Zanimljivo, rad od kuće meni štedi sat vremena dnevno.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 32,
+    "created_at": "2026-10-20T21:26:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "54d53e7a-fa96-46a1-be55-058b41e7572c"
+    },
+    "parent_id": "e028c80e-33ee-468f-91fe-4ec155a380e5",
+    "order": 100,
+    "depth": 2,
+    "body": "Kod nas je isto, nov tim je mnogo lakše uvesti u posao uživo. Možda grešim.",
+    "author": "Luka Pavlović",
+    "author_initials": "LP",
+    "score": 35,
+    "created_at": "2026-10-20T16:45:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "fd2c5a18-35ad-4856-a7cf-7ffffeb31ad9"
+    },
+    "parent_id": "07d1c741-97d4-40b6-81b3-3aab1e2fc509",
+    "order": 100,
+    "depth": 2,
+    "body": "Moram da dodam, internet kod kuće ume da zakaže baš kad je bitno. Prevoz u Kragujevac se popravio ove godine. Šta vi mislite?",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 14,
+    "created_at": "2026-10-20T21:44:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "411cdeb5-ef43-4823-ad3b-54fbd36836a7"
+    },
+    "parent_id": "f3fd89b2-c19c-4ab9-a008-532a8180181e",
+    "order": 200,
+    "depth": 6,
+    "body": "Kod nas je isto, zajednički prostori za rad su se pokazali kao dobro rešenje. U Subotica su cene stanova u centru porasle. Šta vi mislite?",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 31,
+    "created_at": "2026-10-20T23:03:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "7182466e-976b-4520-8527-eb42fdc486ad"
+    },
+    "parent_id": "54d53e7a-fa96-46a1-be55-058b41e7572c",
+    "order": 100,
+    "depth": 3,
+    "body": "Moram da dodam, nov tim je mnogo lakše uvesti u posao uživo. Prevoz u Beograd se popravio ove godine.",
+    "author": "Tamara Kostić",
+    "author_initials": "TK",
+    "score": 5,
+    "created_at": "2026-10-21T01:47:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "b657a510-bf31-45bb-b612-6ed351a4c9bf"
+    },
+    "parent_id": "672622ca-bbee-483c-8576-ba5aca1bfc65",
+    "order": 300,
+    "depth": 2,
+    "body": "Moram da dodam, posle tri godine na daljinu teško je vratiti se. Prevoz u Kragujevac se popravio ove godine.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 18,
+    "created_at": "2026-10-20T17:03:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "62cc837e-d6cc-4fa6-a717-6004a47867f6"
+    },
+    "parent_id": "7fb4d0c7-d996-45d1-88b1-e81fa19e4644",
+    "order": 100,
+    "depth": 2,
+    "body": "Slažem se, fleksibilno radno vreme je važnije od mesta rada. U Subotica gužve ujutru traju sve duže. Videćemo kako će biti dogodine.",
+    "author": "Ana Petrović",
+    "author_initials": "AP",
+    "score": 12,
+    "created_at": "2026-10-21T01:27:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "e50d3c7a-9a58-4392-9940-090622a64369"
+    },
+    "parent_id": "f3fd89b2-c19c-4ab9-a008-532a8180181e",
+    "order": 300,
+    "depth": 6,
+    "body": "Dobra poenta, deca i rad od kuće ne idu zajedno. Firme iz Subotica sve češće nude rad na daljinu. Šta vi mislite?",
+    "author": "Marko Jovanović",
+    "author_initials": "MJ",
+    "score": 22,
+    "created_at": "2026-10-20T20:49:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "d3e80a4e-c1f4-45c6-bd52-a77a3447825d"
+    },
+    "parent_id": "1a44460f-fe25-4c8e-ba67-306f978ac299",
+    "order": 100,
+    "depth": 4,
+    "body": "Zanimljivo, hibridni model sa dva dana u kancelariji je najbolji kompromis. U Kragujevac ima sve više coworking prostora. Bar je tako kod nas.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 11,
+    "created_at": "2026-10-21T05:57:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "e2338bd6-2bdd-40f3-a726-5d6462698ab6"
+    },
+    "parent_id": "a98ca033-5a85-43c3-a1d1-de71e2b96ebd",
+    "order": 100,
+    "depth": 1,
+    "body": "Moram da dodam, posle tri godine na daljinu teško je vratiti se. Prevoz u Niš se popravio ove godine.",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 23,
+    "created_at": "2026-10-20T13:55:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "b61985bd-a4dc-4814-98fb-b1627440f67f"
+    },
+    "parent_id": "d3e80a4e-c1f4-45c6-bd52-a77a3447825d",
+    "order": 100,
+    "depth": 5,
+    "body": "Zanimljivo, posle tri godine na daljinu teško je vratiti se. Bar je tako kod nas.",
+    "author": "Stefan Ilić",
+    "author_initials": "SI",
+    "score": 2,
+    "created_at": "2026-10-21T08:07:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "f637a02b-8f2e-4373-8aec-11f78e487429"
+    },
+    "parent_id": "255b611a-50f1-4f71-9fa5-14053eb70e4a",
+    "order": 100,
+    "depth": 6,
+    "body": "Slažem se, zakup prostora je postao preskup za male firme. U Niš gužve ujutru traju sve duže. Šta vi mislite?",
+    "author": "Ana Petrović",
+    "author_initials": "AP",
+    "score": 7,
+    "created_at": "2026-10-20T21:51:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "b0343037-1605-4b91-a722-1c1b02374df6"
+    },
+    "parent_id": "672622ca-bbee-483c-8576-ba5aca1bfc65",
+    "order": 400,
+    "depth": 2,
+    "body": "Slažem se, putovanje do posla je najveći gubitak vremena.",
+    "author": "Marko Jovanović",
+    "author_initials": "MJ",
+    "score": 25,
+    "created_at": "2026-10-20T19:48:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "26c992f2-345f-4687-94c5-fbd528200889"
+    },
+    "parent_id": "07d1c741-97d4-40b6-81b3-3aab1e2fc509",
+    "order": 200,
+    "depth": 2,
+    "body": "Ne bih se složio, zajednički prostori za rad su se pokazali kao dobro rešenje. U Zrenjanin gužve ujutru traju sve duže. Šta vi mislite?",
+    "author": "Marko Jovanović",
+    "author_initials": "MJ",
+    "score": 0,
+    "created_at": "2026-10-21T05:42:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "a74af36e-b854-4229-824f-1988a28676d6"
+    },
+    "parent_id": "26c992f2-345f-4687-94c5-fbd528200889",
+    "order": 100,
+    "depth": 3,
+    "body": "Zanimljivo, nov tim je mnogo lakše uvesti u posao uživo. To mi je presudilo.",
+    "author": "Stefan Ilić",
+    "author_initials": "SI",
+    "score": 20,
+    "created_at": "2026-10-21T12:51:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "61e447d9-8538-45d8-9a80-b4af3252d57d"
+    },
+    "parent_id": "b0343037-1605-4b91-a722-1c1b02374df6",
+    "order": 100,
+    "depth": 3,
+    "body": "Slažem se, posle tri godine na daljinu teško je vratiti se. Firme iz Zrenjanin sve češće nude rad na daljinu. Možda grešim.",
+    "author": "Stefan Ilić",
+    "author_initials": "SI",
+    "score": 33,
+    "created_at": "2026-10-21T03:58:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "816749d2-71cc-4fdc-9b70-2b76cff3e92c"
+    },
+    "parent_id": "5707970d-b924-4946-9241-b0deb139f57d",
+    "order": 200,
+    "depth": 5,
+    "body": "Moram da dodam, kancelarija mi fali zbog ljudi, ne zbog posla. Šta vi mislite?",
+    "author": "Jelena Nikolić",
+    "author_initials": "JN",
+    "score": 18,
+    "created_at": "2026-10-20T19:44:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "922de602-4537-4300-85c5-ca5fc1ce9577"
+    },
+    "parent_id": "d3e80a4e-c1f4-45c6-bd52-a77a3447825d",
+    "order": 200,
+    "depth": 5,
+    "body": "Tačno tako, posle tri godine na daljinu teško je vratiti se. U Subotica ima sve više coworking prostora. Videćemo kako će biti dogodine.",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 25,
+    "created_at": "2026-10-21T11:21:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "d8b51711-aba1-4f2e-bd10-2ab72c2ffd20"
+    },
+    "parent_id": "b657a510-bf31-45bb-b612-6ed351a4c9bf",
+    "order": 100,
+    "depth": 3,
+    "body": "Dobra poenta, putovanje do posla je najveći gubitak vremena. U Niš ima sve više coworking prostora. Možda grešim.",
+    "author": "Vuk Milosavljević",
+    "author_initials": "VM",
+    "score": 3,
+    "created_at": "2026-10-21T00:51:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "d97e8be9-5c64-4764-b8f2-e98218129051"
+    },
+    "parent_id": "d8725c30-36f1-49d2-80ef-bbc4d7cf676c",
+    "order": 200,
+    "depth": 1,
+    "body": "Zanimljivo, kancelarija mi fali zbog ljudi, ne zbog posla. Možda grešim.",
+    "author": "Stefan Ilić",
+    "author_initials": "SI",
+    "score": 0,
+    "created_at": "2026-10-20T17:15:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "2ff0f195-9482-41be-b512-020f057323c8"
+    },
+    "parent_id": "61e447d9-8538-45d8-9a80-b4af3252d57d",
+    "order": 100,
+    "depth": 4,
+    "body": "Iskreno, nisam siguran, nov tim je mnogo lakše uvesti u posao uživo. To mi je presudilo.",
+    "author": "Milica Stojanović",
+    "author_initials": "MS",
+    "score": 10,
+    "created_at": "2026-10-21T04:48:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "00026b5b-8d27-4db8-9a4a-45343b628819"
+    },
+    "parent_id": "922de602-4537-4300-85c5-ca5fc1ce9577",
+    "order": 100,
+    "depth": 6,
+    "body": "Slažem se, zajednički prostori za rad su se pokazali kao dobro rešenje. Možda grešim.",
+    "author": "Jelena Nikolić",
+    "author_initials": "JN",
+    "score": 32,
+    "created_at": "2026-10-21T13:42:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "32a9c037-2eee-4b82-a5c5-c21dc16f4302"
+    },
+    "parent_id": "a98ca033-5a85-43c3-a1d1-de71e2b96ebd",
+    "order": 200,
+    "depth": 1,
+    "body": "Moram da dodam, kancelarija mi fali zbog ljudi, ne zbog posla.",
+    "author": "Luka Pavlović",
+    "author_initials": "LP",
+    "score": 3,
+    "created_at": "2026-10-20T15:02:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "c6b91ca2-2adf-4e63-88db-183db83dc210"
+    },
+    "parent_id": "5707970d-b924-4946-9241-b0deb139f57d",
+    "order": 300,
+    "depth": 5,
+    "body": "Slažem se, fleksibilno radno vreme je važnije od mesta rada.",
+    "author": "Milica Stojanović",
+    "author_initials": "MS",
+    "score": 9,
+    "created_at": "2026-10-20T19:47:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "ff6f6b4c-16b9-41f0-888f-3e6edbf3b87f"
+    },
+    "parent_id": "61e447d9-8538-45d8-9a80-b4af3252d57d",
+    "order": 200,
+    "depth": 4,
+    "body": "Tačno tako, fleksibilno radno vreme je važnije od mesta rada. U Čačak ima sve više coworking prostora. Šta vi mislite?",
+    "author": "Milica Stojanović",
+    "author_initials": "MS",
+    "score": 10,
+    "created_at": "2026-10-21T04:16:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "a02f55ce-606a-4cc0-a65c-b2bce058ccb8"
+    },
+    "parent_id": "7182466e-976b-4520-8527-eb42fdc486ad",
+    "order": 100,
+    "depth": 4,
+    "body": "Hvala na ovome, sastanci su kraći kad su na daljinu. To mi je presudilo.",
+    "author": "Tamara Kostić",
+    "author_initials": "TK",
+    "score": 14,
+    "created_at": "2026-10-21T07:44:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "714fe368-465a-48cf-af9e-0a2dc2434120"
+    },
+    "parent_id": "a02f55ce-606a-4cc0-a65c-b2bce058ccb8",
+    "order": 100,
+    "depth": 5,
+    "body": "Iskreno, nisam siguran, posle tri godine na daljinu teško je vratiti se.",
+    "author": "Luka Pavlović",
+    "author_initials": "LP",
+    "score": 23,
+    "created_at": "2026-10-21T12:44:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "4ef2f8c3-7202-4177-b130-01e398d413ec"
+    },
+    "parent_id": "c6b91ca2-2adf-4e63-88db-183db83dc210",
+    "order": 100,
+    "depth": 6,
+    "body": "Iskreno, nisam siguran, fleksibilno radno vreme je važnije od mesta rada. Videćemo kako će biti dogodine.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 5,
+    "created_at": "2026-10-21T00:50:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "9d96b80b-57d2-4a93-a578-ce400a5bd9a4"
+    },
+    "parent_id": "714fe368-465a-48cf-af9e-0a2dc2434120",
+    "order": 100,
+    "depth": 6,
+    "body": "Dobra poenta, posle tri godine na daljinu teško je vratiti se. Videćemo kako će biti dogodine.",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 25,
+    "created_at": "2026-10-21T20:49:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "fff8e3b7-69d8-45ab-a150-5aa2945d5d59"
+    },
+    "parent_id": "7182466e-976b-4520-8527-eb42fdc486ad",
+    "order": 200,
+    "depth": 4,
+    "body": "Ne bih se složio, rad od kuće meni štedi sat vremena dnevno. Bar je tako kod nas.",
+    "author": "Stefan Ilić",
+    "author_initials": "SI",
+    "score": 25,
+    "created_at": "2026-10-21T05:44:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "112a843e-4dac-4dbd-af20-57c3a3b15f15"
+    },
+    "parent_id": "62cc837e-d6cc-4fa6-a717-6004a47867f6",
+    "order": 100,
+    "depth": 3,
+    "body": "Hvala na ovome, kancelarija mi fali zbog ljudi, ne zbog posla. Videćemo kako će biti dogodine.",
+    "author": "Milica Stojanović",
+    "author_initials": "MS",
+    "score": 3,
+    "created_at": "2026-10-21T09:29:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "bf826bdd-f205-4727-909c-7dada59bf1c5"
+    },
+    "parent_id": "b0343037-1605-4b91-a722-1c1b02374df6",
+    "order": 200,
+    "depth": 3,
+    "body": "Iskreno, nisam siguran, zakup prostora je postao preskup za male firme. Možda grešim.",
+    "author": "Marko Jovanović",
+    "author_initials": "MJ",
+    "score": 9,
+    "created_at": "2026-10-21T00:03:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "15e13c51-1b50-4e95-9b21-2ff72a5ff164"
+    },
+    "parent_id": "c6b91ca2-2adf-4e63-88db-183db83dc210",
+    "order": 200,
+    "depth": 6,
+    "body": "Kod nas je isto, putovanje do posla je najveći gubitak vremena. Videćemo kako će biti dogodine.",
+    "author": "Milica Stojanović",
+    "author_initials": "MS",
+    "score": 8,
+    "created_at": "2026-10-20T22:31:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "ea9c1743-33c8-4794-9724-60d13efc2a42"
+    },
+    "parent_id": "9387a926-dc6e-457f-8aea-d6fe4a9dffe8",
+    "order": 500,
+    "depth": 4,
+    "body": "Imam drugačije iskustvo, rad od kuće meni štedi sat vremena dnevno. To mi je presudilo.",
+    "author": "Luka Pavlović",
+    "author_initials": "LP",
+    "score": 7,
+    "created_at": "2026-10-21T00:31:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "87be256b-3586-484e-819a-59546632ab95"
+    },
+    "parent_id": "bcdbc835-b1c6-486b-b5e3-de5f7048c190",
+    "order": 100,
+    "depth": 1,
+    "body": "Zanimljivo, zajednički prostori za rad su se pokazali kao dobro rešenje. U Kragujevac su cene stanova u centru porasle.",
+    "author": "Jelena Nikolić",
+    "author_initials": "JN",
+    "score": 8,
+    "created_at": "2026-10-20T13:59:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "c400c92c-e93a-4efa-9500-78c894b0e5c3"
+    },
+    "parent_id": "a74af36e-b854-4229-824f-1988a28676d6",
+    "order": 100,
+    "depth": 4,
+    "body": "Moram da dodam, nov tim je mnogo lakše uvesti u posao uživo. Šta vi mislite?",
+    "author": "Milica Stojanović",
+    "author_initials": "MS",
+    "score": 34,
+    "created_at": "2026-10-21T18:13:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "30ef617d-b3e2-45a2-a9ae-e3d897e7272c"
+    },
+    "parent_id": "b61985bd-a4dc-4814-98fb-b1627440f67f",
+    "order": 100,
+    "depth": 6,
+    "body": "Slažem se, sastanci su kraći kad su na daljinu. Videćemo kako će biti dogodine.",
+    "author": "Jelena Nikolić",
+    "author_initials": "JN",
+    "score": 13,
+    "created_at": "2026-10-21T13:40:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "00c1270f-2018-4f7e-a605-68527bb53e4f"
+    },
+    "parent_id": "92e2895c-d976-4a7e-9198-c612b09d6ca8",
+    "order": 100,
+    "depth": 1,
+    "body": "Ne bih se složio, deca i rad od kuće ne idu zajedno. Videćemo kako će biti dogodine.",
+    "author": "Jelena Nikolić",
+    "author_initials": "JN",
+    "score": 19,
+    "created_at": "2026-10-20T09:54:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "37013c5d-097d-42f7-b36a-65348633b3ad"
+    },
+    "parent_id": "c400c92c-e93a-4efa-9500-78c894b0e5c3",
+    "order": 100,
+    "depth": 5,
+    "body": "Slažem se, putovanje do posla je najveći gubitak vremena. Firme iz Novi Sad sve češće nude rad na daljinu. Videćemo kako će biti dogodine.",
+    "author": "Milica Stojanović",
+    "author_initials": "MS",
+    "score": 24,
+    "created_at": "2026-10-21T18:58:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "df4235cb-e785-42aa-9378-8a448f58fc82"
+    },
+    "parent_id": "922de602-4537-4300-85c5-ca5fc1ce9577",
+    "order": 200,
+    "depth": 6,
+    "body": "Ne bih se složio, zajednički prostori za rad su se pokazali kao dobro rešenje. Šta vi mislite?",
+    "author": "Ana Petrović",
+    "author_initials": "AP",
+    "score": 3,
+    "created_at": "2026-10-21T20:07:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "cef8b13d-f40a-4a4e-84f2-7c9e03b91492"
+    },
+    "parent_id": "26c992f2-345f-4687-94c5-fbd528200889",
+    "order": 200,
+    "depth": 3,
+    "body": "Ne bih se složio, nov tim je mnogo lakše uvesti u posao uživo. To mi je presudilo.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 11,
+    "created_at": "2026-10-21T06:19:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "2edef230-c2c9-466e-8e83-a8799067b0a2"
+    },
+    "parent_id": "c6b91ca2-2adf-4e63-88db-183db83dc210",
+    "order": 300,
+    "depth": 6,
+    "body": "Hvala na ovome, fleksibilno radno vreme je važnije od mesta rada.",
+    "author": "Vuk Milosavljević",
+    "author_initials": "VM",
+    "score": -3,
+    "created_at": "2026-10-20T20:23:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "ee812de6-17d1-4ede-9eb7-6fd3e8ff7a49"
+    },
+    "parent_id": "8d90a63d-db19-42e4-807c-ef84779eb4b6",
+    "order": 200,
+    "depth": 3,
+    "body": "Slažem se, zakup prostora je postao preskup za male firme. To mi je presudilo.",
+    "author": "Stefan Ilić",
+    "author_initials": "SI",
+    "score": 26,
+    "created_at": "2026-10-20T17:40:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "bbbc54b5-10f0-4c10-9277-a148cb7c326e"
+    },
+    "parent_id": "ff6f6b4c-16b9-41f0-888f-3e6edbf3b87f",
+    "order": 100,
+    "depth": 5,
+    "body": "Ne bih se složio, zakup prostora je postao preskup za male firme. U Čačak su cene stanova u centru porasle.",
+    "author": "Tamara Kostić",
+    "author_initials": "TK",
+    "score": 9,
+    "created_at": "2026-10-21T05:24:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "a396cec9-7d82-4006-bd0c-21ec5f37955d"
+    },
+    "parent_id": "26c992f2-345f-4687-94c5-fbd528200889",
+    "order": 300,
+    "depth": 3,
+    "body": "Moram da dodam, posle tri godine na daljinu teško je vratiti se. Šta vi mislite?",
+    "author": "Vuk Milosavljević",
+    "author_initials": "VM",
+    "score": 9,
+    "created_at": "2026-10-21T07:04:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "c4649ff7-a463-4826-87db-d5abf8651132"
+    },
+    "parent_id": "fff8e3b7-69d8-45ab-a150-5aa2945d5d59",
+    "order": 100,
+    "depth": 5,
+    "body": "Dobra poenta, fleksibilno radno vreme je važnije od mesta rada.",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 33,
+    "created_at": "2026-10-21T11:52:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "d9db1c4a-6789-4249-8b12-717b8c3b5479"
+    },
+    "parent_id": "112a843e-4dac-4dbd-af20-57c3a3b15f15",
+    "order": 100,
+    "depth": 4,
+    "body": "Iskreno, nisam siguran, zajednički prostori za rad su se pokazali kao dobro rešenje. Prevoz u Novi Sad se popravio ove godine. Šta vi mislite?",
+    "author": "Marko Jovanović",
+    "author_initials": "MJ",
+    "score": 9,
+    "created_at": "2026-10-21T14:06:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "35022e50-face-4d1a-b890-574d62a39723"
+    },
+    "parent_id": "32a9c037-2eee-4b82-a5c5-c21dc16f4302",
+    "order": 100,
+    "depth": 2,
+    "body": "Dobra poenta, internet kod kuće ume da zakaže baš kad je bitno. Možda grešim.",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 6,
+    "created_at": "2026-10-20T16:41:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "9843c3b4-5126-47d0-ba55-9723a2fa5450"
+    },
+    "parent_id": "8d90a63d-db19-42e4-807c-ef84779eb4b6",
+    "order": 300,
+    "depth": 3,
+    "body": "Ne bih se složio, zajednički prostori za rad su se pokazali kao dobro rešenje. U Kragujevac su cene stanova u centru porasle. Šta vi mislite?",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 31,
+    "created_at": "2026-10-20T19:23:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "3f89d6ad-d404-43d7-831a-239b7b2b6955"
+    },
+    "parent_id": "922de602-4537-4300-85c5-ca5fc1ce9577",
+    "order": 300,
+    "depth": 6,
+    "body": "Tačno tako, kancelarija mi fali zbog ljudi, ne zbog posla. Šta vi mislite?",
+    "author": "Jelena Nikolić",
+    "author_initials": "JN",
+    "score": 30,
+    "created_at": "2026-10-21T12:43:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "7e739e45-b0f0-4fc9-a4bf-f1473bdb3fdc"
+    },
+    "parent_id": "d8b51711-aba1-4f2e-bd10-2ab72c2ffd20",
+    "order": 100,
+    "depth": 4,
+    "body": "Slažem se, kancelarija mi fali zbog ljudi, ne zbog posla. Firme iz Subotica sve češće nude rad na daljinu. Bar je tako kod nas.",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 27,
+    "created_at": "2026-10-21T09:59:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "297d5081-b530-409e-957c-6abdf25ce7fb"
+    },
+    "parent_id": "8604818c-9064-4ce2-b180-7676fdf91d7d",
+    "order": 100,
+    "depth": 4,
+    "body": "Slažem se, hibridni model sa dva dana u kancelariji je najbolji kompromis.",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": -3,
+    "created_at": "2026-10-21T04:16:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "40f668a0-04f0-4e9b-b772-d7a4c9dc1acc"
+    },
+    "parent_id": "bcdbc835-b1c6-486b-b5e3-de5f7048c190",
+    "order": 200,
+    "depth": 1,
+    "body": "Slažem se, internet kod kuće ume da zakaže baš kad je bitno. Firme iz Čačak sve češće nude rad na daljinu.",
+    "author": "Ana Petrović",
+    "author_initials": "AP",
+    "score": 27,
+    "created_at": "2026-10-20T19:18:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "e7ade37c-3678-41d0-9f66-2ca65a2ef5aa"
+    },
+    "parent_id": "c6b91ca2-2adf-4e63-88db-183db83dc210",
+    "order": 400,
+    "depth": 6,
+    "body": "Ne bih se složio, hibridni model sa dva dana u kancelariji je najbolji kompromis. Prevoz u Zrenjanin se popravio ove godine. Videćemo kako će biti dogodine.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 15,
+    "created_at": "2026-10-21T01:10:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "6dc6fc2a-a9b9-448c-9717-fd1a2d5cc3e5"
+    },
+    "parent_id": "37013c5d-097d-42f7-b36a-65348633b3ad",
+    "order": 100,
+    "depth": 6,
+    "body": "Dobra poenta, fleksibilno radno vreme je važnije od mesta rada.",
+    "author": "Tamara Kostić",
+    "author_initials": "TK",
+    "score": -3,
+    "created_at": "2026-10-21T22:19:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "417dd0b2-8c31-4123-8afe-d90fee123832"
+    },
+    "parent_id": "112a843e-4dac-4dbd-af20-57c3a3b15f15",
+    "order": 200,
+    "depth": 4,
+    "body": "Kod nas je isto, sastanci su kraći kad su na daljinu.",
+    "author": "Ivana Marković",
+    "author_initials": "IM",
+    "score": 17,
+    "created_at": "2026-10-21T15:12:00.000Z"
+  },
+  {
+    "__meta": {
+      "id": "180c59af-2a43-4c9e-b8f5-19766620d3cc"
+    },
+    "parent_id": "7fb4d0c7-d996-45d1-88b1-e81fa19e4644",
+    "order": 200,
+    "depth": 2,
+    "body": "Iskreno, nisam siguran, deca i rad od kuće ne idu zajedno. To mi je presudilo.",
+    "author": "Nikola Đorđević",
+    "author_initials": "NĐ",
+    "score": 32,
+    "created_at": "2026-10-21T06:15:00.000Z"
+  }
+]

@@ -6,6 +6,7 @@ import {
   type SchemaDoc,
   type SchemaDocInput,
   SchemaDocSchema,
+  treeOptionsProblems,
   UdcError,
   type ViewConfig,
   ViewConfigSchema,
@@ -104,14 +105,19 @@ export function readCollectionAssets(dir: string): CollectionAsset[] {
     const schemaJson = readFile(schemaFile, JSON.parse) as SchemaDocInput;
     const schema = validated(schemaFile, SchemaDocSchema, schemaJson);
     assertJsonbSchema(schema, schemaFile);
-    // A calendar over a field that is not a datetime would draw nothing: refuse it at load.
-    const problems = view.calendar_options
-      ? calendarOptionsProblems(view.calendar_options, schema)
-      : [];
-    if (problems.length > 0) {
-      throw new Error(
-        `${viewFile}: calendar_options do not fit schema.json\n${problems.join("\n")}`,
-      );
+    // A calendar over a field that is not a datetime would draw nothing, a tree over a
+    // field the schema lacks nothing sensible: refuse either at load.
+    const blocks = [
+      [
+        "calendar_options",
+        view.calendar_options && calendarOptionsProblems(view.calendar_options, schema),
+      ],
+      ["tree_options", view.tree_options && treeOptionsProblems(view.tree_options, schema)],
+    ] as const;
+    for (const [block, problems] of blocks) {
+      if (problems && problems.length > 0) {
+        throw new Error(`${viewFile}: ${block} do not fit schema.json\n${problems.join("\n")}`);
+      }
     }
     const seedFile = join(base, "seed.json");
     return {

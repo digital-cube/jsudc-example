@@ -2,6 +2,7 @@ import { z } from "zod";
 import { CalendarOptionsSchema } from "./calendar.js";
 import { FilterNodeSchema, FilterOpSchema } from "./filter.js";
 import { KanbanOptionsSchema } from "./kanban.js";
+import { TreeOptionsSchema } from "./tree.js";
 
 // Every block is loose: dclabs views carry renderer-specific option blocks
 // and keys jsudc does not read yet, and they must parse without edits.
@@ -164,6 +165,7 @@ export const ViewConfigSchema = z.looseObject({
   /** Validated when present: a typo in a field name fails at load, not on screen. */
   kanban_options: KanbanOptionsSchema.optional(),
   calendar_options: CalendarOptionsSchema.optional(),
+  tree_options: TreeOptionsSchema.optional(),
   row_color: RowColorConfigSchema.optional(),
 
   row_actions: z.array(z.string()).default([]),

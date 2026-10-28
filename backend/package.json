@@ -21,7 +21,8 @@
     "test:watch": "vitest",
     "test:cov": "vitest run --coverage",
     "generate:kanban": "tsx scripts/generate-kanban.ts",
-    "generate:appointments": "tsx scripts/generate-appointments.ts"
+    "generate:appointments": "tsx scripts/generate-appointments.ts",
+    "generate:trees": "tsx scripts/generate-trees.ts"
   },
   "dependencies": {
     "@fastify/swagger": "^9.9.2",

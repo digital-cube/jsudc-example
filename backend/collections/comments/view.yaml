@@ -1,0 +1,71 @@
+# The threaded tree example: one discussion of ~80 comments, read in one page
+# and built into a thread in the browser (`lazy: false`). Reply under any
+# comment; search highlights the matches and opens the way to them.
+default_renderer: tree
+available_renderers: [tree, table]
+pagination: infinite
+# One page holds the whole thread.
+page_size_default: 200
+
+tree_options:
+  parent_field: parent_id
+  order_field: order
+  label_field: body
+  avatar_field: author_initials
+  depth_field: depth
+  lazy: false
+  # A thread reads oldest first under each comment.
+  sibling_sort:
+    - {field: created_at, dir: asc}
+  expand:
+    persist: localstorage
+    key: comments
+    default_depth: 99
+  interactive:
+    reply: true
+  on_search:
+    mode: highlight_and_expand
+    collapse_others: true
+
+columns:
+  - {field: author, pin: left, width: 180}
+  - {field: body, transform: "truncate:90", width: 520}
+  - {field: score, render: number_format, align: right, width: 90}
+  - {field: depth, render: number_format, align: right, width: 80}
+  - {field: created_at, width: 180}
+
+search:
+  fields: [body, author]
+  placeholder: Search the text or the author
+  case_insensitive: true
+
+filters:
+  - field: author
+    kind: select
+    label: Author
+    options:
+      - Ana Petrović
+      - Marko Jovanović
+      - Jelena Nikolić
+      - Nikola Đorđević
+      - Milica Stojanović
+      - Stefan Ilić
+      - Ivana Marković
+      - Luka Pavlović
+      - Tamara Kostić
+      - Vuk Milosavljević
+  - field: score
+    kind: range
+    label: Score
+    min: -5
+    max: 40
+    step: 1
+
+filterable:
+  fields: [body, author, score, depth, created_at]
+
+row_color:
+  field: score
+  rules:
+    - {max: -1, color: danger}
+    - {min: 20, color: success}

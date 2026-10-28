@@ -10,6 +10,7 @@ import {
   type SchemaPosition,
   type SortKey,
   SUPPORTED_OPS,
+  type TreeReparentFields,
 } from "@jsudc/udc-core";
 
 /** A `list` request as a source sees it: the collection is already resolved. */
@@ -41,6 +42,20 @@ export interface SourceReindex {
 
 export const DEFAULT_ORDER_FIELD = "order";
 
+/** A `tree.reparent` request as a source sees it: the collection is already resolved. */
+export interface SourceTreeReparent {
+  id: string;
+  parent: string | null;
+  order: number;
+  expected_version?: number | undefined;
+  fields: TreeReparentFields;
+}
+
+export interface TreeReparentResult {
+  row: Row;
+  updated: number;
+}
+
 export interface SourceUpdateField {
   name: string;
   fielddef: FieldDef;
@@ -68,6 +83,13 @@ export interface Source {
    * Answers how many rows it renumbered. Present when `capabilities.reindex`.
    */
   reindex?(req: SourceReindex): Promise<number>;
+  /**
+   * Move a node under `parent` at `order` in one transaction, keeping the
+   * structure fields named in `fields` consistent: depth and ancestor ids of
+   * the node and its whole subtree, the children count of both parents.
+   * Refuses a cycle. Present when `capabilities.tree_reparent`.
+   */
+  reparent?(req: SourceTreeReparent): Promise<TreeReparentResult>;
 }
 
 export const ALL_FILTER_OPS = [...SUPPORTED_OPS];

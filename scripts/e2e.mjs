@@ -94,7 +94,7 @@ try {
     env: { ...process.env, TEST_DATABASE_URL: testDb },
   });
   log(
-    `seeding every collection (200 companies, 3 boards, 15 buckets, 60 tickets, ~640 appointments around ${SEED_TODAY})`,
+    `seeding every collection (200 companies, 3 boards, 15 buckets, 60 tickets, ~640 appointments around ${SEED_TODAY}, 80 comments, 134 org nodes)`,
   );
   run("sh", ["-c", seedCmd]);
 

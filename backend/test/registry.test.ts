@@ -37,7 +37,9 @@ describe("collection registry", () => {
       "appointments",
       "boards",
       "buckets",
+      "comments",
       "companies",
+      "org",
       "tickets",
     ]);
     // The appointments are generated at seed time, around the day it runs.
@@ -149,6 +151,8 @@ describe("collection registry", () => {
     ["core-fields", /withcore\/schema\.json.*core_fields must be empty/],
     ["bad-name", /Bad-Name.*collection name/],
     ["bad-calendar", /agenda\/view\.yaml.*calendar_options.*\n.*start_field: day is date/s],
+    ["bad-tree", /thread\/view\.yaml.*tree_options.*\n.*label_field: title is not a field/s],
+    ["lazy-tree", /chart\/view\.yaml.*invalid.*children_count_field/s],
   ])("fails startup on %s, naming the file", (dir, message) => {
     expect(() => readCollectionAssets(fixtures(dir))).toThrow(message);
   });

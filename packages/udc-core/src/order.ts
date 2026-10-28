@@ -3,7 +3,8 @@
  * kanban, and the tree after it). Rows sit at 100, 200, 300, …; a drop takes
  * the integer midpoint of its neighbours. When two neighbours are adjacent
  * integers there is no room left: the caller renumbers the scope with
- * `reindex` and computes the order again.
+ * `reindex` and computes the order again. `isCycle` gates a tree's drop
+ * targets in the browser and is what the server's refusal is tested against.
  */
 
 export const ORDER_GAP = 100;
@@ -34,4 +35,35 @@ export function neighbours(
 ): { prev: number | null; next: number | null } {
   const i = Math.max(0, Math.min(index, orders.length));
   return { prev: orders[i - 1] ?? null, next: orders[i] ?? null };
+}
+
+// Trees -----------------------------------------------------------------------
+
+/** Child → parent, for `isCycle` over rows already loaded. */
+export type ParentLookup = ReadonlyMap<string, string | null | undefined>;
+
+/**
+ * Whether moving `nodeId` under `newParentId` would make a cycle: the new
+ * parent is the node itself or lies inside its subtree. `ancestry` is the
+ * new parent's `ancestor_ids` (root first, the parent itself excluded), or a
+ * child → parent map to walk up from it. Moving to the root never cycles.
+ */
+export function isCycle(
+  nodeId: string,
+  newParentId: string | null,
+  ancestry: readonly string[] | ParentLookup,
+): boolean {
+  if (newParentId === null) return false;
+  if (newParentId === nodeId) return true;
+  if (Array.isArray(ancestry)) return ancestry.includes(nodeId);
+  const parents = ancestry as ParentLookup;
+  // A visited set, so data that already holds a cycle cannot loop forever.
+  const seen = new Set<string>([newParentId]);
+  let at = parents.get(newParentId);
+  while (at != null && !seen.has(at)) {
+    if (at === nodeId) return true;
+    seen.add(at);
+    at = parents.get(at);
+  }
+  return false;
 }

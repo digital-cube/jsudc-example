@@ -15,6 +15,8 @@ export const CapabilitiesSchema = z.looseObject({
   config_edit: z.boolean(),
   /** The source renumbers an order field server-side (`reindex`). */
   reindex: z.boolean(),
+  /** The source moves a tree node and keeps its structure fields consistent (`tree.reparent`). */
+  tree_reparent: z.boolean(),
   /** How `list` pages: keyset `cursor`, `offset`, or both. Absent means both. */
   paging: z.array(z.enum(["cursor", "offset"])).optional(),
   supported_filter_ops: z.array(FilterOpSchema),
@@ -187,6 +189,46 @@ export type ReindexRequest = z.infer<typeof ReindexRequestSchema>;
 export const ReindexResponseSchema = z.object({ updated: z.number().int().min(0) });
 export type ReindexResponse = z.infer<typeof ReindexResponseSchema>;
 
+// tree.reparent -------------------------------------------------------------
+
+/** The structure fields of the tree, as its `tree_options` name them. */
+export const TreeReparentFieldsSchema = z.object({
+  parent_field: z.string().min(1),
+  order_field: z.string().min(1),
+  /** Recomputed for the node and its whole subtree. */
+  depth_field: z.string().min(1).optional(),
+  /** Recomputed for the node and its whole subtree (root first, the row itself excluded). */
+  ancestor_ids_field: z.string().min(1).optional(),
+  /** The old parent loses one, the new parent gains one. */
+  children_count_field: z.string().min(1).optional(),
+});
+
+export type TreeReparentFields = z.infer<typeof TreeReparentFieldsSchema>;
+
+/**
+ * Move row `id` under `parent` (`null`: to the root) at `order`, in one
+ * transaction. A collision of orders is the caller's to resolve (`reindex`
+ * with the new parent as scope, then again), as on the kanban.
+ */
+export const TreeReparentRequestSchema = z.object({
+  collection: CollectionName,
+  id: z.string().min(1),
+  parent: z.string().min(1).nullable(),
+  order: z.number().finite(),
+  expected_version: z.number().int().min(1).optional(),
+  fields: TreeReparentFieldsSchema,
+});
+
+export type TreeReparentRequest = z.infer<typeof TreeReparentRequestSchema>;
+
+/** The moved row as it is now, and how many rows the move changed (it, its subtree, the parents). */
+export const TreeReparentResponseSchema = z.object({
+  row: RowSchema,
+  updated: z.number().int().min(0),
+});
+
+export type TreeReparentResponse = z.infer<typeof TreeReparentResponseSchema>;
+
 // registry ------------------------------------------------------------------
 
 /** Every action with its payload schemas, so a server can dispatch generically. */
@@ -206,6 +248,7 @@ export const ACTIONS = {
     response: SchemaResponseSchema,
   },
   reindex: { request: ReindexRequestSchema, response: ReindexResponseSchema },
+  "tree.reparent": { request: TreeReparentRequestSchema, response: TreeReparentResponseSchema },
 } as const satisfies Record<string, { request: z.ZodType; response: z.ZodType }>;
 
 export type ActionName = keyof typeof ACTIONS;

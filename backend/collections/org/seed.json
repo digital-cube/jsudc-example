@@ -1,0 +1,2501 @@
+[
+  {
+    "__meta": {
+      "id": "d72960f8-5ba5-4ade-ae2f-1546885dcd04"
+    },
+    "parent_id": null,
+    "order": 100,
+    "depth": 0,
+    "children_count": 6,
+    "ancestor_ids": [],
+    "name": "Kvadrat Softver d.o.o.",
+    "kind": "company",
+    "title": "Softver za logistiku",
+    "icon": "building",
+    "headcount": 108
+  },
+  {
+    "__meta": {
+      "id": "5810eec3-6d04-43e2-add7-a64a4e365888"
+    },
+    "parent_id": "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+    "order": 100,
+    "depth": 1,
+    "children_count": 4,
+    "ancestor_ids": ["d72960f8-5ba5-4ade-ae2f-1546885dcd04"],
+    "name": "Inženjering",
+    "kind": "department",
+    "title": "Razvoj proizvoda",
+    "icon": "users",
+    "headcount": 21
+  },
+  {
+    "__meta": {
+      "id": "8573fabf-bbb3-4a2f-9255-ac7d75d94891"
+    },
+    "parent_id": "5810eec3-6d04-43e2-add7-a64a4e365888",
+    "order": 100,
+    "depth": 2,
+    "children_count": 5,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888"
+    ],
+    "name": "Platforma",
+    "kind": "team",
+    "title": "Tim: Platforma",
+    "icon": "users",
+    "headcount": 5
+  },
+  {
+    "__meta": {
+      "id": "89cd236d-46b9-4e53-8857-58dfb45aa0c4"
+    },
+    "parent_id": "8573fabf-bbb3-4a2f-9255-ac7d75d94891",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "8573fabf-bbb3-4a2f-9255-ac7d75d94891"
+    ],
+    "name": "Katarina Janković",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "5724a925-c1fa-4c73-b65d-f932828afcb7"
+    },
+    "parent_id": "8573fabf-bbb3-4a2f-9255-ac7d75d94891",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "8573fabf-bbb3-4a2f-9255-ac7d75d94891"
+    ],
+    "name": "Bojana Antić",
+    "kind": "person",
+    "title": "Tehnički lider",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "be96305b-176a-41d5-964d-dfc813681a89"
+    },
+    "parent_id": "8573fabf-bbb3-4a2f-9255-ac7d75d94891",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "8573fabf-bbb3-4a2f-9255-ac7d75d94891"
+    ],
+    "name": "Teodora Babić",
+    "kind": "person",
+    "title": "Stariji inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "5e1f3466-234c-4ed4-8aab-e6b661810e22"
+    },
+    "parent_id": "8573fabf-bbb3-4a2f-9255-ac7d75d94891",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "8573fabf-bbb3-4a2f-9255-ac7d75d94891"
+    ],
+    "name": "Miloš Todorović",
+    "kind": "person",
+    "title": "QA inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "c7dce96a-96cf-4283-ad47-de59c12d3661"
+    },
+    "parent_id": "8573fabf-bbb3-4a2f-9255-ac7d75d94891",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "8573fabf-bbb3-4a2f-9255-ac7d75d94891"
+    ],
+    "name": "Dejan Lukić",
+    "kind": "person",
+    "title": "Tehnički lider",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "6f3b2cb5-ca65-490e-bab1-84969e87447f"
+    },
+    "parent_id": "5810eec3-6d04-43e2-add7-a64a4e365888",
+    "order": 200,
+    "depth": 2,
+    "children_count": 5,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888"
+    ],
+    "name": "Mobilne aplikacije",
+    "kind": "team",
+    "title": "Tim: Mobilne aplikacije",
+    "icon": "users",
+    "headcount": 5
+  },
+  {
+    "__meta": {
+      "id": "c8182a39-dfcd-4724-b889-4f803108ea96"
+    },
+    "parent_id": "6f3b2cb5-ca65-490e-bab1-84969e87447f",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "6f3b2cb5-ca65-490e-bab1-84969e87447f"
+    ],
+    "name": "Dragana Lukić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "7aa0dfa1-7333-40b0-b437-a2b868ee5b0e"
+    },
+    "parent_id": "6f3b2cb5-ca65-490e-bab1-84969e87447f",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "6f3b2cb5-ca65-490e-bab1-84969e87447f"
+    ],
+    "name": "Nevena Živković",
+    "kind": "person",
+    "title": "QA inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "582b01a9-fdab-4b36-96af-5b7f6d323dfe"
+    },
+    "parent_id": "6f3b2cb5-ca65-490e-bab1-84969e87447f",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "6f3b2cb5-ca65-490e-bab1-84969e87447f"
+    ],
+    "name": "Uroš Todorović",
+    "kind": "person",
+    "title": "Stariji inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "c4e3f70f-8f33-4af0-8bd2-c30e9eb0a86b"
+    },
+    "parent_id": "6f3b2cb5-ca65-490e-bab1-84969e87447f",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "6f3b2cb5-ca65-490e-bab1-84969e87447f"
+    ],
+    "name": "Zoran Gajić",
+    "kind": "person",
+    "title": "Softverski inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "f1e8d21c-91c9-4d7f-af9a-fc21ec8c54d1"
+    },
+    "parent_id": "6f3b2cb5-ca65-490e-bab1-84969e87447f",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "6f3b2cb5-ca65-490e-bab1-84969e87447f"
+    ],
+    "name": "Dragana Antić",
+    "kind": "person",
+    "title": "Stariji inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "04e92ffb-d550-4995-8879-6caf62f1cd1b"
+    },
+    "parent_id": "5810eec3-6d04-43e2-add7-a64a4e365888",
+    "order": 300,
+    "depth": 2,
+    "children_count": 4,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888"
+    ],
+    "name": "Podaci",
+    "kind": "team",
+    "title": "Tim: Podaci",
+    "icon": "users",
+    "headcount": 4
+  },
+  {
+    "__meta": {
+      "id": "ea3e9616-d061-48a7-9b03-793f12323181"
+    },
+    "parent_id": "04e92ffb-d550-4995-8879-6caf62f1cd1b",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "04e92ffb-d550-4995-8879-6caf62f1cd1b"
+    ],
+    "name": "Đorđe Antić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "05b345ad-6f57-43ed-87d4-f68060e616c5"
+    },
+    "parent_id": "04e92ffb-d550-4995-8879-6caf62f1cd1b",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "04e92ffb-d550-4995-8879-6caf62f1cd1b"
+    ],
+    "name": "Đorđe Gajić",
+    "kind": "person",
+    "title": "Softverski inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "37fc2063-f014-41e7-a47d-c5ce953c51f7"
+    },
+    "parent_id": "04e92ffb-d550-4995-8879-6caf62f1cd1b",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "04e92ffb-d550-4995-8879-6caf62f1cd1b"
+    ],
+    "name": "Teodora Vasić",
+    "kind": "person",
+    "title": "Softverski inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "9a88b573-e298-468f-b91a-8e1e5e9497ef"
+    },
+    "parent_id": "04e92ffb-d550-4995-8879-6caf62f1cd1b",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "04e92ffb-d550-4995-8879-6caf62f1cd1b"
+    ],
+    "name": "Maja Babić",
+    "kind": "person",
+    "title": "Stariji inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "a6e535be-5ff8-4797-871e-915964ac8d8c"
+    },
+    "parent_id": "5810eec3-6d04-43e2-add7-a64a4e365888",
+    "order": 400,
+    "depth": 2,
+    "children_count": 7,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888"
+    ],
+    "name": "Infrastruktura",
+    "kind": "team",
+    "title": "Tim: Infrastruktura",
+    "icon": "users",
+    "headcount": 7
+  },
+  {
+    "__meta": {
+      "id": "8de49e39-bdcb-4c4d-a17b-47c9b5cd9dd0"
+    },
+    "parent_id": "a6e535be-5ff8-4797-871e-915964ac8d8c",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "a6e535be-5ff8-4797-871e-915964ac8d8c"
+    ],
+    "name": "Jovan Savić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "2ac1ba02-282e-4a14-82e5-3638059dcab0"
+    },
+    "parent_id": "a6e535be-5ff8-4797-871e-915964ac8d8c",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "a6e535be-5ff8-4797-871e-915964ac8d8c"
+    ],
+    "name": "Katarina Popović",
+    "kind": "person",
+    "title": "Tehnički lider",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "bfbc59ef-4e6d-47a6-915e-cb72b36ee2a8"
+    },
+    "parent_id": "a6e535be-5ff8-4797-871e-915964ac8d8c",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "a6e535be-5ff8-4797-871e-915964ac8d8c"
+    ],
+    "name": "Maja Vasić",
+    "kind": "person",
+    "title": "Tehnički lider",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "2d75f8a2-650c-4821-9a87-8859f7b936a9"
+    },
+    "parent_id": "a6e535be-5ff8-4797-871e-915964ac8d8c",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "a6e535be-5ff8-4797-871e-915964ac8d8c"
+    ],
+    "name": "Zoran Despotović",
+    "kind": "person",
+    "title": "Tehnički lider",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "4c70f949-1ebf-46df-aa22-00faa521a728"
+    },
+    "parent_id": "a6e535be-5ff8-4797-871e-915964ac8d8c",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "a6e535be-5ff8-4797-871e-915964ac8d8c"
+    ],
+    "name": "Lazar Živković",
+    "kind": "person",
+    "title": "Softverski inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "a4f49dfa-72bb-4b3b-998d-8f4b21152503"
+    },
+    "parent_id": "a6e535be-5ff8-4797-871e-915964ac8d8c",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "a6e535be-5ff8-4797-871e-915964ac8d8c"
+    ],
+    "name": "Đorđe Babić",
+    "kind": "person",
+    "title": "Tehnički lider",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "36f8d1e5-c7de-4765-bac6-a43c4f288ca9"
+    },
+    "parent_id": "a6e535be-5ff8-4797-871e-915964ac8d8c",
+    "order": 700,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "5810eec3-6d04-43e2-add7-a64a4e365888",
+      "a6e535be-5ff8-4797-871e-915964ac8d8c"
+    ],
+    "name": "Bojana Todorović",
+    "kind": "person",
+    "title": "Stariji inženjer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "8d828f55-8a01-440c-8c7b-4dd5587ed47e"
+    },
+    "parent_id": "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+    "order": 200,
+    "depth": 1,
+    "children_count": 3,
+    "ancestor_ids": ["d72960f8-5ba5-4ade-ae2f-1546885dcd04"],
+    "name": "Prodaja",
+    "kind": "department",
+    "title": "Prodaja i partnerstva",
+    "icon": "users",
+    "headcount": 20
+  },
+  {
+    "__meta": {
+      "id": "b5e198ce-201f-40ce-a117-eff93a52d09b"
+    },
+    "parent_id": "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+    "order": 100,
+    "depth": 2,
+    "children_count": 6,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e"
+    ],
+    "name": "Domaće tržište",
+    "kind": "team",
+    "title": "Tim: Domaće tržište",
+    "icon": "users",
+    "headcount": 6
+  },
+  {
+    "__meta": {
+      "id": "0057f7dd-1a7e-4f16-a3b0-2f7332a45a2c"
+    },
+    "parent_id": "b5e198ce-201f-40ce-a117-eff93a52d09b",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "b5e198ce-201f-40ce-a117-eff93a52d09b"
+    ],
+    "name": "Vesna Gajić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "3e34ad8b-4059-48a2-8bde-09dbada0d98e"
+    },
+    "parent_id": "b5e198ce-201f-40ce-a117-eff93a52d09b",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "b5e198ce-201f-40ce-a117-eff93a52d09b"
+    ],
+    "name": "Uroš Živković",
+    "kind": "person",
+    "title": "Komercijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "8b96d3f2-7323-4072-b69d-8dd06563e78a"
+    },
+    "parent_id": "b5e198ce-201f-40ce-a117-eff93a52d09b",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "b5e198ce-201f-40ce-a117-eff93a52d09b"
+    ],
+    "name": "Nevena Popović",
+    "kind": "person",
+    "title": "Komercijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "629ebd61-1c5f-4cb5-96fc-7192de94d6b3"
+    },
+    "parent_id": "b5e198ce-201f-40ce-a117-eff93a52d09b",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "b5e198ce-201f-40ce-a117-eff93a52d09b"
+    ],
+    "name": "Dragana Janković",
+    "kind": "person",
+    "title": "Menadžer prodaje",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "ba5623c4-c0aa-4b80-8284-d66a2f1a6d77"
+    },
+    "parent_id": "b5e198ce-201f-40ce-a117-eff93a52d09b",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "b5e198ce-201f-40ce-a117-eff93a52d09b"
+    ],
+    "name": "Lazar Lukić",
+    "kind": "person",
+    "title": "Account menadžer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "29974fc4-960c-46e4-8410-9e60eccab8a0"
+    },
+    "parent_id": "b5e198ce-201f-40ce-a117-eff93a52d09b",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "b5e198ce-201f-40ce-a117-eff93a52d09b"
+    ],
+    "name": "Isidora Mitrović",
+    "kind": "person",
+    "title": "Komercijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "42bac0b0-9b3f-405d-a658-ee97e6643efd"
+    },
+    "parent_id": "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+    "order": 200,
+    "depth": 2,
+    "children_count": 7,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e"
+    ],
+    "name": "Izvoz",
+    "kind": "team",
+    "title": "Tim: Izvoz",
+    "icon": "users",
+    "headcount": 7
+  },
+  {
+    "__meta": {
+      "id": "3c611dad-2116-4375-b3f6-63d2404b071b"
+    },
+    "parent_id": "42bac0b0-9b3f-405d-a658-ee97e6643efd",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "42bac0b0-9b3f-405d-a658-ee97e6643efd"
+    ],
+    "name": "Petra Mitrović",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "6484a818-7c5b-404d-8773-42ce3309c124"
+    },
+    "parent_id": "42bac0b0-9b3f-405d-a658-ee97e6643efd",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "42bac0b0-9b3f-405d-a658-ee97e6643efd"
+    ],
+    "name": "Dragana Radić",
+    "kind": "person",
+    "title": "Komercijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "e6e4352a-b657-4e4f-9faa-967e54bc85a3"
+    },
+    "parent_id": "42bac0b0-9b3f-405d-a658-ee97e6643efd",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "42bac0b0-9b3f-405d-a658-ee97e6643efd"
+    ],
+    "name": "Jovan Janković",
+    "kind": "person",
+    "title": "Komercijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "d8c1122b-1899-4eb4-b2d4-415fad46748b"
+    },
+    "parent_id": "42bac0b0-9b3f-405d-a658-ee97e6643efd",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "42bac0b0-9b3f-405d-a658-ee97e6643efd"
+    ],
+    "name": "Relja Todorović",
+    "kind": "person",
+    "title": "Komercijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "b277a942-f2a5-4a74-99ed-50f55b4e690e"
+    },
+    "parent_id": "42bac0b0-9b3f-405d-a658-ee97e6643efd",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "42bac0b0-9b3f-405d-a658-ee97e6643efd"
+    ],
+    "name": "Sanja Antić",
+    "kind": "person",
+    "title": "Menadžer prodaje",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "5d776c8e-f066-4948-81d6-522c46e73de6"
+    },
+    "parent_id": "42bac0b0-9b3f-405d-a658-ee97e6643efd",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "42bac0b0-9b3f-405d-a658-ee97e6643efd"
+    ],
+    "name": "Teodora Janković",
+    "kind": "person",
+    "title": "Menadžer prodaje",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "d3ad7eae-8e40-4ca8-9c3a-cc9516a01c5a"
+    },
+    "parent_id": "42bac0b0-9b3f-405d-a658-ee97e6643efd",
+    "order": 700,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "42bac0b0-9b3f-405d-a658-ee97e6643efd"
+    ],
+    "name": "Uroš Gajić",
+    "kind": "person",
+    "title": "Menadžer prodaje",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345"
+    },
+    "parent_id": "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+    "order": 300,
+    "depth": 2,
+    "children_count": 7,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e"
+    ],
+    "name": "Partneri",
+    "kind": "team",
+    "title": "Tim: Partneri",
+    "icon": "users",
+    "headcount": 7
+  },
+  {
+    "__meta": {
+      "id": "9f5c33dd-7cb7-424c-81ed-0d2075f0f17f"
+    },
+    "parent_id": "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345"
+    ],
+    "name": "Aleksandar Todorović",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "42fbe66f-4e5b-4001-8691-5cd2e6290a83"
+    },
+    "parent_id": "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345"
+    ],
+    "name": "Lazar Obradović",
+    "kind": "person",
+    "title": "Menadžer prodaje",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "922f5e49-d62c-4c9b-ba09-8ef343441a0d"
+    },
+    "parent_id": "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345"
+    ],
+    "name": "Isidora Živković",
+    "kind": "person",
+    "title": "Account menadžer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "5920232b-7dac-45d6-97ce-aec697e2afd8"
+    },
+    "parent_id": "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345"
+    ],
+    "name": "Sanja Živković",
+    "kind": "person",
+    "title": "Account menadžer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "932df95d-af21-4352-986c-79041fd1f358"
+    },
+    "parent_id": "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345"
+    ],
+    "name": "Sanja Obradović",
+    "kind": "person",
+    "title": "Menadžer prodaje",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "d3d7c4de-adca-4136-a626-d9e56d1d9742"
+    },
+    "parent_id": "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345"
+    ],
+    "name": "Miloš Antić",
+    "kind": "person",
+    "title": "Menadžer prodaje",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "0d3857dd-b1a4-48a8-90e6-233bb547ed27"
+    },
+    "parent_id": "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345",
+    "order": 700,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "8d828f55-8a01-440c-8c7b-4dd5587ed47e",
+      "cbfcc8ed-d3d8-4cdd-ad3c-819f46c29345"
+    ],
+    "name": "Ognjen Radić",
+    "kind": "person",
+    "title": "Account menadžer",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "d39024a4-881c-44f7-b136-ef99e7e3c944"
+    },
+    "parent_id": "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+    "order": 300,
+    "depth": 1,
+    "children_count": 3,
+    "ancestor_ids": ["d72960f8-5ba5-4ade-ae2f-1546885dcd04"],
+    "name": "Marketing",
+    "kind": "department",
+    "title": "Brend i rast",
+    "icon": "users",
+    "headcount": 18
+  },
+  {
+    "__meta": {
+      "id": "b996557b-b0d6-4bac-9e4a-91d856e31761"
+    },
+    "parent_id": "d39024a4-881c-44f7-b136-ef99e7e3c944",
+    "order": 100,
+    "depth": 2,
+    "children_count": 5,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944"
+    ],
+    "name": "Sadržaj",
+    "kind": "team",
+    "title": "Tim: Sadržaj",
+    "icon": "users",
+    "headcount": 5
+  },
+  {
+    "__meta": {
+      "id": "c65c5db5-5cc7-412a-bdac-71461efbd237"
+    },
+    "parent_id": "b996557b-b0d6-4bac-9e4a-91d856e31761",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "b996557b-b0d6-4bac-9e4a-91d856e31761"
+    ],
+    "name": "Vesna Ćirić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "160a6987-4d27-4c64-a274-755dbbac1525"
+    },
+    "parent_id": "b996557b-b0d6-4bac-9e4a-91d856e31761",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "b996557b-b0d6-4bac-9e4a-91d856e31761"
+    ],
+    "name": "Dragana Todorović",
+    "kind": "person",
+    "title": "Dizajner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "80a95e03-c47f-470e-ae8a-74b2d7a81355"
+    },
+    "parent_id": "b996557b-b0d6-4bac-9e4a-91d856e31761",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "b996557b-b0d6-4bac-9e4a-91d856e31761"
+    ],
+    "name": "Bojana Popović",
+    "kind": "person",
+    "title": "Marketing specijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "94ebc975-32ed-49ac-9320-423c23a43111"
+    },
+    "parent_id": "b996557b-b0d6-4bac-9e4a-91d856e31761",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "b996557b-b0d6-4bac-9e4a-91d856e31761"
+    ],
+    "name": "Vesna Radić",
+    "kind": "person",
+    "title": "Dizajner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "5f60764b-09e5-4341-b075-88b2319f19b9"
+    },
+    "parent_id": "b996557b-b0d6-4bac-9e4a-91d856e31761",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "b996557b-b0d6-4bac-9e4a-91d856e31761"
+    ],
+    "name": "Lazar Despotović",
+    "kind": "person",
+    "title": "Kopirajter",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "43413535-5cf7-406f-abd5-14fd60d533d3"
+    },
+    "parent_id": "d39024a4-881c-44f7-b136-ef99e7e3c944",
+    "order": 200,
+    "depth": 2,
+    "children_count": 6,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944"
+    ],
+    "name": "Performans marketing",
+    "kind": "team",
+    "title": "Tim: Performans marketing",
+    "icon": "users",
+    "headcount": 6
+  },
+  {
+    "__meta": {
+      "id": "0aadee67-6351-42aa-91e8-1fa70166a7f9"
+    },
+    "parent_id": "43413535-5cf7-406f-abd5-14fd60d533d3",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "43413535-5cf7-406f-abd5-14fd60d533d3"
+    ],
+    "name": "Đorđe Filipović",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "45ef3844-8417-4347-8925-82cefc4f9f15"
+    },
+    "parent_id": "43413535-5cf7-406f-abd5-14fd60d533d3",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "43413535-5cf7-406f-abd5-14fd60d533d3"
+    ],
+    "name": "Katarina Despotović",
+    "kind": "person",
+    "title": "Marketing specijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "78770bb1-41db-4027-b7ba-311b5a97bbde"
+    },
+    "parent_id": "43413535-5cf7-406f-abd5-14fd60d533d3",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "43413535-5cf7-406f-abd5-14fd60d533d3"
+    ],
+    "name": "Uroš Lukić",
+    "kind": "person",
+    "title": "Kopirajter",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "3e92df0b-4ab7-43b2-824f-471e76b95c53"
+    },
+    "parent_id": "43413535-5cf7-406f-abd5-14fd60d533d3",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "43413535-5cf7-406f-abd5-14fd60d533d3"
+    ],
+    "name": "Vesna Babić",
+    "kind": "person",
+    "title": "Marketing specijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "7a76b135-1ebd-4eec-af26-d2b66f8e1ade"
+    },
+    "parent_id": "43413535-5cf7-406f-abd5-14fd60d533d3",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "43413535-5cf7-406f-abd5-14fd60d533d3"
+    ],
+    "name": "Nevena Obradović",
+    "kind": "person",
+    "title": "Dizajner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "c3ce6670-c7f4-4bdb-b97f-8e6ecf2361c7"
+    },
+    "parent_id": "43413535-5cf7-406f-abd5-14fd60d533d3",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "43413535-5cf7-406f-abd5-14fd60d533d3"
+    ],
+    "name": "Aleksandar Antić",
+    "kind": "person",
+    "title": "Dizajner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "39485442-1baf-4b22-842a-e58e2af88a1e"
+    },
+    "parent_id": "d39024a4-881c-44f7-b136-ef99e7e3c944",
+    "order": 300,
+    "depth": 2,
+    "children_count": 7,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944"
+    ],
+    "name": "Društvene mreže",
+    "kind": "team",
+    "title": "Tim: Društvene mreže",
+    "icon": "users",
+    "headcount": 7
+  },
+  {
+    "__meta": {
+      "id": "c919d46f-d567-4257-aa7a-6653a197321d"
+    },
+    "parent_id": "39485442-1baf-4b22-842a-e58e2af88a1e",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "39485442-1baf-4b22-842a-e58e2af88a1e"
+    ],
+    "name": "Zoran Ćirić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "b8dd9a3b-8000-4030-8c55-5fb1ba1f35d3"
+    },
+    "parent_id": "39485442-1baf-4b22-842a-e58e2af88a1e",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "39485442-1baf-4b22-842a-e58e2af88a1e"
+    ],
+    "name": "Nevena Babić",
+    "kind": "person",
+    "title": "Marketing specijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "09c54d0c-cec7-4a9e-8d3e-1365c07cbe5c"
+    },
+    "parent_id": "39485442-1baf-4b22-842a-e58e2af88a1e",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "39485442-1baf-4b22-842a-e58e2af88a1e"
+    ],
+    "name": "Maja Živković",
+    "kind": "person",
+    "title": "Dizajner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "f2ebf718-c744-4d30-a922-276f063a06e8"
+    },
+    "parent_id": "39485442-1baf-4b22-842a-e58e2af88a1e",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "39485442-1baf-4b22-842a-e58e2af88a1e"
+    ],
+    "name": "Relja Vasić",
+    "kind": "person",
+    "title": "Dizajner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "881079fa-1e6b-400b-a359-9e82f9d80a9f"
+    },
+    "parent_id": "39485442-1baf-4b22-842a-e58e2af88a1e",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "39485442-1baf-4b22-842a-e58e2af88a1e"
+    ],
+    "name": "Bojana Savić",
+    "kind": "person",
+    "title": "Marketing specijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "4dedff3b-9e11-4e88-b4f8-50177bcc3804"
+    },
+    "parent_id": "39485442-1baf-4b22-842a-e58e2af88a1e",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "39485442-1baf-4b22-842a-e58e2af88a1e"
+    ],
+    "name": "Sanja Mitrović",
+    "kind": "person",
+    "title": "Marketing specijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "7e5c322e-4de9-415c-afd2-09b198258739"
+    },
+    "parent_id": "39485442-1baf-4b22-842a-e58e2af88a1e",
+    "order": 700,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "d39024a4-881c-44f7-b136-ef99e7e3c944",
+      "39485442-1baf-4b22-842a-e58e2af88a1e"
+    ],
+    "name": "Petra Ćirić",
+    "kind": "person",
+    "title": "Marketing specijalista",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "7dff0297-1700-4837-b3cd-6c7cb99c2b6e"
+    },
+    "parent_id": "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+    "order": 400,
+    "depth": 1,
+    "children_count": 3,
+    "ancestor_ids": ["d72960f8-5ba5-4ade-ae2f-1546885dcd04"],
+    "name": "Finansije",
+    "kind": "department",
+    "title": "Računovodstvo i kontroling",
+    "icon": "users",
+    "headcount": 17
+  },
+  {
+    "__meta": {
+      "id": "dc04c847-3de1-4a09-af5c-55b50acdd64e"
+    },
+    "parent_id": "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+    "order": 100,
+    "depth": 2,
+    "children_count": 7,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e"
+    ],
+    "name": "Računovodstvo",
+    "kind": "team",
+    "title": "Tim: Računovodstvo",
+    "icon": "users",
+    "headcount": 7
+  },
+  {
+    "__meta": {
+      "id": "1c3242ad-3be3-4161-a5d2-45cfcc8a5b4e"
+    },
+    "parent_id": "dc04c847-3de1-4a09-af5c-55b50acdd64e",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "dc04c847-3de1-4a09-af5c-55b50acdd64e"
+    ],
+    "name": "Jovan Ćirić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "36f67071-d12d-4066-8134-60a618fbfbc8"
+    },
+    "parent_id": "dc04c847-3de1-4a09-af5c-55b50acdd64e",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "dc04c847-3de1-4a09-af5c-55b50acdd64e"
+    ],
+    "name": "Dejan Janković",
+    "kind": "person",
+    "title": "Referent nabavke",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "4c391f82-bb28-4146-bfba-9d3c5170820c"
+    },
+    "parent_id": "dc04c847-3de1-4a09-af5c-55b50acdd64e",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "dc04c847-3de1-4a09-af5c-55b50acdd64e"
+    ],
+    "name": "Jovan Popović",
+    "kind": "person",
+    "title": "Računovođa",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "d01363a2-9683-4a2b-bed6-ffbbd28366af"
+    },
+    "parent_id": "dc04c847-3de1-4a09-af5c-55b50acdd64e",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "dc04c847-3de1-4a09-af5c-55b50acdd64e"
+    ],
+    "name": "Lazar Todorović",
+    "kind": "person",
+    "title": "Finansijski analitičar",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "98251755-3b03-46ca-ac3f-8fc72838d430"
+    },
+    "parent_id": "dc04c847-3de1-4a09-af5c-55b50acdd64e",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "dc04c847-3de1-4a09-af5c-55b50acdd64e"
+    ],
+    "name": "Petra Vasić",
+    "kind": "person",
+    "title": "Referent nabavke",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "6fa0c3a7-539a-48b1-96d0-555cda3c1c8d"
+    },
+    "parent_id": "dc04c847-3de1-4a09-af5c-55b50acdd64e",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "dc04c847-3de1-4a09-af5c-55b50acdd64e"
+    ],
+    "name": "Miloš Savić",
+    "kind": "person",
+    "title": "Referent nabavke",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "7084b181-fa7e-4db6-8acf-80932c3a88f1"
+    },
+    "parent_id": "dc04c847-3de1-4a09-af5c-55b50acdd64e",
+    "order": 700,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "dc04c847-3de1-4a09-af5c-55b50acdd64e"
+    ],
+    "name": "Zoran Filipović",
+    "kind": "person",
+    "title": "Referent nabavke",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "588d303f-83b4-4d6c-aefb-26140736783c"
+    },
+    "parent_id": "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+    "order": 200,
+    "depth": 2,
+    "children_count": 6,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e"
+    ],
+    "name": "Kontroling",
+    "kind": "team",
+    "title": "Tim: Kontroling",
+    "icon": "users",
+    "headcount": 6
+  },
+  {
+    "__meta": {
+      "id": "b81e87b8-7ffa-4f36-be34-4b41521f8dc4"
+    },
+    "parent_id": "588d303f-83b4-4d6c-aefb-26140736783c",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "588d303f-83b4-4d6c-aefb-26140736783c"
+    ],
+    "name": "Dejan Radić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "e3bc0a54-6259-4707-a183-a7fdcd3f8551"
+    },
+    "parent_id": "588d303f-83b4-4d6c-aefb-26140736783c",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "588d303f-83b4-4d6c-aefb-26140736783c"
+    ],
+    "name": "Lazar Savić",
+    "kind": "person",
+    "title": "Finansijski analitičar",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "b9390375-5fb4-4572-af73-bddeb4dd6428"
+    },
+    "parent_id": "588d303f-83b4-4d6c-aefb-26140736783c",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "588d303f-83b4-4d6c-aefb-26140736783c"
+    ],
+    "name": "Uroš Savić",
+    "kind": "person",
+    "title": "Računovođa",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "8200a641-ea65-480f-b544-3671fe4010fd"
+    },
+    "parent_id": "588d303f-83b4-4d6c-aefb-26140736783c",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "588d303f-83b4-4d6c-aefb-26140736783c"
+    ],
+    "name": "Miloš Popović",
+    "kind": "person",
+    "title": "Računovođa",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "7a8e98da-75e0-4ebe-af67-8c67896e12c9"
+    },
+    "parent_id": "588d303f-83b4-4d6c-aefb-26140736783c",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "588d303f-83b4-4d6c-aefb-26140736783c"
+    ],
+    "name": "Bojana Lukić",
+    "kind": "person",
+    "title": "Računovođa",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "d20275c5-9bb5-4d0b-8e46-4f2f80a1f20e"
+    },
+    "parent_id": "588d303f-83b4-4d6c-aefb-26140736783c",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "588d303f-83b4-4d6c-aefb-26140736783c"
+    ],
+    "name": "Maja Filipović",
+    "kind": "person",
+    "title": "Referent nabavke",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "983337d7-ee5d-4c60-b249-7659d2c80b9e"
+    },
+    "parent_id": "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+    "order": 300,
+    "depth": 2,
+    "children_count": 4,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e"
+    ],
+    "name": "Nabavka",
+    "kind": "team",
+    "title": "Tim: Nabavka",
+    "icon": "users",
+    "headcount": 4
+  },
+  {
+    "__meta": {
+      "id": "98d55acd-c5cb-485f-80ac-8002430d8ee8"
+    },
+    "parent_id": "983337d7-ee5d-4c60-b249-7659d2c80b9e",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "983337d7-ee5d-4c60-b249-7659d2c80b9e"
+    ],
+    "name": "Teodora Todorović",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "dce8e43c-68cc-4f85-8a9b-94ce0b73f395"
+    },
+    "parent_id": "983337d7-ee5d-4c60-b249-7659d2c80b9e",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "983337d7-ee5d-4c60-b249-7659d2c80b9e"
+    ],
+    "name": "Katarina Živković",
+    "kind": "person",
+    "title": "Računovođa",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "dea24ae8-e242-492e-984e-6e7f9e49d877"
+    },
+    "parent_id": "983337d7-ee5d-4c60-b249-7659d2c80b9e",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "983337d7-ee5d-4c60-b249-7659d2c80b9e"
+    ],
+    "name": "Jovan Mitrović",
+    "kind": "person",
+    "title": "Referent nabavke",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "1ba6f51d-49ff-4be9-9b54-98cbda966c5f"
+    },
+    "parent_id": "983337d7-ee5d-4c60-b249-7659d2c80b9e",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "7dff0297-1700-4837-b3cd-6c7cb99c2b6e",
+      "983337d7-ee5d-4c60-b249-7659d2c80b9e"
+    ],
+    "name": "Katarina Antić",
+    "kind": "person",
+    "title": "Finansijski analitičar",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "c62c6081-2e4d-464b-ad3f-507cdc442653"
+    },
+    "parent_id": "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+    "order": 500,
+    "depth": 1,
+    "children_count": 3,
+    "ancestor_ids": ["d72960f8-5ba5-4ade-ae2f-1546885dcd04"],
+    "name": "Ljudski resursi",
+    "kind": "department",
+    "title": "Ljudi i kultura",
+    "icon": "users",
+    "headcount": 15
+  },
+  {
+    "__meta": {
+      "id": "0999d0f3-d32b-40c6-983d-51f3ec4995e3"
+    },
+    "parent_id": "c62c6081-2e4d-464b-ad3f-507cdc442653",
+    "order": 100,
+    "depth": 2,
+    "children_count": 5,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653"
+    ],
+    "name": "Regrutacija",
+    "kind": "team",
+    "title": "Tim: Regrutacija",
+    "icon": "users",
+    "headcount": 5
+  },
+  {
+    "__meta": {
+      "id": "6dc75149-a45f-467e-9bc4-464f10bc6646"
+    },
+    "parent_id": "0999d0f3-d32b-40c6-983d-51f3ec4995e3",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "0999d0f3-d32b-40c6-983d-51f3ec4995e3"
+    ],
+    "name": "Miloš Radić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "8852ed7f-fe1c-41e5-88a6-c6998a9f1676"
+    },
+    "parent_id": "0999d0f3-d32b-40c6-983d-51f3ec4995e3",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "0999d0f3-d32b-40c6-983d-51f3ec4995e3"
+    ],
+    "name": "Nevena Todorović",
+    "kind": "person",
+    "title": "Regruter",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "ccc38d90-e583-4e48-a972-f8ab3afc9104"
+    },
+    "parent_id": "0999d0f3-d32b-40c6-983d-51f3ec4995e3",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "0999d0f3-d32b-40c6-983d-51f3ec4995e3"
+    ],
+    "name": "Lazar Janković",
+    "kind": "person",
+    "title": "Regruter",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "2ca3e87f-259b-4ae8-981c-b6a5e1a4572b"
+    },
+    "parent_id": "0999d0f3-d32b-40c6-983d-51f3ec4995e3",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "0999d0f3-d32b-40c6-983d-51f3ec4995e3"
+    ],
+    "name": "Ognjen Todorović",
+    "kind": "person",
+    "title": "Trener",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "7ecd9bb5-d363-4d3d-b434-f35a92b99735"
+    },
+    "parent_id": "0999d0f3-d32b-40c6-983d-51f3ec4995e3",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "0999d0f3-d32b-40c6-983d-51f3ec4995e3"
+    ],
+    "name": "Uroš Mitrović",
+    "kind": "person",
+    "title": "HR partner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "4a84f7fd-982a-45d0-bb13-8d565748f621"
+    },
+    "parent_id": "c62c6081-2e4d-464b-ad3f-507cdc442653",
+    "order": 200,
+    "depth": 2,
+    "children_count": 4,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653"
+    ],
+    "name": "Razvoj zaposlenih",
+    "kind": "team",
+    "title": "Tim: Razvoj zaposlenih",
+    "icon": "users",
+    "headcount": 4
+  },
+  {
+    "__meta": {
+      "id": "c142113d-b846-4834-bcfa-6d46a111eef7"
+    },
+    "parent_id": "4a84f7fd-982a-45d0-bb13-8d565748f621",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "4a84f7fd-982a-45d0-bb13-8d565748f621"
+    ],
+    "name": "Ognjen Filipović",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "f289918a-0be9-4167-bb71-0f773d0a0548"
+    },
+    "parent_id": "4a84f7fd-982a-45d0-bb13-8d565748f621",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "4a84f7fd-982a-45d0-bb13-8d565748f621"
+    ],
+    "name": "Jovan Živković",
+    "kind": "person",
+    "title": "HR partner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "26e79339-ae60-42a5-8cab-ab9c6203e226"
+    },
+    "parent_id": "4a84f7fd-982a-45d0-bb13-8d565748f621",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "4a84f7fd-982a-45d0-bb13-8d565748f621"
+    ],
+    "name": "Aleksandar Živković",
+    "kind": "person",
+    "title": "Regruter",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "17a3f4e5-0479-4cff-936a-9e9e59a7fde6"
+    },
+    "parent_id": "4a84f7fd-982a-45d0-bb13-8d565748f621",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "4a84f7fd-982a-45d0-bb13-8d565748f621"
+    ],
+    "name": "Isidora Janković",
+    "kind": "person",
+    "title": "Trener",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "8876e421-8156-4854-9c44-431915982c75"
+    },
+    "parent_id": "c62c6081-2e4d-464b-ad3f-507cdc442653",
+    "order": 300,
+    "depth": 2,
+    "children_count": 6,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653"
+    ],
+    "name": "Administracija",
+    "kind": "team",
+    "title": "Tim: Administracija",
+    "icon": "users",
+    "headcount": 6
+  },
+  {
+    "__meta": {
+      "id": "fa43e2ba-aac0-439c-9880-1a5af2486eb0"
+    },
+    "parent_id": "8876e421-8156-4854-9c44-431915982c75",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "8876e421-8156-4854-9c44-431915982c75"
+    ],
+    "name": "Vesna Janković",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "81084302-3ac3-4cbb-a6ca-1d1e43c41638"
+    },
+    "parent_id": "8876e421-8156-4854-9c44-431915982c75",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "8876e421-8156-4854-9c44-431915982c75"
+    ],
+    "name": "Ognjen Popović",
+    "kind": "person",
+    "title": "HR partner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "3d6b687e-f61e-4616-8f99-1a72d0e57ab4"
+    },
+    "parent_id": "8876e421-8156-4854-9c44-431915982c75",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "8876e421-8156-4854-9c44-431915982c75"
+    ],
+    "name": "Ognjen Vasić",
+    "kind": "person",
+    "title": "Regruter",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "db8a772e-4642-4bdc-bc8d-3b0de563462e"
+    },
+    "parent_id": "8876e421-8156-4854-9c44-431915982c75",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "8876e421-8156-4854-9c44-431915982c75"
+    ],
+    "name": "Zoran Živković",
+    "kind": "person",
+    "title": "HR partner",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "36da7efd-45e5-4944-80f8-d987e279b872"
+    },
+    "parent_id": "8876e421-8156-4854-9c44-431915982c75",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "8876e421-8156-4854-9c44-431915982c75"
+    ],
+    "name": "Relja Radić",
+    "kind": "person",
+    "title": "Regruter",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "089656c4-ea56-4cc3-a39f-c4019b14aa6e"
+    },
+    "parent_id": "8876e421-8156-4854-9c44-431915982c75",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "c62c6081-2e4d-464b-ad3f-507cdc442653",
+      "8876e421-8156-4854-9c44-431915982c75"
+    ],
+    "name": "Jovan Antić",
+    "kind": "person",
+    "title": "Regruter",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "2116b3f1-2503-43b8-805d-56c256fa459a"
+    },
+    "parent_id": "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+    "order": 600,
+    "depth": 1,
+    "children_count": 3,
+    "ancestor_ids": ["d72960f8-5ba5-4ade-ae2f-1546885dcd04"],
+    "name": "Podrška korisnicima",
+    "kind": "department",
+    "title": "Uspeh korisnika",
+    "icon": "users",
+    "headcount": 17
+  },
+  {
+    "__meta": {
+      "id": "ee5d3021-3986-48a9-bdf7-33b49567969f"
+    },
+    "parent_id": "2116b3f1-2503-43b8-805d-56c256fa459a",
+    "order": 100,
+    "depth": 2,
+    "children_count": 6,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a"
+    ],
+    "name": "Prva linija",
+    "kind": "team",
+    "title": "Tim: Prva linija",
+    "icon": "users",
+    "headcount": 6
+  },
+  {
+    "__meta": {
+      "id": "d0f45451-e717-44b7-bbf2-69b336539497"
+    },
+    "parent_id": "ee5d3021-3986-48a9-bdf7-33b49567969f",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "ee5d3021-3986-48a9-bdf7-33b49567969f"
+    ],
+    "name": "Jovan Radić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "f14fcabd-32d2-479b-be41-86630d6a3ce2"
+    },
+    "parent_id": "ee5d3021-3986-48a9-bdf7-33b49567969f",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "ee5d3021-3986-48a9-bdf7-33b49567969f"
+    ],
+    "name": "Teodora Radić",
+    "kind": "person",
+    "title": "Agent podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "41589542-7942-40af-b82d-3b4b00c3a178"
+    },
+    "parent_id": "ee5d3021-3986-48a9-bdf7-33b49567969f",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "ee5d3021-3986-48a9-bdf7-33b49567969f"
+    ],
+    "name": "Dejan Gajić",
+    "kind": "person",
+    "title": "Specijalista podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "f4d01de8-e292-42eb-9b16-fb666c3b9d3d"
+    },
+    "parent_id": "ee5d3021-3986-48a9-bdf7-33b49567969f",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "ee5d3021-3986-48a9-bdf7-33b49567969f"
+    ],
+    "name": "Katarina Obradović",
+    "kind": "person",
+    "title": "Specijalista podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "41ce15ea-e83b-466d-a026-0e6815015b34"
+    },
+    "parent_id": "ee5d3021-3986-48a9-bdf7-33b49567969f",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "ee5d3021-3986-48a9-bdf7-33b49567969f"
+    ],
+    "name": "Lazar Filipović",
+    "kind": "person",
+    "title": "Agent podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "6146e9e3-ffa7-4b02-afff-28158aeac38b"
+    },
+    "parent_id": "ee5d3021-3986-48a9-bdf7-33b49567969f",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "ee5d3021-3986-48a9-bdf7-33b49567969f"
+    ],
+    "name": "Petra Obradović",
+    "kind": "person",
+    "title": "Trener za korisnike",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "6dfa5c09-7c0e-4628-8883-6e0a13844bf0"
+    },
+    "parent_id": "2116b3f1-2503-43b8-805d-56c256fa459a",
+    "order": 200,
+    "depth": 2,
+    "children_count": 5,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a"
+    ],
+    "name": "Druga linija",
+    "kind": "team",
+    "title": "Tim: Druga linija",
+    "icon": "users",
+    "headcount": 5
+  },
+  {
+    "__meta": {
+      "id": "bb0202cc-5bb8-4f8f-870b-806f4775995b"
+    },
+    "parent_id": "6dfa5c09-7c0e-4628-8883-6e0a13844bf0",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "6dfa5c09-7c0e-4628-8883-6e0a13844bf0"
+    ],
+    "name": "Dejan Despotović",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "584f54e6-929c-4426-a0c5-07c13285f853"
+    },
+    "parent_id": "6dfa5c09-7c0e-4628-8883-6e0a13844bf0",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "6dfa5c09-7c0e-4628-8883-6e0a13844bf0"
+    ],
+    "name": "Petra Živković",
+    "kind": "person",
+    "title": "Trener za korisnike",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "e6c9abd3-dd43-4b3a-9f0d-9c6b9ffdb638"
+    },
+    "parent_id": "6dfa5c09-7c0e-4628-8883-6e0a13844bf0",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "6dfa5c09-7c0e-4628-8883-6e0a13844bf0"
+    ],
+    "name": "Bojana Babić",
+    "kind": "person",
+    "title": "Agent podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "6524b6f6-8ece-4b33-a065-b648b6a7e244"
+    },
+    "parent_id": "6dfa5c09-7c0e-4628-8883-6e0a13844bf0",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "6dfa5c09-7c0e-4628-8883-6e0a13844bf0"
+    ],
+    "name": "Dejan Vasić",
+    "kind": "person",
+    "title": "Trener za korisnike",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "d683eebd-8206-47a6-839c-564a1945840a"
+    },
+    "parent_id": "6dfa5c09-7c0e-4628-8883-6e0a13844bf0",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "6dfa5c09-7c0e-4628-8883-6e0a13844bf0"
+    ],
+    "name": "Đorđe Janković",
+    "kind": "person",
+    "title": "Trener za korisnike",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "cd4b53b7-b521-47cc-ac6a-9e4aab691723"
+    },
+    "parent_id": "2116b3f1-2503-43b8-805d-56c256fa459a",
+    "order": 300,
+    "depth": 2,
+    "children_count": 6,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a"
+    ],
+    "name": "Obuke",
+    "kind": "team",
+    "title": "Tim: Obuke",
+    "icon": "users",
+    "headcount": 6
+  },
+  {
+    "__meta": {
+      "id": "306986e1-b105-45d6-94e7-0c456e315d31"
+    },
+    "parent_id": "cd4b53b7-b521-47cc-ac6a-9e4aab691723",
+    "order": 100,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "cd4b53b7-b521-47cc-ac6a-9e4aab691723"
+    ],
+    "name": "Teodora Ćirić",
+    "kind": "person",
+    "title": "Vođa tima",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "a864506f-61f1-496e-b8d4-1ea94140b82c"
+    },
+    "parent_id": "cd4b53b7-b521-47cc-ac6a-9e4aab691723",
+    "order": 200,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "cd4b53b7-b521-47cc-ac6a-9e4aab691723"
+    ],
+    "name": "Aleksandar Vasić",
+    "kind": "person",
+    "title": "Specijalista podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "1685e69e-f64c-4490-8641-1b672510154d"
+    },
+    "parent_id": "cd4b53b7-b521-47cc-ac6a-9e4aab691723",
+    "order": 300,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "cd4b53b7-b521-47cc-ac6a-9e4aab691723"
+    ],
+    "name": "Lazar Ćirić",
+    "kind": "person",
+    "title": "Agent podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "92bbbd0c-314a-4bb2-8cc3-4c675716d693"
+    },
+    "parent_id": "cd4b53b7-b521-47cc-ac6a-9e4aab691723",
+    "order": 400,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "cd4b53b7-b521-47cc-ac6a-9e4aab691723"
+    ],
+    "name": "Nevena Ćirić",
+    "kind": "person",
+    "title": "Agent podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "0e71996f-cf1f-4beb-b3a7-12368c27a91b"
+    },
+    "parent_id": "cd4b53b7-b521-47cc-ac6a-9e4aab691723",
+    "order": 500,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "cd4b53b7-b521-47cc-ac6a-9e4aab691723"
+    ],
+    "name": "Zoran Janković",
+    "kind": "person",
+    "title": "Agent podrške",
+    "icon": "user",
+    "headcount": 1
+  },
+  {
+    "__meta": {
+      "id": "4df487d5-5de3-43f0-89ea-c2f47e8c532e"
+    },
+    "parent_id": "cd4b53b7-b521-47cc-ac6a-9e4aab691723",
+    "order": 600,
+    "depth": 3,
+    "children_count": 0,
+    "ancestor_ids": [
+      "d72960f8-5ba5-4ade-ae2f-1546885dcd04",
+      "2116b3f1-2503-43b8-805d-56c256fa459a",
+      "cd4b53b7-b521-47cc-ac6a-9e4aab691723"
+    ],
+    "name": "Dragana Babić",
+    "kind": "person",
+    "title": "Trener za korisnike",
+    "icon": "user",
+    "headcount": 1
+  }
+]

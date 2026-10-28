@@ -285,3 +285,74 @@ describe("reindex action", () => {
     expect(res).toMatchObject({ kind: "udc.reindex.err", payload: { code: "validation_error" } });
   });
 });
+
+describe("tree.reparent action", () => {
+  const treeSchema = SchemaDocSchema.parse({
+    version: "v1",
+    fields: {
+      name: { type: "string" },
+      parent_id: { type: "string" },
+      order: { type: "integer" },
+      depth: { type: "integer" },
+    },
+  });
+  const A = "00000000-0000-4000-8000-00000000000a";
+  const B = "00000000-0000-4000-8000-00000000000b";
+  const fields = { parent_field: "parent_id", order_field: "order", depth_field: "depth" };
+
+  function withSources() {
+    const registry = new CollectionRegistry();
+    const rows = [
+      { __meta: { id: A }, name: "a", parent_id: null, order: 100, depth: 0 },
+      { __meta: { id: B }, name: "b", parent_id: null, order: 200, depth: 0 },
+    ];
+    registry.register({
+      name: "org",
+      source: new MemorySource({ schema: treeSchema, rows }),
+      view,
+    });
+    const flat = new MemorySource({ schema: treeSchema, rows });
+    Object.assign(flat, { capabilities: { ...flat.capabilities, tree_reparent: false } });
+    registry.register({ name: "flat", source: flat, view });
+    return createDispatcher(registry, { log: { error: vi.fn() } });
+  }
+
+  it("moves the node and answers the row and the count", async () => {
+    const res = await call(withSources(), "tree.reparent", {
+      collection: "org",
+      id: B,
+      parent: A,
+      order: 100,
+      fields,
+    });
+    expect(res).toMatchObject({
+      kind: "udc.tree.reparent.ok",
+      payload: { row: { __meta: { id: B, version: 2 }, parent_id: A, depth: 1 }, updated: 1 },
+    });
+  });
+
+  it("is unsupported where the capability is off", async () => {
+    const res = await call(withSources(), "tree.reparent", {
+      collection: "flat",
+      id: B,
+      parent: A,
+      order: 1,
+      fields,
+    });
+    expect(res).toMatchObject({ payload: { code: "unsupported_op" } });
+  });
+
+  it("refuses a cycle and a bad payload", async () => {
+    const d = withSources();
+    const cycle = await call(d, "tree.reparent", {
+      collection: "org",
+      id: A,
+      parent: A,
+      order: 1,
+      fields,
+    });
+    expect(cycle).toMatchObject({ payload: { code: "validation_error" } });
+    const bad = await call(d, "tree.reparent", { collection: "org", id: A, order: 1, fields });
+    expect(bad).toMatchObject({ payload: { code: "validation_error" } });
+  });
+});

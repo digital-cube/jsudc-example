@@ -7,16 +7,19 @@ import {
   type SchemaDoc,
   UdcError,
 } from "@jsudc/udc-core";
-import { sql } from "drizzle-orm";
-import type { Db } from "../db/client.js";
+import { type SQL, sql } from "drizzle-orm";
+import type { Db, Executor } from "../db/client.js";
 import { applySchemaEdit, type SchemaEdit } from "../schema-edit.js";
 import { activeSchema, assertJsonbSchema, writeSchemaRevision } from "../schema-store.js";
 import { type CursorValue, decodeCursor, encodeCursor, isUuid } from "./cursor.js";
 import {
   assertQueryFields,
   assertValidRow,
+  cycleError,
   notFound,
+  type ReparentPlan,
   reindexPlan,
+  reparentPlan,
   versionConflict,
   withoutMeta,
 } from "./fields.js";
@@ -29,7 +32,9 @@ import {
   type SourceListRequest,
   type SourceMutation,
   type SourceReindex,
+  type SourceTreeReparent,
   type SourceUpdateField,
+  type TreeReparentResult,
 } from "./source.js";
 import {
   compileFilter,
@@ -68,6 +73,7 @@ export class PostgresJsonbSource implements Source {
     schema_edit: true,
     config_edit: false,
     reindex: true,
+    tree_reparent: true,
     paging: ["cursor", "offset"],
     supported_filter_ops: ALL_FILTER_OPS,
   };
@@ -215,6 +221,117 @@ export class PostgresJsonbSource implements Source {
     return res.rowCount ?? 0;
   }
 
+  /**
+   * One transaction: lock the node, check its version and the new parent's
+   * chain (a cycle is refused), write parent and order, then — when the
+   * parent changed — recompute depth and ancestor ids of the whole subtree
+   * with a recursive CTE over `data->>parent_field`, and recount both
+   * parents' children. Every row written gets its version bumped once.
+   */
+  async reparent(req: SourceTreeReparent): Promise<TreeReparentResult> {
+    const schema = await this.describe();
+    const plan = reparentPlan(schema, req.fields, req);
+    if (!isUuid(req.id)) throw notFound(req.id);
+    if (req.parent !== null && !isUuid(req.parent)) throw notFound(req.parent);
+    const parent = req.parent;
+    const t = this.table;
+    const pf = plan.parentField;
+
+    return this.db.transaction(async (tx) => {
+      const found = await tx.execute<{ version: number; parent: string | null }>(sql`
+        SELECT version, ${parentOf(pf)} AS parent FROM ${t} WHERE id = ${req.id}::uuid FOR UPDATE`);
+      const node = found.rows[0];
+      if (!node) throw notFound(req.id);
+      if (req.expected_version !== undefined && req.expected_version !== node.version) {
+        throw versionConflict(req.id, req.expected_version, node.version);
+      }
+      const chain = parent === null ? [] : await this.chainUp(tx, pf, parent);
+      if (parent !== null && chain.length === 0) throw notFound(parent);
+      if (chain.includes(req.id)) throw cycleError(req.id, parent as string);
+
+      const moved = node.parent !== parent;
+      const ancestors = [...chain].reverse();
+      const patch: Record<string, unknown> = { [pf]: parent, [plan.orderField]: req.order };
+      if (moved && plan.depthField) patch[plan.depthField] = ancestors.length;
+      if (moved && plan.ancestorIdsField) patch[plan.ancestorIdsField] = ancestors;
+      const res = await tx.execute<DbRow>(sql`
+        UPDATE ${t}
+        SET data = data || ${JSON.stringify(patch)}::jsonb, version = version + 1, updated_at = now()
+        WHERE id = ${req.id}::uuid
+        RETURNING id, version, data`);
+      let updated = 1;
+      if (moved) {
+        updated += await this.restructureSubtree(tx, plan, req.id, ancestors);
+        updated += await this.recountChildren(tx, plan, [node.parent, parent]);
+      }
+      return { row: serialize(res.rows[0] as DbRow), updated };
+    });
+  }
+
+  /** The ids from `start` up to its root, nearest first; empty when `start` does not exist. */
+  private async chainUp(tx: Executor, pf: string, start: string): Promise<string[]> {
+    // `CYCLE` stops the walk on data that already loops instead of running forever.
+    const res = await tx.execute<{ id: string }>(sql`
+      WITH RECURSIVE up(id, parent, n) AS (
+        SELECT id, ${parentOf(pf)}, 0 FROM ${this.table} WHERE id = ${start}::uuid
+        UNION ALL
+        SELECT t.id, ${parentOf(pf, "t")}, up.n + 1
+        FROM ${this.table} t JOIN up ON t.id::text = up.parent
+      ) CYCLE id SET looped USING path
+      SELECT id::text FROM up WHERE NOT looped ORDER BY n`);
+    return res.rows.map((r) => r.id);
+  }
+
+  /** Depth and ancestor ids of every descendant of `root`, whose own ancestors are `ancestors`. */
+  private async restructureSubtree(
+    tx: Executor,
+    plan: ReparentPlan,
+    root: string,
+    ancestors: string[],
+  ): Promise<number> {
+    if (!plan.depthField && !plan.ancestorIdsField) return 0;
+    const pf = plan.parentField;
+    const set = [
+      plan.depthField
+        ? sql`jsonb_build_object(${plan.depthField}::text, jsonb_array_length(s.anc))`
+        : null,
+      plan.ancestorIdsField ? sql`jsonb_build_object(${plan.ancestorIdsField}::text, s.anc)` : null,
+    ].filter((x) => x !== null);
+    const res = await tx.execute(sql`
+      WITH RECURSIVE sub(id, anc) AS (
+        SELECT c.id, ${JSON.stringify([...ancestors, root])}::jsonb
+        FROM ${this.table} c WHERE ${parentOf(pf, "c")} = ${root}
+        UNION ALL
+        SELECT c.id, sub.anc || to_jsonb(sub.id::text)
+        FROM ${this.table} c JOIN sub ON ${parentOf(pf, "c")} = sub.id::text
+      ) CYCLE id SET looped USING path
+      UPDATE ${this.table} AS t
+      SET data = t.data || ${sql.join(set, sql` || `)}, version = t.version + 1, updated_at = now()
+      FROM sub s
+      WHERE t.id = s.id AND NOT s.looped`);
+    return res.rowCount ?? 0;
+  }
+
+  /** Set the children count of each parent to what it is now (the old one loses, the new one gains). */
+  private async recountChildren(
+    tx: Executor,
+    plan: ReparentPlan,
+    parents: (string | null)[],
+  ): Promise<number> {
+    const field = plan.childrenCountField;
+    const ids = parents.filter((p): p is string => p !== null && isUuid(p));
+    if (!field || ids.length === 0) return 0;
+    const pf = plan.parentField;
+    const res = await tx.execute(sql`
+      UPDATE ${this.table} AS t
+      SET data = jsonb_set(t.data, ARRAY[${field}]::text[], to_jsonb((
+            SELECT count(*)::int FROM ${this.table} c WHERE ${parentOf(pf, "c")} = t.id::text))),
+          version = t.version + 1,
+          updated_at = now()
+      WHERE t.id = ANY(${`{${ids.join(",")}}`}::uuid[])`);
+    return res.rowCount ?? 0;
+  }
+
   addField(req: SourceAddField): Promise<SchemaDoc> {
     return this.editSchema({ op: "add", ...req });
   }
@@ -240,6 +357,14 @@ export class PostgresJsonbSource implements Source {
       },
     });
   }
+}
+
+/**
+ * `data->>'<parent field>'` written into the SQL text, the form the field's
+ * expression index is built on; the name passed the allowlist (`reparentPlan`).
+ */
+function parentOf(field: string, alias?: string): SQL {
+  return sql.raw(`(${alias ? `${alias}.` : ""}data->>'${field}')`);
 }
 
 function serialize(row: DbRow): Row {

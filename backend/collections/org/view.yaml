@@ -1,0 +1,68 @@
+# The lazy tree example: an organisation chart read one level at a time
+# (`lazy: true`): the company first, a department's teams when it is opened.
+# Rename a node inline; drag one under another parent or between siblings —
+# the move goes through `tree.reparent`, which keeps depth, ancestor_ids and
+# children_count consistent server-side.
+default_renderer: tree
+available_renderers: [tree, table]
+pagination: infinite
+page_size_default: 50
+
+tree_options:
+  parent_field: parent_id
+  order_field: order
+  label_field: name
+  icon_field: icon
+  depth_field: depth
+  children_count_field: children_count
+  ancestor_ids_field: ancestor_ids
+  lazy: true
+  lazy_page_size: 512
+  # By kind (a moved team among people sorts apart), then by order.
+  sibling_sort:
+    - {field: kind, dir: asc}
+    - {field: order, dir: asc}
+  expand:
+    persist: localstorage
+    key: org
+    default_depth: 1
+  interactive:
+    rename: true
+    reparent: true
+  # A lazy tree has not read the branches a match sits in: its search always
+  # filters server-side, and the labels highlight the matched text.
+
+columns:
+  - {field: name, pin: left, editable: true, width: 240}
+  - {field: kind, width: 120}
+  - {field: title, editable: true, width: 220}
+  - {field: headcount, render: number_format, align: right, width: 110}
+  - {field: depth, render: number_format, align: right, width: 80}
+  - {field: children_count, render: number_format, align: right, width: 130}
+
+search:
+  fields: [name, title]
+  placeholder: Search a name or a title
+  case_insensitive: true
+
+filters:
+  - field: kind
+    kind: select
+    label: Kind
+    options: [company, department, team, person]
+  - field: headcount
+    kind: range
+    label: Headcount
+    min: 0
+    max: 200
+    step: 1
+
+filterable:
+  fields: [name, kind, title, headcount, depth, children_count]
+
+row_color:
+  field: kind
+  rules:
+    - {value: company, color: accent}
+    - {value: department, color: info}
+    - {value: person, color: muted}
