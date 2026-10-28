@@ -38,6 +38,7 @@ describe("ACTIONS registry", () => {
       "schema.soft_delete_field",
       "reindex",
       "tree.reparent",
+      "source.read",
     ]);
     expect(isActionName("list")).toBe(true);
     expect(isActionName("toString")).toBe(false);
@@ -93,6 +94,11 @@ describe("ACTIONS registry", () => {
       { rows: [row], next_cursor: null, total: 1 },
     ],
     ["read", { collection: "companies", id: "r1" }, { row }],
+    [
+      "source.read",
+      { collection: "menu" },
+      { path: "menu/data/menu.yaml", text: "- code: HOME\n", mtime: "2026-10-28T10:00:00.000Z" },
+    ],
     [
       "mutate",
       { collection: "companies", op: "update", id: "r1", row: { name: "B" }, expected_version: 2 },

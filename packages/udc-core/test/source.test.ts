@@ -93,6 +93,30 @@ describe("SourceConfig", () => {
     expect(sourceGroup("memory")).toBe("database");
     expect(sourceGroup("filesystem")).toBe("files");
     expect(sourceGroup("http_api")).toBe("internet");
+    expect(sourceGroup("yaml_menu")).toBe("files");
+  });
+
+  it("accepts the menu source.yaml, dynamic by default", () => {
+    const cfg = parseSourceConfig(shipped("menu"));
+    if (cfg.kind !== "yaml_menu") throw new Error("not yaml_menu");
+    expect(cfg.options.file).toBe("data/menu.yaml");
+    expect(cfg.options.dynamic).toBe(true);
+    expect(cfg.options.collection_icons.tickets).toBe("lucide:kanban");
+    const flat = parseSourceConfig({ kind: "yaml_menu", file: "m.yaml" });
+    expect(flat).toEqual({
+      kind: "yaml_menu",
+      options: { file: "m.yaml", dynamic: true, collection_icons: {} },
+    });
+  });
+
+  it("refuses a yaml_menu file that climbs out or is absolute", () => {
+    const ok = (file: string) =>
+      SourceConfigSchema.safeParse({ kind: "yaml_menu", options: { file } }).success;
+    expect(ok("data/menu.yaml")).toBe(true);
+    expect(ok("../other/menu.yaml")).toBe(false);
+    expect(ok("data/../../menu.yaml")).toBe(false);
+    expect(ok("/etc/menu.yaml")).toBe(false);
+    expect(ok("")).toBe(false);
   });
 });
 

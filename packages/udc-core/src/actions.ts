@@ -18,6 +18,8 @@ export const CapabilitiesSchema = z.looseObject({
   reindex: z.boolean(),
   /** The source moves a tree node and keeps its structure fields consistent (`tree.reparent`). */
   tree_reparent: z.boolean(),
+  /** The source is a file the UI may show as it is written (`source.read`, the Source tab). */
+  source_yaml: z.boolean().default(false),
   /**
    * How `list` pages: keyset `cursor`, `offset`, or both. Absent means both.
    * An array-backed source (memory, filesystem, http_api) answers `["offset"]`:
@@ -259,6 +261,22 @@ export const TreeReparentResponseSchema = z.object({
 
 export type TreeReparentResponse = z.infer<typeof TreeReparentResponseSchema>;
 
+// source.read ---------------------------------------------------------------
+
+/** The file a `source_yaml` collection is read from, as written. */
+export const SourceReadRequestSchema = z.object({ collection: CollectionName });
+export type SourceReadRequest = z.infer<typeof SourceReadRequestSchema>;
+
+export const SourceReadResponseSchema = z.object({
+  /** Relative to the backend's collections directory (`menu/data/menu.yaml`). */
+  path: z.string().min(1),
+  text: z.string(),
+  /** Last modification, ISO instant. */
+  mtime: z.string(),
+});
+
+export type SourceReadResponse = z.infer<typeof SourceReadResponseSchema>;
+
 // registry ------------------------------------------------------------------
 
 /** Every action with its payload schemas, so a server can dispatch generically. */
@@ -279,6 +297,7 @@ export const ACTIONS = {
   },
   reindex: { request: ReindexRequestSchema, response: ReindexResponseSchema },
   "tree.reparent": { request: TreeReparentRequestSchema, response: TreeReparentResponseSchema },
+  "source.read": { request: SourceReadRequestSchema, response: SourceReadResponseSchema },
 } as const satisfies Record<string, { request: z.ZodType; response: z.ZodType }>;
 
 export type ActionName = keyof typeof ACTIONS;

@@ -7,6 +7,7 @@ export * from "./filter.js";
 export * from "./filterable.js";
 export * from "./kanban.js";
 export * from "./map.js";
+export * from "./menu.js";
 export * from "./order.js";
 export * from "./query.js";
 export * from "./row.js";

@@ -7,7 +7,13 @@ import { z } from "zod";
  * (no `options:` key) parses too.
  */
 
-export const SOURCE_KINDS = ["postgres_jsonb", "memory", "filesystem", "http_api"] as const;
+export const SOURCE_KINDS = [
+  "postgres_jsonb",
+  "memory",
+  "filesystem",
+  "http_api",
+  "yaml_menu",
+] as const;
 export type SourceKind = (typeof SOURCE_KINDS)[number];
 export const SourceKindSchema = z.enum(SOURCE_KINDS);
 
@@ -21,6 +27,7 @@ const GROUP_OF: Record<SourceKind, SourceGroup> = {
   memory: "database",
   filesystem: "files",
   http_api: "internet",
+  yaml_menu: "files",
 };
 
 export function sourceGroup(kind: SourceKind): SourceGroup {
@@ -131,10 +138,31 @@ export const HttpApiOptionsSchema = z.looseObject({
   max_rows: z.number().int().min(1).max(50_000).default(2000),
 });
 
+/** A file of the collection: relative to its directory, never absolute, never climbing out (`..`). */
+const CollectionFileSchema = z
+  .string()
+  .min(1)
+  .refine((f) => !/^([\\/]|[A-Za-z]:)/.test(f), {
+    message: "file is relative to the collection directory, not absolute",
+  })
+  .refine((f) => !f.split(/[\\/]+/).includes(".."), {
+    message: "file must not contain a .. segment",
+  });
+
+export const YamlMenuOptionsSchema = z.looseObject({
+  /** The menu YAML, relative to the collection directory. */
+  file: CollectionFileSchema,
+  /** Resolve `children: "udc:…"` references against the live registry; `false` leaves them childless. */
+  dynamic: z.boolean().default(true),
+  /** Collection name → icon (`lucide:<name>`) of its node in a `udc:collections` branch. */
+  collection_icons: z.record(z.string().min(1), z.string().min(1)).default({}),
+});
+
 export type PostgresJsonbOptions = z.output<typeof PostgresJsonbOptionsSchema>;
 export type MemoryOptions = z.output<typeof MemoryOptionsSchema>;
 export type FilesystemOptions = z.output<typeof FilesystemOptionsSchema>;
 export type HttpApiOptions = z.output<typeof HttpApiOptionsSchema>;
+export type YamlMenuOptions = z.output<typeof YamlMenuOptionsSchema>;
 
 /** A flat file (`kind` plus the options beside it) is read as `{kind, options}`. */
 function nestOptions(raw: unknown): unknown {
@@ -153,6 +181,7 @@ export const SourceConfigSchema = z.preprocess(
     z.object({ kind: z.literal("memory"), options: MemoryOptionsSchema.default({}) }),
     z.object({ kind: z.literal("filesystem"), options: FilesystemOptionsSchema }),
     z.object({ kind: z.literal("http_api"), options: HttpApiOptionsSchema }),
+    z.object({ kind: z.literal("yaml_menu"), options: YamlMenuOptionsSchema }),
   ]),
 );
 
