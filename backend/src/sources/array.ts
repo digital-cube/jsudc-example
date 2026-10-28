@@ -83,6 +83,8 @@ export interface ArrayQuery {
   limit: number;
   /** Rows placed first, outside filter and sort (the filesystem's `..`); counted and paged. */
   head?: readonly Row[] | undefined;
+  /** Without sort keys, keep the array's own order instead of ordering by id. */
+  keepOrder?: boolean | undefined;
 }
 
 /**
@@ -95,7 +97,8 @@ export function queryRows(
   q: ArrayQuery,
 ): { rows: Row[]; total: number } {
   const matched = rows.filter((r) => evaluateFilter(q.filter, r));
-  const ordered = [...(q.head ?? []), ...sortRows(matched, q.sort ?? [], schema)];
+  const sorted = q.keepOrder && !q.sort?.length ? matched : sortRows(matched, q.sort ?? [], schema);
+  const ordered = [...(q.head ?? []), ...sorted];
   const offset = Math.max(0, q.offset ?? 0);
   return { rows: ordered.slice(offset, offset + q.limit), total: ordered.length };
 }
@@ -146,6 +149,8 @@ export abstract class ArraySource implements Source {
 
   /** The order of a `list` that asks for none (ties are always broken by id). */
   protected readonly defaultSort: SortKey[] = [];
+  /** Without a sort (and no `defaultSort`), serve the rows in the order `load` gave them. */
+  protected readonly keepOrder: boolean = false;
 
   async describe(): Promise<SchemaDoc> {
     return this.schema;
@@ -165,6 +170,7 @@ export abstract class ArraySource implements Source {
       offset,
       limit,
       head: loaded.head,
+      keepOrder: this.keepOrder,
     });
     return { ...loaded.extra, rows: page.rows, next_cursor: null, total: page.total };
   }

@@ -207,6 +207,12 @@ describe("HttpApiSource", () => {
     await rejectsWith(src.list({ page: { limit: 1, cursor: "c" } }), "unsupported_op");
   });
 
+  it("keeps the upstream order when no sort is asked for", async () => {
+    const { src } = make(scripted({ data: { items: [...ITEMS].reverse() } }).fetch);
+    expect(ids((await src.list({})).rows)).toEqual(["#0", "b", "a"]);
+    expect(ids((await src.list({ sort: [{ field: "title" }] })).rows)).toEqual(["a", "b", "#0"]);
+  });
+
   it("filters, sorts and pages the fetched array in memory", async () => {
     const { src } = make(scripted(BODY).fetch);
     const res = await src.list({

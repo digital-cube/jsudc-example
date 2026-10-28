@@ -15,6 +15,9 @@ map_options:
   radius_min: 4
   popup_fields: [place, mag, depth, time, alert]
   zoom: 2
+  # Opens on the whole world: fitting ~700 markers around the globe would zoom out past it.
+  default_region: world
+  fit_bounds: false
   regions:
     - {id: world, label: World, center: [20, 0], zoom: 2}
     - {id: europe, label: Europe, center: [48, 15], zoom: 4}

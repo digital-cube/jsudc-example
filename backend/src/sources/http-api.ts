@@ -139,6 +139,8 @@ interface Snapshot {
 export class HttpApiSource extends ArraySource {
   readonly capabilities: Capabilities = { ...READ_ONLY_ARRAY_CAPABILITIES };
   readonly kind = "http_api";
+  // Unsorted, the rows come as upstream sent them: USGS newest first, GitHub by last update.
+  protected override readonly keepOrder = true;
   protected readonly label: string;
   readonly name: string;
   private readonly opts: HttpApiOptions;
