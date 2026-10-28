@@ -322,6 +322,54 @@ Light and dark use the categorical palette `--chart-1 … --chart-8` in
 (`frontend/cypress/e2e/chart.cy.ts`) freezes the browser clock at the
 seed's noon, so every `between` above is checked to the millisecond.
 
+## Flights: aircraft from OpenSky, with a history the API does not have
+
+`flights` (`backend/collections/flights/`) is every aircraft the OpenSky
+Network sees over Serbia and its neighbours — a 5° × 5° box, the largest that
+costs one credit a call — called **anonymously** (no account, no key).
+
+1. **The map.** **Views ▸ Flights map** (`/udc/flights?tab=map`): an
+   aeroplane per aircraft (`icon: airplane`), turned along its track
+   (`rotate_field: heading`, CSS `rotate`) and coloured by altitude through
+   the view's `row_color` — blue at cruise, green climbing or descending,
+   amber on approach, grey on the ground. Hover one: its outline darkens and
+   its trail turns from grey to its own colour. *Balkans*, *Belgrade* and
+   *Adriatic* fly to a region.
+2. **The trails grow while the server runs.** OpenSky only answers *where is
+   everything now*. The source's `history` block keeps, per ICAO24 address,
+   the last 60 values of `baro_alt`, `lat` and `lng` across calls and serves
+   them as `baro_alt_history`, `lat_history`, `lng_history` (the server adds
+   them to the schema; `schema.json` does not list them). Right after a start
+   there are no trails; after the second upstream call every aircraft still
+   in the box has two points, and so on. Up to 300 aircraft every trail is
+   drawn; above that only the hovered and the selected one.
+3. **A poll does not move you.** The page polls every 30 s; the markers are
+   kept by id and move in place, the open popup follows its aircraft, the
+   viewport stays where you put it.
+4. **The budget.** Hover *updated … ago*: *Upstream access: anonymous*,
+   *Server cache: 4 min*. However many tabs poll, OpenSky is called at most
+   every 4 minutes (360 calls of the 400 a day it allows an IP); the backend
+   log has a line per call (`flights: GET … → 200 (anonymous)`). With
+   `UDC_OPENSKY_CLIENT_ID` and `UDC_OPENSKY_CLIENT_SECRET` set (an OpenSky API
+   client) the source fetches an OAuth2 token, refreshes it at 90 % of its
+   life, and the cache drops to 15 s; the tooltip then says *OAuth2 client*.
+5. **Chips.** *On ground = No* drops the taxiing ones, *Baro alt* 9 000 –
+   13 000 leaves the cruise traffic, the search box matches callsign, ICAO24
+   and country.
+6. **Table and cards.** **Table**: `baro_alt_history` as a sparkline (framed
+   on its own min and max, the latest value a dot, the range in its tooltip),
+   the track as an arrow (`heading_glyph`, degrees on hover), altitudes and
+   speeds with `number_format` `precision` and `suffix` (`10,973 m`,
+   `246 m/s`). **Cards**: the altitude large (`card_options.metric`) and its
+   sparkline under the details.
+7. **The row is an array.** **Doc** explains the positional state vector
+   (`id_field: "[0]"`, `lng: "[5]"`, `lat: "[6]"` — lng before lat), Unix
+   seconds (`epoch_seconds`) and the padded callsign. Offline,
+   `UDC_HTTP_FIXTURES=backend/test/fixtures/http` serves two recorded answers,
+   `flights.1.json` then `flights.2.json`, so the trails have two points after
+   the second call (`UDC_FLIGHTS_CACHE_TTL_MS=1000` shortens the wait; that is
+   what `npm run e2e` does).
+
 ## The menu: the sidebar is a collection
 
 The sidebar on the left is not hard-coded: it is the `menu` collection
