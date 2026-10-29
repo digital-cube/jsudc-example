@@ -298,6 +298,14 @@ install from their tags with the listed peers and a `tsc --noEmit` smoke
 importing all three passes. The Actions runs on each `main` were not
 checked from here.
 
+P6 (TCKQ6MJ5HX, hand-over TCKUCFTR9Q) closed phase 1 on 2026-10-29 evening:
+`main` fast-forwarded to `b1bd6fa` (P1–P6, `packages/` gone, `@jsudc/*` from
+the `v0.1.0` tags over HTTPS), deployed to `jsudc.igor.digitalcube.work` with
+all 13 collections answering, and pushed as the first `main` of
+`digital-cube/jsudc-example` (63 commits, private). Lesson from that deploy:
+`deploy.sh` runs the version from before its own fast-forward, so a branch
+that changes the script deploys with the old one (TCKWMQCE7H).
+
 ### Phase 2 — more frameworks, more design systems
 
 **T10 `@jsudc/ui-mui` and `@jsudc/ui-antd` adapters** with an example route
