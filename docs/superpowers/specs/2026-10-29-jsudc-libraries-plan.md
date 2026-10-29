@@ -280,6 +280,23 @@ through npm" with the least motion:
 | P5 | split and push core, server, react; tag `v0.1.0` | P4 |
 | P6 | example installs from GitHub tags; push as `jsudc-example`; deploy | P5 |
 
+### Release log
+
+| package | repository | commit | tag | date |
+|---|---|---|---|---|
+| `@jsudc/core` | `digital-cube/jsudc-core` | `6914a65` | `v0.1.0` | 2026-10-29 |
+| `@jsudc/server` | `digital-cube/jsudc-server` | `453a756` | `v0.1.0` | 2026-10-29 |
+| `@jsudc/react` | `digital-cube/jsudc-react` | `c4bef7e` | `v0.1.0` | 2026-10-29 |
+
+Pushed from the monorepo's `git subtree split` branches over HTTPS with the
+`digital-cube` gh token (`workflow` scope added 2026-10-29); the machine's SSH
+key is `ijdigital`, which has no access to the three repositories. Verified
+from a scratch project: `npm install github:digital-cube/jsudc-core#v0.1.0`
+runs `prepare`, imports with 168 exports; server (39 exports) and react
+install from their tags with the listed peers and a `tsc --noEmit` smoke
+importing all three passes. The Actions runs on each `main` were not
+checked from here.
+
 ### Phase 2 — more frameworks, more design systems
 
 **T10 `@jsudc/ui-mui` and `@jsudc/ui-antd` adapters** with an example route
