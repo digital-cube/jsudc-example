@@ -29,7 +29,7 @@ npm install @jsudc/react @jsudc/core \
   react react-dom react-router @tanstack/react-query @tanstack/react-table \
   radix-ui lucide-react leaflet recharts @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities
 # before the npm release, from a tag:
-npm install github:digital-cube/jsudc-react#v0.1.0
+npm install github:digital-cube/jsudc-core#v0.1.0 github:digital-cube/jsudc-react#v0.1.0
 ```
 
 ## Quick start

@@ -52,7 +52,7 @@
     "test:watch": "vitest"
   },
   "dependencies": {
-    "@jsudc/core": "^0.1.0",
+    "@jsudc/core": "github:digital-cube/jsudc-core#v0.1.0",
     "clsx": "^2.1.1",
     "marked": "^18.1.2",
     "tailwind-merge": "^3.7.0"
