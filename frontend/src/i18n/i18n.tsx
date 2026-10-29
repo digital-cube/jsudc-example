@@ -1,4 +1,4 @@
-import type { SchemaDoc } from "@jsudc/udc-core";
+import type { SchemaDoc } from "@jsudc/core";
 import { createContext, type ReactNode, useCallback, useContext, useMemo, useState } from "react";
 import { humanize, storage } from "../lib/utils";
 import { LOCALES, type Locale, type Term, TRANSLATIONS, type Translations } from "./translations";

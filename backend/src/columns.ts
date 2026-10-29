@@ -1,4 +1,4 @@
-import type { ColumnConfig, SchemaDoc } from "@jsudc/udc-core";
+import type { ColumnConfig, SchemaDoc } from "@jsudc/core";
 
 type FieldOrder = Pick<SchemaDoc, "fields" | "field_order">;
 

@@ -1,9 +1,4 @@
-import {
-  type CollectionListing,
-  SOURCE_GROUPS,
-  type SourceGroup,
-  sourceGroup,
-} from "@jsudc/udc-core";
+import { type CollectionListing, SOURCE_GROUPS, type SourceGroup, sourceGroup } from "@jsudc/core";
 import {
   Activity,
   Building2,

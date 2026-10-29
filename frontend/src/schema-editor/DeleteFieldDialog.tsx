@@ -1,4 +1,4 @@
-import { isUdcError } from "@jsudc/udc-core";
+import { isUdcError } from "@jsudc/core";
 import { AlertTriangle, Trash2 } from "lucide-react";
 import { useState } from "react";
 import { Button } from "../components/ui/button";

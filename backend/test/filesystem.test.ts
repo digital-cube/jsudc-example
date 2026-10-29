@@ -1,7 +1,7 @@
 import { mkdtempSync, readFileSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { type FilterNode, SchemaDocSchema } from "@jsudc/udc-core";
+import { type FilterNode, SchemaDocSchema } from "@jsudc/core";
 import { afterAll, describe, expect, it } from "vitest";
 import { COLLECTIONS_DIR } from "../src/config.js";
 import { FilesystemSource, normalizeRelPath, takePathSelector } from "../src/sources/filesystem.js";

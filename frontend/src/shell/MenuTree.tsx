@@ -1,4 +1,4 @@
-import type { CollectionListing } from "@jsudc/udc-core";
+import type { CollectionListing } from "@jsudc/core";
 import { ChevronRight } from "lucide-react";
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router";

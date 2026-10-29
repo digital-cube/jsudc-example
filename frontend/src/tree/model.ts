@@ -12,7 +12,7 @@ import {
   type TreeOptions,
   type TreeReparentRequest,
   treeReparentFields,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 
 /*
  * The tree's pure parts: building a tree from flat rows, sibling order,

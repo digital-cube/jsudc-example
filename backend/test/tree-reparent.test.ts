@@ -1,4 +1,4 @@
-import { isCycle, type Row, type SchemaDocInput, SchemaDocSchema } from "@jsudc/udc-core";
+import { isCycle, type Row, type SchemaDocInput, SchemaDocSchema } from "@jsudc/core";
 import { sql } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import { MemorySource } from "../src/sources/memory.js";

@@ -4,7 +4,7 @@ import {
   type SchemaDocInput,
   SchemaDocSchema,
   validateRow,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { sql } from "drizzle-orm";
 import type { Db } from "./db/client.js";
 import { dropFieldIndexes, syncFieldIndexes } from "./sources/indexes.js";

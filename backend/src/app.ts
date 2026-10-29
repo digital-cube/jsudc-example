@@ -1,6 +1,6 @@
 import swagger from "@fastify/swagger";
 import swaggerUi from "@fastify/swagger-ui";
-import { ACTIONS, ErrorPayloadSchema, errKind, isActionName, requestKind } from "@jsudc/udc-core";
+import { ACTIONS, ErrorPayloadSchema, errKind, isActionName, requestKind } from "@jsudc/core";
 import Fastify, { type FastifyInstance, type FastifyServerOptions } from "fastify";
 import { jsonSchemaTransform } from "fastify-type-provider-zod";
 import { z } from "zod";

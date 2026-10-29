@@ -1,4 +1,4 @@
-import type { TreeOptions } from "@jsudc/udc-core";
+import type { TreeOptions } from "@jsudc/core";
 import { useCallback, useMemo, useState } from "react";
 import { storage } from "../lib/utils";
 

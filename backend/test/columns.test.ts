@@ -1,4 +1,4 @@
-import { type ColumnConfig, SchemaDocSchema } from "@jsudc/udc-core";
+import { type ColumnConfig, SchemaDocSchema } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import { deriveColumns } from "../src/columns.js";
 

@@ -1,5 +1,6 @@
-import type { CollectionListing, ViewConfig } from "@jsudc/udc-core";
-import { ViewConfigSchema } from "@jsudc/udc-core";
+import type { CollectionListing, ViewConfig } from "@jsudc/core";
+import { ViewConfigSchema } from "@jsudc/core";
+import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { act, render, renderHook, screen, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
@@ -10,7 +11,6 @@ import { folderCrumbs, joinFolder, splitFolder } from "../src/data-view/folder";
 import { DOC_TAB, useDataViewState } from "../src/data-view/useDataViewState";
 import { groupCollections } from "../src/shell/AppShell";
 import { Badges, badgeTone, formatBytes } from "../src/table/cells";
-import { UdcClient } from "../src/udc/client";
 import { pollInterval, useUdcAllRows, useUdcCollection } from "../src/udc/hooks";
 import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";
 import { listOf, mockUdcFetch, row } from "./fetchMock";

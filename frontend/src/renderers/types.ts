@@ -1,4 +1,4 @@
-import type { DescribeResponse, FilterNode, FolderOptions, Row, SortKey } from "@jsudc/udc-core";
+import type { DescribeResponse, FilterNode, FolderOptions, Row, SortKey } from "@jsudc/core";
 import type { LucideIcon } from "lucide-react";
 import type { ComponentType } from "react";
 import type { ChartWindowState } from "../chart/useChartWindow";

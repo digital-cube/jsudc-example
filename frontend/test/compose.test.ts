@@ -1,5 +1,5 @@
-import type { FilterChipConfig } from "@jsudc/udc-core";
-import { evaluateFilter } from "@jsudc/udc-core";
+import type { FilterChipConfig } from "@jsudc/core";
+import { evaluateFilter } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import {
   chipCondition,

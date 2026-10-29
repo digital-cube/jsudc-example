@@ -26,7 +26,7 @@ import {
   type KanbanOptions,
   orderBetween,
   type Row,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { useQueryClient } from "@tanstack/react-query";
 import { KanbanSquare } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";

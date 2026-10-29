@@ -1,0 +1,30 @@
+{
+  "version": "v1",
+  "core_fields": [],
+  "fields": {
+    "board_id": {
+      "type": "relation",
+      "ref": "boards",
+      "label_field": "name",
+      "required": true,
+      "index": true
+    },
+    "bucket_id": {
+      "type": "relation",
+      "ref": "buckets",
+      "label_field": "name",
+      "required": true,
+      "index": true
+    },
+    "order": { "type": "integer", "index": true },
+    "key": { "type": "string", "length": 16, "index": true },
+    "title": { "type": "string", "length": 200, "required": true, "index": true },
+    "body": { "type": "text" },
+    "priority": { "type": "enum", "values": ["low", "normal", "high", "urgent"], "index": true },
+    "tags": { "type": "string_array" },
+    "due": { "type": "date", "index": true },
+    "assignees": { "type": "string_array" },
+    "starts_at": { "type": "datetime", "index": true },
+    "ends_at": { "type": "datetime" }
+  }
+}

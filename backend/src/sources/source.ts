@@ -14,7 +14,7 @@ import {
   type SourceReadResponse,
   SUPPORTED_OPS,
   type TreeReparentFields,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 
 /** A `list` request as a source sees it: the collection is already resolved. */
 export interface SourceListRequest {

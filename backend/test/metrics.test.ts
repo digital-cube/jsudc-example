@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { bucketByTime, type SchemaDocInput, SchemaDocSchema, validateRow } from "@jsudc/udc-core";
+import { bucketByTime, type SchemaDocInput, SchemaDocSchema, validateRow } from "@jsudc/core";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   floorToStep,

@@ -1,4 +1,4 @@
-import type { CardOptions, ColumnColor, ColumnConfig, ViewConfig } from "@jsudc/udc-core";
+import type { CardOptions, ColumnColor, ColumnConfig, ViewConfig } from "@jsudc/core";
 
 export type CardSize = "small" | "medium" | "large";
 

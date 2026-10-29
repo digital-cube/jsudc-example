@@ -1,4 +1,4 @@
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 import { storage } from "../lib/utils";
 import { i18nKey } from "../tree/model";
 

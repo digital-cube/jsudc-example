@@ -4,7 +4,8 @@ import {
   type Row,
   SchemaDocSchema,
   ViewConfigSchema,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
+import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
@@ -25,7 +26,6 @@ import {
 import type { RendererProps } from "../src/renderers/types";
 import { CellValue, displayText } from "../src/table/cells";
 import { HeadingGlyph, headingDegrees, Sparkline, sparkGeometry } from "../src/table/sparkline";
-import { UdcClient } from "../src/udc/client";
 import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";
 import { listOf, mockUdcFetch, row } from "./fetchMock";
 

@@ -1,5 +1,5 @@
 import { randomUUID } from "node:crypto";
-import { type Capabilities, ORDER_GAP, type Row, type SchemaDoc, UdcError } from "@jsudc/udc-core";
+import { type Capabilities, ORDER_GAP, type Row, type SchemaDoc, UdcError } from "@jsudc/core";
 import { type ArrayLoad, ArraySource, READ_ONLY_ARRAY_CAPABILITIES } from "./array.js";
 import {
   assertValidRow,

@@ -11,10 +11,7 @@ import {
 
 const shipped = (name: string) =>
   parse(
-    readFileSync(
-      new URL(`../../../backend/collections/${name}/source.yaml`, import.meta.url),
-      "utf8",
-    ),
+    readFileSync(new URL(`./fixtures/collections/${name}/source.yaml`, import.meta.url), "utf8"),
   );
 
 describe("SourceConfig", () => {

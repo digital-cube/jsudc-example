@@ -6,7 +6,8 @@ import {
   type ListResponse,
   type Row,
   type SortKey,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
+import type { UdcClient } from "@jsudc/core/client";
 import {
   type InfiniteData,
   keepPreviousData,
@@ -17,7 +18,6 @@ import {
   useQueryClient,
 } from "@tanstack/react-query";
 import { useState } from "react";
-import type { UdcClient } from "./client";
 import { type ListKeyParams, type PagingMode, udcKeys } from "./keys";
 import { useUdcClient } from "./provider";
 

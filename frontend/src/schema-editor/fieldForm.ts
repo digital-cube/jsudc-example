@@ -5,7 +5,7 @@ import {
   PHASE1_FIELD_TYPES,
   type SchemaDoc,
   type SchemaPosition,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 
 /** What the schema editor opens: from a column menu item or the trailing `+`. */
 export type SchemaAction =

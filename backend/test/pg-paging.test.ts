@@ -1,4 +1,4 @@
-import type { FilterNode, Row, SortKey } from "@jsudc/udc-core";
+import type { FilterNode, Row, SortKey } from "@jsudc/core";
 import { beforeAll, describe, expect, it } from "vitest";
 import { seedCollection } from "../src/seed.js";
 import { decodeCursor, encodeCursor } from "../src/sources/cursor.js";

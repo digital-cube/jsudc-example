@@ -20,7 +20,7 @@ import {
   type ViewConfig,
   ViewConfigSchema,
   withHistoryFields,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
 import { assertJsonbSchema } from "./schema-store.js";

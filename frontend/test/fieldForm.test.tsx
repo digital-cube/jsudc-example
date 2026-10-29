@@ -1,4 +1,5 @@
-import { type SchemaDoc, SchemaDocSchema } from "@jsudc/udc-core";
+import { type SchemaDoc, SchemaDocSchema } from "@jsudc/core";
+import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
@@ -18,7 +19,6 @@ import {
   typeControls,
   validateDraft,
 } from "../src/schema-editor/fieldForm";
-import { UdcClient } from "../src/udc/client";
 import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";
 import { mockUdcFetch } from "./fetchMock";
 

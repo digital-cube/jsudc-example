@@ -4,7 +4,8 @@ import {
   type Row,
   SchemaDocSchema,
   ViewConfigSchema,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
+import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
@@ -27,7 +28,6 @@ import {
 import { persistOrder } from "../src/kanban/persist";
 import { rendererEntry, rendererTabs, resolveTab } from "../src/renderers/registry";
 import type { RendererProps } from "../src/renderers/types";
-import { UdcClient } from "../src/udc/client";
 import type { UdcCollectionResult } from "../src/udc/hooks";
 import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";
 import { listOf, mockUdcFetch, row } from "./fetchMock";

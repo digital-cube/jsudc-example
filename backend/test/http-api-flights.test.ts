@@ -1,11 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import {
-  type HttpApiOptions,
-  HttpApiOptionsSchema,
-  type Row,
-  SchemaDocSchema,
-} from "@jsudc/udc-core";
+import { type HttpApiOptions, HttpApiOptionsSchema, type Row, SchemaDocSchema } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import { COLLECTIONS_DIR } from "../src/config.js";
 import { buildDescribe } from "../src/describe.js";

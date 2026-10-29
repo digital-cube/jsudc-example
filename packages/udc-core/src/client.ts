@@ -6,7 +6,7 @@ import {
   errKind,
   okKind,
   UdcError,
-} from "@jsudc/udc-core";
+} from "./index.js";
 
 export const MESSAGE_ID_HEADER = "x-udc-message-id";
 

@@ -1,4 +1,4 @@
-import { evaluateFilter, type FilterNode, type FilterOp, type Row } from "@jsudc/udc-core";
+import { evaluateFilter, type FilterNode, type FilterOp, type Row } from "@jsudc/core";
 import { beforeAll, describe, expect, it } from "vitest";
 import { seedCollection } from "../src/seed.js";
 import {

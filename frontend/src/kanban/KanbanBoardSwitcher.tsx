@@ -1,4 +1,4 @@
-import type { DescribeResponse } from "@jsudc/udc-core";
+import type { DescribeResponse } from "@jsudc/core";
 import { Skeleton } from "../components/ui/misc";
 import { Select } from "../components/ui/select";
 import { useI18n } from "../i18n/i18n";

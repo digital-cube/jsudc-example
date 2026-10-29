@@ -1,4 +1,4 @@
-import type { CalendarOptions, CalendarPreset, FilterNode, Row, SchemaDoc } from "@jsudc/udc-core";
+import type { CalendarOptions, CalendarPreset, FilterNode, Row, SchemaDoc } from "@jsudc/core";
 import {
   addDays,
   addMonths,

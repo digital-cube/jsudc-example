@@ -1,4 +1,4 @@
-import { type ChartWindow, type FilterNode, parseWindowPreset } from "@jsudc/udc-core";
+import { type ChartWindow, type FilterNode, parseWindowPreset } from "@jsudc/core";
 import {
   addDays,
   dayOf,

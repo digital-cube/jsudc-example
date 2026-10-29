@@ -15,7 +15,7 @@ import {
   type SourceInfo,
   UdcError,
   withHistoryFields,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { type ArrayLoad, ArraySource, READ_ONLY_ARRAY_CAPABILITIES } from "./array.js";
 
 /** The part of `fetch` the source uses; a test hands in its own. */

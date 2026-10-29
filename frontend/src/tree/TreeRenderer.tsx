@@ -16,7 +16,7 @@ import {
   type Row,
   type TreeOptions,
   UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { useQueryClient } from "@tanstack/react-query";
 import { ChevronsDownUp, ChevronsUpDown, ListTree } from "lucide-react";
 import {

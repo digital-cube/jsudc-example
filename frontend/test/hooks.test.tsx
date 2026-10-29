@@ -1,9 +1,9 @@
-import { isVersionConflict, type ListResponse, UdcError } from "@jsudc/udc-core";
+import { isVersionConflict, type ListResponse, UdcError } from "@jsudc/core";
+import { UdcClient } from "@jsudc/core/client";
 import { type QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { act, renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it } from "vitest";
-import { UdcClient } from "../src/udc/client";
 import { pageOffset, useUdcCollection, useUdcMutate } from "../src/udc/hooks";
 import { udcKeys } from "../src/udc/keys";
 import { createUdcQueryClient, shouldRetry, UdcProvider } from "../src/udc/provider";

@@ -1,4 +1,4 @@
-import { SchemaDocSchema, ViewConfigSchema } from "@jsudc/udc-core";
+import { SchemaDocSchema, ViewConfigSchema } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import { liveSort, liveView, pruneTree } from "../src/data-view/liveView";
 import { lookup, makeT, schemaLabelTerms } from "../src/i18n/i18n";

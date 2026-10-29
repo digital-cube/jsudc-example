@@ -1,4 +1,4 @@
-import type { ActionName, ActionRequest, ActionResponse, FilterNode } from "@jsudc/udc-core";
+import type { ActionName, ActionRequest, ActionResponse, FilterNode } from "@jsudc/core";
 
 declare global {
   namespace Cypress {

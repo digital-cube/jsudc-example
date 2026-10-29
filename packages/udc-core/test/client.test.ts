@@ -1,7 +1,36 @@
-import { UdcError } from "@jsudc/udc-core";
-import { describe, expect, it } from "vitest";
-import { MESSAGE_ID_HEADER, UdcClient } from "../src/udc/client";
-import { mockUdcFetch } from "./fetchMock";
+import { describe, expect, it, vi } from "vitest";
+import { MESSAGE_ID_HEADER, UdcClient } from "../src/client.js";
+import { UdcError } from "../src/index.js";
+
+interface Call {
+  action: string;
+  body: Record<string, unknown>;
+  headers: Record<string, string>;
+}
+
+type Reply = { ok: unknown } | { err: unknown };
+
+/** A `fetch` that answers UDC envelopes from per-action handlers and records every call. */
+function mockUdcFetch(handlers: Record<string, (body: Record<string, unknown>) => Reply>) {
+  const calls: Call[] = [];
+  const fetch = vi.fn(async (input: RequestInfo | URL, init?: RequestInit) => {
+    const action = String(input).split("/udc/")[1] ?? "";
+    const body = JSON.parse(String(init?.body ?? "{}")) as Record<string, unknown>;
+    calls.push({ action, body, headers: (init?.headers ?? {}) as Record<string, string> });
+    const handler = handlers[action];
+    if (!handler) throw new Error(`no mock for ${action}`);
+    const res = handler(body);
+    const envelope =
+      "ok" in res
+        ? { kind: `udc.${action}.ok`, id: "", payload: res.ok }
+        : { kind: `udc.${action}.err`, id: "", payload: res.err };
+    return new Response(JSON.stringify(envelope), {
+      status: 200,
+      headers: { "content-type": "application/json" },
+    });
+  });
+  return { fetch: fetch as unknown as typeof globalThis.fetch, calls };
+}
 
 describe("UdcClient", () => {
   it("posts the payload to <httpUrl>/udc/<action> with a message id and unwraps .ok", async () => {

@@ -1,4 +1,4 @@
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 
 const firstRow = () => cy.get('[data-testid="row"]').first();
 

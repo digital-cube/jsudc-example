@@ -1,4 +1,4 @@
-import { SchemaDocSchema, UdcError } from "@jsudc/udc-core";
+import { SchemaDocSchema, UdcError } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import { applySchemaEdit, presentedSchema } from "../src/schema-edit.js";
 

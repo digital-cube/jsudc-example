@@ -1,4 +1,4 @@
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 import { decodeParam } from "../support/e2e";
 
 // Runs under `npm run e2e`: the backend reads quakes and repos from the recorded

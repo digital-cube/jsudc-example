@@ -1,5 +1,5 @@
 import { useDraggable, useDroppable } from "@dnd-kit/core";
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 import { ChevronRight, CornerLeftUp, MoreVertical } from "lucide-react";
 import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import {

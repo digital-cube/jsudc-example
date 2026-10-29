@@ -17,7 +17,7 @@ import {
 } from "../src/index.js";
 
 const file = (name: string) =>
-  readFileSync(new URL(`../../../backend/collections/flights/${name}`, import.meta.url), "utf8");
+  readFileSync(new URL(`./fixtures/collections/flights/${name}`, import.meta.url), "utf8");
 
 const source = parseSourceConfig(parse(file("source.yaml")));
 const opts = source.options as HttpApiOptions;

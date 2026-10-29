@@ -8,7 +8,7 @@ import {
   type SchemaDoc,
   type SortKey,
   UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { assertQueryFields, notFound } from "./fields.js";
 import {
   ALL_FILTER_OPS,

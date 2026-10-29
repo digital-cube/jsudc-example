@@ -11,7 +11,7 @@ import {
   type SourceGroup,
   type SourceReadResponse,
   UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { parse as parseYaml } from "yaml";
 import { z } from "zod";
 import { type ArrayLoad, ArraySource, READ_ONLY_ARRAY_CAPABILITIES } from "./array.js";

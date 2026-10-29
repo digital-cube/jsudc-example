@@ -1,4 +1,4 @@
-import type { FilterNode, SortKey, ViewConfig } from "@jsudc/udc-core";
+import type { FilterNode, SortKey, ViewConfig } from "@jsudc/core";
 import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { storage } from "../lib/utils";

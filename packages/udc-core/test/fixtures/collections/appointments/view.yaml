@@ -1,0 +1,73 @@
+# The calendar example: a clinic's appointments, ~600 rows around the day the
+# database was seeded (there is no seed.json: `npm run seed` generates them,
+# see backend/scripts/generate-appointments.ts). Everything the calendar does
+# is read from `calendar_options`.
+default_renderer: calendar
+available_renderers: [calendar, table]
+pagination: infinite
+page_size_default: 50
+
+calendar_options:
+  start_field: start
+  end_field: end
+  title_field: title
+  # One colour per doctor; the `doctor` chip narrows the grid to one colour.
+  color_field: doctor
+  color_map:
+    "Ana Vuković": "#2563eb"
+    "Bojan Simić": "#16a34a"
+    "Dragana Popović": "#db2777"
+    "Igor Tomić": "#d97706"
+    "Katarina Ristić": "#7c3aed"
+    "Milan Obradović": "#0891b2"
+    "Nina Savić": "#dc2626"
+    "Uroš Lazić": "#4d7c0f"
+  default_preset: workweek
+  available_presets: [day, workweek, week, month]
+  workweek_days: 5
+  week_starts_on: monday
+  # The clinic is open 08:00-20:00 Belgrade time; shown in the header's zone.
+  business_hours: [8, 20]
+  hour_height_px: 64
+  scroll_to_hour: 7.5
+  snap_minutes: 15
+  min_event_minutes: 15
+  show_now_line: true
+  month_max_chips_per_day: 4
+  detail:
+    fields:
+      - title
+      - doctor
+      - patient
+      - {field: room, editable: true}
+      - {field: status, editable: true}
+      - {field: notes, editable: true}
+    delete: true
+
+columns:
+  - {field: start, pin: left, width: 180}
+  - {field: end, width: 180}
+  - {field: title, pin: left, editable: true, width: 280}
+  - {field: doctor, width: 170}
+  - {field: patient, editable: true, width: 170}
+  - {field: room, editable: true, width: 80}
+  - {field: status, editable: true, width: 110}
+  - {field: notes, editable: true, width: 280}
+
+search:
+  fields: [title, patient]
+  placeholder: Search title or patient
+  case_insensitive: true
+
+filters:
+  - field: doctor
+    kind: select
+    label: Doctor
+    options: ["Ana Vuković", "Bojan Simić", "Dragana Popović", "Igor Tomić", "Katarina Ristić", "Milan Obradović", "Nina Savić", "Uroš Lazić"]
+  - field: status
+    kind: select
+    label: Status
+    options: [scheduled, done, cancelled]
+
+filterable:
+  fields: [title, doctor, patient, room, start, end, status]

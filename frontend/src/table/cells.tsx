@@ -1,4 +1,4 @@
-import { COLUMN_COLORS, type ColumnColor, type ColumnConfig, type FieldDef } from "@jsudc/udc-core";
+import { COLUMN_COLORS, type ColumnColor, type ColumnConfig, type FieldDef } from "@jsudc/core";
 import { Check, X } from "lucide-react";
 import type { ReactNode } from "react";
 import { resolveIcon } from "../icons/resolve";

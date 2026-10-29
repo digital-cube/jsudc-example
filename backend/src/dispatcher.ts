@@ -10,7 +10,7 @@ import {
   sourceGroup,
   UdcError,
   type UdcMessage,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import type { z } from "zod";
 import { buildDescribe } from "./describe.js";
 import type { Collection, CollectionRegistry } from "./registry.js";

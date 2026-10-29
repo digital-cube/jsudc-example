@@ -7,7 +7,7 @@ import {
   type SchemaDoc,
   type SchemaPosition,
   UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { z } from "zod";
 
 export interface AddFieldEdit {

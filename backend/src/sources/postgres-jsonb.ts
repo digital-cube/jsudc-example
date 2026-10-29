@@ -6,7 +6,7 @@ import {
   type Row,
   type SchemaDoc,
   UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { type SQL, sql } from "drizzle-orm";
 import type { Db, Executor } from "../db/client.js";
 import { applySchemaEdit, type SchemaEdit } from "../schema-edit.js";

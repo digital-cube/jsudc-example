@@ -1,7 +1,7 @@
 import { mkdtempSync, rmSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { ACTIONS, type CollectionsResponse, type DescribeResponse } from "@jsudc/udc-core";
+import { ACTIONS, type CollectionsResponse, type DescribeResponse } from "@jsudc/core";
 import { afterAll, describe, expect, it, vi } from "vitest";
 import { buildApp } from "../src/app.js";
 import { BLOB_MAX_BYTES } from "../src/blob.js";

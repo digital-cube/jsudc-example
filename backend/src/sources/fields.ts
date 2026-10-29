@@ -10,7 +10,7 @@ import {
   UdcError,
   type ValidateMode,
   validateRow,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 
 /**
  * The allowlist: a field may appear in a filter or a sort only when it is a

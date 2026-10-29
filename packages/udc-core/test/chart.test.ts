@@ -93,19 +93,13 @@ function must<T>(v: T | undefined): T {
 const viewOf = (name: string) =>
   ViewConfigSchema.parse(
     parse(
-      readFileSync(
-        new URL(`../../../backend/collections/${name}/view.yaml`, import.meta.url),
-        "utf8",
-      ),
+      readFileSync(new URL(`./fixtures/collections/${name}/view.yaml`, import.meta.url), "utf8"),
     ),
   );
 const schemaOf = (name: string) =>
   SchemaDocSchema.parse(
     JSON.parse(
-      readFileSync(
-        new URL(`../../../backend/collections/${name}/schema.json`, import.meta.url),
-        "utf8",
-      ),
+      readFileSync(new URL(`./fixtures/collections/${name}/schema.json`, import.meta.url), "utf8"),
     ),
   );
 

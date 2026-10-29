@@ -84,10 +84,7 @@ describe("the backend's tree views", () => {
   const view = (name: string) =>
     ViewConfigSchema.parse(
       parse(
-        readFileSync(
-          new URL(`../../../backend/collections/${name}/view.yaml`, import.meta.url),
-          "utf8",
-        ),
+        readFileSync(new URL(`./fixtures/collections/${name}/view.yaml`, import.meta.url), "utf8"),
       ),
     );
 

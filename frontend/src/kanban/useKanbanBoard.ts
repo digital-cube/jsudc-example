@@ -1,4 +1,4 @@
-import type { DescribeResponse, KanbanOptions } from "@jsudc/udc-core";
+import type { DescribeResponse, KanbanOptions } from "@jsudc/core";
 import { useCallback, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { useUdcCollection, useUdcDescribe } from "../udc/hooks";

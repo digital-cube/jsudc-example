@@ -1,4 +1,4 @@
-import { evaluateFilter, type FilterNode, SchemaDocSchema } from "@jsudc/udc-core";
+import { evaluateFilter, type FilterNode, SchemaDocSchema } from "@jsudc/core";
 import { sql } from "drizzle-orm";
 import { beforeAll, describe, expect, it } from "vitest";
 import { PostgresJsonbSource } from "../src/sources/postgres-jsonb.js";

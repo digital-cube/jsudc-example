@@ -9,7 +9,7 @@ import {
   type SortDir,
   type SortKey,
   UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { type SQL, sql } from "drizzle-orm";
 import type { CursorValue } from "./cursor.js";
 import { allowedField } from "./fields.js";

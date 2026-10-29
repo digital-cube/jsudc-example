@@ -1,4 +1,4 @@
-import { parseWindowPreset } from "@jsudc/udc-core";
+import { parseWindowPreset } from "@jsudc/core";
 import { X } from "lucide-react";
 import { Button } from "../components/ui/button";
 import { inputClass } from "../components/ui/input";

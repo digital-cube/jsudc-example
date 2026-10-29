@@ -1,4 +1,4 @@
-import type { ListResponse, Row } from "@jsudc/udc-core";
+import type { ListResponse, Row } from "@jsudc/core";
 import { vi } from "vitest";
 
 export interface Call {

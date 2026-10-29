@@ -1,4 +1,4 @@
-import type { CollectionListing, SourceGroup } from "@jsudc/udc-core";
+import type { CollectionListing, SourceGroup } from "@jsudc/core";
 
 /*
  * The sidebar is the `menu` collection (backend/collections/menu/data/menu.yaml)

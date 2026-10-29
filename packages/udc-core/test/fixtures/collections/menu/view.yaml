@@ -1,0 +1,48 @@
+# The application menu as data. The sidebar on the left is this collection
+# drawn as chrome (frontend/src/shell/MenuTree.tsx); this view draws the
+# same rows with the tree renderer, a table and the file itself.
+#
+# The rows are fixed (MENU_SCHEMA in udc-core), so there is no schema.json.
+# The tree is not lazy: the menu is a few dozen rows, read in one list,
+# built client-side. The `udc:collections` branches are already resolved
+# by the server, their rows marked `is_dynamic`.
+default_renderer: tree
+available_renderers: [tree, table]
+pagination: infinite
+page_size_default: 200
+
+tree_options:
+  parent_field: parent_id
+  order_field: order
+  label_field: translation_key
+  label_i18n: true
+  icon_field: icon
+  depth_field: depth
+  children_count_field: children_count
+  ancestor_ids_field: ancestor_ids
+  lazy: false
+  expand:
+    persist: localstorage
+    key: menu
+    default_depth: 2
+
+columns:
+  - {field: icon, render: icon, pin: left, width: 56, align: center}
+  - {field: translation_key, pin: left, width: 240}
+  - {field: code, width: 200}
+  - {field: url, width: 260, color: muted}
+  - {field: order, align: right, width: 80, color: muted}
+  - {field: depth, align: right, width: 80, color: muted}
+  - {field: children_count, align: right, width: 130, color: muted}
+  # The point of the table tab: true on every row a udc: reference added.
+  - {field: is_dynamic, render: bool, render_options: {style: check_x}, align: center, width: 110}
+
+row_color:
+  field: is_dynamic
+  rules:
+    - {value: true, color: accent}
+
+search:
+  fields: [translation_key, code, url]
+  placeholder: Search a key, a code or a url
+  case_insensitive: true

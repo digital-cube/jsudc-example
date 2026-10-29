@@ -1,5 +1,5 @@
 import "leaflet/dist/leaflet.css";
-import type { DescribeResponse, MapOptions, Row } from "@jsudc/udc-core";
+import type { DescribeResponse, MapOptions, Row } from "@jsudc/core";
 import L from "leaflet";
 import { Maximize } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";

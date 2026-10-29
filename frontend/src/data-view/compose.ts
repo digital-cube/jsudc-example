@@ -4,7 +4,7 @@ import {
   type FilterNode,
   isCondition,
   type SearchConfig,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { type ChipState, type ChipValue, isEmptyChip } from "./urlState";
 
 /** The search box as a filter: `contains` over every `search.fields`, or-ed. */

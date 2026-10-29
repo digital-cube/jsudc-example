@@ -1,5 +1,5 @@
-import { type FilterNode, type Row, UdcError } from "@jsudc/udc-core";
-import type { UdcClient } from "../udc/client";
+import { type FilterNode, type Row, UdcError } from "@jsudc/core";
+import type { UdcClient } from "@jsudc/core/client";
 import type { UdcMutateVars } from "../udc/hooks";
 import { type DropPlan, orderOf, replanDrop } from "./model";
 

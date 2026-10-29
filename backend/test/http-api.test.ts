@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { type HttpApiOptions, HttpApiOptionsSchema, SchemaDocSchema } from "@jsudc/udc-core";
+import { type HttpApiOptions, HttpApiOptionsSchema, SchemaDocSchema } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import { COLLECTIONS_DIR } from "../src/config.js";
 import { readCollectionAssets } from "../src/registry.js";

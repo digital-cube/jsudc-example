@@ -1,9 +1,26 @@
 {
-  "name": "@jsudc/udc-core",
+  "name": "@jsudc/core",
   "version": "0.1.0",
-  "private": true,
+  "private": false,
   "type": "module",
-  "description": "The shared jsudc protocol: envelopes, filter DSL, schema, view config, action payloads.",
+  "description": "The UDC protocol in TypeScript: envelopes, filter DSL and evaluator, schema, view and source types, action payloads, row validation and the HTTP transport client.",
+  "keywords": [
+    "udc",
+    "jsudc",
+    "universal-data-collection",
+    "protocol",
+    "zod",
+    "filter-dsl",
+    "rpc"
+  ],
+  "license": "MIT",
+  "author": "DigitalCube",
+  "repository": "github:digital-cube/jsudc-core",
+  "homepage": "https://github.com/digital-cube/jsudc-core#readme",
+  "bugs": "https://github.com/digital-cube/jsudc-core/issues",
+  "engines": {
+    "node": ">=24"
+  },
   "sideEffects": false,
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
@@ -11,14 +28,23 @@
     ".": {
       "types": "./dist/index.d.ts",
       "default": "./dist/index.js"
-    }
+    },
+    "./client": {
+      "types": "./dist/client.d.ts",
+      "default": "./dist/client.js"
+    },
+    "./package.json": "./package.json"
   },
   "files": [
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build": "tsc -p tsconfig.build.json",
+    "prepare": "npm run build",
     "typecheck": "tsc -p tsconfig.json --noEmit",
+    "lint": "biome check .",
     "test": "vitest run",
     "test:watch": "vitest"
   },
@@ -26,6 +52,10 @@
     "zod": "^4.6.7"
   },
   "devDependencies": {
+    "@biomejs/biome": "^2.5.15",
+    "@types/node": "^24",
+    "typescript": "^5.9.3",
+    "vitest": "^5.0.5",
     "yaml": "^2.9.1"
   }
 }

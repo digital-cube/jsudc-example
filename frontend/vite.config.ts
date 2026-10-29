@@ -11,11 +11,13 @@ const proxyTarget = process.env.UDC_PROXY_TARGET || "http://127.0.0.1:5100";
 export default defineConfig({
   plugins: [react(), tailwindcss()],
   resolve: {
-    // udc-core's source, so a change there needs no rebuild.
+    // @jsudc/core's source, so a change there needs no rebuild.
     alias: {
-      "@jsudc/udc-core": fileURLToPath(
-        new URL("../packages/udc-core/src/index.ts", import.meta.url),
+      // The subpath first: an alias also matches what starts with `<key>/`.
+      "@jsudc/core/client": fileURLToPath(
+        new URL("../packages/udc-core/src/client.ts", import.meta.url),
       ),
+      "@jsudc/core": fileURLToPath(new URL("../packages/udc-core/src/index.ts", import.meta.url)),
     },
   },
   server: {

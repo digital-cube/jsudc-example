@@ -11,7 +11,8 @@
     "declaration": false,
     "declarationMap": false,
     "paths": {
-      "@jsudc/udc-core": ["../packages/udc-core/src/index.ts"]
+      "@jsudc/core": ["../packages/udc-core/src/index.ts"],
+      "@jsudc/core/client": ["../packages/udc-core/src/client.ts"]
     }
   },
   "include": ["src", "test", "vite.config.ts", "vitest.config.ts"]

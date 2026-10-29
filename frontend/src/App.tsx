@@ -1,3 +1,4 @@
+import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router";
@@ -11,7 +12,6 @@ import { AboutPage } from "./shell/AboutPage";
 import { AppShell } from "./shell/AppShell";
 import { ErrorState } from "./table/states";
 import { TimezoneProvider } from "./time/timezone";
-import { UdcClient } from "./udc/client";
 import { useUdcCollections } from "./udc/hooks";
 import { createUdcQueryClient, UdcProvider } from "./udc/provider";
 

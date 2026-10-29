@@ -1,4 +1,4 @@
-import { type FieldType, isUdcError, type SchemaDoc, type SchemaPosition } from "@jsudc/udc-core";
+import { type FieldType, isUdcError, type SchemaDoc, type SchemaPosition } from "@jsudc/core";
 import { AlertTriangle, Lock } from "lucide-react";
 import { type FormEvent, type ReactNode, useId, useState } from "react";
 import { Button } from "../components/ui/button";

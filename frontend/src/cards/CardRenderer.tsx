@@ -1,4 +1,4 @@
-import type { ColumnColor, DescribeResponse, Row } from "@jsudc/udc-core";
+import type { ColumnColor, DescribeResponse, Row } from "@jsudc/core";
 import { useEffect, useMemo, useRef } from "react";
 import { Skeleton, Spinner } from "../components/ui/misc";
 import { FolderEntry } from "../data-view/FolderEntry";

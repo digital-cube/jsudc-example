@@ -1,4 +1,4 @@
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 
 /*
  * The two tree examples, seeded: `comments` (80 comments, 8 top-level, built

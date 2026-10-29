@@ -1,4 +1,4 @@
-import { ACTIONS, SchemaDocSchema, ViewConfigSchema } from "@jsudc/udc-core";
+import { ACTIONS, SchemaDocSchema, ViewConfigSchema } from "@jsudc/core";
 import type { FastifyInstance } from "fastify";
 import { afterAll, beforeAll, describe, expect, it, vi } from "vitest";
 import { buildApp } from "../src/app.js";

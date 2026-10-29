@@ -1,4 +1,4 @@
-import type { FilterNode } from "@jsudc/udc-core";
+import type { FilterNode } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import {
   base64UrlToUtf8,

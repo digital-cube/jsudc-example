@@ -1,4 +1,4 @@
-import type { SourceInfo } from "@jsudc/udc-core";
+import type { SourceInfo } from "@jsudc/core";
 import { CloudOff, RefreshCw } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Tip } from "../components/ui/tooltip";

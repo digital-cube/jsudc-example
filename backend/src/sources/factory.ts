@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { dirname, isAbsolute, relative, resolve } from "node:path";
-import { sourceGroup } from "@jsudc/udc-core";
+import { sourceGroup } from "@jsudc/core";
 import type { Db } from "../db/client.js";
 import type { CollectionAsset, CollectionRegistry } from "../registry.js";
 import { FilesystemSource } from "./filesystem.js";

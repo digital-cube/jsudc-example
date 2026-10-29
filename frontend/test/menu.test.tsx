@@ -1,6 +1,7 @@
 import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
-import type { CollectionListing, Row } from "@jsudc/udc-core";
+import type { CollectionListing, Row } from "@jsudc/core";
+import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { Circle, Kanban, Users } from "lucide-react";
@@ -25,7 +26,6 @@ import {
   withOpen,
 } from "../src/shell/menu";
 import { TimezoneProvider } from "../src/time/timezone";
-import { UdcClient } from "../src/udc/client";
 import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";
 import { listOf, mockUdcFetch } from "./fetchMock";
 

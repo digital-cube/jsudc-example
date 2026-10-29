@@ -1,4 +1,4 @@
-import { SchemaDocSchema, UdcError } from "@jsudc/udc-core";
+import { SchemaDocSchema, UdcError } from "@jsudc/core";
 import { beforeEach, describe, expect, it } from "vitest";
 import { MemorySource } from "../src/sources/memory.js";
 

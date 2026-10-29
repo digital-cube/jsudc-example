@@ -1,11 +1,4 @@
-import type {
-  ColumnColor,
-  LatLng,
-  MapOptions,
-  MapRegion,
-  Row,
-  RowColorConfig,
-} from "@jsudc/udc-core";
+import type { ColumnColor, LatLng, MapOptions, MapRegion, Row, RowColorConfig } from "@jsudc/core";
 import { resolveRowColor } from "../table/style";
 
 /** One row on the map. */

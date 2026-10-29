@@ -1,0 +1,71 @@
+# flights — live aircraft over the Balkans from the OpenSky Network
+# (/api/states/all), anonymous by default. Three things this file shows
+# that no other collection here does:
+#
+#   * THE ROW IS A BARE ARRAY. OpenSky's state vector is a 17-element
+#     positional array with no keys, so every field is mapped by index
+#     (`[0]`, `[5]`, …) and the id is `[0]`, the ICAO 24-bit address.
+#   * A SLIDING HISTORY over a stateless API. OpenSky answers "where is
+#     every aircraft now" and nothing else; `history` keeps the last
+#     `size` values per aircraft across polls, in the server's memory,
+#     and serves them as `<field>_history` — the trails on the map and
+#     the sparklines in the table and on the cards.
+#   * POLLING AGAINST A BUDGET. Anonymous access is 400 credits a day per
+#     IP; a box of at most 25 square degrees costs 1 credit a call. The
+#     page polls every 30 s, but the server's cache decides when OpenSky
+#     is called: every 4 minutes anonymous (~360 calls a day), every 15 s
+#     with an OAuth2 client (4000 credits a day).
+kind: http_api
+options:
+  base_url: https://opensky-network.org
+  # The box: 41.5–46.5 °N, 18.5–23.5 °E — Serbia and its neighbours.
+  # 5° × 5° = 25 square degrees, the largest box that still costs 1 credit.
+  # The unbounded /api/states/all is ~10 000 aircraft and 4 credits.
+  list_endpoint: /api/states/all?lamin=41.5&lomin=18.5&lamax=46.5&lomax=23.5
+  # {"time": 1793172114, "states": [[…], […]]}; `states` is null when the box is empty.
+  list_unwrap: states
+  # The transponder's address: the airframe, not the flight (the callsign changes every leg).
+  id_field: "[0]"
+  headers:
+    Accept: application/json
+    User-Agent: jsudc-example
+  # [5] is LONGITUDE and [6] LATITUDE — lng before lat, as in GeoJSON;
+  # swapped, every aircraft lands in the Indian Ocean. [7] is barometric
+  # altitude (what traffic is separated by), [13] geometric (GNSS); both in
+  # metres. [12] sensors, [15] spi and [16] position_source are not read.
+  field_map:
+    icao24: "[0]"
+    callsign: "[1]"
+    country: "[2]"
+    time_pos: "[3]"
+    last_seen: "[4]"
+    lng: "[5]"
+    lat: "[6]"
+    baro_alt: "[7]"
+    on_ground: "[8]"
+    velocity: "[9]"
+    heading: "[10]"
+    vert_rate: "[11]"
+    geo_alt: "[13]"
+    squawk: "[14]"
+  # OpenSky's times are Unix seconds, not milliseconds (USGS sends milliseconds).
+  epoch_seconds: [time_pos, last_seen]
+  # Optional: an OpenSky API client (Account page → API client). Without
+  # both variables the source calls OpenSky anonymously; nothing is refused.
+  auth:
+    kind: oauth2_client_credentials
+    token_url: https://auth.opensky-network.org/auth/realms/opensky-network/protocol/openid-connect/token
+    client_id_env: UDC_OPENSKY_CLIENT_ID
+    client_secret_env: UDC_OPENSKY_CLIENT_SECRET
+  # 4 minutes anonymous: 360 calls of 1 credit a day, under the 400.
+  cache_ttl_ms: 240000
+  # 15 s with the client: 5760 calls would be over 4000 for a day left
+  # open, but OpenSky's own resolution for a non-feeder is 10 s anyway.
+  cache_ttl_ms_authenticated: 15000
+  timeout_ms: 10000
+  # Per aircraft, the last 60 values (4 hours anonymous, 15 minutes with
+  # the client). An aircraft out of the box for 10 polls drops its window.
+  history:
+    fields: [baro_alt, lat, lng]
+    size: 60
+  max_rows: 2000

@@ -1,4 +1,4 @@
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 import { useQuery } from "@tanstack/react-query";
 import { Dialog, DialogBody, DialogContent } from "../components/ui/dialog";
 import { Skeleton } from "../components/ui/misc";

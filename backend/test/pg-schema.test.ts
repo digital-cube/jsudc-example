@@ -5,7 +5,7 @@ import {
   type Row,
   type SchemaDoc,
   UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { sql } from "drizzle-orm";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { COLLECTIONS_DIR } from "../src/config.js";

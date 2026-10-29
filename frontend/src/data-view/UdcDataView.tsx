@@ -1,4 +1,4 @@
-import type { FilterChipConfig, FilterNode, Row } from "@jsudc/udc-core";
+import type { FilterChipConfig, FilterNode, Row } from "@jsudc/core";
 import { BookOpen, FileCode2, InfinityIcon, Rows3 } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { ChartWindowControl } from "../chart/ChartWindowControl";

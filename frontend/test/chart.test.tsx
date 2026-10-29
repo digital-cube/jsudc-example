@@ -5,7 +5,7 @@ import {
   type Row,
   SchemaDocSchema,
   ViewConfigSchema,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { act, fireEvent, render, screen } from "@testing-library/react";
 import { MemoryRouter, useLocation } from "react-router";
 import { describe, expect, it } from "vitest";

@@ -1,6 +1,6 @@
 import { useSortable } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { ColumnColor, KanbanOptions, Row, SchemaDoc } from "@jsudc/udc-core";
+import type { ColumnColor, KanbanOptions, Row, SchemaDoc } from "@jsudc/core";
 import { CalendarDays } from "lucide-react";
 import type { CSSProperties, KeyboardEvent } from "react";
 import { avatarTone, initials } from "../cards/cardModel";

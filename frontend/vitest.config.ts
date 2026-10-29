@@ -4,9 +4,11 @@ import { defineConfig } from "vitest/config";
 export default defineConfig({
   resolve: {
     alias: {
-      "@jsudc/udc-core": fileURLToPath(
-        new URL("../packages/udc-core/src/index.ts", import.meta.url),
+      // The subpath first: an alias also matches what starts with `<key>/`.
+      "@jsudc/core/client": fileURLToPath(
+        new URL("../packages/udc-core/src/client.ts", import.meta.url),
       ),
+      "@jsudc/core": fileURLToPath(new URL("../packages/udc-core/src/index.ts", import.meta.url)),
     },
   },
   test: {

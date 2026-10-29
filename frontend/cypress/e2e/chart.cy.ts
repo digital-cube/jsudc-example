@@ -1,4 +1,4 @@
-import type { FilterNode, Row } from "@jsudc/udc-core";
+import type { FilterNode, Row } from "@jsudc/core";
 
 /*
  * The chart tab: metrics (seeded to end at noon of SEED_TODAY in Belgrade,

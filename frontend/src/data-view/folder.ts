@@ -1,4 +1,4 @@
-import { type Condition, type FilterNode, isCondition } from "@jsudc/udc-core";
+import { type Condition, type FilterNode, isCondition } from "@jsudc/core";
 
 /*
  * Folder navigation keeps the open folder as one `path eq <folder>`

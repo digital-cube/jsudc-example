@@ -7,7 +7,7 @@ import {
   type Row,
   type SortKey,
   type UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { type Column, type ColumnDef, getCoreRowModel, useReactTable } from "@tanstack/react-table";
 import { ArrowDown, ArrowUp, ChevronsUpDown, Plus } from "lucide-react";
 import { type CSSProperties, useEffect, useMemo, useRef, useState } from "react";

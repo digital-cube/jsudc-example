@@ -1,4 +1,4 @@
-import type { SchemaDoc } from "@jsudc/udc-core";
+import type { SchemaDoc } from "@jsudc/core";
 import { type ReactNode, useCallback, useState } from "react";
 import { Dialog } from "../components/ui/dialog";
 import { useToast } from "../components/ui/toast";

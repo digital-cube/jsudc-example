@@ -3,11 +3,9 @@ import { defineConfig } from "vitest/config";
 
 export default defineConfig({
   resolve: {
-    // Test against udc-core's source, so a change there needs no rebuild.
+    // Test against @jsudc/core's source, so a change there needs no rebuild.
     alias: {
-      "@jsudc/udc-core": fileURLToPath(
-        new URL("../packages/udc-core/src/index.ts", import.meta.url),
-      ),
+      "@jsudc/core": fileURLToPath(new URL("../packages/udc-core/src/index.ts", import.meta.url)),
     },
   },
   test: {

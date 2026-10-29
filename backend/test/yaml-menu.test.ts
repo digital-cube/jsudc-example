@@ -10,7 +10,7 @@ import {
   MENU_SCHEMA,
   type Row,
   type SourceReadResponse,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { afterEach, describe, expect, it, vi } from "vitest";
 import { COLLECTIONS_DIR } from "../src/config.js";
 import { createDispatcher } from "../src/dispatcher.js";

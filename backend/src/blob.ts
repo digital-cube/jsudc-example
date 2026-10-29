@@ -1,6 +1,6 @@
 import { readFile, stat } from "node:fs/promises";
 import { extname } from "node:path";
-import { isUdcError } from "@jsudc/udc-core";
+import { isUdcError } from "@jsudc/core";
 import type { FastifyInstance } from "fastify";
 import { z } from "zod";
 import type { CollectionRegistry } from "./registry.js";

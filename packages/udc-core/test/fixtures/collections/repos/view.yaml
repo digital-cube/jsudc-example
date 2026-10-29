@@ -1,0 +1,55 @@
+# repos — the public repositories of github.com/digital-cube (source.yaml).
+# Polled every five minutes, which is also the server's cache: at most 12
+# GitHub calls an hour, inside the anonymous limit of 60.
+default_renderer: cards
+available_renderers: [cards, table, chart]
+pagination: infinite
+page_size_default: 60
+row_height: 40
+refresh_interval_ms: 300000
+
+search:
+  fields: [name, description]
+  placeholder: "Search name or description…"
+
+filters:
+  - field: language
+    kind: select
+    options: [TypeScript, JavaScript, Python, HTML, Shell]
+  - {field: archived, kind: bool}
+
+filterable:
+  fields: [name, description, language, topics, stargazers_count, pushed_at, archived]
+
+columns:
+  - {field: name, pin: left, width: 220}
+  - {field: description, width: 380, color: muted}
+  - {field: language, width: 120, render: badge, render_options: {default: info}}
+  - {field: topics, width: 240, render: badge, render_options: {default: accent}}
+  - {field: stargazers_count, width: 90, align: right}
+  - {field: forks_count, width: 90, align: right}
+  - {field: open_issues_count, width: 100, align: right}
+  - {field: pushed_at, width: 170, transform: "date_format:DD.MM.YYYY HH:mm"}
+  - {field: archived, width: 90, align: center}
+  - {field: html_url, width: 300, color: muted}
+
+# Stars per repository: the ten most starred as slices, the rest folded into "Other".
+chart_options:
+  type: pie
+  category_field: name
+  value_field: stargazers_count
+  max_slices: 10
+
+card_options:
+  title_field: name
+  subtitle_field: language
+  image_field: owner_avatar
+  image_style: avatar
+  meta_fields: [topics, stargazers_count, forks_count, pushed_at]
+  size: medium
+
+row_color:
+  field: archived
+  rules:
+    - {value: true, color: muted}
+    - {else: true, color: default}

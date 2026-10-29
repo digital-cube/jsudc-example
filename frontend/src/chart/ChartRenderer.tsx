@@ -6,7 +6,7 @@ import {
   foldSlices,
   type PieSlice,
   type Row,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { type ReactNode, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import {
   Area,

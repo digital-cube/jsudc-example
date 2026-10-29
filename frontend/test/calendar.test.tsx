@@ -5,7 +5,8 @@ import {
   type Row,
   SchemaDocSchema,
   ViewConfigSchema,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
+import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { act, render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router";
@@ -37,7 +38,6 @@ import { CellValue } from "../src/table/cells";
 import { applyTransforms } from "../src/table/transforms";
 import { TimezoneProvider, TZ_STORAGE_KEY, useTimezone } from "../src/time/timezone";
 import { dayKey } from "../src/time/zoned";
-import { UdcClient } from "../src/udc/client";
 import type { UdcCollectionResult } from "../src/udc/hooks";
 import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";
 import { listOf, mockUdcFetch, row } from "./fetchMock";

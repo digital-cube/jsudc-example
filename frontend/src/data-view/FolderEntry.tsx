@@ -1,4 +1,4 @@
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 import { CornerLeftUp, File, Folder } from "lucide-react";
 import type { ReactNode } from "react";
 import { cn } from "../lib/utils";

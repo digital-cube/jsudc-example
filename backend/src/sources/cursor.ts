@@ -1,4 +1,4 @@
-import { UdcError } from "@jsudc/udc-core";
+import { UdcError } from "@jsudc/core";
 
 /** A keyset position: the text form of each sort value (`null` for a missing one), then the row id. */
 export type CursorValue = string | null;

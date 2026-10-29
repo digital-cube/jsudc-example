@@ -9,7 +9,7 @@ import {
   type SchemaDoc,
   type SortKey,
   UdcError,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { type ArrayLoad, ArraySource, READ_ONLY_ARRAY_CAPABILITIES } from "./array.js";
 import { notFound } from "./fields.js";
 import type { SourceListRequest } from "./source.js";

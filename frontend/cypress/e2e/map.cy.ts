@@ -1,4 +1,4 @@
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 
 const markers = () => cy.get('[data-testid="map-marker"]');
 const count = () => cy.get('[data-testid="row-count"]');

@@ -1,4 +1,4 @@
-import type { FilterNode, Row } from "@jsudc/udc-core";
+import type { FilterNode, Row } from "@jsudc/core";
 
 /*
  * The appointments calendar, seeded around 2026-10-27 (`npm run e2e` pins

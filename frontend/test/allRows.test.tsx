@@ -1,9 +1,9 @@
-import type { FilterNode } from "@jsudc/udc-core";
+import type { FilterNode } from "@jsudc/core";
+import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { renderHook, waitFor } from "@testing-library/react";
 import type { ReactNode } from "react";
 import { describe, expect, it } from "vitest";
-import { UdcClient } from "../src/udc/client";
 import { fetchAllRows, useUdcAllRows } from "../src/udc/hooks";
 import { udcKeys } from "../src/udc/keys";
 import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";

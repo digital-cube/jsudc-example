@@ -1,4 +1,4 @@
-import type { FieldDef } from "@jsudc/udc-core";
+import type { FieldDef } from "@jsudc/core";
 import { type KeyboardEvent, useEffect, useRef, useState } from "react";
 import { Spinner } from "../components/ui/misc";
 import { cn } from "../lib/utils";

@@ -1,4 +1,4 @@
-import type { CalendarOptions } from "@jsudc/udc-core";
+import type { CalendarOptions } from "@jsudc/core";
 import {
   type PointerEvent as ReactPointerEvent,
   useEffect,

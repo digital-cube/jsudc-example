@@ -5,7 +5,7 @@ import {
   type SchemaDoc,
   type SortKey,
   type ViewConfig,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 
 /** A field the schema has and has not soft-deleted. */
 export function isLiveField(schema: SchemaDoc, field: string): boolean {

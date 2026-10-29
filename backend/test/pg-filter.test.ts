@@ -1,9 +1,4 @@
-import {
-  evaluateFilter,
-  type FilterNode,
-  type SchemaDocInput,
-  SchemaDocSchema,
-} from "@jsudc/udc-core";
+import { evaluateFilter, type FilterNode, type SchemaDocInput, SchemaDocSchema } from "@jsudc/core";
 import { beforeAll, describe, expect, it } from "vitest";
 import { PostgresJsonbSource } from "../src/sources/postgres-jsonb.js";
 import { activateSchema, insertRows, rejectsWith, resetTables, useTestDb } from "./helpers.js";

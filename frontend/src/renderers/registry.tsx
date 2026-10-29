@@ -1,4 +1,4 @@
-import type { DescribeResponse, RendererName } from "@jsudc/udc-core";
+import type { DescribeResponse, RendererName } from "@jsudc/core";
 import {
   CalendarDays,
   ChartLine,

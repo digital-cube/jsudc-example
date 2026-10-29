@@ -11,7 +11,8 @@
     "declarationMap": false,
     "isolatedModules": false,
     "paths": {
-      "@jsudc/udc-core": ["../../packages/udc-core/src/index.ts"]
+      "@jsudc/core": ["../../packages/udc-core/src/index.ts"],
+      "@jsudc/core/client": ["../../packages/udc-core/src/client.ts"]
     }
   },
   "include": ["**/*.ts", "../cypress.config.ts"]

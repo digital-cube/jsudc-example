@@ -6,7 +6,7 @@ import {
   isCondition,
   isVersionConflict,
   type SchemaDoc,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { ChevronLeft, ChevronRight, Globe } from "lucide-react";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";

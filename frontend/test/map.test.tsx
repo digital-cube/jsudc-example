@@ -1,4 +1,4 @@
-import { MapOptionsSchema, type RowColorConfig } from "@jsudc/udc-core";
+import { MapOptionsSchema, type RowColorConfig } from "@jsudc/core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 import { I18nProvider } from "../src/i18n/i18n";

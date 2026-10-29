@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { SchemaDocSchema, validateRow } from "@jsudc/udc-core";
+import { SchemaDocSchema, validateRow } from "@jsudc/core";
 import { sql } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import {

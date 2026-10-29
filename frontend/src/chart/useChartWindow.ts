@@ -1,4 +1,4 @@
-import type { ChartWindow, FilterNode, ViewConfig } from "@jsudc/udc-core";
+import type { ChartWindow, FilterNode, ViewConfig } from "@jsudc/core";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router";
 import { useTimezone } from "../time/timezone";

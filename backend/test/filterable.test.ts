@@ -1,4 +1,4 @@
-import { SchemaDocSchema, ViewConfigSchema } from "@jsudc/udc-core";
+import { SchemaDocSchema, ViewConfigSchema } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import { filterableFields } from "../src/describe.js";
 

@@ -8,7 +8,7 @@ import {
   orderBetween,
   type Row,
   type SchemaDoc,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 
 /*
  * The kanban's pure parts: which rows are columns and cards, where a dropped

@@ -1,0 +1,101 @@
+# The kanban example: the same rows as a drag-and-drop board, a table and
+# cards. Everything the board does is read from `kanban_options`; renaming a
+# field in the schema means changing it here and nowhere else.
+default_renderer: kanban
+available_renderers: [kanban, table, cards, calendar]
+pagination: infinite
+page_size_default: 50
+
+kanban_options:
+  # Columns: rows of `buckets` whose board_id is the board on screen, by order.
+  bucket_collection: buckets
+  bucket_filter_field: board_id
+  bucket_order_field: order
+  bucket_label_field: name
+  bucket_color_field: color
+  # Cards: rows of `tickets` on that board (board_id), in a column (bucket_id), by order.
+  ticket_board_field: board_id
+  ticket_bucket_field: bucket_id
+  ticket_order_field: order
+  card:
+    title_field: title
+    body_field: body
+    priority_field: priority
+    tags_field: tags
+    due_field: due
+    assignees_field: assignees
+    footer_fields: [key]
+  cards:
+    title_lines: 3
+    body_lines: 2
+    show_priority_left_border: true
+    tags_max_visible: 4
+    density: comfortable
+  buckets:
+    max_visible_tickets: 50
+    show_count: true
+    show_add_ticket_button: true
+    min_width_px: 280
+  board:
+    extendable_with_buckets: true
+    buckets_sortable: true
+  permissions:
+    read_only: false
+
+columns:
+  - {field: key, pin: left, width: 100}
+  - {field: title, pin: left, editable: true, width: 300}
+  - {field: priority, width: 100}
+  - {field: tags, width: 200}
+  - {field: assignees, width: 220}
+  - {field: due, width: 120}
+  - {field: body, width: 320}
+  - {field: starts_at, width: 170}
+  - {field: ends_at, width: 170}
+  # The machinery: which board and column a card is in, and where.
+  - {field: board_id, width: 300}
+  - {field: bucket_id, width: 300}
+  - {field: order, render: number_format, align: right, width: 90}
+
+search:
+  fields: [title, body, key]
+  placeholder: Search title, text or key
+  case_insensitive: true
+
+filters:
+  - field: priority
+    kind: select
+    label: Priority
+    options: [low, normal, high, urgent]
+  - field: tags
+    kind: select
+    label: Tags
+    options: [ux, api, performance, a11y, docs, mobile, billing, bug, question, account, data, urgent-customer, infra, qa, security, release]
+
+filterable:
+  fields: [key, title, priority, tags, due, starts_at, order]
+
+card_options:
+  title_field: title
+  subtitle_field: key
+  meta_fields: [priority, tags, due, assignees]
+  size: medium
+
+# The calendar tab: the scheduled tickets (~40% have a slot), coloured by
+# priority. The board switcher's `?board=` narrows it as it narrows the board.
+calendar_options:
+  start_field: starts_at
+  end_field: ends_at
+  title_field: title
+  color_field: priority
+  color_map:
+    low: "#64748b"
+    normal: "#2563eb"
+    high: "#d97706"
+    urgent: "#dc2626"
+  default_preset: week
+  business_hours: [9, 17]
+  scroll_to_hour: 8
+  detail:
+    fields: [title, key, priority, assignees, due]
+    delete: false

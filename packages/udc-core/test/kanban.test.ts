@@ -66,10 +66,7 @@ describe("KanbanOptions", () => {
 
   it("parses the tickets view of the backend", () => {
     const raw = parse(
-      readFileSync(
-        new URL("../../../backend/collections/tickets/view.yaml", import.meta.url),
-        "utf8",
-      ),
+      readFileSync(new URL("./fixtures/collections/tickets/view.yaml", import.meta.url), "utf8"),
     );
     const view = ViewConfigSchema.parse(raw);
     expect(view.default_renderer).toBe("kanban");

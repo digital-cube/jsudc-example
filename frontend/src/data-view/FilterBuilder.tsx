@@ -1,4 +1,4 @@
-import type { Condition, FilterableField, FilterNode, FilterOp } from "@jsudc/udc-core";
+import type { Condition, FilterableField, FilterNode, FilterOp } from "@jsudc/core";
 import { ListFilter, Plus, Trash2, X } from "lucide-react";
 import { type ReactNode, useState } from "react";
 import { Button } from "../components/ui/button";

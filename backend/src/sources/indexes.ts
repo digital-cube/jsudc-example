@@ -1,5 +1,5 @@
 import { createHash } from "node:crypto";
-import type { FieldDef, FieldType, SchemaDoc } from "@jsudc/udc-core";
+import type { FieldDef, FieldType, SchemaDoc } from "@jsudc/core";
 import { sql } from "drizzle-orm";
 import type { Executor } from "../db/client.js";
 import { fieldExpr } from "./sql.js";

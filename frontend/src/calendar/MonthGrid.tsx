@@ -1,4 +1,4 @@
-import type { CalendarOptions } from "@jsudc/udc-core";
+import type { CalendarOptions } from "@jsudc/core";
 import { useState } from "react";
 import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
 import { useI18n } from "../i18n/i18n";

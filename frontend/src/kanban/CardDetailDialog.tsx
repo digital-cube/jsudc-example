@@ -1,4 +1,4 @@
-import type { DescribeResponse, Row } from "@jsudc/udc-core";
+import type { DescribeResponse, Row } from "@jsudc/core";
 import { Dialog, DialogBody, DialogContent } from "../components/ui/dialog";
 import { tableSection, useI18n } from "../i18n/i18n";
 import { CellValue } from "../table/cells";

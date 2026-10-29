@@ -1,4 +1,4 @@
-import type { Row } from "@jsudc/udc-core";
+import type { Row } from "@jsudc/core";
 
 /*
  * The tickets board, seeded: 3 boards × 5 buckets, 60 tickets at orders 100, 200, …

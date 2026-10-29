@@ -1,4 +1,4 @@
-import type { FilterNode } from "@jsudc/udc-core";
+import type { FilterNode } from "@jsudc/core";
 import { decodeParam } from "../support/e2e";
 
 const rows = () => cy.get('[data-testid="row"]');

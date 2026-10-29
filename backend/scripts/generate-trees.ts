@@ -15,7 +15,7 @@
 import { writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { parseArgs } from "node:util";
-import { ORDER_GAP } from "@jsudc/udc-core";
+import { ORDER_GAP } from "@jsudc/core";
 import { COLLECTIONS_DIR } from "../src/config.js";
 
 /** mulberry32, as the other generators. */

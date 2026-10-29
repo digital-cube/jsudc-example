@@ -3,7 +3,7 @@ import {
   SchemaDocSchema,
   type ViewConfig,
   ViewConfigSchema,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { CardRenderer } from "../src/cards/CardRenderer";

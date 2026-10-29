@@ -1,4 +1,4 @@
-import type { FilterChipConfig } from "@jsudc/udc-core";
+import type { FilterChipConfig } from "@jsudc/core";
 import { Check, ChevronDown, PlusCircle, X } from "lucide-react";
 import { type ReactNode, useEffect, useState } from "react";
 import { Button } from "../components/ui/button";

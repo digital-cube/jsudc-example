@@ -1,4 +1,4 @@
-import type { FilterNode, SortKey } from "@jsudc/udc-core";
+import type { FilterNode, SortKey } from "@jsudc/core";
 import { afterEach, beforeAll, describe, expect, it, vi } from "vitest";
 import {
   activateSchema,

@@ -1,4 +1,4 @@
-import { type SchemaDoc, SchemaDocSchema, UdcError } from "@jsudc/udc-core";
+import { type SchemaDoc, SchemaDocSchema, UdcError } from "@jsudc/core";
 import { and, eq, sql } from "drizzle-orm";
 import type { Db, Executor } from "./db/client.js";
 import { udcSchemaRevisions } from "./db/schema.js";

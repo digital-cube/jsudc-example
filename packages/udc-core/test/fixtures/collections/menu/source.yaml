@@ -1,0 +1,24 @@
+# The application menu: a YAML file, flattened into tree rows on every read
+# whose mtime changed. The sidebar to the left is this collection drawn as
+# chrome; /udc/menu is the same rows drawn as data.
+kind: yaml_menu
+options:
+  # Relative to this directory.
+  file: data/menu.yaml
+  # Resolve `children: "udc:collections?group=…"` against the live registry.
+  dynamic: true
+  # The icon of a collection's node in a udc:collections branch; the rest get lucide:table.
+  collection_icons:
+    companies: lucide:building-2
+    appointments: lucide:calendar-days
+    tickets: lucide:kanban
+    boards: lucide:layout-dashboard
+    buckets: lucide:columns-3
+    comments: lucide:messages-square
+    org: lucide:network
+    metrics: lucide:chart-line
+    files: lucide:folder-open
+    menu: lucide:list-tree
+    quakes: lucide:activity
+    flights: lucide:plane
+    repos: lucide:folder-git-2

@@ -7,7 +7,7 @@ import {
   UdcError,
   type UdcMessage,
   ViewConfigSchema,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { beforeEach, describe, expect, it, vi } from "vitest";
 import { createDispatcher, Dispatcher } from "../src/dispatcher.js";
 import { CollectionRegistry } from "../src/registry.js";

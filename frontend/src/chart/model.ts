@@ -8,7 +8,7 @@ import {
   toChartInstant,
   toChartNumber,
   yAxisFrame,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { formatBytes } from "../table/cells";
 import {
   addDays,

@@ -95,10 +95,7 @@ describe("MapOptions", () => {
 describe("the backend's companies view", () => {
   const view = ViewConfigSchema.parse(
     parse(
-      readFileSync(
-        new URL("../../../backend/collections/companies/view.yaml", import.meta.url),
-        "utf8",
-      ),
+      readFileSync(new URL("./fixtures/collections/companies/view.yaml", import.meta.url), "utf8"),
     ),
   );
 

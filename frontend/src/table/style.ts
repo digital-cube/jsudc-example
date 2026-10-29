@@ -1,4 +1,4 @@
-import type { ColumnColor, RowColorConfig } from "@jsudc/udc-core";
+import type { ColumnColor, RowColorConfig } from "@jsudc/core";
 
 /** Semantic text colour tokens → classes. Literal strings so Tailwind sees them. */
 export const TEXT_COLOR: Record<ColumnColor, string> = {

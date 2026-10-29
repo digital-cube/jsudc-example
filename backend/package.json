@@ -5,9 +5,9 @@
   "type": "module",
   "description": "jsudc backend: Fastify transport, UDC dispatcher, Postgres jsonb source.",
   "scripts": {
-    "predev": "npm run build -w @jsudc/udc-core",
+    "predev": "npm run build -w @jsudc/core",
     "dev": "tsx watch src/main.ts",
-    "prestart": "npm run build -w @jsudc/udc-core",
+    "prestart": "npm run build -w @jsudc/core",
     "start": "tsx src/main.ts",
     "db:create": "tsx src/cli/db-create.ts",
     "db:migrate": "drizzle-kit migrate",
@@ -28,7 +28,7 @@
   "dependencies": {
     "@fastify/swagger": "^9.9.2",
     "@fastify/swagger-ui": "^6.1.2",
-    "@jsudc/udc-core": "*",
+    "@jsudc/core": "*",
     "drizzle-orm": "^0.45.4",
     "fastify": "^5.12.7",
     "fastify-type-provider-zod": "^7.0.0",

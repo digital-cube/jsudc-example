@@ -8,7 +8,7 @@ import {
   type SourceInfo,
   type SourceKind,
   type ViewConfig,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { deriveColumns, placeUnlisted } from "./columns.js";
 import { presentedSchema } from "./schema-edit.js";
 

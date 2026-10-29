@@ -1,4 +1,4 @@
-import type { Row, SchemaDoc } from "@jsudc/udc-core";
+import type { Row, SchemaDoc } from "@jsudc/core";
 
 const firstRow = () => cy.get('[data-testid="row"]').first();
 const headerFields = () =>

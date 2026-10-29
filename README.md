@@ -10,7 +10,7 @@ generic protocol: `describe`, `list` with server-side filter/sort/paging,
 
 The point of the exercise is the **shared interface**. In UDC today the
 protocol is declared twice, once in Python and once in TypeScript, and the two
-drift. In jsudc it lives once, in [`packages/udc-core`](packages/udc-core):
+drift. In jsudc it lives once, in [`@jsudc/core`](packages/udc-core) (`packages/udc-core`):
 envelopes, the filter DSL and an in-memory evaluator, schema and view types,
 row validation and every action payload, as Zod schemas with inferred types.
 Both the server and the browser import it. The design is in
@@ -19,7 +19,7 @@ Both the server and the browser import it. The design is in
 ## Layout
 
 ```
-packages/udc-core/   shared protocol (zod is its only runtime dependency)
+packages/udc-core/   @jsudc/core: the shared protocol and the transport client (zod is its only runtime dependency)
 backend/             Fastify + Drizzle server: UDC envelope RPC over Postgres jsonb
 frontend/            React 19 + Vite app: UDC client, hooks, the generic data view, table and
                      card renderers, the schema editor (add / edit / delete columns)
@@ -36,7 +36,7 @@ npm install
 npm run typecheck  # tsc --noEmit in every workspace
 npm run lint       # Biome, one config for the whole repo
 npm test           # Vitest in every workspace (backend needs Postgres, see below)
-npm run build      # udc-core -> packages/udc-core/dist (ESM + .d.ts)
+npm run build      # @jsudc/core -> packages/udc-core/dist (ESM + .d.ts)
 npm run format     # Biome, rewrites files
 ```
 

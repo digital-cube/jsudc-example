@@ -1,7 +1,7 @@
-import { isUdcError } from "@jsudc/udc-core";
+import { isUdcError } from "@jsudc/core";
+import type { UdcClient } from "@jsudc/core/client";
 import { QueryClient } from "@tanstack/react-query";
 import { createContext, type ReactNode, useContext } from "react";
-import type { UdcClient } from "./client";
 
 const UdcClientContext = createContext<UdcClient | null>(null);
 

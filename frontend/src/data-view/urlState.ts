@@ -1,4 +1,4 @@
-import { type FilterNode, FilterNodeSchema, type SortKey } from "@jsudc/udc-core";
+import { type FilterNode, FilterNodeSchema, type SortKey } from "@jsudc/core";
 import type { PagingMode } from "../udc/keys";
 
 /*

@@ -4,7 +4,7 @@ import {
   type Row,
   SchemaDocSchema,
   type SortKey,
-} from "@jsudc/udc-core";
+} from "@jsudc/core";
 import { beforeAll, describe, expect, it } from "vitest";
 import { seedCollection } from "../src/seed.js";
 import { compareByType, queryRows, sortRows } from "../src/sources/array.js";

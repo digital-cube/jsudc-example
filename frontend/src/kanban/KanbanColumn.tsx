@@ -1,6 +1,6 @@
 import { SortableContext, useSortable, verticalListSortingStrategy } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import type { KanbanOptions, Row, SchemaDoc } from "@jsudc/udc-core";
+import type { KanbanOptions, Row, SchemaDoc } from "@jsudc/core";
 import { MoreHorizontal, Pencil, Plus, Trash2 } from "lucide-react";
 import { type KeyboardEvent, useState } from "react";
 import { Button } from "../components/ui/button";

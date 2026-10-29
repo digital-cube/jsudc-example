@@ -1,6 +1,6 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
-import { type SchemaDocInput, SchemaDocSchema } from "@jsudc/udc-core";
+import { type SchemaDocInput, SchemaDocSchema } from "@jsudc/core";
 import { sql } from "drizzle-orm";
 import { beforeEach, describe, expect, it } from "vitest";
 import { COLLECTIONS_DIR } from "../src/config.js";
