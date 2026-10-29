@@ -21,3 +21,6 @@ coverage/
 *.tsbuildinfo
 frontend/cypress/screenshots/
 frontend/cypress/downloads/
+
+# external library clones (digital-cube/jsudc-*), worked on in their own repos
+libs/
