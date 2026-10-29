@@ -9,12 +9,10 @@
  * the quarter hour the seed runs in, or at noon of `SEED_TODAY`.
  */
 import { parseArgs } from "node:util";
+import { connect, readCollectionAssets, seedCollection } from "@jsudc/server";
 import { seedToday } from "../../scripts/generate-appointments.js";
 import { metricsEnd } from "../../scripts/generate-metrics.js";
 import { COLLECTIONS_DIR, config } from "../config.js";
-import { connect } from "../db/client.js";
-import { readCollectionAssets } from "../registry.js";
-import { seedCollection } from "../seed.js";
 import { seedRowsFor } from "../seed-rows.js";
 
 const { values } = parseArgs({

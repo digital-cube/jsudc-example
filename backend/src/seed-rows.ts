@@ -1,8 +1,8 @@
 import { readFileSync } from "node:fs";
+import type { CollectionAsset } from "@jsudc/server";
 import { belgradeIso, generateAppointments, parseDay } from "../scripts/generate-appointments.js";
 import { KANBAN_TODAY, mondayOf } from "../scripts/generate-kanban.js";
 import { generateMetrics, noonOf } from "../scripts/generate-metrics.js";
-import type { CollectionAsset } from "./registry.js";
 
 const DAY = 86_400_000;
 const WALL = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/;

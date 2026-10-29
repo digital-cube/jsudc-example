@@ -19,7 +19,7 @@
     "format": "biome format --write .",
     "dev": "concurrently -k -n backend,web -c blue,magenta \"npm run dev -w @jsudc/backend\" \"npm run dev -w @jsudc/frontend\"",
     "db:setup": "npm run db:create -w @jsudc/backend && npm run db:migrate -w @jsudc/backend && npm run db:migrate:test -w @jsudc/backend",
-    "seed": "npm run build -w @jsudc/core && npm run seed -w @jsudc/backend --",
+    "seed": "npm run build -w @jsudc/core && npm run build -w @jsudc/server && npm run seed -w @jsudc/backend --",
     "dev:backend": "npm run dev -w @jsudc/backend",
     "dev:web": "npm run dev -w @jsudc/frontend",
     "e2e": "node scripts/e2e.mjs"

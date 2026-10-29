@@ -1,11 +1,10 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { type SchemaDocInput, SchemaDocSchema } from "@jsudc/core";
+import { PostgresJsonbSource, seedCollection } from "@jsudc/server";
 import { beforeAll, describe, expect, it } from "vitest";
 import { generateAppointments } from "../scripts/generate-appointments.js";
 import { COLLECTIONS_DIR } from "../src/config.js";
-import { seedCollection } from "../src/seed.js";
-import { PostgresJsonbSource } from "../src/sources/postgres-jsonb.js";
 import { useTestDb } from "./helpers.js";
 
 const schemaJson = JSON.parse(

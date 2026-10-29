@@ -1,28 +1,9 @@
-import { sql } from "drizzle-orm";
-import {
-  bigserial,
-  boolean,
-  integer,
-  jsonb,
-  pgTable,
-  text,
-  timestamp,
-  unique,
-  uniqueIndex,
-  uuid,
-} from "drizzle-orm/pg-core";
+import { collectionTable } from "@jsudc/server";
 
-/** The shape every jsonb-backed collection table has: all fields live in `data`. */
-export function collectionTable(name: string) {
-  return pgTable(name, {
-    id: uuid("id").primaryKey().defaultRandom(),
-    data: jsonb("data").$type<Record<string, unknown>>().notNull().default({}),
-    version: integer("version").notNull().default(1),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-    updatedAt: timestamp("updated_at", { withTimezone: true }).notNull().defaultNow(),
-  });
-}
+// The library's own table: listed here so drizzle-kit keeps it in the snapshot instead of dropping it.
+export { udcSchemaRevisions } from "@jsudc/server";
 
+// The demo collections: one jsonb table each, the shape the library reads.
 export const companies = collectionTable("companies");
 export const boards = collectionTable("boards");
 export const buckets = collectionTable("buckets");
@@ -31,19 +12,3 @@ export const appointments = collectionTable("appointments");
 export const comments = collectionTable("comments");
 export const org = collectionTable("org");
 export const metrics = collectionTable("metrics");
-
-export const udcSchemaRevisions = pgTable(
-  "udc_schema_revisions",
-  {
-    id: bigserial("id", { mode: "number" }).primaryKey(),
-    collection: text("collection").notNull(),
-    version: integer("version").notNull(),
-    schema: jsonb("schema").$type<Record<string, unknown>>().notNull(),
-    active: boolean("active").notNull().default(false),
-    createdAt: timestamp("created_at", { withTimezone: true }).notNull().defaultNow(),
-  },
-  (t) => [
-    unique("udc_schema_revisions_collection_version_key").on(t.collection, t.version),
-    uniqueIndex("udc_schema_revisions_one_active_idx").on(t.collection).where(sql`active`),
-  ],
-);

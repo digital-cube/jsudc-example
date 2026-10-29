@@ -1,9 +1,5 @@
-import { buildApp } from "./app.js";
+import { buildApp, connect, createDispatcher, loadRegistry, makeSource } from "@jsudc/server";
 import { COLLECTIONS_DIR, config } from "./config.js";
-import { connect } from "./db/client.js";
-import { createDispatcher } from "./dispatcher.js";
-import { loadRegistry } from "./registry.js";
-import { makeSource } from "./sources/factory.js";
 
 const handle = connect(config.databaseUrl);
 // Each collection's source.yaml picks its source: Postgres (the default), files on disk, the net.
@@ -12,8 +8,9 @@ const sourceLog = {
   info: (msg: string) => app.log.info(msg),
   warn: (msg: string) => app.log.warn(msg),
 };
+// The library reads no environment of its own: the UDC_* overrides and the credentials come from here.
 const registry = loadRegistry(COLLECTIONS_DIR, (asset, reg) =>
-  makeSource(asset, { db: handle.db, registry: reg, log: sourceLog }),
+  makeSource(asset, { db: handle.db, registry: reg, log: sourceLog, env: process.env }),
 );
 
 // Dispatcher failures go to Fastify's logger, which exists once the app does.

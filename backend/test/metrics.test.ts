@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { bucketByTime, type SchemaDocInput, SchemaDocSchema, validateRow } from "@jsudc/core";
+import { PostgresJsonbSource, readCollectionAssets, seedCollection } from "@jsudc/server";
 import { beforeAll, describe, expect, it } from "vitest";
 import {
   floorToStep,
@@ -14,10 +15,7 @@ import {
   STEP_MS,
 } from "../scripts/generate-metrics.js";
 import { COLLECTIONS_DIR } from "../src/config.js";
-import { readCollectionAssets } from "../src/registry.js";
-import { seedCollection } from "../src/seed.js";
 import { seedRowsFor } from "../src/seed-rows.js";
-import { PostgresJsonbSource } from "../src/sources/postgres-jsonb.js";
 import { useTestDb } from "./helpers.js";
 
 const schemaJson = JSON.parse(

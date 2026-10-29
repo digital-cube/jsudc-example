@@ -13,14 +13,18 @@ protocol is declared twice, once in Python and once in TypeScript, and the two
 drift. In jsudc it lives once, in [`@jsudc/core`](packages/udc-core) (`packages/udc-core`):
 envelopes, the filter DSL and an in-memory evaluator, schema and view types,
 row validation and every action payload, as Zod schemas with inferred types.
-Both the server and the browser import it. The design is in
+Both the server and the browser import it. The server machinery — dispatcher,
+collection registry, the five sources, schema revisions, the Fastify plugin —
+is [`@jsudc/server`](packages/udc-server) (`packages/udc-server`); `backend/`
+is the example server that serves the demo collections with it. The design is in
 [`docs/superpowers/specs/2026-10-18-jsudc-design.md`](docs/superpowers/specs/2026-10-18-jsudc-design.md).
 
 ## Layout
 
 ```
 packages/udc-core/   @jsudc/core: the shared protocol and the transport client (zod is its only runtime dependency)
-backend/             Fastify + Drizzle server: UDC envelope RPC over Postgres jsonb
+packages/udc-server/ @jsudc/server: dispatcher, registry, sources, schema store, seeding, the Fastify plugin
+backend/             the example server: the demo collections, their tables and migrations, seed CLI
 frontend/            React 19 + Vite app: UDC client, hooks, the generic data view, table and
                      card renderers, the schema editor (add / edit / delete columns)
 docs/                design, plans and the two-minute demo script (docs/demo.md)
@@ -35,8 +39,8 @@ nvm use            # Node 24
 npm install
 npm run typecheck  # tsc --noEmit in every workspace
 npm run lint       # Biome, one config for the whole repo
-npm test           # Vitest in every workspace (backend needs Postgres, see below)
-npm run build      # @jsudc/core -> packages/udc-core/dist (ESM + .d.ts)
+npm test           # Vitest in every workspace (udc-server and backend need Postgres, see below)
+npm run build      # @jsudc/core and @jsudc/server -> packages/*/dist (ESM + .d.ts)
 npm run format     # Biome, rewrites files
 ```
 
@@ -53,8 +57,9 @@ Defaults live in [`backend/.env.example`](backend/.env.example); copy it to
 npm run db:setup   # create jsudc + jsudc_test, apply the drizzle migrations to both
 npm run seed       # companies: schema revision 1 + 200 rows (-- --reset, --limit N, --db <url|name>)
 npm run dev        # http://localhost:5100, OpenAPI UI at /docs
-npm test -w @jsudc/backend           # Vitest against the real jsudc_test database
-npm run test:cov -w @jsudc/backend   # coverage, thresholds 80%
+npm test -w @jsudc/server            # the library's tests, on its own fixture collections, in jsudc_test
+npm test -w @jsudc/backend           # the demo collections' tests, against the same database
+npm run test:cov -w @jsudc/backend   # coverage, thresholds 80% (same script in @jsudc/server)
 ```
 
 Every action is `POST /udc/<action>` with the payload as body; the answer is

@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { SchemaDocSchema, validateRow } from "@jsudc/core";
+import { readCollectionAssets } from "@jsudc/server";
 import { describe, expect, it } from "vitest";
 import {
   belgradeIso,
@@ -11,7 +12,6 @@ import {
 import { CITY_COORDS, generateCompanies } from "../scripts/generate-companies.js";
 import { generateKanban } from "../scripts/generate-kanban.js";
 import { COLLECTIONS_DIR } from "../src/config.js";
-import { readCollectionAssets } from "../src/registry.js";
 import { seedRowsFor, shiftBelgradeWeeks, weeksBetween } from "../src/seed-rows.js";
 import { companiesSeed } from "./helpers.js";
 

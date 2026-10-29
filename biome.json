@@ -41,7 +41,10 @@
   },
   "overrides": [
     {
-      "includes": ["backend/test/http-api.test.ts", "packages/udc-core/test/source.test.ts"],
+      "includes": [
+        "packages/udc-server/test/http-api.test.ts",
+        "packages/udc-core/test/source.test.ts"
+      ],
       "linter": {
         "rules": {
           "suspicious": {

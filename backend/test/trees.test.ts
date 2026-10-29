@@ -1,6 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { SchemaDocSchema, validateRow } from "@jsudc/core";
+import { PostgresJsonbSource, readCollectionAssets, seedCollection } from "@jsudc/server";
 import { sql } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import {
@@ -12,9 +13,6 @@ import {
   type SeedRow,
 } from "../scripts/generate-trees.js";
 import { COLLECTIONS_DIR } from "../src/config.js";
-import { readCollectionAssets } from "../src/registry.js";
-import { seedCollection } from "../src/seed.js";
-import { PostgresJsonbSource } from "../src/sources/postgres-jsonb.js";
 import { useTestDb } from "./helpers.js";
 
 const seed = generateTrees();
