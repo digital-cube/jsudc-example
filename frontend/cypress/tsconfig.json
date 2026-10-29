@@ -9,12 +9,7 @@
     "noEmit": true,
     "declaration": false,
     "declarationMap": false,
-    "isolatedModules": false,
-    "paths": {
-      "@jsudc/core": ["../../packages/udc-core/src/index.ts"],
-      "@jsudc/core/client": ["../../packages/udc-core/src/client.ts"],
-      "@jsudc/react": ["../../packages/udc-react/src/index.ts"]
-    }
+    "isolatedModules": false
   },
   "include": ["**/*.ts", "../cypress.config.ts"]
 }

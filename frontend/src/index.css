@@ -1,11 +1,12 @@
 /*
  * The example runs Tailwind itself (the shell has utilities of its own), so it
- * takes the library's raw tokens and scans the library's sources with its own.
+ * takes the library's raw tokens and scans the library's built `dist` with its own
+ * (the workspace hoists it to the root `node_modules`).
  * A host without Tailwind imports `@jsudc/react/styles.css` instead.
  */
 @import "tailwindcss";
 @import "@jsudc/react/tokens.css";
-@source "../../packages/udc-react/src";
+@source "../../node_modules/@jsudc/react/dist";
 
 @layer base {
   html,

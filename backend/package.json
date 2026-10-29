@@ -5,9 +5,7 @@
   "type": "module",
   "description": "jsudc example server: the demo collections served by @jsudc/server over Fastify.",
   "scripts": {
-    "predev": "npm run build -w @jsudc/core && npm run build -w @jsudc/server",
     "dev": "tsx watch src/main.ts",
-    "prestart": "npm run build -w @jsudc/core && npm run build -w @jsudc/server",
     "start": "tsx src/main.ts",
     "db:create": "tsx src/cli/db-create.ts",
     "db:migrate": "drizzle-kit migrate",
@@ -28,8 +26,8 @@
   "dependencies": {
     "@fastify/swagger": "^9.9.2",
     "@fastify/swagger-ui": "^6.1.2",
-    "@jsudc/core": "*",
-    "@jsudc/server": "*",
+    "@jsudc/core": "^0.1.0",
+    "@jsudc/server": "^0.1.0",
     "drizzle-orm": "^0.45.4",
     "fastify": "^5.12.7",
     "fastify-type-provider-zod": "^7.0.0",

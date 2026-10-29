@@ -1,4 +1,3 @@
-import { fileURLToPath } from "node:url";
 import tailwindcss from "@tailwindcss/vite";
 import react from "@vitejs/plugin-react";
 import { defineConfig } from "vite";
@@ -10,23 +9,6 @@ const proxyTarget = process.env.UDC_PROXY_TARGET || "http://127.0.0.1:5100";
 
 export default defineConfig({
   plugins: [react(), tailwindcss()],
-  resolve: {
-    // The packages' sources, so a change there needs no rebuild.
-    alias: {
-      // Subpaths first: an alias also matches what starts with `<key>/`.
-      "@jsudc/core/client": fileURLToPath(
-        new URL("../packages/udc-core/src/client.ts", import.meta.url),
-      ),
-      "@jsudc/core": fileURLToPath(new URL("../packages/udc-core/src/index.ts", import.meta.url)),
-      "@jsudc/react/styles.css": fileURLToPath(
-        new URL("../packages/udc-react/src/styles.css", import.meta.url),
-      ),
-      "@jsudc/react/tokens.css": fileURLToPath(
-        new URL("../packages/udc-react/src/tokens.css", import.meta.url),
-      ),
-      "@jsudc/react": fileURLToPath(new URL("../packages/udc-react/src/index.ts", import.meta.url)),
-    },
-  },
   server: {
     port: Number(process.env.VITE_PORT || 5173),
     proxy: {

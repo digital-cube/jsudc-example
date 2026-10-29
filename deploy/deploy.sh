@@ -105,6 +105,7 @@ timeout 60 systemctl --user stop "$UNIT"
 step "npm ci"
 timeout 600 npm ci --no-audit --no-fund
 
+# The packages' dist (the example imports it, no source aliases), then the frontend.
 step "npm run build"
 timeout 300 npm run build
 
@@ -137,14 +138,14 @@ udc() { # udc <action> <json body> — POST through nginx, prints the answer
     -H "Host: $SITE" -H 'content-type: application/json' -d "$2"
 }
 
-step "waiting for /healthz through nginx (up to 60 s)"
-deadline=$((SECONDS + 60))
+step "waiting for /healthz through nginx (up to 120 s)"
+deadline=$((SECONDS + 120))
 until curl -fsS -m 5 -o /dev/null -H "Host: $SITE" http://127.0.0.1/healthz 2>/dev/null; do
   ((SECONDS < deadline)) ||
-    die 5 "/healthz did not answer within 60 s — journalctl --user -u $UNIT -n 100"
+    die 5 "/healthz did not answer within 120 s — journalctl --user -u $UNIT -n 100"
   sleep 2
 done
-echo "healthz ok after $((60 - (deadline - SECONDS))) s"
+echo "healthz ok after $((120 - (deadline - SECONDS))) s"
 
 step "POST /udc/collections"
 answer="$(udc collections '{}')" || die 5 "POST /udc/collections failed"

@@ -1,5 +1,6 @@
 # jsudc dev stack behind nginx vhost jsudc.igor.digitalcube.work.
-# Runs `npm run dev` (concurrently: Fastify backend + Vite with HMR) from the
+# Runs `npm run dev` (builds packages/*/dist, then concurrently: the package
+# watchers, Fastify backend + Vite with HMR) from the
 # root checkout /home/digital/work/jsudc on main — deliberately the dev stack,
 # not a production build.
 # nginx :80 -> Vite 127.0.0.1:5101 -> (POST /udc/*, /healthz) Fastify 127.0.0.1:5100.
