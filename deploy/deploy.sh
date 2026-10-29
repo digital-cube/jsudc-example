@@ -4,9 +4,26 @@
 #   -> start jsudc-dev -> /healthz through nginx -> every collection answers.
 # The unit is stopped BEFORE npm ci: Vite serves "Failed to resolve import"
 # while node_modules is replaced under a running dev server.
+# The script runs from a temporary copy of itself, and when the merge changed
+# deploy/deploy.sh it re-executes the merged version with --no-merge, so a deploy
+# always runs the script it has just merged.
 #
 # Usage: deploy/deploy.sh [--branch jsudc] [--reset-seed] [--no-merge]
 set -euo pipefail
+
+# Run from a copy, never from the checkout: the merge below rewrites deploy/deploy.sh,
+# and bash reads a script in chunks, so it would carry on at the same byte offset of
+# the new file. The copy records where the checkout is; it deletes itself on exit.
+if [[ -z "${DEPLOY_SH_COPY:-}" ]]; then
+  repo="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
+  copy="$(mktemp "${TMPDIR:-/tmp}/deploy.sh.XXXXXX")"
+  cp "${BASH_SOURCE[0]}" "$copy"
+  DEPLOY_SH_COPY="$copy" DEPLOY_SH_REPO="$repo" exec bash "$copy" "$@"
+fi
+COPY="$DEPLOY_SH_COPY"
+REPO="$DEPLOY_SH_REPO"
+unset DEPLOY_SH_COPY DEPLOY_SH_REPO
+trap 'rm -f "$COPY"' EXIT
 
 EXPECTED_ROOT=/home/digital/work/jsudc
 SITE=jsudc.igor.digitalcube.work
@@ -21,6 +38,8 @@ Deploys $SITE from $EXPECTED_ROOT (must be on main, clean):
   git merge --ff-only <branch>, systemctl --user stop $UNIT, npm ci, npm run build,
   npm run db:migrate -w @jsudc/backend, npm run seed, systemctl --user start $UNIT,
   then waits for /healthz through nginx and lists one row of every postgres collection.
+  It runs from a temporary copy of itself; when the merge changed deploy/deploy.sh it
+  re-executes the merged one with --no-merge (--reset-seed is passed on).
 
   --branch <name>  branch to fast-forward main to (default: jsudc)
   --no-merge       skip the merge, redeploy what main has now
@@ -37,6 +56,7 @@ EOF
 BRANCH=jsudc
 RESET_SEED=0
 MERGE=1
+KEEP_ARGS=() # what a re-exec after the merge passes on (--branch is done by then)
 while (($#)); do
   case "$1" in
     --branch)
@@ -44,7 +64,7 @@ while (($#)); do
       BRANCH="$2"
       shift
       ;;
-    --reset-seed) RESET_SEED=1 ;;
+    --reset-seed) RESET_SEED=1; KEEP_ARGS+=("$1") ;;
     --no-merge) MERGE=0 ;;
     -h | --help) usage; exit 0 ;;
     *) echo "deploy.sh: unknown argument: $1" >&2; usage >&2; exit 2 ;;
@@ -60,7 +80,6 @@ die() { # die <exit code> <message...>
 }
 step() { printf '\n==> %s\n' "$*"; }
 
-REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 [[ "$REPO" == "$EXPECTED_ROOT" ]] ||
   die 3 "refusing to deploy from $REPO — the live site runs from $EXPECTED_ROOT"
 cd "$REPO"
@@ -80,12 +99,20 @@ current="$(git symbolic-ref --short -q HEAD || true)"
   die 3 "the working tree is dirty — commit or clean it first:
 $(git status --short)"
 
-BEFORE="$(git rev-parse HEAD)"
+# A re-exec after the merge (below) hands over where main was before it, so the
+# deploy/nginx check further down still sees what that merge brought.
+BEFORE="${DEPLOY_SH_BEFORE:-$(git rev-parse HEAD)}"
+unset DEPLOY_SH_BEFORE
 if ((MERGE)); then
   step "git merge --ff-only $BRANCH"
   git rev-parse --verify -q "refs/heads/$BRANCH" >/dev/null || die 3 "no local branch '$BRANCH'"
   timeout 60 git merge --ff-only "$BRANCH" ||
     die 4 "main cannot fast-forward to $BRANCH — rebase $BRANCH on main first; nothing was changed"
+  if ! git diff --quiet "$BEFORE" HEAD -- deploy/deploy.sh; then
+    echo "the merge brought a new deploy/deploy.sh — re-executing it with --no-merge"
+    rm -f "$COPY"
+    DEPLOY_SH_BEFORE="$BEFORE" exec "$REPO/deploy/deploy.sh" --no-merge "${KEEP_ARGS[@]}"
+  fi
 else
   step "skipping the merge (--no-merge)"
 fi
