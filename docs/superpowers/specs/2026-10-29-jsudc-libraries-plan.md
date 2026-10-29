@@ -287,6 +287,7 @@ through npm" with the least motion:
 | `@jsudc/core` | `digital-cube/jsudc-core` | `6914a65` | `v0.1.0` | 2026-10-29 |
 | `@jsudc/server` | `digital-cube/jsudc-server` | `453a756` | `v0.1.0` | 2026-10-29 |
 | `@jsudc/react` | `digital-cube/jsudc-react` | `c4bef7e` | `v0.1.0` | 2026-10-29 |
+| example (this repo) | `digital-cube/jsudc-example` | `b1bd6fa` | — | 2026-10-29 |
 
 Pushed from the monorepo's `git subtree split` branches over HTTPS with the
 `digital-cube` gh token (`workflow` scope added 2026-10-29); the machine's SSH
