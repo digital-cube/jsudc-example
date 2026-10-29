@@ -331,10 +331,11 @@ and shown to Igor first.
 
 ## 7. Decisions for Igor, and calls I made
 
-**Igor decides (on T1 and T2):** npm scope `@jsudc` vs unscoped; domain.
-**Decided 2026-10-29:** GitHub org `digital-cube` (eight private repos exist,
-`jsudc-website` among them); **licence MIT**, one for every package and the
-example, copyright DigitalCube.
+**Decided by Igor, 2026-10-29:** GitHub org `digital-cube` (eight private
+repos exist, `jsudc-website` among them); npm scope **`@jsudc/*`**;
+**licence MIT**, one for every package and the example, copyright
+`Copyright (c) 2026 DigitalCube`; domain **`jsudc.dev`** only; P1–P6 run on
+`claude-opus-5-5` and were queued together on 2026-10-29.
 
 **My calls, change them if wrong:** scope `@jsudc`; client moves into
 core; extraction inside this monorepo before the split; lockstep version
