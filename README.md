@@ -44,12 +44,15 @@ docs/                design, plans and the two-minute demo script (docs/demo.md)
 ## From a clean clone to a running app
 
 Requires Node 24 (pinned in `.nvmrc`), Postgres on localhost with the role `jsudc`
-(password `123`, `CREATEDB`; see [Backend](#backend) to point elsewhere), and SSH
-access to the three `digital-cube/jsudc-*` repositories: they are private, and
-`npm ci` clones them (see below).
+(password `123`, `CREATEDB`; see [Backend](#backend) to point elsewhere), and read
+access to the three `digital-cube/jsudc-*` repositories over HTTPS: they are
+private, and `npm ci` clones them with the credential git gets from the `gh` CLI
+(see below).
 
 ```sh
-git clone git@github.com:digital-cube/jsudc-example.git && cd jsudc-example
+gh auth login              # once, as an account that can read digital-cube/jsudc-*
+gh auth setup-git          # once: git takes its GitHub credential from gh
+git clone https://github.com/digital-cube/jsudc-example.git && cd jsudc-example
 nvm use                    # Node 24
 npm ci                     # clones @jsudc/core, server and react at their v0.1.0 tags and builds their dist
 npm run db:setup           # create jsudc + jsudc_test, apply the drizzle migrations to both
@@ -77,10 +80,13 @@ workspace, `npm test` runs only that one.
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. **Until the packages are on npm they come from
 GitHub tags**: each `package.json` names `github:digital-cube/jsudc-<name>#v0.1.0`.
-`npm install` / `npm ci` clones each tag over SSH (the repositories are private, so
-your SSH key needs read access to `digital-cube/jsudc-*`), runs the package's
-`prepare` — its build — and installs the resulting `dist`; `package-lock.json`
-pins the commit each tag pointed at. `@jsudc/server` and `@jsudc/react` depend on
+`npm install` / `npm ci` clones each tag over HTTPS (the repositories are private,
+so git needs a credential for an account with read access to `digital-cube/jsudc-*`:
+`gh auth setup-git` once, or for a single process
+`GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0='!gh auth git-credential'`;
+npm tries HTTPS first and SSH second, so an SSH key with access works too), runs
+the package's `prepare` — its build — and installs the resulting `dist`;
+`package-lock.json` pins the commit each tag pointed at. `@jsudc/server` and `@jsudc/react` depend on
 `@jsudc/core` by the same tag, so npm dedupes them to one copy. Switching to the npm
 registry later changes only those three specifiers.
 

@@ -160,7 +160,10 @@ describe("icon resolution", () => {
     walk(dir);
     expect(names.size).toBeGreaterThan(10);
     const missing = [...names].filter((n) => !(n in LUCIDE_ICONS));
-    expect(missing, "run npm run generate:icons -w @jsudc/frontend").toEqual([]);
+    expect(
+      missing,
+      "not in @jsudc/react's LUCIDE_ICONS: add them to jsudc-react, release a tag, bump it here",
+    ).toEqual([]);
   });
 });
 

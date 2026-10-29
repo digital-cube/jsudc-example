@@ -66,6 +66,13 @@ REPO="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd -P)"
 cd "$REPO"
 export PATH="$NODE_BIN:$PATH"
 command -v jq >/dev/null || die 3 "jq is required (sudo apt install jq)"
+command -v gh >/dev/null || die 3 "gh is required: npm ci clones digital-cube/jsudc-* over HTTPS with its token"
+
+# @jsudc/core, server and react are git dependencies on private repositories:
+# npm ci clones them over HTTPS and git takes the token from the gh CLI (logged
+# in as digital-cube, which reads them). Set for this process so the script needs
+# no credential.helper in ~/.gitconfig; the unit never runs npm ci, so it needs none.
+export GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0='!gh auth git-credential'
 
 current="$(git symbolic-ref --short -q HEAD || true)"
 [[ "$current" == "main" ]] || die 3 "not on main (on '${current:-detached HEAD}'): git switch main"
@@ -105,7 +112,7 @@ timeout 60 systemctl --user stop "$UNIT"
 step "npm ci"
 timeout 600 npm ci --no-audit --no-fund
 
-# @jsudc/* come from GitHub tags (npm ci clones them over SSH and builds their dist); this builds the frontend.
+# @jsudc/* come from GitHub tags (npm ci clones them over HTTPS and builds their dist); this builds the frontend.
 step "npm run build"
 timeout 300 npm run build
 
