@@ -31,7 +31,7 @@ import {
   windowRange,
   writeWindow,
 } from "../src/chart/window";
-import { I18nProvider } from "../src/i18n/i18n";
+import { UdcI18nProvider } from "../src/i18n/i18n";
 import { rendererEntry } from "../src/renderers/registry";
 import { TimezoneProvider, useTimezone } from "../src/time/timezone";
 import { row } from "./fetchMock";
@@ -115,6 +115,22 @@ describe("window → between", () => {
   });
 });
 
+function Probe({
+  onState,
+}: {
+  onState: (w: ChartWindowState | null, set: (z: string) => void) => void;
+}) {
+  const view = ViewConfigSchema.parse({
+    available_renderers: ["chart"],
+    chart_options: { x_field: "ts", series: [{ field: "cpu" }], window: { field: "ts" } },
+  });
+  const w = useChartWindow(view);
+  const { setTimeZone } = useTimezone();
+  const loc = useLocation();
+  onState(w, setTimeZone);
+  return <output data-testid="search">{loc.search}</output>;
+}
+
 describe("the window in the URL", () => {
   const cfg = win({ presets: ["1h", "6h", "24h", "7d"], default: "24h" });
   const read = (q: string, c = cfg) => readWindow(new URLSearchParams(q), c);
@@ -156,22 +172,6 @@ describe("the window in the URL", () => {
     expect(parseWall("2026-13-01T08:00")).toBeNull();
     expect(wallOf(NOW, TOKYO)).toBe("2026-10-27T20:00");
   });
-
-  function Probe({
-    onState,
-  }: {
-    onState: (w: ChartWindowState | null, set: (z: string) => void) => void;
-  }) {
-    const view = ViewConfigSchema.parse({
-      available_renderers: ["chart"],
-      chart_options: { x_field: "ts", series: [{ field: "cpu" }], window: { field: "ts" } },
-    });
-    const w = useChartWindow(view);
-    const { setTimeZone } = useTimezone();
-    const loc = useLocation();
-    onState(w, setTimeZone);
-    return <output data-testid="search">{loc.search}</output>;
-  }
 
   it("useChartWindow writes the URL, and the zone changes the condition", () => {
     let state: ChartWindowState | null = null;
@@ -270,9 +270,9 @@ function renderChart(chart: ChartOptionsInput, rows: Row[], schema = metricsSche
   const opts = d.view.chart_options;
   if (!opts) throw new Error("chart_options");
   return render(
-    <I18nProvider>
+    <UdcI18nProvider>
       <ChartView collection="metrics" describe={d} rows={rows} opts={opts} timeZone={BG} />
-    </I18nProvider>,
+    </UdcI18nProvider>,
   );
 }
 

@@ -1,7 +1,7 @@
+import { useI18n } from "@jsudc/react";
 import { marked } from "marked";
 import { useMemo } from "react";
 import readme from "../../../README.md?raw";
-import { useI18n } from "../i18n/i18n";
 
 /**
  * The README's first section: everything above its first `##` heading.

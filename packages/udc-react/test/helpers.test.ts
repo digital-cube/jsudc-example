@@ -1,7 +1,8 @@
 import { describe, expect, it } from "vitest";
 import { draftToCondition } from "../src/data-view/FilterBuilder";
 import { resolvePagingMode } from "../src/data-view/useDataViewState";
-import { makeT } from "../src/i18n/i18n";
+import { makeT, mergeMessages } from "../src/i18n/i18n";
+import { TRANSLATIONS } from "../src/i18n/translations";
 import { fromEditorValue, sameValue } from "../src/table/CellEditor";
 import { displayText, renderKind } from "../src/table/cells";
 import { pageWindow } from "../src/table/Pager";
@@ -83,9 +84,15 @@ describe("paging mode", () => {
 
 describe("i18n", () => {
   it("translates per locale, falls back to en, then to the humanised term", () => {
-    expect(makeT("sr")("TBL_COMPANIES", "name")).toBe("Naziv");
-    expect(makeT("en")("TBL_COMPANIES", "revenue_eur")).toBe("Revenue (EUR)");
-    expect(makeT("sr")("TBL_COMPANIES", "website_url")).toBe("Website url");
+    const host = mergeMessages(TRANSLATIONS, {
+      TBL_COMPANIES: {
+        NAME: { en: "Name", sr: "Naziv" },
+        REVENUE_EUR: { en: "Revenue (EUR)", sr: "Prihod (EUR)" },
+      },
+    });
+    expect(makeT("sr", host)("TBL_COMPANIES", "name")).toBe("Naziv");
+    expect(makeT("en", host)("TBL_COMPANIES", "revenue_eur")).toBe("Revenue (EUR)");
+    expect(makeT("sr", host)("TBL_COMPANIES", "website_url")).toBe("Website url");
     expect(makeT("en")("APP", "SHOWING", { shown: 5, total: 9 })).toBe("Showing 5 of 9");
     const t = makeT("sr", { S: { ONLY_EN: { en: "x" } as never } });
     expect(t("S", "ONLY_EN")).toBe("x");

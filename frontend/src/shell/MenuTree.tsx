@@ -1,12 +1,8 @@
 import type { CollectionListing } from "@jsudc/core";
+import { cn, resolveIcon, Skeleton, useI18n, useUdcAllRows } from "@jsudc/react";
 import { ChevronRight } from "lucide-react";
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router";
-import { Skeleton } from "../components/ui/misc";
-import { useI18n } from "../i18n/i18n";
-import { resolveIcon } from "../icons/resolve";
-import { cn } from "../lib/utils";
-import { useUdcAllRows } from "../udc/hooks";
 import {
   activeLeaf,
   buildMenu,

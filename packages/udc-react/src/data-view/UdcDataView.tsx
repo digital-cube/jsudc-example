@@ -45,7 +45,8 @@ export function UdcDataView({ collection }: { collection: string }) {
   const view = live?.view;
   const schema = live?.schema;
   // The README in the UI's language, else the English one.
-  const docText = live?.docs?.[locale] ?? live?.docs?.en;
+  const docs: Partial<Record<string, string>> | undefined = live?.docs;
+  const docText = docs?.[locale] ?? docs?.en;
   const hasSource = live?.capabilities.source_yaml === true;
   const state = useDataViewState(collection, view, { doc: Boolean(docText), source: hasSource });
   // The README and the source file are pages of their own: no rows, no toolbar.

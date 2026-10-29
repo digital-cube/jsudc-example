@@ -1,5 +1,17 @@
 import { type CollectionListing, SOURCE_GROUPS, type SourceGroup, sourceGroup } from "@jsudc/core";
 import {
+  Button,
+  cn,
+  LOCALES,
+  type Locale,
+  Segmented,
+  Skeleton,
+  Tip,
+  useI18n,
+  useTheme,
+  useUdcCollections,
+} from "@jsudc/react";
+import {
   Activity,
   Building2,
   CalendarDays,
@@ -16,15 +28,6 @@ import {
   Sun,
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
-import { Button } from "../components/ui/button";
-import { Skeleton } from "../components/ui/misc";
-import { Segmented } from "../components/ui/segmented";
-import { Tip } from "../components/ui/tooltip";
-import { useI18n } from "../i18n/i18n";
-import { LOCALES, type Locale } from "../i18n/translations";
-import { useTheme } from "../lib/theme";
-import { cn } from "../lib/utils";
-import { useUdcCollections } from "../udc/hooks";
 import { MENU_COLLECTION, MenuTree } from "./MenuTree";
 import { TimezonePicker } from "./TimezonePicker";
 

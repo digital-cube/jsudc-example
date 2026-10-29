@@ -1,16 +1,20 @@
+import {
+  allZones,
+  BROWSER_TZ,
+  COMMON_ZONES,
+  cn,
+  Input,
+  offsetLabel,
+  offsetMinutes,
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+  useI18n,
+  useTimezone,
+  zoneCity,
+} from "@jsudc/react";
 import { Check, Globe } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
-import { Input } from "../components/ui/input";
-import { Popover, PopoverContent, PopoverTrigger } from "../components/ui/popover";
-import { useI18n } from "../i18n/i18n";
-import { cn } from "../lib/utils";
-import { BROWSER_TZ, COMMON_ZONES, useTimezone } from "../time/timezone";
-import { allZones, offsetLabel, offsetMinutes } from "../time/zoned";
-
-/** `America/New_York` → `New York`. */
-export function zoneCity(zone: string): string {
-  return (zone.split("/").at(-1) ?? zone).replace(/_/g, " ");
-}
 
 interface ZoneOption {
   /** A zone name, or `BROWSER_TZ`. */

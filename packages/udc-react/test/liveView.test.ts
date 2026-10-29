@@ -1,7 +1,7 @@
 import { SchemaDocSchema, ViewConfigSchema } from "@jsudc/core";
 import { describe, expect, it } from "vitest";
 import { liveSort, liveView, pruneTree } from "../src/data-view/liveView";
-import { lookup, makeT, schemaLabelTerms } from "../src/i18n/i18n";
+import { lookup, makeT, mergeMessages, schemaLabelTerms } from "../src/i18n/i18n";
 import { TRANSLATIONS } from "../src/i18n/translations";
 
 const schema = SchemaDocSchema.parse({
@@ -76,12 +76,19 @@ describe("schema labels in i18n", () => {
   });
 
   it("lets an overlay label win over the static map, falling back to en per term", () => {
+    // The host's static labels, as the example passes them through `messages`.
+    const dict = mergeMessages(TRANSLATIONS, {
+      TBL_COMPANIES: {
+        NAME: { en: "Name", sr: "Naziv" },
+        MB: { en: "Reg. no.", sr: "Matični broj" },
+      },
+    });
     const overlay = { TBL_COMPANIES: schemaLabelTerms(schema) };
-    expect(lookup(TRANSLATIONS, "sr", "TBL_COMPANIES", "name", overlay)).toBe("Firma");
-    expect(lookup(TRANSLATIONS, "sr", "TBL_COMPANIES", "website", overlay)).toBe("Website");
+    expect(lookup(dict, "sr", "TBL_COMPANIES", "name", overlay)).toBe("Firma");
+    expect(lookup(dict, "sr", "TBL_COMPANIES", "website", overlay)).toBe("Website");
     // Static terms the overlay does not touch stay.
-    expect(lookup(TRANSLATIONS, "sr", "TBL_COMPANIES", "mb", overlay)).toBe("Matični broj");
-    expect(makeT("en", TRANSLATIONS, overlay)("TBL_COMPANIES", "name")).toBe("Company");
-    expect(makeT("en", TRANSLATIONS)("TBL_COMPANIES", "name")).toBe("Name");
+    expect(lookup(dict, "sr", "TBL_COMPANIES", "mb", overlay)).toBe("Matični broj");
+    expect(makeT("en", dict, overlay)("TBL_COMPANIES", "name")).toBe("Company");
+    expect(makeT("en", dict)("TBL_COMPANIES", "name")).toBe("Name");
   });
 });

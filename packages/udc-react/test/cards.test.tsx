@@ -8,7 +8,7 @@ import { render, screen, within } from "@testing-library/react";
 import { describe, expect, it } from "vitest";
 import { CardRenderer } from "../src/cards/CardRenderer";
 import { avatarTone, cardSize, cardSlots, initials } from "../src/cards/cardModel";
-import { I18nProvider } from "../src/i18n/i18n";
+import { UdcI18nProvider } from "../src/i18n/i18n";
 import type { UdcCollectionResult } from "../src/udc/hooks";
 import { row } from "./fetchMock";
 
@@ -82,7 +82,8 @@ function result(rows: ReturnType<typeof row>[], extra: Partial<UdcCollectionResu
 
 function renderCards(v: ViewConfig, data: UdcCollectionResult) {
   return render(
-    <I18nProvider>
+    // A host's own label, as the example passes its TBL_* sections.
+    <UdcI18nProvider messages={{ TBL_COMPANIES: { PIB: { en: "PIB", sr: "PIB" } } }}>
       <CardRenderer
         collection="companies"
         describe={describeOf(v)}
@@ -95,7 +96,7 @@ function renderCards(v: ViewConfig, data: UdcCollectionResult) {
         onClearFilters={() => {}}
         resetKey=""
       />
-    </I18nProvider>,
+    </UdcI18nProvider>,
   );
 }
 

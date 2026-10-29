@@ -1,0 +1,8 @@
+/*
+ * @jsudc/react, compiled at build time into dist/styles.css: Tailwind over the
+ * library's own sources, with its tokens. A host without Tailwind imports
+ * `@jsudc/react/styles.css` and needs nothing else.
+ */
+@import "tailwindcss" source(none);
+@import "./tokens.css";
+@source "./";

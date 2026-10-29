@@ -16,7 +16,10 @@ row validation and every action payload, as Zod schemas with inferred types.
 Both the server and the browser import it. The server machinery — dispatcher,
 collection registry, the five sources, schema revisions, the Fastify plugin —
 is [`@jsudc/server`](packages/udc-server) (`packages/udc-server`); `backend/`
-is the example server that serves the demo collections with it. The design is in
+is the example server that serves the demo collections with it. The React side —
+hooks, the data view and its seven renderers, the schema editor, i18n, theme and a
+compiled stylesheet — is [`@jsudc/react`](packages/udc-react) (`packages/udc-react`);
+`frontend/` is the example app around it. The design is in
 [`docs/superpowers/specs/2026-10-18-jsudc-design.md`](docs/superpowers/specs/2026-10-18-jsudc-design.md).
 
 ## Layout
@@ -24,9 +27,11 @@ is the example server that serves the demo collections with it. The design is in
 ```
 packages/udc-core/   @jsudc/core: the shared protocol and the transport client (zod is its only runtime dependency)
 packages/udc-server/ @jsudc/server: dispatcher, registry, sources, schema store, seeding, the Fastify plugin
+packages/udc-react/  @jsudc/react: hooks, <UdcDataView> and its renderers, the schema editor, i18n,
+                     theme, UI primitives, styles.css / tokens.css
 backend/             the example server: the demo collections, their tables and migrations, seed CLI
-frontend/            React 19 + Vite app: UDC client, hooks, the generic data view, table and
-                     card renderers, the schema editor (add / edit / delete columns)
+frontend/            the example app (React 19 + Vite): the shell (menu, pickers, about page),
+                     routes and the demo strings, around @jsudc/react
 docs/                design, plans and the two-minute demo script (docs/demo.md)
 ```
 
@@ -40,7 +45,7 @@ npm install
 npm run typecheck  # tsc --noEmit in every workspace
 npm run lint       # Biome, one config for the whole repo
 npm test           # Vitest in every workspace (udc-server and backend need Postgres, see below)
-npm run build      # @jsudc/core and @jsudc/server -> packages/*/dist (ESM + .d.ts)
+npm run build      # @jsudc/core, react and server -> packages/*/dist (ESM + .d.ts; react also styles.css)
 npm run format     # Biome, rewrites files
 ```
 
@@ -90,7 +95,8 @@ synthetic `companies` seed deterministically.
 ```sh
 npm run dev        # backend (:5100) and Vite (:5173) together; open /udc/companies
 npm run dev:web    # Vite only, proxying POST /udc/* and /healthz to 127.0.0.1:5100
-npm test -w @jsudc/frontend   # Vitest + Testing Library (jsdom), no backend needed
+npm test -w @jsudc/react      # the library's Vitest + Testing Library (jsdom) tests, no backend needed
+npm test -w @jsudc/frontend   # the shell's tests (menu, sidebar groups, about page)
 npm run e2e        # Cypress headless against a reseeded jsudc_test (see below)
 ```
 
@@ -99,15 +105,25 @@ taken). The dev proxy targets `UDC_PROXY_TARGET` (default `http://127.0.0.1:5100
 setting `VITE_UDC_URL` instead makes the browser call that backend directly.
 Only POSTs under `/udc` are proxied: `GET /udc/<collection>` is an app route.
 
-`frontend/src/`:
+`packages/udc-react/src/` (`@jsudc/react`, see [its README](packages/udc-react/README.md)):
 
 ```
-udc/          UdcClient (one method per action), UdcProvider, TanStack Query hooks
+udc/          UdcProvider, createUdcQueryClient, TanStack Query hooks over @jsudc/core/client
 data-view/    <UdcDataView>: URL state, search, chips, filter builder, paging toggle
-table/        TableRenderer (TanStack Table), cell formats and transforms, inline editor, pager
-i18n/         t(section, term), en + sr, persisted under udc-locale
+renderers/    the registry: table, cards, kanban, calendar, tree, map, chart
+table/ …      one directory per renderer (TanStack Table, dnd-kit, Leaflet, Recharts)
+i18n/         UdcI18nProvider, t(section, term), the library's APP strings in en + sr
 components/ui shadcn-style primitives on Radix (popover, select, tooltip, toast, …)
+tokens.css    the design tokens; styles.css compiles them with Tailwind into dist/styles.css
 ```
+
+`frontend/src/`: `main.tsx`, `App.tsx` (providers and routes), `shell/` (AppShell,
+MenuTree, TimezonePicker, AboutPage) and `i18n/messages.ts`, the example's strings
+(`COLLECTIONS`, `ABOUT`, `MENU`, `TBL_<collection>`, the shell's own `APP` terms),
+passed to `<UdcI18nProvider messages>`. In the monorepo, Vite and `tsc` resolve
+`@jsudc/core` and `@jsudc/react` to their sources, so a change there needs no
+rebuild; `src/index.css` runs Tailwind over the shell and the library's sources
+with `@jsudc/react/tokens.css`.
 
 Everything the user picks lives in the URL (`?q=` search, `?cf=` chips and `?f=`
 filter tree as base64url JSON, `?sort=field:dir,…`, `?mode=pages|infinite`, `?p=`,

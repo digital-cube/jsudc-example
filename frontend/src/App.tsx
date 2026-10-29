@@ -1,19 +1,24 @@
 import { UdcClient } from "@jsudc/core/client";
+import {
+  createUdcQueryClient,
+  ErrorState,
+  Spinner,
+  ThemeProvider,
+  TimezoneProvider,
+  Toaster,
+  TooltipProvider,
+  UdcDataView,
+  UdcI18nProvider,
+  UdcProvider,
+  useI18n,
+  useUdcCollections,
+} from "@jsudc/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router";
-import { Spinner } from "./components/ui/misc";
-import { Toaster } from "./components/ui/toast";
-import { TooltipProvider } from "./components/ui/tooltip";
-import { UdcDataView } from "./data-view/UdcDataView";
-import { I18nProvider, useI18n } from "./i18n/i18n";
-import { ThemeProvider } from "./lib/theme";
+import { EXAMPLE_MESSAGES } from "./i18n/messages";
 import { AboutPage } from "./shell/AboutPage";
 import { AppShell } from "./shell/AppShell";
-import { ErrorState } from "./table/states";
-import { TimezoneProvider } from "./time/timezone";
-import { useUdcCollections } from "./udc/hooks";
-import { createUdcQueryClient, UdcProvider } from "./udc/provider";
 
 /** `/`: the first collection the server lists. */
 function FirstCollection() {
@@ -46,7 +51,7 @@ export function App() {
   const [queryClient] = useState(createUdcQueryClient);
   return (
     <ThemeProvider>
-      <I18nProvider>
+      <UdcI18nProvider messages={EXAMPLE_MESSAGES}>
         <TimezoneProvider>
           <UdcProvider client={client}>
             <QueryClientProvider client={queryClient}>
@@ -67,7 +72,7 @@ export function App() {
             </QueryClientProvider>
           </UdcProvider>
         </TimezoneProvider>
-      </I18nProvider>
+      </UdcI18nProvider>
     </ThemeProvider>
   );
 }

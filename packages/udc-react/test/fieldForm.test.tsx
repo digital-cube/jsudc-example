@@ -5,7 +5,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { describe, expect, it, vi } from "vitest";
 import { Dialog } from "../src/components/ui/dialog";
-import { I18nProvider } from "../src/i18n/i18n";
+import { UdcI18nProvider } from "../src/i18n/i18n";
 import { FieldFormDialog, type FieldFormTarget } from "../src/schema-editor/FieldFormDialog";
 import {
   DEFAULT_STRING_LENGTH,
@@ -143,7 +143,7 @@ function renderForm(target: FieldFormTarget, handlers: Parameters<typeof mockUdc
   render(
     <UdcProvider client={client}>
       <QueryClientProvider client={createUdcQueryClient()}>
-        <I18nProvider>
+        <UdcI18nProvider>
           <Dialog open>
             <FieldFormDialog
               collection="companies"
@@ -154,7 +154,7 @@ function renderForm(target: FieldFormTarget, handlers: Parameters<typeof mockUdc
               onCancel={() => {}}
             />
           </Dialog>
-        </I18nProvider>
+        </UdcI18nProvider>
       </QueryClientProvider>
     </UdcProvider>,
   );

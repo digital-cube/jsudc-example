@@ -1,23 +1,22 @@
+/** The locales the library's dictionary ships. A host adds others through `messages`. */
 export const LOCALES = ["en", "sr"] as const;
-export type Locale = (typeof LOCALES)[number];
+export type BuiltinLocale = (typeof LOCALES)[number];
+/** A locale tag: `en` or `sr`, or any other a host supplies strings for. */
+export type Locale = BuiltinLocale | (string & {});
 
-export type Term = Record<Locale, string>;
+/** One term: every built-in locale, plus any a host adds. */
+export type Term = Record<BuiltinLocale, string> & Partial<Record<string, string>>;
 export type Translations = Record<string, Record<string, Term>>;
 
 /**
- * `{SECTION: {TERM: {en, sr}}}`. `APP` is the chrome; `TBL_<COLLECTION>`
- * holds a collection's field labels (term = field name upper-cased) and its
- * own strings; `COLLECTIONS` the sidebar names. `{name}` placeholders are
- * filled from `t`'s third argument.
+ * The library's dictionary, `{SECTION: {TERM: {en, sr}}}`. `APP` is the
+ * strings of the data view and its renderers. A host's own sections (its
+ * collection names, `TBL_<COLLECTION>` field labels, its chrome) come in
+ * through `<UdcI18nProvider messages>`. `{name}` placeholders are filled from
+ * `t`'s third argument.
  */
 export const TRANSLATIONS: Translations = {
   APP: {
-    NAME: { en: "jsudc", sr: "jsudc" },
-    TAGLINE: { en: "Universal Data Collection", sr: "Univerzalna kolekcija podataka" },
-    COLLECTIONS: { en: "Collections", sr: "Kolekcije" },
-    LANGUAGE: { en: "Language", sr: "Jezik" },
-    THEME_LIGHT: { en: "Switch to light theme", sr: "Svetla tema" },
-    THEME_DARK: { en: "Switch to dark theme", sr: "Tamna tema" },
     TAB_TABLE: { en: "Table", sr: "Tabela" },
     TAB_CARDS: { en: "Cards", sr: "Kartice" },
     TAB_KANBAN: { en: "Board", sr: "Tabla" },
@@ -33,10 +32,6 @@ export const TRANSLATIONS: Translations = {
       en: "The file does not parse; the rows shown are from its last good version",
       sr: "Fajl ne može da se pročita; prikazani redovi su iz poslednje ispravne verzije",
     },
-    NAV_MENU: { en: "Application menu", sr: "Meni aplikacije" },
-    GROUP_DATABASE: { en: "Database", sr: "Baza" },
-    GROUP_FILES: { en: "Files", sr: "Fajlovi" },
-    GROUP_INTERNET: { en: "Internet", sr: "Internet" },
     UPDATED_AGO: { en: "updated {age}", sr: "osveženo {age}" },
     FRESH_FETCHED: { en: "Fetched {when}", sr: "Preuzeto {when}" },
     FRESH_AUTH: { en: "Upstream access: {auth}", sr: "Pristup izvoru: {auth}" },
@@ -164,12 +159,6 @@ export const TRANSLATIONS: Translations = {
     CAL_MOVE_FAILED: { en: "The change was not saved", sr: "Izmena nije sačuvana" },
     CAL_ADD_FAILED: { en: "Could not add the event", sr: "Događaj nije dodat" },
     CAL_DELETE_FAILED: { en: "Could not delete the event", sr: "Događaj nije obrisan" },
-    TZ_LABEL: { en: "Time zone", sr: "Vremenska zona" },
-    TZ_BROWSER: { en: "Browser · {zone}", sr: "Pregledač · {zone}" },
-    TZ_COMMON: { en: "Common", sr: "Česte" },
-    TZ_ALL: { en: "All zones", sr: "Sve zone" },
-    TZ_SEARCH: { en: "Search zones", sr: "Pretraži zone" },
-    TZ_NONE: { en: "No zone matches", sr: "Nijedna zona ne odgovara" },
     TAB_UNAVAILABLE: {
       en: "The {name} view is not available yet",
       sr: "Prikaz {name} još nije dostupan",
@@ -274,7 +263,6 @@ export const TRANSLATIONS: Translations = {
     },
     SAVE_FAILED: { en: "Could not save", sr: "Čuvanje nije uspelo" },
     NOT_FOUND_TITLE: { en: "Collection not found", sr: "Kolekcija nije pronađena" },
-    NO_COLLECTIONS: { en: "No collections", sr: "Nema kolekcija" },
     OP_EQ: { en: "equals", sr: "jednako" },
     OP_NEQ: { en: "not equal", sr: "nije jednako" },
     OP_IN: { en: "is any of", sr: "je jedno od" },
@@ -382,286 +370,5 @@ export const TRANSLATIONS: Translations = {
     TYPE_DATETIME: { en: "Date and time", sr: "Datum i vreme" },
     TYPE_JSON: { en: "JSON", sr: "JSON" },
     TYPE_ENUM: { en: "Choice", sr: "Izbor" },
-  },
-  COLLECTIONS: {
-    COMPANIES: { en: "Companies", sr: "Preduzeća" },
-    BOARDS: { en: "Boards", sr: "Table" },
-    BUCKETS: { en: "Buckets", sr: "Kolone" },
-    TICKETS: { en: "Tickets", sr: "Tiketi" },
-    APPOINTMENTS: { en: "Appointments", sr: "Termini" },
-    COMMENTS: { en: "Comments", sr: "Komentari" },
-    ORG: { en: "Organisation", sr: "Organizacija" },
-    FILES: { en: "Files", sr: "Fajlovi" },
-    QUAKES: { en: "Earthquakes", sr: "Zemljotresi" },
-    FLIGHTS: { en: "Flights", sr: "Letovi" },
-    REPOS: { en: "Repositories", sr: "Repozitorijumi" },
-    METRICS: { en: "Server metrics", sr: "Metrike servera" },
-    MENU: { en: "Menu", sr: "Meni" },
-  },
-  // The /about page. README is the repository README's first section in Serbian; the English
-  // page renders README.md itself, so its `en` is only what a missing import would show.
-  ABOUT: {
-    TITLE: { en: "About jsudc", sr: "O aplikaciji jsudc" },
-    LEAD: {
-      en: "From the repository's README. The sidebar you are using is the menu collection, drawn from a YAML file.",
-      sr: "Iz README fajla repozitorijuma. Bočna traka koju koristite je kolekcija menu, nacrtana iz YAML fajla.",
-    },
-    README: {
-      en: "jsudc re-implements the core of UDC in TypeScript.",
-      sr: `# jsudc
-
-jsudc ponovo implementira jezgro DigitalCube-ovog **UDC-a (Universal Data Collection)**
-u jednoj TypeScript bazi koda: Node.js backend (Fastify + Drizzle), React frontend
-(Vite) i Postgres, sa redovima kolekcija uglavnom sačuvanim kao \`jsonb\`. Kolekcija
-je opisana dokumentom šeme i konfiguracijom prikaza (\`schema.json\` i \`view.yaml\`,
-isti dijalekt kao u dclabs-u). Server je služi kroz jedan generički protokol:
-\`describe\`, \`list\` sa filtriranjem, sortiranjem i straničenjem na serveru,
-\`mutate\` i izmene šeme koje dodaju kolonu iz korisničkog interfejsa.
-
-Poenta vežbe je **zajednički interfejs**. U današnjem UDC-u protokol je deklarisan
-dva puta, jednom u Python-u i jednom u TypeScript-u, i ta dva se razilaze. U jsudc-u
-on postoji jednom, u \`packages/udc-core\`: envelope-i, filter DSL i evaluator u
-memoriji, tipovi šeme i prikaza, validacija redova i svaki payload akcije, kao Zod
-šeme sa izvedenim tipovima. I server i pregledač ga uvoze.`,
-    },
-  },
-  // The application menu (backend/collections/menu/data/menu.yaml): translation_key MENU_<TERM>.
-  MENU: {
-    HOME: { en: "Home", sr: "Početna" },
-    COLLECTIONS: { en: "Collections", sr: "Kolekcije" },
-    DATABASE: { en: "Database", sr: "Baza" },
-    FILES: { en: "Files", sr: "Fajlovi" },
-    INTERNET: { en: "Internet", sr: "Internet" },
-    VIEWS: { en: "Views", sr: "Prikazi" },
-    VIEW_TICKETS: { en: "Tickets board", sr: "Tabla tiketa" },
-    VIEW_APPOINTMENTS: { en: "Appointments calendar", sr: "Kalendar termina" },
-    VIEW_COMPANIES: { en: "Companies map", sr: "Mapa preduzeća" },
-    VIEW_ORG: { en: "Organisation tree", sr: "Stablo organizacije" },
-    VIEW_METRICS: { en: "Metrics chart", sr: "Grafikon metrika" },
-    VIEW_QUAKES: { en: "Earthquakes map", sr: "Mapa zemljotresa" },
-    VIEW_FLIGHTS: { en: "Flights map", sr: "Mapa letova" },
-    DOCS: { en: "Docs", sr: "Dokumentacija" },
-    MENU: { en: "Menu", sr: "Meni" },
-    ABOUT: { en: "About", sr: "O aplikaciji" },
-  },
-  TBL_METRICS: {
-    __DESCRIPTION: {
-      en: "Three servers every 15 minutes for 30 days; the window follows the header's zone",
-      sr: "Tri servera na svakih 15 minuta tokom 30 dana; prozor prati zonu iz zaglavlja",
-    },
-    TS: { en: "Time", sr: "Vreme" },
-    HOST: { en: "Host", sr: "Host" },
-    CPU: { en: "CPU %", sr: "CPU %" },
-    MEM: { en: "Memory %", sr: "Memorija %" },
-    LOAD: { en: "Load", sr: "Opterećenje" },
-    REQ_PER_S: { en: "Requests/s", sr: "Zahteva/s" },
-    ERRORS: { en: "Errors", sr: "Greške" },
-  },
-  TBL_MENU: {
-    __DESCRIPTION: {
-      en: "The sidebar, as data: a YAML file flattened into tree rows, its collections branch live",
-      sr: "Bočna traka kao podaci: YAML fajl izravnat u redove stabla, grana kolekcija uživo",
-    },
-    SEARCH_PLACEHOLDER: {
-      en: "Search a key, a code or a url",
-      sr: "Pretraga po ključu, kodu ili url-u",
-    },
-    ICON: { en: "Icon", sr: "Ikonica" },
-    TRANSLATION_KEY: { en: "Translation key", sr: "Ključ prevoda" },
-    CODE: { en: "Code", sr: "Kod" },
-    URL: { en: "URL", sr: "URL" },
-    ORDER: { en: "Order", sr: "Redosled" },
-    DEPTH: { en: "Depth", sr: "Dubina" },
-    CHILDREN_COUNT: { en: "Children", sr: "Dece" },
-    IS_DYNAMIC: { en: "Dynamic", sr: "Dinamički" },
-  },
-  TBL_FILES: {
-    __DESCRIPTION: {
-      en: "A folder on disk, read-only: click a folder to open it",
-      sr: "Folder na disku, samo za čitanje: kliknite folder da ga otvorite",
-    },
-    SEARCH_PLACEHOLDER: { en: "Search this folder", sr: "Pretraga ovog foldera" },
-    NAME: { en: "Name", sr: "Naziv" },
-    KIND: { en: "Kind", sr: "Vrsta" },
-    EXT: { en: "Ext", sr: "Ekst." },
-    SIZE: { en: "Size", sr: "Veličina" },
-    MTIME: { en: "Modified", sr: "Izmenjeno" },
-    PATH: { en: "Path", sr: "Putanja" },
-  },
-  TBL_QUAKES: {
-    __DESCRIPTION: {
-      en: "M4.5+ earthquakes of the last 30 days, live from USGS",
-      sr: "Zemljotresi M4,5+ u poslednjih 30 dana, uživo sa USGS-a",
-    },
-    SEARCH_PLACEHOLDER: { en: "Search place", sr: "Pretraga po mestu" },
-    MAG: { en: "Mag", sr: "Jačina" },
-    PLACE: { en: "Place", sr: "Mesto" },
-    TIME: { en: "Time", sr: "Vreme" },
-    DEPTH: { en: "Depth (km)", sr: "Dubina (km)" },
-    ALERT: { en: "Alert", sr: "Uzbuna" },
-    STATUS: { en: "Status", sr: "Status" },
-    TYPE: { en: "Type", sr: "Tip" },
-    LAT: { en: "Latitude", sr: "Geografska širina" },
-    LNG: { en: "Longitude", sr: "Geografska dužina" },
-    URL: { en: "USGS page", sr: "USGS stranica" },
-  },
-  TBL_FLIGHTS: {
-    __DESCRIPTION: {
-      en: "Aircraft over Serbia and its neighbours, live from the OpenSky Network; trails grow while the server runs",
-      sr: "Avioni iznad Srbije i suseda, uživo sa OpenSky mreže; tragovi rastu dok server radi",
-    },
-    SEARCH_PLACEHOLDER: {
-      en: "Callsign, ICAO24 or country",
-      sr: "Pozivni znak, ICAO24 ili zemlja",
-    },
-    CALLSIGN: { en: "Callsign", sr: "Pozivni znak" },
-    ICAO24: { en: "ICAO24", sr: "ICAO24" },
-    COUNTRY: { en: "Country", sr: "Zemlja" },
-    BARO_ALT: { en: "Altitude", sr: "Visina" },
-    GEO_ALT: { en: "GNSS altitude", sr: "GNSS visina" },
-    VELOCITY: { en: "Speed", sr: "Brzina" },
-    VERT_RATE: { en: "Vertical rate", sr: "Vertikalna brzina" },
-    HEADING: { en: "Track", sr: "Kurs" },
-    LAT: { en: "Latitude", sr: "Geografska širina" },
-    LNG: { en: "Longitude", sr: "Geografska dužina" },
-    ON_GROUND: { en: "On ground", sr: "Na zemlji" },
-    SQUAWK: { en: "Squawk", sr: "Squawk" },
-    TIME_POS: { en: "Position at", sr: "Pozicija u" },
-    LAST_SEEN: { en: "Last seen", sr: "Poslednji put viđen" },
-    BARO_ALT_HISTORY: { en: "Altitude history", sr: "Istorija visine" },
-    LAT_HISTORY: { en: "Latitude history", sr: "Istorija širine" },
-    LNG_HISTORY: { en: "Longitude history", sr: "Istorija dužine" },
-  },
-  TBL_REPOS: {
-    __DESCRIPTION: {
-      en: "Public repositories of digital-cube, live from the GitHub API",
-      sr: "Javni repozitorijumi digital-cube, uživo sa GitHub API-ja",
-    },
-    SEARCH_PLACEHOLDER: { en: "Search name or description", sr: "Pretraga po imenu ili opisu" },
-    NAME: { en: "Name", sr: "Naziv" },
-    FULL_NAME: { en: "Full name", sr: "Puno ime" },
-    DESCRIPTION: { en: "Description", sr: "Opis" },
-    LANGUAGE: { en: "Language", sr: "Jezik" },
-    TOPICS: { en: "Topics", sr: "Teme" },
-    STARGAZERS_COUNT: { en: "Stars", sr: "Zvezdice" },
-    FORKS_COUNT: { en: "Forks", sr: "Forkovi" },
-    OPEN_ISSUES_COUNT: { en: "Open issues", sr: "Otvoreni problemi" },
-    PUSHED_AT: { en: "Last push", sr: "Poslednji push" },
-    ARCHIVED: { en: "Archived", sr: "Arhiviran" },
-    HTML_URL: { en: "GitHub page", sr: "GitHub stranica" },
-    OWNER_AVATAR: { en: "Avatar", sr: "Avatar" },
-  },
-  TBL_COMMENTS: {
-    __DESCRIPTION: {
-      en: "One discussion as a thread: reply under any comment; search highlights and opens the way",
-      sr: "Jedna diskusija kao nit: odgovorite ispod bilo kog komentara; pretraga označava i otvara put",
-    },
-    SEARCH_PLACEHOLDER: {
-      en: "Search the text or the author",
-      sr: "Pretraga po tekstu ili autoru",
-    },
-    PARENT_ID: { en: "Reply to", sr: "Odgovor na" },
-    ORDER: { en: "Order", sr: "Redosled" },
-    DEPTH: { en: "Depth", sr: "Dubina" },
-    BODY: { en: "Comment", sr: "Komentar" },
-    AUTHOR: { en: "Author", sr: "Autor" },
-    AUTHOR_INITIALS: { en: "Initials", sr: "Inicijali" },
-    SCORE: { en: "Score", sr: "Ocena" },
-    CREATED_AT: { en: "Written", sr: "Napisano" },
-  },
-  TBL_ORG: {
-    __DESCRIPTION: {
-      en: "An invented company, one level at a time: rename inline, drag to move",
-      sr: "Izmišljena firma, nivo po nivo: preimenujte na mestu, prevucite da premestite",
-    },
-    SEARCH_PLACEHOLDER: { en: "Search a name or a title", sr: "Pretraga po imenu ili zvanju" },
-    PARENT_ID: { en: "Parent", sr: "Nadređeni" },
-    ORDER: { en: "Order", sr: "Redosled" },
-    DEPTH: { en: "Depth", sr: "Dubina" },
-    CHILDREN_COUNT: { en: "Children", sr: "Podređenih" },
-    ANCESTOR_IDS: { en: "Ancestors", sr: "Preci" },
-    NAME: { en: "Name", sr: "Naziv" },
-    KIND: { en: "Kind", sr: "Vrsta" },
-    TITLE: { en: "Title", sr: "Zvanje" },
-    ICON: { en: "Icon", sr: "Ikona" },
-    HEADCOUNT: { en: "Headcount", sr: "Broj ljudi" },
-  },
-  TBL_APPOINTMENTS: {
-    __DESCRIPTION: {
-      en: "A clinic's calendar: drag to move, pull the edge to resize; times follow the header's zone",
-      sr: "Kalendar ordinacije: prevuci da pomeriš, povuci ivicu da promeniš trajanje; vremena prate zonu iz zaglavlja",
-    },
-    SEARCH_PLACEHOLDER: { en: "Search title or patient", sr: "Pretraga po naslovu ili pacijentu" },
-    TITLE: { en: "Title", sr: "Naslov" },
-    DOCTOR: { en: "Doctor", sr: "Lekar" },
-    PATIENT: { en: "Patient", sr: "Pacijent" },
-    ROOM: { en: "Room", sr: "Soba" },
-    START: { en: "Start", sr: "Početak" },
-    END: { en: "End", sr: "Kraj" },
-    STATUS: { en: "Status", sr: "Status" },
-    NOTES: { en: "Notes", sr: "Beleške" },
-  },
-  TBL_TICKETS: {
-    __DESCRIPTION: {
-      en: "Three boards of invented tickets: drag, add, rename",
-      sr: "Tri table izmišljenih tiketa: prevuci, dodaj, preimenuj",
-    },
-    SEARCH_PLACEHOLDER: {
-      en: "Search title, text or key",
-      sr: "Pretraga po naslovu, tekstu ili ključu",
-    },
-    BOARD_ID: { en: "Board", sr: "Tabla" },
-    BUCKET_ID: { en: "Bucket", sr: "Kolona" },
-    ORDER: { en: "Order", sr: "Redosled" },
-    KEY: { en: "Key", sr: "Ključ" },
-    TITLE: { en: "Title", sr: "Naslov" },
-    BODY: { en: "Description", sr: "Opis" },
-    PRIORITY: { en: "Priority", sr: "Prioritet" },
-    TAGS: { en: "Tags", sr: "Oznake" },
-    DUE: { en: "Due", sr: "Rok" },
-    ASSIGNEES: { en: "Assignees", sr: "Zaduženi" },
-    STARTS_AT: { en: "Starts", sr: "Početak" },
-    ENDS_AT: { en: "Ends", sr: "Kraj" },
-  },
-  TBL_BOARDS: {
-    __DESCRIPTION: { en: "The boards of the tickets kanban", sr: "Table kanbana sa tiketima" },
-    NAME: { en: "Name", sr: "Naziv" },
-    KEY: { en: "Key", sr: "Ključ" },
-    DESCRIPTION: { en: "Description", sr: "Opis" },
-    COLOR: { en: "Colour", sr: "Boja" },
-    ORDER: { en: "Order", sr: "Redosled" },
-  },
-  TBL_BUCKETS: {
-    __DESCRIPTION: {
-      en: "The columns of every board, one row each",
-      sr: "Kolone svih tabli, po jedan red",
-    },
-    BOARD_ID: { en: "Board", sr: "Tabla" },
-    NAME: { en: "Name", sr: "Naziv" },
-    COLOR: { en: "Colour", sr: "Boja" },
-    ORDER: { en: "Order", sr: "Redosled" },
-    IS_DONE: { en: "Done column", sr: "Završna kolona" },
-  },
-  TBL_COMPANIES: {
-    __DESCRIPTION: {
-      en: "Synthetic register of Serbian companies",
-      sr: "Sintetički registar preduzeća u Srbiji",
-    },
-    SEARCH_PLACEHOLDER: {
-      en: "Search by name, PIB, MB or city",
-      sr: "Pretraga po nazivu, PIB-u, MB-u ili gradu",
-    },
-    PIB: { en: "PIB", sr: "PIB" },
-    NAME: { en: "Name", sr: "Naziv" },
-    MB: { en: "Reg. no.", sr: "Matični broj" },
-    LEGAL_FORM: { en: "Legal form", sr: "Pravna forma" },
-    CITY: { en: "City", sr: "Grad" },
-    INDUSTRY: { en: "Industry", sr: "Delatnost" },
-    EMPLOYEES: { en: "Employees", sr: "Zaposleni" },
-    REVENUE_EUR: { en: "Revenue (EUR)", sr: "Prihod (EUR)" },
-    LAT: { en: "Latitude", sr: "Geografska širina" },
-    LNG: { en: "Longitude", sr: "Geografska dužina" },
-    FOUNDED: { en: "Founded", sr: "Osnovano" },
-    ACTIVE: { en: "Active", sr: "Aktivno" },
   },
 };

@@ -1,4 +1,4 @@
-// Writes src/icons/lucide.generated.ts: one import per `lucide:<name>` the
+// Writes @jsudc/react's src/icons/lucide.generated.ts: one import per `lucide:<name>` the
 // collections under backend/collections reference (view.yaml, source.yaml,
 // data/*.yaml, seeds), plus the fallbacks. A static map keeps the bundle to
 // the icons the repo uses instead of all of lucide-react.
@@ -11,7 +11,7 @@ import * as lucide from "lucide-react";
 
 const FRONTEND = fileURLToPath(new URL("..", import.meta.url));
 const COLLECTIONS = join(FRONTEND, "..", "backend", "collections");
-const OUT = join(FRONTEND, "src", "icons", "lucide.generated.ts");
+const OUT = join(FRONTEND, "..", "packages", "udc-react", "src", "icons", "lucide.generated.ts");
 /** Always present: the fallback, and the default icon of a collection node. */
 const ALWAYS = ["circle", "table"];
 const REF_RE = /lucide:([a-z0-9]+(?:-[a-z0-9]+)*)/g;

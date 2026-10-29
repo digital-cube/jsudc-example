@@ -1,6 +1,5 @@
 import type { Row } from "@jsudc/core";
-import { storage } from "../lib/utils";
-import { i18nKey } from "../tree/model";
+import { i18nKey, storage } from "@jsudc/react";
 
 /*
  * The sidebar's pure parts: the menu collection's flat rows (MENU_SCHEMA) as

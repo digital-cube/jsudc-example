@@ -13,7 +13,7 @@ import { CardRenderer } from "../src/cards/CardRenderer";
 import { cardSlots, metricText } from "../src/cards/cardModel";
 import { TooltipProvider } from "../src/components/ui/tooltip";
 import { Freshness, ttlText } from "../src/data-view/Freshness";
-import { I18nProvider } from "../src/i18n/i18n";
+import { UdcI18nProvider } from "../src/i18n/i18n";
 import { MapRenderer } from "../src/map/MapRenderer";
 import {
   airplaneHtml,
@@ -309,7 +309,7 @@ describe("cards", () => {
       plane("b", { baro_alt: null, baro_alt_history: [] }),
     ];
     render(
-      <I18nProvider>
+      <UdcI18nProvider>
         <CardRenderer
           collection="flights"
           describe={describeFlights()}
@@ -334,7 +334,7 @@ describe("cards", () => {
           onClearFilters={() => {}}
           resetKey=""
         />
-      </I18nProvider>,
+      </UdcI18nProvider>,
     );
     const [a, b] = screen.getAllByTestId("card");
     expect(a?.querySelector('[data-testid="card-metric-value"]')?.textContent).toBe("10,973 m");
@@ -357,7 +357,7 @@ describe("the freshness pill", () => {
     expect(ttlText(240_000, "en-US")).toBe("4 min");
     expect(ttlText(15_000, "en-US")).toBe("15 sec");
     render(
-      <I18nProvider>
+      <UdcI18nProvider>
         <TooltipProvider delayDuration={0}>
           <Freshness
             fetchedAt={new Date().toISOString()}
@@ -365,7 +365,7 @@ describe("the freshness pill", () => {
             source={{ auth: "anonymous", cache_ttl_ms: 240_000 }}
           />
         </TooltipProvider>
-      </I18nProvider>,
+      </UdcI18nProvider>,
     );
     const pill = screen.getByTestId("updated-ago");
     expect(pill).toHaveAttribute("data-auth", "anonymous");
@@ -394,13 +394,13 @@ describe("the map across a poll", () => {
       onCount: () => {},
     } as unknown as RendererProps;
     const utils = render(
-      <I18nProvider>
+      <UdcI18nProvider>
         <UdcProvider client={client}>
           <QueryClientProvider client={qc}>
             <MapRenderer {...props} />
           </QueryClientProvider>
         </UdcProvider>
-      </I18nProvider>,
+      </UdcI18nProvider>,
     );
     return {
       ...utils,

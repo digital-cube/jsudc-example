@@ -235,3 +235,8 @@ export function allZones(): string[] {
   const zones = intl.supportedValuesOf?.("timeZone") ?? [];
   return zones.includes("UTC") ? zones : ["UTC", ...zones];
 }
+
+/** `America/New_York` → `New York`. */
+export function zoneCity(zone: string): string {
+  return (zone.split("/").at(-1) ?? zone).replace(/_/g, " ");
+}

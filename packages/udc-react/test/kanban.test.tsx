@@ -12,7 +12,7 @@ import { MemoryRouter } from "react-router";
 import { describe, expect, it, vi } from "vitest";
 import { Toaster } from "../src/components/ui/toast";
 import { TooltipProvider } from "../src/components/ui/tooltip";
-import { I18nProvider } from "../src/i18n/i18n";
+import { UdcI18nProvider } from "../src/i18n/i18n";
 import { KanbanRenderer } from "../src/kanban/KanbanRenderer";
 import {
   boardSource,
@@ -379,7 +379,7 @@ describe("KanbanRenderer read-only gating", () => {
       onCount: vi.fn(),
     };
     render(
-      <I18nProvider>
+      <UdcI18nProvider>
         <UdcProvider client={client}>
           <QueryClientProvider client={createUdcQueryClient()}>
             <TooltipProvider>
@@ -391,7 +391,7 @@ describe("KanbanRenderer read-only gating", () => {
             </TooltipProvider>
           </QueryClientProvider>
         </UdcProvider>
-      </I18nProvider>,
+      </UdcI18nProvider>,
     );
     return { props, mock };
   }

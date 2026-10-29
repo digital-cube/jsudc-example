@@ -17,7 +17,6 @@ import { useI18n } from "../i18n/i18n";
 import { useKanbanBoard } from "../kanban/useKanbanBoard";
 import { AllRowsStatus } from "../renderers/AllRowsStatus";
 import type { RendererProps } from "../renderers/types";
-import { zoneCity } from "../shell/TimezonePicker";
 import { EmptyState, ErrorState } from "../table/states";
 import { useTimezone } from "../time/timezone";
 import {
@@ -27,6 +26,7 @@ import {
   offsetLabel,
   offsetMinutes,
   parseDayKey,
+  zoneCity,
 } from "../time/zoned";
 import { useUdcAllRows, useUdcMutate } from "../udc/hooks";
 import { EventDetail } from "./EventDetail";

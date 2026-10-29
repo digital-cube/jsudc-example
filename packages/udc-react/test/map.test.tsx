@@ -1,7 +1,7 @@
 import { MapOptionsSchema, type RowColorConfig } from "@jsudc/core";
 import { fireEvent, render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
-import { I18nProvider } from "../src/i18n/i18n";
+import { UdcI18nProvider } from "../src/i18n/i18n";
 import { MapRenderer, MapToolbar } from "../src/map/MapRenderer";
 import {
   boundsOf,
@@ -130,7 +130,7 @@ describe("regions", () => {
     const onRegion = vi.fn();
     const onFitAll = vi.fn();
     render(
-      <I18nProvider>
+      <UdcI18nProvider>
         <MapToolbar
           opts={companies}
           region="serbia"
@@ -138,7 +138,7 @@ describe("regions", () => {
           onFitAll={onFitAll}
           canFit
         />
-      </I18nProvider>,
+      </UdcI18nProvider>,
     );
     expect(screen.getByTestId("map-region-serbia")).toHaveAttribute("data-state", "on");
     expect(screen.getByTestId("map-region-south")).toHaveAttribute("data-state", "off");
@@ -150,7 +150,7 @@ describe("regions", () => {
 
   it("draws no region buttons without regions, and no fit without markers", () => {
     render(
-      <I18nProvider>
+      <UdcI18nProvider>
         <MapToolbar
           opts={opts()}
           region={null}
@@ -158,7 +158,7 @@ describe("regions", () => {
           onFitAll={vi.fn()}
           canFit={false}
         />
-      </I18nProvider>,
+      </UdcI18nProvider>,
     );
     expect(screen.queryByTestId("map-regions")).toBeNull();
     expect(screen.getByTestId("map-fit-all")).toBeDisabled();

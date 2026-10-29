@@ -1,0 +1,454 @@
+/*
+ * @jsudc/react tokens: the dark variant, the colour/font tokens of both themes,
+ * their Tailwind theme mapping and the library's few rules of its own (base,
+ * skeleton, map markers, the Doc tab's prose). Raw Tailwind v4 input: a host
+ * that runs Tailwind imports it after `@import "tailwindcss"` and adds an
+ * `@source` for the package; `styles.css` is this file compiled.
+ */
+@custom-variant dark (&:where(.dark, .dark *));
+
+/*
+ * Design tokens. Every colour the components use is one of these, so the
+ * light and dark themes differ only here.
+ */
+:root {
+  --background: oklch(0.985 0.002 260);
+  --foreground: oklch(0.21 0.02 265);
+  --surface: oklch(1 0 0);
+  --surface-raised: oklch(1 0 0);
+  --muted: oklch(0.965 0.004 260);
+  --muted-foreground: oklch(0.52 0.02 262);
+  --border: oklch(0.915 0.006 260);
+  --border-strong: oklch(0.86 0.01 260);
+  --input: oklch(0.89 0.008 260);
+  --ring: oklch(0.58 0.2 268);
+  --primary: oklch(0.52 0.2 268);
+  --primary-foreground: oklch(0.99 0 0);
+  --hover: oklch(0.97 0.008 268);
+  --selected: oklch(0.95 0.025 268);
+  --shadow-pin: oklch(0.2 0.02 265 / 0.12);
+
+  --sem-accent: oklch(0.5 0.2 268);
+  --sem-success: oklch(0.52 0.13 155);
+  --sem-warning: oklch(0.6 0.14 70);
+  --sem-danger: oklch(0.55 0.2 25);
+  --sem-info: oklch(0.5 0.14 240);
+  --sem-muted: oklch(0.55 0.015 262);
+
+  --sem-accent-bg: oklch(0.96 0.03 268);
+  --sem-success-bg: oklch(0.965 0.035 155);
+  --sem-warning-bg: oklch(0.97 0.05 85);
+  --sem-danger-bg: oklch(0.965 0.03 25);
+  --sem-info-bg: oklch(0.976 0.016 240);
+  --sem-muted-bg: oklch(0.965 0.004 260);
+
+  /* The chart's categorical palette, in this fixed order (validated for colour-vision
+     deficiencies on adjacent pairs; slots 3-5 sit under 3:1 on white, so a chart
+     always ships labels or the table tab). Dark mode has its own steps below. */
+  --chart-1: #2a78d6;
+  --chart-2: #eb6834;
+  --chart-3: #1baf7a;
+  --chart-4: #eda100;
+  --chart-5: #e87ba4;
+  --chart-6: #008300;
+  --chart-7: #6250d6;
+  --chart-8: #e34948;
+
+  color-scheme: light;
+}
+
+.dark {
+  --background: oklch(0.16 0.012 265);
+  --foreground: oklch(0.94 0.008 260);
+  --surface: oklch(0.195 0.013 265);
+  --surface-raised: oklch(0.235 0.015 265);
+  --muted: oklch(0.24 0.014 265);
+  --muted-foreground: oklch(0.68 0.02 262);
+  --border: oklch(0.285 0.016 265);
+  --border-strong: oklch(0.34 0.018 265);
+  --input: oklch(0.33 0.018 265);
+  --ring: oklch(0.68 0.17 268);
+  --primary: oklch(0.66 0.17 268);
+  --primary-foreground: oklch(0.16 0.02 265);
+  --hover: oklch(0.225 0.016 266);
+  --selected: oklch(0.26 0.04 268);
+  --shadow-pin: oklch(0 0 0 / 0.45);
+
+  --sem-accent: oklch(0.76 0.13 268);
+  --sem-success: oklch(0.76 0.13 155);
+  --sem-warning: oklch(0.8 0.13 80);
+  --sem-danger: oklch(0.72 0.16 25);
+  --sem-info: oklch(0.78 0.1 235);
+  --sem-muted: oklch(0.66 0.015 262);
+
+  --sem-accent-bg: oklch(0.26 0.05 268);
+  --sem-success-bg: oklch(0.25 0.04 155);
+  --sem-warning-bg: oklch(0.26 0.04 80);
+  --sem-danger-bg: oklch(0.26 0.05 25);
+  --sem-info-bg: oklch(0.215 0.022 245);
+  --sem-muted-bg: oklch(0.23 0.012 265);
+
+  --chart-1: #3987e5;
+  --chart-2: #d95926;
+  --chart-3: #199e70;
+  --chart-4: #c98500;
+  --chart-5: #d55181;
+  --chart-6: #008300;
+  --chart-7: #9085e9;
+  --chart-8: #e66767;
+
+  color-scheme: dark;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-surface-raised: var(--surface-raised);
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+  --color-primary: var(--primary);
+  --color-primary-foreground: var(--primary-foreground);
+  --color-hover: var(--hover);
+  --color-selected: var(--selected);
+
+  --color-sem-accent: var(--sem-accent);
+  --color-sem-success: var(--sem-success);
+  --color-sem-warning: var(--sem-warning);
+  --color-sem-danger: var(--sem-danger);
+  --color-sem-info: var(--sem-info);
+  --color-sem-muted: var(--sem-muted);
+  --color-sem-accent-bg: var(--sem-accent-bg);
+  --color-sem-success-bg: var(--sem-success-bg);
+  --color-sem-warning-bg: var(--sem-warning-bg);
+  --color-sem-danger-bg: var(--sem-danger-bg);
+  --color-sem-info-bg: var(--sem-info-bg);
+  --color-sem-muted-bg: var(--sem-muted-bg);
+
+  --font-sans:
+    "Inter Variable", "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    "Helvetica Neue", Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "JetBrains Mono", Menlo, Consolas, monospace;
+
+  --animate-shimmer: shimmer 1.6s ease-in-out infinite;
+  --animate-in: fade-in 140ms ease-out;
+}
+
+@keyframes shimmer {
+  0% {
+    background-position: -200% 0;
+  }
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+    transform: translateY(2px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@layer base {
+  * {
+    border-color: var(--border);
+  }
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  button:not(:disabled),
+  [role="button"]:not(:disabled) {
+    cursor: pointer;
+  }
+  ::selection {
+    background: color-mix(in oklch, var(--primary) 25%, transparent);
+  }
+}
+
+@layer components {
+  /* A thin scrollbar that follows the theme. */
+  .scroll-thin {
+    scrollbar-width: thin;
+    scrollbar-color: var(--border-strong) transparent;
+  }
+  .select-chevron {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%23888' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    background-size: 14px;
+  }
+  .select-chevron:disabled {
+    background-image: none;
+  }
+  .skeleton {
+    background: linear-gradient(
+      90deg,
+      var(--muted) 25%,
+      color-mix(in oklch, var(--muted) 40%, var(--surface)) 50%,
+      var(--muted) 75%
+    );
+    background-size: 200% 100%;
+    animation: var(--animate-shimmer);
+  }
+}
+
+@keyframes overlay-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+/* The map tab (Leaflet). Unlayered on purpose: leaflet.css is unlayered too, and a
+   layered rule would lose to it whatever its specificity. Marker colours come from
+   the theme's tokens by tone, so a muted row is a muted circle in both themes. */
+.udc-map.leaflet-container {
+  background: var(--muted);
+  font-family: var(--font-sans);
+}
+.dark .udc-map .leaflet-tile-pane {
+  filter: invert(1) hue-rotate(180deg) brightness(0.95) contrast(0.9) saturate(0.55);
+}
+.udc-map .leaflet-bar a,
+.udc-map .leaflet-bar a:hover {
+  background: var(--surface);
+  color: var(--foreground);
+  border-color: var(--border);
+}
+.udc-map .leaflet-control-attribution {
+  background: color-mix(in oklch, var(--surface) 80%, transparent);
+  color: var(--muted-foreground);
+}
+.udc-map .leaflet-control-attribution a {
+  color: var(--sem-info);
+}
+.udc-map .udc-map-popup .leaflet-popup-content-wrapper,
+.udc-map .udc-map-popup .leaflet-popup-tip {
+  background: var(--surface-raised);
+  color: var(--foreground);
+  box-shadow: 0 6px 24px -6px rgb(0 0 0 / 0.3);
+}
+.udc-map .udc-map-popup .leaflet-popup-content {
+  margin: 12px 14px;
+  font-size: 13px;
+}
+.udc-map .udc-map-popup a.leaflet-popup-close-button {
+  color: var(--muted-foreground);
+}
+.udc-map-marker {
+  stroke: var(--sem-accent);
+  fill: var(--sem-accent);
+  transition: stroke-width 120ms;
+}
+.udc-map-marker.tone-success {
+  stroke: var(--sem-success);
+  fill: var(--sem-success);
+}
+.udc-map-marker.tone-warning {
+  stroke: var(--sem-warning);
+  fill: var(--sem-warning);
+}
+.udc-map-marker.tone-danger {
+  stroke: var(--sem-danger);
+  fill: var(--sem-danger);
+}
+.udc-map-marker.tone-info {
+  stroke: var(--sem-info);
+  fill: var(--sem-info);
+}
+.udc-map-marker.tone-muted {
+  stroke: var(--sem-muted);
+  fill: var(--sem-muted);
+}
+.udc-map-marker:hover {
+  stroke: var(--foreground);
+  stroke-width: 3;
+}
+.udc-map-marker.is-selected {
+  stroke: var(--foreground);
+  stroke-width: 3;
+  fill-opacity: 0.85;
+}
+
+/* An aeroplane marker (icon: airplane): a divIcon whose SVG is filled with currentColor, so
+   the tone sets it; the background-coloured outline keeps it legible on the tiles. */
+.udc-map-plane {
+  color: var(--sem-accent);
+  cursor: pointer;
+}
+.udc-map-plane.tone-success {
+  color: var(--sem-success);
+}
+.udc-map-plane.tone-warning {
+  color: var(--sem-warning);
+}
+.udc-map-plane.tone-danger {
+  color: var(--sem-danger);
+}
+.udc-map-plane.tone-info {
+  color: var(--sem-info);
+}
+.udc-map-plane.tone-muted {
+  color: var(--sem-muted);
+}
+.udc-map-plane-glyph {
+  line-height: 0;
+  transition: transform 300ms ease-out;
+}
+.udc-map-plane svg {
+  overflow: visible;
+}
+.udc-map-plane path {
+  fill: currentColor;
+  stroke: var(--background);
+  stroke-width: 1;
+  stroke-linejoin: round;
+  transition:
+    stroke 120ms,
+    stroke-width 120ms;
+}
+.udc-map-plane:hover path,
+.udc-map-plane.is-selected path {
+  stroke: var(--foreground);
+  stroke-width: 1.6;
+}
+/* A trail: muted under the markers, the tone of its aeroplane when it is hovered or selected. */
+.udc-map-trail {
+  stroke: var(--sem-muted);
+  stroke-opacity: 0.55;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+}
+.udc-map-trail.is-active {
+  stroke-opacity: 0.95;
+}
+.udc-map-trail.is-active.tone-success {
+  stroke: var(--sem-success);
+}
+.udc-map-trail.is-active.tone-warning {
+  stroke: var(--sem-warning);
+}
+.udc-map-trail.is-active.tone-danger {
+  stroke: var(--sem-danger);
+}
+.udc-map-trail.is-active.tone-info,
+.udc-map-trail.is-active.tone-accent {
+  stroke: var(--sem-info);
+}
+.udc-map-trail.is-active.tone-muted {
+  stroke: var(--foreground);
+}
+
+/* The Doc tab: a collection's README. Theme tokens only, so it follows light and dark. */
+.udc-prose {
+  color: var(--color-foreground);
+  font-size: 14px;
+  line-height: 1.7;
+}
+.udc-prose > :first-child {
+  margin-top: 0;
+}
+.udc-prose h1 {
+  font-size: 1.6rem;
+  font-weight: 650;
+  letter-spacing: -0.02em;
+  line-height: 1.25;
+  margin: 0 0 0.9rem;
+}
+.udc-prose h2 {
+  font-size: 1.15rem;
+  font-weight: 620;
+  letter-spacing: -0.01em;
+  margin: 1.8rem 0 0.6rem;
+  padding-bottom: 0.3rem;
+  border-bottom: 1px solid var(--color-border);
+}
+.udc-prose h3 {
+  font-size: 1rem;
+  font-weight: 600;
+  margin: 1.4rem 0 0.4rem;
+}
+.udc-prose p,
+.udc-prose ul,
+.udc-prose ol,
+.udc-prose pre,
+.udc-prose table,
+.udc-prose blockquote {
+  margin: 0.75rem 0;
+}
+.udc-prose ul,
+.udc-prose ol {
+  padding-left: 1.4rem;
+}
+.udc-prose ul {
+  list-style: disc;
+}
+.udc-prose ol {
+  list-style: decimal;
+}
+.udc-prose li {
+  margin: 0.3rem 0;
+}
+.udc-prose li::marker {
+  color: var(--color-muted-foreground);
+}
+.udc-prose a:any-link {
+  color: var(--color-primary);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+.udc-prose strong {
+  font-weight: 620;
+}
+.udc-prose em {
+  color: var(--color-foreground);
+}
+.udc-prose code {
+  font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.85em;
+  padding: 0.1rem 0.35rem;
+  border-radius: 4px;
+  background: var(--color-muted);
+}
+.udc-prose pre {
+  padding: 0.8rem 1rem;
+  border-radius: 8px;
+  background: var(--color-muted);
+  overflow-x: auto;
+}
+.udc-prose pre code {
+  padding: 0;
+  background: none;
+}
+.udc-prose blockquote {
+  padding-left: 1rem;
+  border-left: 3px solid var(--color-border-strong);
+  color: var(--color-muted-foreground);
+}
+.udc-prose table {
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.udc-prose th,
+.udc-prose td {
+  border: 1px solid var(--color-border);
+  padding: 0.35rem 0.7rem;
+  text-align: left;
+}

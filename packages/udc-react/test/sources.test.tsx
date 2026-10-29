@@ -1,4 +1,4 @@
-import type { CollectionListing, ViewConfig } from "@jsudc/core";
+import type { ViewConfig } from "@jsudc/core";
 import { ViewConfigSchema } from "@jsudc/core";
 import { UdcClient } from "@jsudc/core/client";
 import { QueryClientProvider } from "@tanstack/react-query";
@@ -9,7 +9,6 @@ import { describe, expect, it } from "vitest";
 import { ageText } from "../src/data-view/Freshness";
 import { folderCrumbs, joinFolder, splitFolder } from "../src/data-view/folder";
 import { DOC_TAB, useDataViewState } from "../src/data-view/useDataViewState";
-import { groupCollections } from "../src/shell/AppShell";
 import { Badges, badgeTone, formatBytes } from "../src/table/cells";
 import { pollInterval, useUdcAllRows, useUdcCollection } from "../src/udc/hooks";
 import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";
@@ -27,37 +26,6 @@ const caps = {
   paging: ["offset" as const],
   supported_filter_ops: [],
 };
-
-const listing = (name: string, extra: Partial<CollectionListing>): CollectionListing => ({
-  name,
-  default_renderer: "table",
-  capabilities: caps,
-  source_kind: "postgres_jsonb",
-  ...extra,
-});
-
-describe("sidebar groups", () => {
-  it("groups by group, database / files / internet, in server order; empty groups go", () => {
-    const groups = groupCollections([
-      listing("repos", { source_kind: "http_api", group: "internet" }),
-      listing("companies", { group: "database" }),
-      listing("quakes", { source_kind: "http_api", group: "internet" }),
-      listing("tickets", {}),
-    ]);
-    expect(groups.map((g) => [g.group, g.collections.map((c) => c.name)])).toEqual([
-      ["database", ["companies", "tickets"]],
-      ["internet", ["repos", "quakes"]],
-    ]);
-  });
-
-  it("places a listing without group by its source_kind", () => {
-    const groups = groupCollections([listing("files", { source_kind: "filesystem" })]);
-    expect(groups).toEqual([
-      { group: "files", collections: [expect.objectContaining({ name: "files" })] },
-    ]);
-    expect(groupCollections([])).toEqual([]);
-  });
-});
 
 describe("the Doc tab", () => {
   const view = (o: object = {}): ViewConfig =>

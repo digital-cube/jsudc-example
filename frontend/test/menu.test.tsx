@@ -2,16 +2,23 @@ import { readdirSync, readFileSync, statSync } from "node:fs";
 import { join } from "node:path";
 import type { CollectionListing, Row } from "@jsudc/core";
 import { UdcClient } from "@jsudc/core/client";
+import {
+  createUdcQueryClient,
+  FALLBACK_ICON,
+  LUCIDE_ICONS,
+  resolveIcon,
+  ThemeProvider,
+  TimezoneProvider,
+  TooltipProvider,
+  UdcI18nProvider,
+  UdcProvider,
+} from "@jsudc/react";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { fireEvent, render, screen, waitFor, within } from "@testing-library/react";
 import { Circle, Kanban, Users } from "lucide-react";
 import { MemoryRouter, Route, Routes } from "react-router";
 import { describe, expect, it } from "vitest";
-import { TooltipProvider } from "../src/components/ui/tooltip";
-import { I18nProvider } from "../src/i18n/i18n";
-import { LUCIDE_ICONS } from "../src/icons/lucide.generated";
-import { FALLBACK_ICON, resolveIcon } from "../src/icons/resolve";
-import { ThemeProvider } from "../src/lib/theme";
+import { EXAMPLE_MESSAGES } from "../src/i18n/messages";
 import { readmeIntro } from "../src/shell/AboutPage";
 import { AppShell } from "../src/shell/AppShell";
 import {
@@ -25,8 +32,6 @@ import {
   visibleItems,
   withOpen,
 } from "../src/shell/menu";
-import { TimezoneProvider } from "../src/time/timezone";
-import { createUdcQueryClient, UdcProvider } from "../src/udc/provider";
 import { listOf, mockUdcFetch } from "./fetchMock";
 
 const caps = {
@@ -256,7 +261,7 @@ function renderShell(url: string, collections: CollectionListing[], rows: Row[] 
   const client = new UdcClient({ httpUrl: "", fetch: mock.fetch });
   const view = render(
     <ThemeProvider>
-      <I18nProvider>
+      <UdcI18nProvider messages={EXAMPLE_MESSAGES}>
         <TimezoneProvider>
           <UdcProvider client={client}>
             <QueryClientProvider client={createUdcQueryClient()}>
@@ -272,7 +277,7 @@ function renderShell(url: string, collections: CollectionListing[], rows: Row[] 
             </QueryClientProvider>
           </UdcProvider>
         </TimezoneProvider>
-      </I18nProvider>
+      </UdcI18nProvider>
     </ThemeProvider>,
   );
   return { mock, view };

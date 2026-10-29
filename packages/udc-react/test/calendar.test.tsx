@@ -31,7 +31,7 @@ import {
 } from "../src/calendar/model";
 import { Toaster } from "../src/components/ui/toast";
 import { TooltipProvider } from "../src/components/ui/tooltip";
-import { I18nProvider } from "../src/i18n/i18n";
+import { UdcI18nProvider } from "../src/i18n/i18n";
 import { rendererEntry } from "../src/renderers/registry";
 import type { RendererProps } from "../src/renderers/types";
 import { CellValue } from "../src/table/cells";
@@ -274,16 +274,16 @@ describe("calendar writes", () => {
   });
 });
 
-describe("the display zone in cells", () => {
-  function Zone({ zone }: { zone: string }) {
-    const { setTimeZone } = useTimezone();
-    return (
-      <button type="button" onClick={() => setTimeZone(zone)}>
-        to {zone}
-      </button>
-    );
-  }
+function Zone({ zone }: { zone: string }) {
+  const { setTimeZone } = useTimezone();
+  return (
+    <button type="button" onClick={() => setTimeZone(zone)}>
+      to {zone}
+    </button>
+  );
+}
 
+describe("the display zone in cells", () => {
   it("datetime cells and date_format follow the provider; a date does not move", async () => {
     localStorage.setItem(TZ_STORAGE_KEY, BG);
     render(
@@ -401,7 +401,7 @@ describe("CalendarRenderer", () => {
       onCount: vi.fn(),
     };
     render(
-      <I18nProvider>
+      <UdcI18nProvider>
         <TimezoneProvider>
           <UdcProvider client={client}>
             <QueryClientProvider client={createUdcQueryClient()}>
@@ -415,7 +415,7 @@ describe("CalendarRenderer", () => {
             </QueryClientProvider>
           </UdcProvider>
         </TimezoneProvider>
-      </I18nProvider>,
+      </UdcI18nProvider>,
     );
     return { props, mock };
   }

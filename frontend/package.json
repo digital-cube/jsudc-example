@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "private": true,
   "type": "module",
-  "description": "jsudc frontend: React 19 + Vite, UDC client, hooks and the table renderer.",
+  "description": "jsudc example app: React 19 + Vite, the shell (menu, routes, pickers) around @jsudc/react's data view.",
   "scripts": {
     "dev": "vite",
     "build": "tsc -p tsconfig.json && vite build",
@@ -21,9 +21,9 @@
     "@dnd-kit/utilities": "^3.2.2",
     "@fontsource-variable/inter": "^5.3.0",
     "@jsudc/core": "*",
+    "@jsudc/react": "*",
     "@tanstack/react-query": "^5.104.4",
     "@tanstack/react-table": "^8.21.3",
-    "clsx": "^2.1.1",
     "leaflet": "^1.9.4",
     "lucide-react": "^1.59.0",
     "marked": "^18.1.2",
@@ -31,8 +31,7 @@
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "react-router": "^7.18.4",
-    "recharts": "^3.10.1",
-    "tailwind-merge": "^3.7.0"
+    "recharts": "^3.10.1"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.3.3",
