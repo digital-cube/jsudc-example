@@ -241,6 +241,45 @@ and `view.yaml` / `schema.json` / `source.yaml` reference from the Zod
 schemas (JSON Schema → MDX), the renderer option tables, the OpenAPI that
 Fastify already emits at `/docs`.
 
+### Phase 1 as filed (2026-10-29, after the repositories were created)
+
+The eight repositories exist on `digital-cube` (private, empty). Phase 1 was
+cut into six tickets on the `jsudc` worktree, chained so each waits for the
+one before it. Scope changes against T3–T7 above, to reach "what we have now
+through npm" with the least motion:
+
+- **react-router stays a peer dependency** of `@jsudc/react` in phase 1; the
+  `UrlStateAdapter` moves to phase 1b. Four library files use it
+  (`useDataViewState`, `useKanbanBoard`, `useChartWindow`, `CalendarRenderer`).
+- **The `UiKit` contract, the `udc-` Tailwind prefix and optional renderer
+  subpaths move to phase 1b.** Phase 1 ships the library build, a compiled
+  `styles.css`, and the i18n split (`APP` is the library's dictionary;
+  `COLLECTIONS`, `ABOUT`, `MENU`, `TBL_*` are the example's, passed as an
+  overlay).
+- **Each package directory becomes a repo-ready tree before the split**: own
+  README, LICENSE, `biome.json`, `.gitignore`, `.nvmrc`,
+  `.github/workflows/ci.yml`, and a `prepare` script that builds `dist`, so
+  `npm install github:digital-cube/jsudc-core#v0.1.0` works before any npm
+  publish. The example installs from GitHub tags first and switches to
+  npmjs.org when the npm org exists (TCKU2QEWWE).
+- **Server tests split by what they test**: the generic machinery goes with
+  the library and gets small fixture collections of its own; tests of the
+  demo collections (appointments, metrics, trees, flights fixtures, the
+  generators) stay in the example's `backend/test`.
+- **History**: `git subtree split` keeps every commit that touched the
+  prefix. `packages/udc-core` has history from the first commit; server and
+  react start at their extraction commit. The staging branch must not live
+  under a `libs/` path: the runner's guard refuses `git push … main` there.
+
+| # | Ticket | Waits for |
+|---|---|---|
+| P1 | `@jsudc/core`: rename, client in, repo-ready package | — |
+| P2 | extract `packages/udc-server`, repo-ready | P1 |
+| P3 | extract `packages/udc-react`, repo-ready (phase-1 scope) | P2 |
+| P4 | example consumes the three packages like a stranger | P3 |
+| P5 | split and push core, server, react; tag `v0.1.0` | P4 |
+| P6 | example installs from GitHub tags; push as `jsudc-example`; deploy | P5 |
+
 ### Phase 2 — more frameworks, more design systems
 
 **T10 `@jsudc/ui-mui` and `@jsudc/ui-antd` adapters** with an example route
