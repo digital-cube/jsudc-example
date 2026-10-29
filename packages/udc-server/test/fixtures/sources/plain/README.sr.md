@@ -1,3 +1,0 @@
-# Obično
-
-Srpski.

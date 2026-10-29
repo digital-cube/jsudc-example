@@ -2,7 +2,7 @@
 # drawn as chrome (frontend/src/shell/MenuTree.tsx); this view draws the
 # same rows with the tree renderer, a table and the file itself.
 #
-# The rows are fixed (MENU_SCHEMA in udc-core), so there is no schema.json.
+# The rows are fixed (MENU_SCHEMA in @jsudc/core), so there is no schema.json.
 # The tree is not lazy: the menu is a few dozen rows, read in one list,
 # built client-side. The `udc:collections` branches are already resolved
 # by the server, their rows marked `is_dynamic`.

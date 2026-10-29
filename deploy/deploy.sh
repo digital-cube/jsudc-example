@@ -105,7 +105,7 @@ timeout 60 systemctl --user stop "$UNIT"
 step "npm ci"
 timeout 600 npm ci --no-audit --no-fund
 
-# The packages' dist (the example imports it, no source aliases), then the frontend.
+# @jsudc/* come from GitHub tags (npm ci clones them over SSH and builds their dist); this builds the frontend.
 step "npm run build"
 timeout 300 npm run build
 

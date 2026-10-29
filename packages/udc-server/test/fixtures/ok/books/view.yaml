@@ -1,4 +1,0 @@
-default_renderer: cards
-available_renderers: [table, cards]
-columns:
-  - {field: title}

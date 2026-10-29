@@ -2,8 +2,7 @@
 /**
  *   npm run e2e [-- <extra cypress run args>]
  *
- * The Cypress run, end to end: build the three packages (the example imports
- * their `dist`), migrate and reseed the TEST database (every
+ * The Cypress run, end to end: migrate and reseed the TEST database (every
  * collection; the appointments around SEED_TODAY, default 2026-10-27, and the metrics ending at
  * its noon in Belgrade), start the backend on it, start Vite proxying to that backend,
  * run Cypress headless, and stop both servers whatever happens.
@@ -33,7 +32,6 @@ const webUrl = `http://127.0.0.1:${webPort}`;
 // The appointments are generated around the seed day: pinned, so every run sees the same week.
 const SEED_TODAY = process.env.SEED_TODAY || "2026-10-27";
 const HTTP_FIXTURES = join(ROOT, "backend", "test", "fixtures", "http");
-// The backend workspace's seed, not the root one: the packages are built once, above, not per spec.
 const seedCmd = `SEED_TODAY=${SEED_TODAY} npm run seed --silent -w @jsudc/backend -- --reset --db ${testDb}`;
 
 const children = [];
@@ -97,8 +95,6 @@ for (const signal of ["SIGINT", "SIGTERM"]) {
 
 let code = 1;
 try {
-  log("building @jsudc/core, @jsudc/server, @jsudc/react");
-  run("npm", ["run", "build:packages", "--silent"]);
   log(`test database: ${testDb.replace(/:[^:@/]+@/, ":***@")}`);
   run("npm", ["run", "db:migrate:test", "--silent", "-w", "@jsudc/backend"], {
     env: { ...process.env, TEST_DATABASE_URL: testDb },

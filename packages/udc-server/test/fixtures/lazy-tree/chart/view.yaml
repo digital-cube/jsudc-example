@@ -1,3 +1,0 @@
-available_renderers: [tree]
-tree_options:
-  lazy: true

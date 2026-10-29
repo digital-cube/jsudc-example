@@ -6,14 +6,7 @@
     "useIgnoreFile": true
   },
   "files": {
-    "includes": [
-      "**",
-      "!**/dist",
-      "!**/coverage",
-      "!**/test/fixtures",
-      "!docs",
-      "!!packages/*/biome.json"
-    ]
+    "includes": ["**", "!**/dist", "!**/coverage", "!**/test/fixtures", "!docs"]
   },
   "formatter": {
     "enabled": true,
@@ -38,20 +31,5 @@
     "parser": {
       "tailwindDirectives": true
     }
-  },
-  "overrides": [
-    {
-      "includes": [
-        "packages/udc-server/test/http-api.test.ts",
-        "packages/udc-core/test/source.test.ts"
-      ],
-      "linter": {
-        "rules": {
-          "suspicious": {
-            "noTemplateCurlyInString": "off"
-          }
-        }
-      }
-    }
-  ]
+  }
 }

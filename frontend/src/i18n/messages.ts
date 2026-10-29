@@ -64,7 +64,7 @@ isti dijalekt kao u dclabs-u). Server je služi kroz jedan generički protokol:
 
 Poenta vežbe je **zajednički interfejs**. U današnjem UDC-u protokol je deklarisan
 dva puta, jednom u Python-u i jednom u TypeScript-u, i ta dva se razilaze. U jsudc-u
-on postoji jednom, u \`packages/udc-core\`: envelope-i, filter DSL i evaluator u
+on postoji jednom, u \`@jsudc/core\`-u: envelope-i, filter DSL i evaluator u
 memoriji, tipovi šeme i prikaza, validacija redova i svaki payload akcije, kao Zod
 šeme sa izvedenim tipovima. I server i pregledač ga uvoze.`,
     },
