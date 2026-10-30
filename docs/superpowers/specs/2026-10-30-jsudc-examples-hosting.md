@@ -106,12 +106,22 @@ releases. `--install` links the vhost and the unit the first time.
 
 ## 5. Tickets
 
-| # | kind | title |
-|---|---|---|
-| T1 | AI, worktree `jsudc` | examples.stage.jsudc.dev replaces jsudc.igor.digitalcube.work: vhost, redirect, SITE, allowed host, README |
-| T2 | AI, worktree `jsudc`, after T3 | deploy/prod.sh and the production vhost + unit for examples.jsudc.dev; first deploy on hetzner2 |
-| T3 | person (Igor) | hetzner2: the VM for examples.jsudc.dev, edge forwarding, and SSH access for this VM's key |
-| T4 | website repo | `EXAMPLE_URL` → examples.stage.jsudc.dev / examples.jsudc.dev |
+Filed 2026-10-30 on the worktree `jsudc`, queued in this order:
+
+| ticket | title |
+|---|---|
+| TCKX7QTR5W | examples.stage.jsudc.dev replaces jsudc.igor.digitalcube.work: vhost, 301, SITE, allowed host, README |
+| TCKCT9NQ2P | examples.jsudc.dev: production deploy on digitalcube-production-websites (deploy/prod.sh, vhost, unit, Postgres, first deploy) |
+| TCK3F35EDP | jsudc-website: `EXAMPLE_URL` → examples.stage.jsudc.dev / examples.jsudc.dev |
+
+The production unknowns of §4 are settled: the target is the VM
+`digitalcube-production-websites` (192.168.122.11 behind `insider2`, reachable
+by that SSH alias from this VM), the edge `h2` already terminates TLS for
+`examples.jsudc.dev` and forwards to its :80, where a "coming soon" vhost waits
+(TCK25C3MWW). Postgres there is 18.6, Node 24.16/24.17, linger is off.
 
 Done 2026-10-30 by Igor, no ticket: all five `digital-cube/jsudc-*` repositories
 (core, server, react, example, website) are public.
+
+Not filed: a production deploy of the **website** itself. `jsudc.dev` on the
+same VM is still the "coming soon" page; the website has only `deploy/stage.sh`.
