@@ -278,7 +278,7 @@ describe("the shipped menu collection", () => {
     const menu = registry.get("menu").source;
     const { rows } = await menu.list({ page: { limit: 1000 } });
     const roots = rows.filter((r) => r.parent_id === null).map((r) => r.code);
-    expect(roots).toEqual(["HOME", "COLLECTIONS", "VIEWS", "DOCS", "MENU", "ABOUT"]);
+    expect(roots).toEqual(["HOME", "COLLECTIONS", "VIEWS", "DOCS", "EXAMPLES", "MENU", "ABOUT"]);
     const dynamic = rows.filter((r) => r.is_dynamic);
     expect(dynamic.map((r) => r.url).sort()).toEqual(
       registry

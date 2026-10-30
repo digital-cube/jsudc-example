@@ -7,7 +7,7 @@ import type { CollectionListing, SourceGroup } from "@jsudc/core";
  * come from `collections`. quakes and repos read recorded fixtures: no internet.
  */
 
-const ROOTS = ["HOME", "COLLECTIONS", "VIEWS", "DOCS", "MENU", "ABOUT"];
+const ROOTS = ["HOME", "COLLECTIONS", "VIEWS", "DOCS", "EXAMPLES", "MENU", "ABOUT"];
 const node = (code: string) => cy.get(`[data-testid="menu-${code}"]`);
 const tree = () => cy.get('[data-testid="menu-tree"]');
 
@@ -29,7 +29,7 @@ function leavesUnder(code: string): Cypress.Chainable<string[]> {
 }
 
 describe("the sidebar from the menu collection", () => {
-  it("draws HOME / COLLECTIONS / VIEWS / DOCS / MENU / ABOUT, each with its icon", () => {
+  it("draws HOME / COLLECTIONS / VIEWS / DOCS / EXAMPLES / MENU / ABOUT, each with its icon", () => {
     cy.visit("/about");
     cy.get('[data-testid="sidebar"]').should("have.attr", "data-sidebar", "menu");
     tree()
@@ -157,6 +157,6 @@ describe("/udc/menu: the same rows as data", () => {
     cy.get('[data-testid="source-text"]')
       .should("contain", 'children: "udc:collections?group=database"')
       .and("contain", "code: HOME");
-    cy.get('[data-testid="toolbar"]').should("have.class", "hidden");
+    cy.get('[data-testid="toolbar"]').should("not.be.visible");
   });
 });

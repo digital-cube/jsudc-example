@@ -21,7 +21,7 @@ export function AboutPage() {
     locale === "en" ? readmeIntro(readme) : (tMaybe("ABOUT", "README") ?? readmeIntro(readme));
   const html = useMemo(() => marked.parse(markdown, { async: false, gfm: true }), [markdown]);
   return (
-    <div className="scroll-thin min-h-0 flex-1 overflow-y-auto" data-testid="about-page">
+    <div className="udc-scroll-thin min-h-0 flex-1 overflow-y-auto" data-testid="about-page">
       <div className="mx-auto max-w-3xl px-8 pt-7">
         <h1 className="sr-only">{t("ABOUT", "TITLE")}</h1>
         <p className="text-[13px] text-muted-foreground">{t("ABOUT", "LEAD")}</p>

@@ -3,16 +3,13 @@ import {
   BROWSER_TZ,
   COMMON_ZONES,
   cn,
-  Input,
   offsetLabel,
   offsetMinutes,
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
   useI18n,
   useTimezone,
   zoneCity,
 } from "@jsudc/react";
+import { Input, Popover, PopoverContent, PopoverTrigger } from "@jsudc/react/ui";
 import { Check, Globe } from "lucide-react";
 import { type KeyboardEvent, useEffect, useMemo, useRef, useState } from "react";
 
@@ -149,7 +146,7 @@ export function TimezonePicker() {
             aria-label={t("APP", "TZ_SEARCH")}
           />
         </div>
-        <div ref={listRef} role="listbox" className="scroll-thin max-h-80 overflow-y-auto p-1">
+        <div ref={listRef} role="listbox" className="udc-scroll-thin max-h-80 overflow-y-auto p-1">
           {shown.length === 0 ? (
             <div className="px-2 py-6 text-center text-xs text-muted-foreground">
               {t("APP", "TZ_NONE")}

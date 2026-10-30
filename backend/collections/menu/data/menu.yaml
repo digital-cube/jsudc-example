@@ -121,6 +121,12 @@
       icon: lucide:file-text
       url: /udc/menu?tab=doc
 
+# The layers of @jsudc/react a host enters: the default kit, a restyle by CSS variables.
+- code: EXAMPLES
+  translation_key: MENU_EXAMPLES
+  icon: lucide:layout-dashboard
+  url: /examples
+
 # This file, as data: the tree, the table and the Source tab.
 - code: MENU
   translation_key: MENU_MENU

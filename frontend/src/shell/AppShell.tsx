@@ -1,16 +1,6 @@
 import { type CollectionListing, SOURCE_GROUPS, type SourceGroup, sourceGroup } from "@jsudc/core";
-import {
-  Button,
-  cn,
-  LOCALES,
-  type Locale,
-  Segmented,
-  Skeleton,
-  Tip,
-  useI18n,
-  useTheme,
-  useUdcCollections,
-} from "@jsudc/react";
+import { cn, LOCALES, type Locale, useI18n, useTheme, useUdcCollections } from "@jsudc/react";
+import { Button, Segmented, Skeleton, Tip } from "@jsudc/react/ui";
 import {
   Activity,
   Building2,
@@ -24,10 +14,12 @@ import {
   Languages,
   type LucideIcon,
   Moon,
+  Palette,
   Plane,
   Sun,
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
+import { BRANDS, type Brand, useBrand, useBrandFromUrl } from "./brand";
 import { MENU_COLLECTION, MenuTree } from "./MenuTree";
 import { TimezonePicker } from "./TimezonePicker";
 
@@ -75,6 +67,7 @@ export function groupCollections(collections: readonly CollectionListing[]): Sid
 }
 
 export function AppShell() {
+  useBrandFromUrl();
   return (
     <div className="flex h-full flex-col">
       <TopBar />
@@ -106,6 +99,7 @@ function TopBar() {
         </div>
       </div>
       <div className="flex items-center gap-2">
+        <BrandSwitch />
         <TimezonePicker />
         <Languages className="size-4 text-muted-foreground" aria-hidden />
         <Segmented<Locale>
@@ -136,6 +130,28 @@ function TopBar() {
   );
 }
 
+/** Default / Acme: the CSS-variables-only restyle of src/brand.css. */
+function BrandSwitch() {
+  const { t } = useI18n();
+  const [brand, setBrand] = useBrand();
+  return (
+    <>
+      <Palette className="size-4 text-muted-foreground" aria-hidden />
+      <Segmented<Brand>
+        aria-label={t("APP", "BRAND")}
+        data-testid="brand-switch"
+        value={brand}
+        onChange={setBrand}
+        options={BRANDS.map((b) => ({
+          value: b,
+          label: t("APP", `BRAND_${b.toUpperCase()}`),
+          testId: `brand-${b}`,
+        }))}
+      />
+    </>
+  );
+}
+
 /**
  * The sidebar: the menu collection (`VITE_MENU_COLLECTION`, default `menu`)
  * drawn as a tree when the server serves one; the collections grouped by
@@ -150,7 +166,7 @@ function Sidebar() {
       aria-label={t("APP", menu ? "NAV_MENU" : "COLLECTIONS")}
       data-testid="sidebar"
       data-sidebar={menu ? "menu" : "groups"}
-      className="scroll-thin hidden w-52 shrink-0 flex-col overflow-y-auto border-r border-border bg-surface/60 p-3 pt-4 md:flex lg:w-60"
+      className="udc-scroll-thin hidden w-52 shrink-0 flex-col overflow-y-auto border-r border-border bg-surface/60 p-3 pt-4 md:flex lg:w-60"
     >
       {menu ? <MenuTree listing={menu} /> : <GroupedSidebar collections={collections} />}
     </nav>

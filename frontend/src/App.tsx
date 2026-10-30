@@ -2,23 +2,24 @@ import { UdcClient } from "@jsudc/core/client";
 import {
   createUdcQueryClient,
   ErrorState,
-  Spinner,
   ThemeProvider,
   TimezoneProvider,
-  Toaster,
-  TooltipProvider,
   UdcDataView,
   UdcI18nProvider,
   UdcProvider,
   useI18n,
   useUdcCollections,
 } from "@jsudc/react";
+import { UdcReactRouterUrlState } from "@jsudc/react/react-router";
+import { Spinner, Toaster, TooltipProvider } from "@jsudc/react/ui";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router";
 import { EXAMPLE_MESSAGES } from "./i18n/messages";
+import { EXAMPLE_RENDERERS } from "./renderers";
 import { AboutPage } from "./shell/AboutPage";
 import { AppShell } from "./shell/AppShell";
+import { ExamplesPage } from "./shell/ExamplesPage";
 
 /** `/`: the first collection the server lists. */
 function FirstCollection() {
@@ -53,19 +54,22 @@ export function App() {
     <ThemeProvider>
       <UdcI18nProvider messages={EXAMPLE_MESSAGES}>
         <TimezoneProvider>
-          <UdcProvider client={client}>
+          <UdcProvider client={client} renderers={EXAMPLE_RENDERERS}>
             <QueryClientProvider client={queryClient}>
               <TooltipProvider delayDuration={400}>
                 <Toaster>
                   <BrowserRouter>
-                    <Routes>
-                      <Route element={<AppShell />}>
-                        <Route index element={<FirstCollection />} />
-                        <Route path="udc/:collection" element={<CollectionRoute />} />
-                        <Route path="about" element={<AboutPage />} />
-                        <Route path="*" element={<Navigate to="/" replace />} />
-                      </Route>
-                    </Routes>
+                    <UdcReactRouterUrlState>
+                      <Routes>
+                        <Route element={<AppShell />}>
+                          <Route index element={<FirstCollection />} />
+                          <Route path="udc/:collection" element={<CollectionRoute />} />
+                          <Route path="examples" element={<ExamplesPage />} />
+                          <Route path="about" element={<AboutPage />} />
+                          <Route path="*" element={<Navigate to="/" replace />} />
+                        </Route>
+                      </Routes>
+                    </UdcReactRouterUrlState>
                   </BrowserRouter>
                 </Toaster>
               </TooltipProvider>

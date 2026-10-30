@@ -26,6 +26,9 @@ export const EXAMPLE_MESSAGES: Messages = {
     TZ_SEARCH: { en: "Search zones", sr: "Pretraži zone" },
     TZ_NONE: { en: "No zone matches", sr: "Nijedna zona ne odgovara" },
     NO_COLLECTIONS: { en: "No collections", sr: "Nema kolekcija" },
+    BRAND: { en: "Brand", sr: "Brend" },
+    BRAND_DEFAULT: { en: "Default", sr: "Podrazumevani" },
+    BRAND_ACME: { en: "Acme", sr: "Acme" },
   },
   COLLECTIONS: {
     COMPANIES: { en: "Companies", sr: "Preduzeća" },
@@ -69,6 +72,26 @@ memoriji, tipovi šeme i prikaza, validacija redova i svaki payload akcije, kao 
 šeme sa izvedenim tipovima. I server i pregledač ga uvoze.`,
     },
   },
+  // The /examples page: the two layers of @jsudc/react the app proves. Inline markdown.
+  EXAMPLES: {
+    TITLE: { en: "Two ways in", sr: "Dva ulaza" },
+    LEAD: {
+      en: "The same view of the companies, entered at two layers of @jsudc/react. Neither needs a line of component code.",
+      sr: "Isti prikaz preduzeća, na dva sloja biblioteke @jsudc/react. Nijedan ne traži ni red koda komponenti.",
+    },
+    KIT_TITLE: { en: "1. The default kit", sr: "1. Podrazumevani kit" },
+    KIT_BODY: {
+      en: "The app mounts `UdcProvider` without a `kit`, so every renderer draws with the default UI kit, the Radix + Tailwind primitives of `@jsudc/react/ui`. It imports the compiled `@jsudc/react/styles.css`, whose utilities are all `udc:`-prefixed, beside its own unprefixed Tailwind, and registers the seven renderers one by one from their subpaths (`src/renderers.ts`). This is what a host gets with no styling work at all.",
+      sr: "Aplikacija postavlja `UdcProvider` bez `kit`-a, pa svaki renderer crta podrazumevanim UI kitom, Radix + Tailwind primitivama iz `@jsudc/react/ui`. Uvozi kompajlirani `@jsudc/react/styles.css`, čije su sve klase sa prefiksom `udc:`, pored sopstvenog Tailwind-a bez prefiksa, i registruje sedam renderera jedan po jedan iz njihovih podputanja (`src/renderers.ts`). Ovo host dobija bez ikakvog rada na stilu.",
+    },
+    KIT_LINK: { en: "Companies, default theme", sr: "Preduzeća, podrazumevana tema" },
+    BRAND_TITLE: { en: "2. A restyle by CSS variables", sr: "2. Novi stil samo CSS promenljivama" },
+    BRAND_BODY: {
+      en: 'The Acme brand is one stylesheet, `src/brand.css`, that redefines the tokens the components paint from (`--background`, `--foreground`, `--primary`, the `--sem-*` tones, the `--chart-*` series, the radius and the font) under `[data-brand="acme"]`, for the light and the dark theme. The switch in the header only sets that attribute on `<html>` and remembers it; no component changes, and a test holds the file to custom-property declarations.',
+      sr: 'Brend Acme je jedan stylesheet, `src/brand.css`, koji pod `[data-brand="acme"]` redefiniše tokene iz kojih komponente boje (`--background`, `--foreground`, `--primary`, tonove `--sem-*`, serije `--chart-*`, radijus i font), za svetlu i tamnu temu. Prekidač u zaglavlju samo postavlja taj atribut na `<html>` i pamti ga; nijedna komponenta se ne menja, a test drži fajl na samim deklaracijama promenljivih.',
+    },
+    BRAND_LINK: { en: "Companies, Acme brand", sr: "Preduzeća, brend Acme" },
+  },
   // The application menu (backend/collections/menu/data/menu.yaml): translation_key MENU_<TERM>.
   MENU: {
     HOME: { en: "Home", sr: "Početna" },
@@ -85,6 +108,7 @@ memoriji, tipovi šeme i prikaza, validacija redova i svaki payload akcije, kao 
     VIEW_QUAKES: { en: "Earthquakes map", sr: "Mapa zemljotresa" },
     VIEW_FLIGHTS: { en: "Flights map", sr: "Mapa letova" },
     DOCS: { en: "Docs", sr: "Dokumentacija" },
+    EXAMPLES: { en: "Examples", sr: "Primeri" },
     MENU: { en: "Menu", sr: "Meni" },
     ABOUT: { en: "About", sr: "O aplikaciji" },
   },

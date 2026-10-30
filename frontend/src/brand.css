@@ -1,0 +1,109 @@
+/*
+ * The "Acme" brand: the whole restyle, and nothing but CSS variables. The
+ * header's Default / Acme switch puts `data-brand="acme"` on <html>; every
+ * component, the library's and the shell's, already paints from these
+ * tokens, so no component changes. test/brand.test.ts holds this file to
+ * custom-property declarations only.
+ *
+ * `html[...]` outranks the library's `:root` and `.dark`, and the file is
+ * loaded after `@jsudc/react/styles.css` (src/main.tsx).
+ *
+ * Radius and font: @jsudc/react 0.2.0 compiles them as literals (the radius
+ * through its prefixed `--udc-radius-*` theme variables), so `--radius`
+ * feeds those here and the shell's body reads `--font-sans`
+ * (src/index.css). The library's documented tokens are the colours.
+ */
+
+html[data-brand="acme"] {
+  --background: oklch(0.975 0.012 85);
+  --foreground: oklch(0.27 0.035 50);
+  --surface: oklch(0.993 0.007 85);
+  --surface-raised: oklch(1 0.004 85);
+  --muted: oklch(0.95 0.017 80);
+  --muted-foreground: oklch(0.5 0.035 60);
+  --border: oklch(0.89 0.022 75);
+  --border-strong: oklch(0.82 0.032 70);
+  --input: oklch(0.86 0.027 70);
+  --ring: oklch(0.62 0.16 42);
+  --primary: oklch(0.55 0.165 40);
+  --primary-foreground: oklch(0.99 0.01 85);
+  --hover: oklch(0.955 0.022 75);
+  --selected: oklch(0.925 0.048 55);
+  --shadow-pin: oklch(0.3 0.04 50 / 0.14);
+
+  --sem-accent: oklch(0.53 0.16 40);
+  --sem-success: oklch(0.5 0.11 165);
+  --sem-warning: oklch(0.6 0.13 75);
+  --sem-danger: oklch(0.52 0.19 22);
+  --sem-info: oklch(0.5 0.1 215);
+  --sem-muted: oklch(0.55 0.025 60);
+
+  --sem-accent-bg: oklch(0.955 0.035 45);
+  --sem-success-bg: oklch(0.96 0.03 165);
+  --sem-warning-bg: oklch(0.965 0.05 85);
+  --sem-danger-bg: oklch(0.96 0.03 22);
+  --sem-info-bg: oklch(0.965 0.02 215);
+  --sem-muted-bg: oklch(0.955 0.012 75);
+
+  --chart-1: #c0522b;
+  --chart-2: #2e6f68;
+  --chart-3: #d39b17;
+  --chart-4: #7b4f9d;
+  --chart-5: #3d7fbe;
+  --chart-6: #7f8f24;
+  --chart-7: #b03a5a;
+  --chart-8: #6b5d52;
+
+  --radius: 2px;
+  --udc-radius-sm: var(--radius);
+  --udc-radius-md: var(--radius);
+  --udc-radius-lg: var(--radius);
+  --udc-radius-xl: var(--radius);
+  --radius-sm: var(--radius);
+  --radius-md: var(--radius);
+  --radius-lg: var(--radius);
+  --radius-xl: var(--radius);
+
+  --font-sans: "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", Georgia, serif;
+}
+
+html[data-brand="acme"].dark {
+  --background: oklch(0.17 0.014 55);
+  --foreground: oklch(0.93 0.015 80);
+  --surface: oklch(0.2 0.016 55);
+  --surface-raised: oklch(0.24 0.018 55);
+  --muted: oklch(0.245 0.018 55);
+  --muted-foreground: oklch(0.7 0.03 70);
+  --border: oklch(0.3 0.02 55);
+  --border-strong: oklch(0.36 0.024 55);
+  --input: oklch(0.34 0.022 55);
+  --ring: oklch(0.7 0.14 45);
+  --primary: oklch(0.7 0.15 45);
+  --primary-foreground: oklch(0.17 0.02 55);
+  --hover: oklch(0.23 0.02 55);
+  --selected: oklch(0.27 0.045 45);
+  --shadow-pin: oklch(0 0 0 / 0.45);
+
+  --sem-accent: oklch(0.76 0.12 45);
+  --sem-success: oklch(0.75 0.11 165);
+  --sem-warning: oklch(0.8 0.12 80);
+  --sem-danger: oklch(0.72 0.15 22);
+  --sem-info: oklch(0.77 0.09 215);
+  --sem-muted: oklch(0.67 0.025 60);
+
+  --sem-accent-bg: oklch(0.27 0.05 45);
+  --sem-success-bg: oklch(0.25 0.04 165);
+  --sem-warning-bg: oklch(0.27 0.045 80);
+  --sem-danger-bg: oklch(0.26 0.05 22);
+  --sem-info-bg: oklch(0.24 0.03 215);
+  --sem-muted-bg: oklch(0.235 0.015 55);
+
+  --chart-1: #de7148;
+  --chart-2: #4b9a90;
+  --chart-3: #e2b13a;
+  --chart-4: #a07cc4;
+  --chart-5: #6aa3dc;
+  --chart-6: #a3b546;
+  --chart-7: #d6668a;
+  --chart-8: #a0928a;
+}

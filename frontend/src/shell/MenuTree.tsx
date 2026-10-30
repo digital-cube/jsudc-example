@@ -1,5 +1,6 @@
 import type { CollectionListing } from "@jsudc/core";
-import { cn, resolveIcon, Skeleton, useI18n, useUdcAllRows } from "@jsudc/react";
+import { cn, resolveIcon, useI18n, useUdcAllRows } from "@jsudc/react";
+import { Skeleton } from "@jsudc/react/ui";
 import { ChevronRight } from "lucide-react";
 import { type KeyboardEvent, useCallback, useEffect, useMemo, useState } from "react";
 import { Link, useLocation } from "react-router";

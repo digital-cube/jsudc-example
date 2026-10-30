@@ -1,12 +1,15 @@
 /*
- * The example runs Tailwind itself (the shell has utilities of its own), so it
- * takes the library's raw tokens and scans the library's built `dist` with its own
- * (the workspace hoists it to the root `node_modules`).
- * A host without Tailwind imports `@jsudc/react/styles.css` instead.
+ * Two stylesheets side by side, as the library asks of a Tailwind host:
+ * `@jsudc/react/styles.css` is the library's own, compiled with every
+ * utility `udc:`-prefixed, so nothing here scans the package. The shell
+ * (menu, header, pages) runs its own unprefixed Tailwind over src/ and
+ * takes the library's tokens for it: `tokens.css` maps `--background`,
+ * `--primary`, … to `bg-background`, `text-primary`, … in this build too.
+ * src/brand.css comes after both (src/main.tsx).
  */
+@import "@jsudc/react/styles.css";
 @import "tailwindcss";
 @import "@jsudc/react/tokens.css";
-@source "../../node_modules/@jsudc/react/dist";
 
 @layer base {
   html,
@@ -14,4 +17,10 @@
   #root {
     height: 100%;
   }
+}
+
+/* The page font as a variable, so a brand can swap it (src/brand.css). Unlayered:
+   it wins over both stylesheets' literal `body` font. */
+body {
+  font-family: var(--font-sans, "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif);
 }
