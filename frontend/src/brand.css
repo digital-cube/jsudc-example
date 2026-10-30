@@ -8,10 +8,11 @@
  * `html[...]` outranks the library's `:root` and `.dark`, and the file is
  * loaded after `@jsudc/react/styles.css` (src/main.tsx).
  *
- * Radius and font: @jsudc/react 0.2.0 compiles them as literals (the radius
- * through its prefixed `--udc-radius-*` theme variables), so `--radius`
- * feeds those here and the shell's body reads `--font-sans`
- * (src/index.css). The library's documented tokens are the colours.
+ * Radius and font are documented library tokens like the colours:
+ * `--radius` is the base corner radius, every `rounded-*` step a multiple of
+ * it (sm ½, md ¾, lg 1×, xl 1½×), and `--font-sans` is the UI font. Both the
+ * library's stylesheet and the shell's Tailwind (through `tokens.css`) read
+ * them at runtime.
  */
 
 html[data-brand="acme"] {
@@ -55,14 +56,6 @@ html[data-brand="acme"] {
   --chart-8: #6b5d52;
 
   --radius: 2px;
-  --udc-radius-sm: var(--radius);
-  --udc-radius-md: var(--radius);
-  --udc-radius-lg: var(--radius);
-  --udc-radius-xl: var(--radius);
-  --radius-sm: var(--radius);
-  --radius-md: var(--radius);
-  --radius-lg: var(--radius);
-  --radius-xl: var(--radius);
 
   --font-sans: "Iowan Old Style", "Palatino Linotype", Palatino, "URW Palladio L", Georgia, serif;
 }

@@ -18,9 +18,3 @@
     height: 100%;
   }
 }
-
-/* The page font as a variable, so a brand can swap it (src/brand.css). Unlayered:
-   it wins over both stylesheets' literal `body` font. */
-body {
-  font-family: var(--font-sans, "Inter Variable", "Inter", ui-sans-serif, system-ui, sans-serif);
-}
