@@ -252,6 +252,11 @@ describe("the about page", () => {
       "# x\n\nSee [core](packages/core) and [web](https://example.com).\n\n## Layout\nrest";
     expect(readmeIntro(md)).toBe("# x\n\nSee core and [web](https://example.com).");
   });
+
+  it("points an image under frontend/public/ at the app's own copy", () => {
+    const md = "# x\n\n![shot](frontend/public/screenshots/a.png)\n\n## Layout";
+    expect(readmeIntro(md)).toBe("# x\n\n![shot](/screenshots/a.png)");
+  });
 });
 
 // --- the sidebar in the shell ---------------------------------------------------------

@@ -6,12 +6,16 @@ import readme from "../../../README.md?raw";
 /**
  * The README's first section: everything above its first `##` heading.
  * A relative link points into the repository, not at a route of this app,
- * so it is kept as code text instead.
+ * so it is kept as text instead; an image under `frontend/public/` is one
+ * this app serves, so it points there.
  */
 export function readmeIntro(markdown: string): string {
   const cut = markdown.search(/^## /m);
   const intro = cut === -1 ? markdown : markdown.slice(0, cut);
-  return intro.replace(/\[([^\]]+)\]\((?!https?:)[^)]*\)/g, "$1").trim();
+  return intro
+    .replace(/!\[([^\]]*)\]\(frontend\/public\//g, "![$1](/")
+    .replace(/(?<!!)\[([^\]]+)\]\((?!https?:|\/)[^)]*\)/g, "$1")
+    .trim();
 }
 
 /** `/about`: what this application is, from the README (in Serbian from the translations). */

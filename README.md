@@ -15,7 +15,7 @@ The libraries live in their own repositories:
 |---|---|---|
 | `@jsudc/core` | [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core) | the shared protocol, once: envelopes, the filter DSL and an in-memory evaluator, schema and view types, row validation and every action payload as Zod schemas with inferred types, plus the transport client (`@jsudc/core/client`) |
 | `@jsudc/server` | [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) | dispatcher, collection registry, the five sources, schema revisions, seeding, the Fastify plugin |
-| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers, the schema editor, i18n, theme and a compiled stylesheet |
+| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet |
 
 The point of the exercise is the **shared interface**: in UDC today the protocol is
 declared twice, once in Python and once in TypeScript, and the two drift; in jsudc
@@ -23,6 +23,21 @@ both the server and the browser import `@jsudc/core`. `backend/` is the example
 server that serves the demo collections with `@jsudc/server`; `frontend/` is the
 example app around `@jsudc/react`. Both use the libraries the way any outside
 project does (see [How the example uses the libraries](#how-the-example-uses-the-libraries)).
+On `@jsudc/*` 0.2.0 the example also proves the first two of the library's
+layers a host can enter (plan §4.3), on the same `/udc/companies` view. **The
+default kit:** `UdcProvider` without a `kit`, the compiled
+`@jsudc/react/styles.css` (every utility `udc:`-prefixed) beside the shell's own
+Tailwind, and the renderers registered one by one from their subpaths. **A
+restyle by CSS variables:** the header's Default / Acme switch puts
+`data-brand="acme"` on `<html>`, and `frontend/src/brand.css` redefines only
+custom properties under it (colours, semantic tones, chart series, radius,
+font), so not a line of component code changes. The Examples page in the menu
+explains both and links to each.
+
+![/udc/companies with the default kit](frontend/public/screenshots/companies-default.png)
+
+![/udc/companies with the Acme brand](frontend/public/screenshots/companies-acme.png)
+
 The design is in
 [`docs/superpowers/specs/2026-10-18-jsudc-design.md`](docs/superpowers/specs/2026-10-18-jsudc-design.md).
 Until phase 1 of the libraries plan the three packages were developed inside this
@@ -75,7 +90,7 @@ workspace, `npm test` runs only that one.
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
-dependency: each `package.json` names `^0.1.1`, `npm ci` downloads the published
+dependency: each `package.json` names `^0.2.0`, `npm ci` downloads the published
 tarballs (already built, `dist` included) and `package-lock.json` pins their
 version and integrity. No GitHub credential is involved. `@jsudc/server` and
 `@jsudc/react` take `@jsudc/core` as a peer dependency, so npm hoists a single
@@ -87,9 +102,18 @@ copy of all three to the root `node_modules`. The sources live in their own repo
 The packages resolve through their `exports` to the built `dist`; there is no path
 alias to a library's source anywhere (not in `vite.config.ts`, `vitest.config.ts`
 or any `tsconfig.json`). To change a library, change it in its repository, publish
-a release to npm, and bump the version here. The example's Tailwind scans
-`node_modules/@jsudc/react/dist` for the library's classes, as any Tailwind host
-would (`frontend/src/index.css`).
+a release to npm, and bump the version here.
+
+The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks:
+`frontend/src/index.css` imports the compiled `@jsudc/react/styles.css` (the
+library's utilities, all `udc:`-prefixed) and, for the shell's own unprefixed
+Tailwind, `@jsudc/react/tokens.css`; it does not scan the package.
+`frontend/src/App.tsx` mounts `UdcReactRouterUrlState` from
+`@jsudc/react/react-router` under the router, and `frontend/src/renderers.ts`
+registers the seven renderers explicitly (`createRendererRegistry` with
+`@jsudc/react/table`, `/cards`, `/kanban`, `/calendar`, `/tree`, `/map`,
+`/chart`). The primitives the shell uses (`Button`, `Segmented`, …) come from
+`@jsudc/react/ui`.
 
 ## Backend
 

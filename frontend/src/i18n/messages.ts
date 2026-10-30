@@ -69,7 +69,21 @@ Poenta vežbe je **zajednički interfejs**. U današnjem UDC-u protokol je dekla
 dva puta, jednom u Python-u i jednom u TypeScript-u, i ta dva se razilaze. U jsudc-u
 on postoji jednom, u \`@jsudc/core\`-u: envelope-i, filter DSL i evaluator u
 memoriji, tipovi šeme i prikaza, validacija redova i svaki payload akcije, kao Zod
-šeme sa izvedenim tipovima. I server i pregledač ga uvoze.`,
+šeme sa izvedenim tipovima. I server i pregledač ga uvoze.
+
+Na \`@jsudc/*\` 0.2.0 primer dokazuje i prva dva sloja biblioteke u koja host
+može da uđe (plan §4.3), na istom prikazu \`/udc/companies\`. **Podrazumevani kit:**
+\`UdcProvider\` bez \`kit\`-a, kompajlirani \`@jsudc/react/styles.css\` (sve klase sa
+prefiksom \`udc:\`) pored sopstvenog Tailwind-a ljuske, i renderere registrovane
+jedan po jedan iz njihovih podputanja. **Novi stil samo CSS promenljivama:**
+prekidač Default / Acme u zaglavlju postavlja \`data-brand="acme"\` na \`<html>\`, a
+\`frontend/src/brand.css\` pod njim redefiniše samo promenljive (boje, semantičke
+tonove, serije grafikona, radijus, font), pa se ni red koda komponenti ne menja.
+Stranica Primeri u meniju objašnjava oba i vodi na svaki.
+
+![/udc/companies sa podrazumevanim kitom](/screenshots/companies-default.png)
+
+![/udc/companies sa brendom Acme](/screenshots/companies-acme.png)`,
     },
   },
   // The /examples page: the two layers of @jsudc/react the app proves. Inline markdown.
