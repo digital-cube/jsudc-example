@@ -26,8 +26,8 @@
   "dependencies": {
     "@fastify/swagger": "^9.9.2",
     "@fastify/swagger-ui": "^6.1.2",
-    "@jsudc/core": "github:digital-cube/jsudc-core#v0.1.0",
-    "@jsudc/server": "github:digital-cube/jsudc-server#v0.1.0",
+    "@jsudc/core": "^0.1.1",
+    "@jsudc/server": "^0.1.1",
     "drizzle-orm": "^0.45.4",
     "fastify": "^5.12.7",
     "fastify-type-provider-zod": "^7.0.0",

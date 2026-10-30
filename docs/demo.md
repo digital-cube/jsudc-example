@@ -8,7 +8,7 @@ UDC path, shown as a table and as cards, with columns added from the UI.
 
 ```sh
 nvm use
-npm ci                      # clones @jsudc/* at their GitHub tags and builds their dist
+npm ci                      # installs @jsudc/* from npmjs.org, already built
 npm run db:setup
 npm run db:migrate -w @jsudc/backend   # once after pulling: new collection tables (0003 appointments … 0005 metrics)
 npm run seed -- --reset     # 200 companies (with lat / lng), 3 boards / 15 buckets / 60 tickets, ~640 appointments around today, 30 days of metrics up to now
@@ -420,7 +420,7 @@ Database / Files / Internet.
   `@jsudc/server` and `@jsudc/react` are the server machinery and the data view.
   What you are looking at is the example: `backend/` (the collections, their
   tables, migrations and generators) and `frontend/` (the shell and its strings)
-  depend on the three by their GitHub tags (`v0.1.0`) and import their built
+  depend on the three from npmjs.org (`^0.1.1`) and import their built
   `dist`, as an outside project would.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
   `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for

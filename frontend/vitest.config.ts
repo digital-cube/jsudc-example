@@ -10,9 +10,7 @@ export default defineConfig({
     setupFiles: ["test/setup.ts"],
     server: {
       deps: {
-        // @jsudc/react is installed into node_modules (a GitHub tag, no workspace
-        // symlink), so Vitest would externalize it and Node would load its
-        // `leaflet/dist/leaflet.css` import raw. Inline it: Vite transforms it like app code.
+        // @jsudc/react is a real npm package dir in node_modules, which Vitest would externalize (Node can't load its leaflet.css import); inline it so Vite transforms it.
         inline: [/@jsudc\/react/],
       },
     },

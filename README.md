@@ -44,17 +44,13 @@ docs/                design, plans and the two-minute demo script (docs/demo.md)
 ## From a clean clone to a running app
 
 Requires Node 24 (pinned in `.nvmrc`), Postgres on localhost with the role `jsudc`
-(password `123`, `CREATEDB`; see [Backend](#backend) to point elsewhere), and read
-access to the three `digital-cube/jsudc-*` repositories over HTTPS: they are
-private, and `npm ci` clones them with the credential git gets from the `gh` CLI
-(see below).
+(password `123`, `CREATEDB`; see [Backend](#backend) to point elsewhere). No GitHub
+account or token: the libraries come from npmjs.org (see below).
 
 ```sh
-gh auth login              # once, as an account that can read digital-cube/jsudc-*
-gh auth setup-git          # once: git takes its GitHub credential from gh
 git clone https://github.com/digital-cube/jsudc-example.git && cd jsudc-example
 nvm use                    # Node 24
-npm ci                     # clones @jsudc/core, server and react at their v0.1.0 tags and builds their dist
+npm ci                     # installs @jsudc/core, server and react from npmjs.org, already built
 npm run db:setup           # create jsudc + jsudc_test, apply the drizzle migrations to both
 npm run seed -- --reset    # every database collection: schema revision 1 + its seed rows
 npm run dev                # backend :5100, Vite :5173
@@ -78,22 +74,20 @@ workspace, `npm test` runs only that one.
 ## How the example uses the libraries
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
-`@jsudc/core` and `@jsudc/react`. **Until the packages are on npm they come from
-GitHub tags**: each `package.json` names `github:digital-cube/jsudc-<name>#v0.1.0`.
-`npm install` / `npm ci` clones each tag over HTTPS (the repositories are private,
-so git needs a credential for an account with read access to `digital-cube/jsudc-*`:
-`gh auth setup-git` once, or for a single process
-`GIT_CONFIG_COUNT=1 GIT_CONFIG_KEY_0=credential.helper GIT_CONFIG_VALUE_0='!gh auth git-credential'`;
-npm tries HTTPS first and SSH second, so an SSH key with access works too), runs
-the package's `prepare` — its build — and installs the resulting `dist`;
-`package-lock.json` pins the commit each tag pointed at. `@jsudc/server` and `@jsudc/react` depend on
-`@jsudc/core` by the same tag, so npm dedupes them to one copy. Switching to the npm
-registry later changes only those three specifiers.
+`@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
+dependency: each `package.json` names `^0.1.1`, `npm ci` downloads the published
+tarballs (already built, `dist` included) and `package-lock.json` pins their
+version and integrity. No GitHub credential is involved. `@jsudc/server` and
+`@jsudc/react` take `@jsudc/core` as a peer dependency, so npm hoists a single
+copy of all three to the root `node_modules`. The sources live in their own repositories:
+[digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core),
+[digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) and
+[digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react).
 
 The packages resolve through their `exports` to the built `dist`; there is no path
 alias to a library's source anywhere (not in `vite.config.ts`, `vitest.config.ts`
-or any `tsconfig.json`). To change a library, change it in its repository, tag a
-release, and bump the tag here. The example's Tailwind scans
+or any `tsconfig.json`). To change a library, change it in its repository, publish
+a release to npm, and bump the version here. The example's Tailwind scans
 `node_modules/@jsudc/react/dist` for the library's classes, as any Tailwind host
 would (`frontend/src/index.css`).
 
