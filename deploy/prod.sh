@@ -356,18 +356,22 @@ udc() { # udc <action> <json body> — POST through nginx, prints the answer
 check() {
   step "waiting for /healthz through nginx (Host: $SITE, up to 120 s)"
   local deadline=$((SECONDS + 120))
-  until curl -fsS -m 5 -o /dev/null -H "Host: $SITE" http://127.0.0.1/healthz 2>/dev/null; do
+  # The body is checked, not only the status: for a moment after a reload nginx's
+  # old workers still answer, and the "coming soon" vhost gave every path a 200.
+  until curl -fsS -m 5 -H "Host: $SITE" http://127.0.0.1/healthz 2>/dev/null |
+    jq -e '.ok == true' >/dev/null 2>&1; do
     ((SECONDS < deadline)) ||
       die 5 "/healthz did not answer within 120 s — journalctl --user -u $UNIT -n 100; tail /var/log/nginx/$SITE.error.log"
     sleep 2
   done
   echo "    ok after $((120 - (deadline - SECONDS))) s"
 
-  step "GET / through nginx is the app"
-  local code
-  code="$(curl -s -o /dev/null -w '%{http_code}' -m 15 -H "Host: $SITE" http://127.0.0.1/udc/companies || true)"
-  [[ "$code" == 200 ]] || die 5 "GET /udc/companies answers $code, not 200 (the SPA fallback)"
-  echo "    200"
+  step "GET /udc/companies through nginx is the built app"
+  local page
+  page="$(curl -fsS -m 15 -H "Host: $SITE" http://127.0.0.1/udc/companies 2>/dev/null || true)"
+  grep -q 'src="/assets/' <<<"$page" ||
+    die 5 "GET /udc/companies is not the built index.html (no /assets/ bundle in it): $(head -c 300 <<<"$page")"
+  echo "    200, the SPA fallback with the hashed bundles"
 
   step "POST /udc/collections"
   local answer
@@ -392,10 +396,9 @@ check() {
   ((failed == 0)) || die 5 "$failed collection(s) answered an error to list"
 
   step "https://$SITE/healthz through the edge"
-  code="$(curl -s -o /dev/null -w '%{http_code}' -m 30 "https://$SITE/healthz" || true)"
-  [[ "$code" == 200 ]] ||
-    die 6 "this VM answers but https://$SITE/healthz answers $code: the edge does not route $SITE here"
-  echo "    200"
+  curl -fsS -m 30 "https://$SITE/healthz" 2>/dev/null | jq -e '.ok == true' >/dev/null 2>&1 ||
+    die 6 "this VM answers but https://$SITE/healthz does not: the edge does not route $SITE here"
+  echo "    ok"
 }
 
 main
