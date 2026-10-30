@@ -1,9 +1,11 @@
 #!/usr/bin/env bash
-# Install the deployment of jsudc.igor.digitalcube.work from this checkout:
-#   ~/.config/systemd/user/jsudc-dev.service      -> <repo>/deploy/systemd/jsudc-dev.service
-#   /etc/nginx/sites-enabled/jsudc.igor.digitalcube.work -> <repo>/deploy/nginx/jsudc.igor.digitalcube.work.conf
-# then daemon-reload + enable the unit (it is NOT started or restarted here),
-# nginx -t + reload, and a check that linger is on (the unit starts at boot).
+# Install the deployment of examples.stage.jsudc.dev from this checkout:
+#   ~/.config/systemd/user/jsudc-dev.service       -> <repo>/deploy/systemd/jsudc-dev.service
+#   /etc/nginx/sites-enabled/examples.stage.jsudc.dev -> <repo>/deploy/nginx/examples.stage.jsudc.dev.conf
+# and removes the link of the old name, /etc/nginx/sites-enabled/jsudc.igor.digitalcube.work
+# (the 301 for that name lives in the new vhost), then daemon-reload + enable the
+# unit (it is NOT started or restarted here), nginx -t + reload, and a check that
+# linger is on (the unit starts at boot).
 #
 # Idempotent: running it again changes nothing. Run it from the root checkout
 # /home/digital/work/jsudc after a merge to main that touched deploy/.
@@ -12,7 +14,8 @@
 set -euo pipefail
 
 EXPECTED_ROOT=/home/digital/work/jsudc
-SITE=jsudc.igor.digitalcube.work
+SITE=examples.stage.jsudc.dev
+OLD_SITE=jsudc.igor.digitalcube.work # redirected by the vhost of $SITE; its own link goes away
 UNIT=jsudc-dev.service
 UNIT_DIR="$HOME/.config/systemd/user"
 LINGER_USER=digital
@@ -22,7 +25,8 @@ usage() {
 Usage: deploy/install.sh [--dry-run] [--allow-root <path>]
 
 Links the systemd user unit and the nginx vhost of $SITE into this
-checkout, enables the unit, reloads nginx and checks linger.
+checkout, removes the old link of $OLD_SITE, enables the unit, reloads nginx
+and checks linger.
 
   --dry-run            print every command that changes something instead of running it
   --allow-root <path>  accept a repo root other than $EXPECTED_ROOT
@@ -65,6 +69,7 @@ UNIT_DST="$UNIT_DIR/$UNIT"
 VHOST_SRC="$REPO/deploy/nginx/$SITE.conf"
 VHOST_ENABLED="/etc/nginx/sites-enabled/$SITE"
 VHOST_AVAILABLE="/etc/nginx/sites-available/$SITE"
+OLD_VHOST_ENABLED="/etc/nginx/sites-enabled/$OLD_SITE"
 
 for f in "$UNIT_SRC" "$VHOST_SRC"; do
   [[ -f "$f" ]] || { echo "install.sh: missing $f" >&2; exit 1; }
@@ -94,6 +99,12 @@ run systemctl --user enable "$UNIT"
 
 echo "==> nginx vhost"
 run sudo ln -sfn "$VHOST_SRC" "$VHOST_ENABLED"
+# The old name is a 301 inside the new vhost; its own link would make nginx
+# see two servers for it (a missing link is fine: nothing to do).
+if [[ -L "$OLD_VHOST_ENABLED" || -e "$OLD_VHOST_ENABLED" ]]; then
+  echo "    removing the old link $OLD_VHOST_ENABLED ($OLD_SITE is a 301 in $SITE.conf)"
+  run sudo rm -f "$OLD_VHOST_ENABLED"
+fi
 run sudo nginx -t
 # The old hand-written copy is redundant once sites-enabled points into the repo.
 if [[ -f "$VHOST_AVAILABLE" && ! -L "$VHOST_AVAILABLE" ]]; then

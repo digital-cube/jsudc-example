@@ -1,8 +1,11 @@
-# jsudc dev stack behind nginx vhost jsudc.igor.digitalcube.work.
+# jsudc dev stack behind nginx vhost examples.stage.jsudc.dev (stage).
 # Runs `npm run dev` (concurrently: Fastify backend + Vite with HMR) from the
 # root checkout /home/digital/work/jsudc on main — deliberately the dev stack,
 # not a production build.
 # nginx :80 -> Vite 127.0.0.1:5101 -> (POST /udc/*, /healthz) Fastify 127.0.0.1:5100.
+# Vite refuses an unknown Host, so __VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS names the
+# vhost. The old name jsudc.igor.digitalcube.work is a 301 in nginx and never
+# reaches Vite, so it is not listed here.
 # 5101 instead of 5173: podman's rootlessport holds 5170-5189 on this machine.
 # Node 24 from nvm (v24.19.0) is hardcoded in PATH/ExecStart: a unit has no
 # shell profile, so no `nvm use`. Bump both lines when Node is upgraded.
@@ -21,7 +24,7 @@ WorkingDirectory=/home/digital/work/jsudc
 Environment=PORT=5100
 Environment=HOST=127.0.0.1
 Environment=VITE_PORT=5101
-Environment=__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS=jsudc.igor.digitalcube.work
+Environment=__VITE_ADDITIONAL_SERVER_ALLOWED_HOSTS=examples.stage.jsudc.dev
 Environment=PATH=/home/digital/.nvm/versions/node/v24.19.0/bin:/usr/local/bin:/usr/bin:/bin
 ExecStart=/home/digital/.nvm/versions/node/v24.19.0/bin/npm run dev
 Restart=on-failure

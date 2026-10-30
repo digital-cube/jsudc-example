@@ -52,7 +52,7 @@ backend/             the example server: the demo collections (backend/collectio
 frontend/            the example app (React 19 + Vite): the shell (menu, pickers, about page),
                      routes and the demo dictionary (src/i18n), around @jsudc/react
 scripts/e2e.mjs      the Cypress run, end to end
-deploy/              the dev stack on jsudc.igor.digitalcube.work (nginx vhost, systemd unit, deploy.sh)
+deploy/              the stage dev stack on examples.stage.jsudc.dev (nginx vhost, systemd unit, deploy.sh)
 docs/                design, plans and the two-minute demo script (docs/demo.md)
 ```
 
@@ -184,16 +184,20 @@ is remembered per collection in `localStorage` (`udc:paging:<collection>`).
 files that edit rows reseed first. Extra arguments go to Cypress, e.g.
 `npm run e2e -- --spec frontend/cypress/e2e/edit.cy.ts`.
 
-## Deploy on igor.digitalcube.work
+## Deploy: examples.stage.jsudc.dev (stage)
 
-<http://jsudc.igor.digitalcube.work> is the **dev stack with HMR**, on purpose: no
-production build, no `vite preview`, no static files. Everything it needs is in
+<https://examples.stage.jsudc.dev> is the **dev stack with HMR**, on purpose: no
+production build, no `vite preview`, no static files. TLS ends at the edge in
+front of this VM (the same edge as `stage.jsudc.dev`); the VM answers on :80.
+The old host `jsudc.igor.digitalcube.work` answers a 301 to the new one, from a
+second `server` block in the same vhost. Everything it needs is in
 [`deploy/`](deploy):
 
 ```
-nginx :80 (TLS upstream)  ->  Vite 127.0.0.1:5101  ->  POST /udc/*, /healthz  ->  Fastify 127.0.0.1:5100
-deploy/nginx/jsudc.igor.digitalcube.work.conf   the vhost; /etc/nginx/sites-enabled/ links to it
-deploy/systemd/jsudc-dev.service                user unit running `npm run dev`; ~/.config/systemd/user/ links to it
+edge (TLS)  ->  nginx :80 examples.stage.jsudc.dev  ->  Vite 127.0.0.1:5101  ->  POST /udc/*, /healthz  ->  Fastify 127.0.0.1:5100
+                nginx :80 jsudc.igor.digitalcube.work  ->  301 https://examples.stage.jsudc.dev$request_uri
+deploy/nginx/examples.stage.jsudc.dev.conf   the vhost (both server blocks); /etc/nginx/sites-enabled/ links to it
+deploy/systemd/jsudc-dev.service             user unit running `npm run dev`; ~/.config/systemd/user/ links to it
 ```
 
 Vite is on 5101, not 5173: podman's `rootlessport` holds 5170–5189 on this machine.
@@ -206,15 +210,16 @@ worktree), with Node v24.19.0 from nvm hardcoded, and starts at boot through lin
   reseeds everything and loses edits made on the site), start the unit, then waits
   for `/healthz` through nginx and lists one row of every database collection.
 - `deploy/install.sh [--dry-run]` — once, and again whenever the unit or the vhost
-  file is renamed or a link is lost: links both files into the checkout, enables the
-  unit, reloads nginx and checks linger. It refuses to run from anywhere but
-  `/home/digital/work/jsudc`.
+  file is renamed or a link is lost: links both files into the checkout, removes the
+  old link `/etc/nginx/sites-enabled/jsudc.igor.digitalcube.work` if it is still
+  there, enables the unit, reloads nginx and checks linger. It refuses to run from
+  anywhere but `/home/digital/work/jsudc`.
 
 ```sh
 systemctl --user restart jsudc-dev
 systemctl --user status jsudc-dev
 journalctl --user -u jsudc-dev -f
-tail -f /var/log/nginx/jsudc.igor.access.log /var/log/nginx/jsudc.igor.error.log
+tail -f /var/log/nginx/examples.stage.jsudc.access.log /var/log/nginx/examples.stage.jsudc.error.log
 ```
 
 `DATABASE_URL` or `PORT` overrides, if ever needed, go into `backend/.env` in the

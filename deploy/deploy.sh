@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Deploy jsudc.igor.digitalcube.work end to end from the root checkout on main:
+# Deploy examples.stage.jsudc.dev (stage) end to end from the root checkout on main:
 #   merge --ff-only <branch> -> stop jsudc-dev -> npm ci -> build -> migrate -> seed
 #   -> start jsudc-dev -> /healthz through nginx -> every collection answers.
 # The unit is stopped BEFORE npm ci: Vite serves "Failed to resolve import"
@@ -28,7 +28,7 @@ unset DEPLOY_SH_COPY DEPLOY_SH_REPO
 trap 'rm -f "$COPY"' EXIT
 
 EXPECTED_ROOT=/home/digital/work/jsudc
-SITE=jsudc.igor.digitalcube.work
+SITE=examples.stage.jsudc.dev
 UNIT=jsudc-dev
 NODE_BIN=/home/digital/.nvm/versions/node/v24.19.0/bin
 
@@ -199,4 +199,4 @@ done < <(jq -r '.payload.collections[] | select(.source_kind == "postgres_jsonb"
 
 echo
 git log -1 --format='HEAD %h %s (%ci)'
-echo "deployed -> http://$SITE"
+echo "deployed -> https://$SITE  (TLS at the edge; this VM answers on :80)"
