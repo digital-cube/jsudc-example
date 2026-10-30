@@ -52,7 +52,7 @@ backend/             the example server: the demo collections (backend/collectio
 frontend/            the example app (React 19 + Vite): the shell (menu, pickers, about page),
                      routes and the demo dictionary (src/i18n), around @jsudc/react
 scripts/e2e.mjs      the Cypress run, end to end
-deploy/              the dev stack on jsudc.igor.digitalcube.work (nginx vhost, systemd unit, deploy.sh)
+deploy/              the stage dev stack on examples.stage.jsudc.dev (nginx vhost, systemd unit, deploy.sh)
 docs/                design, plans and the two-minute demo script (docs/demo.md)
 ```
 
@@ -184,16 +184,20 @@ is remembered per collection in `localStorage` (`udc:paging:<collection>`).
 files that edit rows reseed first. Extra arguments go to Cypress, e.g.
 `npm run e2e -- --spec frontend/cypress/e2e/edit.cy.ts`.
 
-## Deploy on igor.digitalcube.work
+## Deploy: examples.stage.jsudc.dev (stage)
 
-<http://jsudc.igor.digitalcube.work> is the **dev stack with HMR**, on purpose: no
-production build, no `vite preview`, no static files. Everything it needs is in
+<https://examples.stage.jsudc.dev> is the **dev stack with HMR**, on purpose: no
+production build, no `vite preview`, no static files. TLS ends at the edge in
+front of this VM (the same edge as `stage.jsudc.dev`); the VM answers on :80.
+The old host `jsudc.igor.digitalcube.work` answers a 301 to the new one, from a
+second `server` block in the same vhost. Everything it needs is in
 [`deploy/`](deploy):
 
 ```
-nginx :80 (TLS upstream)  ->  Vite 127.0.0.1:5101  ->  POST /udc/*, /healthz  ->  Fastify 127.0.0.1:5100
-deploy/nginx/jsudc.igor.digitalcube.work.conf   the vhost; /etc/nginx/sites-enabled/ links to it
-deploy/systemd/jsudc-dev.service                user unit running `npm run dev`; ~/.config/systemd/user/ links to it
+edge (TLS)  ->  nginx :80 examples.stage.jsudc.dev  ->  Vite 127.0.0.1:5101  ->  POST /udc/*, /healthz  ->  Fastify 127.0.0.1:5100
+                nginx :80 jsudc.igor.digitalcube.work  ->  301 https://examples.stage.jsudc.dev$request_uri
+deploy/nginx/examples.stage.jsudc.dev.conf   the vhost (both server blocks); /etc/nginx/sites-enabled/ links to it
+deploy/systemd/jsudc-dev.service             user unit running `npm run dev`; ~/.config/systemd/user/ links to it
 ```
 
 Vite is on 5101, not 5173: podman's `rootlessport` holds 5170–5189 on this machine.
@@ -206,15 +210,16 @@ worktree), with Node v24.19.0 from nvm hardcoded, and starts at boot through lin
   reseeds everything and loses edits made on the site), start the unit, then waits
   for `/healthz` through nginx and lists one row of every database collection.
 - `deploy/install.sh [--dry-run]` — once, and again whenever the unit or the vhost
-  file is renamed or a link is lost: links both files into the checkout, enables the
-  unit, reloads nginx and checks linger. It refuses to run from anywhere but
-  `/home/digital/work/jsudc`.
+  file is renamed or a link is lost: links both files into the checkout, removes the
+  old link `/etc/nginx/sites-enabled/jsudc.igor.digitalcube.work` if it is still
+  there, enables the unit, reloads nginx and checks linger. It refuses to run from
+  anywhere but `/home/digital/work/jsudc`.
 
 ```sh
 systemctl --user restart jsudc-dev
 systemctl --user status jsudc-dev
 journalctl --user -u jsudc-dev -f
-tail -f /var/log/nginx/jsudc.igor.access.log /var/log/nginx/jsudc.igor.error.log
+tail -f /var/log/nginx/examples.stage.jsudc.access.log /var/log/nginx/examples.stage.jsudc.error.log
 ```
 
 `DATABASE_URL` or `PORT` overrides, if ever needed, go into `backend/.env` in the
@@ -222,3 +227,82 @@ root checkout (see [`backend/.env.example`](backend/.env.example)). The unit's o
 `Environment=` lines win over that file, though (the environment beats `.env`), so
 moving the backend off 5100 under the unit means editing `PORT` in
 `deploy/systemd/jsudc-dev.service` (and `UDC_PROXY_TARGET` for Vite's proxy).
+
+## Deploy: examples.jsudc.dev (production)
+
+<https://examples.jsudc.dev> is a **real build** on the VM
+`digitalcube-production-websites` (hetzner2, 192.168.122.11): nginx serves the
+Vite build from disk, the Fastify backend runs under a systemd user unit, the
+database is the VM's own Postgres (18). TLS ends at the edge in front of that
+VM; the VM answers on :80. Everything it needs is in [`deploy/`](deploy):
+
+```
+edge (TLS)  ->  nginx :80 examples.jsudc.dev
+                  /             static files from ~/sites/examples.jsudc.dev/current  (SPA: try_files … /index.html)
+                  /assets/      the hashed bundles, cached for a year
+                  POST /udc/*   ->  Fastify 127.0.0.1:5100   (GET /udc/<collection> is an app route -> /index.html)
+                  /udc/files/blob, /healthz  ->  Fastify
+                Fastify: `npm start -w @jsudc/backend` under the user unit jsudc-prod,
+                         DATABASE_URL from src/backend/.env -> local Postgres, database jsudc
+
+deploy/prod.sh                            the deploy script, runs ON the VM as `digital`
+deploy/nginx/examples.jsudc.dev.conf      the vhost; /etc/nginx/sites-available/examples.jsudc.dev links to it
+deploy/systemd/jsudc-prod.service         the user unit; ~/.config/systemd/user/ links to it
+
+/home/digital/sites/examples.jsudc.dev/
+  src/                  the checkout, detached at origin/main; backend/.env (DATABASE_URL, mode 600) lives here
+  releases/<short sha>/ one built frontend/dist per commit, the last three kept
+  current -> releases/… what nginx serves, swapped atomically
+  node -> ~/.nvm/versions/node/vX/bin   the Node the unit runs (the newest installed v24, re-pointed by prod.sh)
+```
+
+- `deploy/prod.sh [--install] [--ref <committish>] [--reset-seed] [--force]` — a
+  normal deploy, on the VM: fetch, check out `origin/main` (refusing a commit
+  that lacks the vhost or the unit), `npm ci`, `npm run build`, migrate, `npm run seed`
+  (new collections only; `--reset-seed` reseeds everything and loses edits made
+  on the site), copy `frontend/dist` to `releases/<short sha>/`, repoint `current`,
+  restart the unit, then wait for `/healthz` through nginx, `GET /udc/companies`
+  (the app), `POST /udc/collections`, one row of every database collection, and
+  `/healthz` through the edge. Run again for the same commit it rebuilds nothing
+  and only re-checks the site. It refuses to run as root, as another user, or on
+  another host. `--ref <tag|sha>` deploys that commit instead of `origin/main`
+  (a pinned build or a roll-forward).
+- `deploy/prod.sh --install` — the one-time steps, harmless to repeat: Postgres
+  role and database `jsudc` with a generated password written to
+  `src/backend/.env`, `loginctl enable-linger digital`, link the unit, replace
+  the hand-written vhost in `sites-available` with a symlink into the checkout
+  (the old file stays as `examples.jsudc.dev.coming-soon`), `nginx -t`, reload;
+  then a normal deploy. The first run on a fresh VM:
+
+  ```sh
+  scp deploy/prod.sh digitalcube-production-websites:/tmp/jsudc-prod.sh
+  ssh digitalcube-production-websites 'bash /tmp/jsudc-prod.sh --install'
+  ```
+
+  `prod.sh` clones the repository itself; afterwards it is
+  `~/sites/examples.jsudc.dev/src/deploy/prod.sh` on the VM.
+
+**Roll back** to a previous release: `current` is a symlink and the last three
+builds are kept, so repoint it and, when the backend changed too, check out that
+commit and restart the unit:
+
+```sh
+cd ~/sites/examples.jsudc.dev
+ls -lt releases/                                   # what is there
+ln -sfn releases/<short sha> .current.tmp && mv -T .current.tmp current   # frontend only, atomic
+deploy/prod.sh --ref <sha>                         # frontend + backend at that commit
+```
+
+Logs and the usual commands:
+
+```sh
+systemctl --user status jsudc-prod
+systemctl --user restart jsudc-prod
+journalctl --user -u jsudc-prod -f
+tail -f /var/log/nginx/examples.jsudc.dev.access.log /var/log/nginx/examples.jsudc.dev.error.log
+```
+
+The unit's `Environment=` lines (`PORT=5100`, `HOST`, `NODE_ENV=production`,
+`LOG_LEVEL`) win over `backend/.env`, which carries only `DATABASE_URL`. The
+production database was created with the server's default collation,
+`C.UTF-8` (libc), so text sorts by code point.

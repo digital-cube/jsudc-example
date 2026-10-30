@@ -6,7 +6,8 @@ chat of the thilo board, from the code on `main` at `44d5f42`.
 ## 1. Intent
 
 jsudc today is one application: `packages/udc-core` + `backend/` +
-`frontend/`, deployed as the dev stack at `jsudc.igor.digitalcube.work`. The
+`frontend/`, deployed as the dev stack at `examples.stage.jsudc.dev` (until
+2026-10-30 `jsudc.igor.digitalcube.work`, which now redirects). The
 decision (Igor, 2026-10-29) is:
 
 - the application is **not** the product. It is the example of how the
@@ -300,7 +301,7 @@ checked from here.
 
 P6 (TCKQ6MJ5HX, hand-over TCKUCFTR9Q) closed phase 1 on 2026-10-29 evening:
 `main` fast-forwarded to `b1bd6fa` (P1–P6, `packages/` gone, `@jsudc/*` from
-the `v0.1.0` tags over HTTPS), deployed to `jsudc.igor.digitalcube.work` with
+the `v0.1.0` tags over HTTPS), deployed to `jsudc.igor.digitalcube.work` (the host until 2026-10-30, now `examples.stage.jsudc.dev`) with
 all 13 collections answering, and pushed as the first `main` of
 `digital-cube/jsudc-example` (63 commits, private). Lesson from that deploy:
 `deploy.sh` runs the version from before its own fast-forward, so a branch
@@ -379,12 +380,20 @@ and shown to Igor first.
 (Cloudflare DNS, records unproxied: `jsudc.dev` A 168.119.212.55,
 `stage.jsudc.dev` A 65.108.45.136, `www.jsudc.dev` CNAME `jsudc.dev`).
 The site is deployed first as **stage.jsudc.dev on this VM**
-(igor.digitalcube.work, 65.108.45.136, the host of
-jsudc.igor.digitalcube.work), served the way `deploy/` serves the example
-(nginx vhost + systemd), and its live example points at the backend on this
-VM. Production **www.jsudc.dev** goes to a different server
+(igor.digitalcube.work, 65.108.45.136), served the way `deploy/` serves the
+example (nginx vhost + systemd), and its live example points at the backend on
+this VM. Production **www.jsudc.dev** goes to a different server
 (168.119.212.55); Igor will specify it later. This replaces the "Cloudflare
 Pages (or GitHub Pages)" call above for v1.
+
+The example app has its two hosts next to the site hosts (DNS done, A records
+unproxied, TLS at the edge in front of each server, vhosts on :80; details in
+[`2026-10-30-jsudc-examples-hosting.md`](2026-10-30-jsudc-examples-hosting.md)):
+
+| host | server | what |
+|---|---|---|
+| `examples.stage.jsudc.dev` | this VM (edge 65.108.45.136) | stage: the dev stack with HMR, `deploy/` as today; `jsudc.igor.digitalcube.work` 301s here |
+| `examples.jsudc.dev` | the production websites VM (hetzner2, 168.119.212.55) | production: a real build, its own ticket |
 
 ## 7. Decisions for Igor, and calls I made
 
