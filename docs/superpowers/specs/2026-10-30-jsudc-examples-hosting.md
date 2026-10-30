@@ -126,7 +126,12 @@ backend only).
   other websites; port 5100 for the backend (free there). The thilo runner of
   another project on that machine is untouched.
 - **Access.** The SSH alias works from this VM; the first deploy was run from
-  the worktree over SSH as the ticket describes.
+  the worktree over SSH as the ticket describes. GitHub `main` was behind
+  (`104011b`, before the stage rename) and this project pushes nothing, so the
+  first deploy fetched the branch into `src/` from a git bundle and ran
+  `prod.sh --install --ref ticket-TCKCT9NQ2P`. Once `main` carries these
+  commits a plain `prod.sh` converges on `origin/main` (same commit, nothing
+  rebuilt); a NON-AI ticket asks for that push.
 - **Seed data.** Production started from `seed.json`; nothing was copied from
   stage.
 - **Postgres 18.** The backend tests and the library's `pg-*` tests were run
