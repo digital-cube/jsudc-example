@@ -111,5 +111,7 @@ releases. `--install` links the vhost and the unit the first time.
 | T1 | AI, worktree `jsudc` | examples.stage.jsudc.dev replaces jsudc.igor.digitalcube.work: vhost, redirect, SITE, allowed host, README |
 | T2 | AI, worktree `jsudc`, after T3 | deploy/prod.sh and the production vhost + unit for examples.jsudc.dev; first deploy on hetzner2 |
 | T3 | person (Igor) | hetzner2: the VM for examples.jsudc.dev, edge forwarding, and SSH access for this VM's key |
-| T4 | person (Igor) | GitHub: make `digital-cube/jsudc-example` and `jsudc-website` public (`gh repo edit` is blocked for agents) |
-| T5 | website repo | `EXAMPLE_URL` → examples.stage.jsudc.dev / examples.jsudc.dev |
+| T4 | website repo | `EXAMPLE_URL` → examples.stage.jsudc.dev / examples.jsudc.dev |
+
+Done 2026-10-30 by Igor, no ticket: all five `digital-cube/jsudc-*` repositories
+(core, server, react, example, website) are public.
