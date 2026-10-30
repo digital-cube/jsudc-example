@@ -60,49 +60,80 @@ there once this is live).
 
 ## 4. Production: examples.jsudc.dev on hetzner2
 
-### What production should be
+Built by TCKCT9NQ2P on 2026-10-30; this section describes what is in the
+repository, not a plan. The VM is `digitalcube-production-websites`
+(hetzner2, 192.168.122.11, SSH alias of that name through `insider2`):
+Ubuntu 26.04, user `digital` with passwordless sudo, nginx, Postgres 18.6 on
+127.0.0.1, Node 24 via nvm (v24.16.0 and v24.17.0 at the time). The edge
+`h2` terminates TLS for `examples.jsudc.dev` and forwards to this VM's :80.
+
+### What production is
 
 Not the dev stack. The README says so on purpose for stage; production is:
 
 ```
 nginx :80 (TLS at the edge)
-  /            -> static files from <release>/frontend/dist (SPA: try_files … /index.html)
-  POST /udc/*  -> Fastify 127.0.0.1:5100     (GET /udc/<collection> is an app route -> index.html)
+  /            -> static files from ~/sites/examples.jsudc.dev/current (SPA: try_files … /index.html)
+  /assets/     -> the same, Cache-Control: public, max-age=31536000, immutable
+  POST /udc/*  -> Fastify 127.0.0.1:5100     (GET /udc/<collection> is an app route -> /index.html)
   /udc/files/blob, /healthz -> Fastify
-Fastify: `npm start -w @jsudc/backend` (tsx src/main.ts) under a systemd user unit,
-         DATABASE_URL -> local Postgres 16, database jsudc
+Fastify: `npm start -w @jsudc/backend` (tsx src/main.ts) under the systemd user unit jsudc-prod,
+         DATABASE_URL from src/backend/.env -> local Postgres 18, database jsudc (C.UTF-8, libc)
 ```
 
-The frontend build (`vite build`) already produces `frontend/dist`; the app
-calls the backend on the same origin (`VITE_UDC_URL` unset), so no build-time
-URL is needed. The backend has no static serving and does not need any.
+The frontend build (`vite build`) produces `frontend/dist`; the app calls the
+backend on the same origin (`VITE_UDC_URL` unset), so no build-time URL is
+needed. The backend has no static serving and does not need any. No code
+change was needed to run the production build: `npm start` already existed
+and `tsx` is a devDependency that `npm ci` installs (the deploy script unsets
+`NODE_ENV` for that reason; the unit sets `NODE_ENV=production` for the
+backend only).
 
-### Deploy script
+### The three files
 
-`deploy/prod.sh`, the shape of the website's `deploy/stage.sh`: clone or fetch
-`digital-cube/jsudc-example` into `~/sites/examples.jsudc.dev/src`, check out
-`main`, `npm ci` (libraries from npm, no credential), `npm run build`,
-`db:migrate`, `seed` (new collections only), restart the unit, `/healthz`
-through nginx, one row of every database collection, keep the last three
-releases. `--install` links the vhost and the unit the first time.
+- `deploy/prod.sh` — runs on the VM as `digital`, the shape of the website's
+  `deploy/stage.sh`: `ROOT=/home/digital/sites/examples.jsudc.dev`, clone or
+  fetch `digital-cube/jsudc-example` into `src/`, check out `origin/main`
+  (`--ref` for another committish; a commit without the vhost or the unit is
+  refused, because both are symlinks into the checkout), `npm ci`, `npm run
+  build`, `db:migrate`, `seed` (new collections only; `--reset-seed`), copy
+  `frontend/dist` to `releases/<short sha>/`, repoint `current` with one
+  rename, restart the unit, wait for `/healthz` through nginx with
+  `Host: examples.jsudc.dev`, `GET /udc/companies` is the app, `POST
+  /udc/collections`, one row of every `postgres_jsonb` collection, and
+  `/healthz` through the edge; keep the last three releases. Idempotent: the
+  same commit already current with the unit up rebuilds nothing. Refuses
+  root, another user, another host. `--install` does the one-time steps:
+  role and database `jsudc` with a generated password written to
+  `src/backend/.env` (mode 600), `loginctl enable-linger digital`, the unit
+  link, the vhost link (the hand-written "coming soon" file stays in
+  `sites-available` as `examples.jsudc.dev.coming-soon`), `nginx -t`, reload.
+- `deploy/nginx/examples.jsudc.dev.conf` — the vhost above. `location /udc/`
+  carries `if ($request_method != POST) { rewrite ^ /index.html last; }`,
+  the nginx form of the Vite proxy's `bypass`; `/index.html` is
+  `Cache-Control: no-cache`.
+- `deploy/systemd/jsudc-prod.service` — user unit, `WorkingDirectory=…/src`,
+  `ExecStart=/home/digital/sites/examples.jsudc.dev/node/npm start -w
+  @jsudc/backend`, `PORT=5100 HOST=127.0.0.1 NODE_ENV=production
+  LOG_LEVEL=info`, `Restart=on-failure`, `WantedBy=default.target`. The Node
+  version is not in the unit: `prod.sh` points the symlink `~/sites/
+  examples.jsudc.dev/node` at the newest installed nvm v24 on every run (and
+  runs `nvm install 24` when there is none).
 
-### Unknowns, to be settled before the ticket runs
+### Settled
 
-- **Where on hetzner2.** It is a hypervisor (`insider2`, VMs on 192.168.122.x
-  reached by `ProxyJump`). Igor decides whether the example gets its own VM or
-  goes on an existing one, and which one receives `examples.jsudc.dev` from the
-  edge. The VM needs Node 24 (nvm), Postgres 16, nginx, linger for the user.
-- **Access.** This VM has only `~/.ssh/id_ed25519`; `hetzner2` and `insider2`
-  are configured for `id_rsa`, which does not exist here, and the key is not
-  authorised there. Either the public key below is added to the target VM, or
-  Igor runs `prod.sh` by hand.
-
-  ```
-  ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIJeoYrQi6NMaeXdZZe+traZljn9Fl1cZdkk7XFeopGVS
-  ```
-
-- **Seed data.** Production starts from `seed.json` like stage; nothing is
-  copied from stage.
+- **Where.** On the existing VM `digitalcube-production-websites`, next to the
+  other websites; port 5100 for the backend (free there). The thilo runner of
+  another project on that machine is untouched.
+- **Access.** The SSH alias works from this VM; the first deploy was run from
+  the worktree over SSH as the ticket describes.
+- **Seed data.** Production started from `seed.json`; nothing was copied from
+  stage.
+- **Postgres 18.** The backend tests and the library's `pg-*` tests were run
+  against it on the VM before the first deploy (the transcripts are on
+  TCKCT9NQ2P). The database collation is `C.UTF-8` with the libc provider
+  (`pg_database.datcollate`; the `lc_collate` GUC no longer exists in 18),
+  relevant to TCKDHHN3N6.
 
 ## 5. Tickets
 

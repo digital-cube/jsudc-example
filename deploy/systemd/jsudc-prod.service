@@ -1,0 +1,36 @@
+# jsudc example app, PRODUCTION backend behind the nginx vhost examples.jsudc.dev.
+# Runs `npm start -w @jsudc/backend` (tsx src/main.ts: Fastify + @jsudc/server) from
+# the deploy checkout /home/digital/sites/examples.jsudc.dev/src, detached at
+# origin/main by deploy/prod.sh. nginx serves the built frontend itself and
+# proxies POST /udc/*, /udc/files/blob and /healthz to 127.0.0.1:5100.
+# DATABASE_URL is not here: the backend reads src/backend/.env (backend/src/config.ts),
+# written by `deploy/prod.sh --install` with the generated password, mode 600.
+# Node: a unit has no shell profile, so no `nvm use`. deploy/prod.sh points the
+# symlink /home/digital/sites/examples.jsudc.dev/node at the newest installed
+# nvm v24 bin dir on every run; PATH and ExecStart go through that link, so this
+# file never names a version. (`ls -l ~/sites/examples.jsudc.dev/node` shows it.)
+#
+# Installed by deploy/prod.sh: ~/.config/systemd/user/jsudc-prod.service is a
+# symlink to this file (edit here, then `systemctl --user daemon-reload`).
+# Starts at boot via linger (loginctl enable-linger digital) + WantedBy=default.target.
+# Restart: systemctl --user restart jsudc-prod   Logs: journalctl --user -u jsudc-prod -f
+[Unit]
+Description=jsudc example backend (Fastify 127.0.0.1:5100) for examples.jsudc.dev
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+WorkingDirectory=/home/digital/sites/examples.jsudc.dev/src
+Environment=NODE_ENV=production
+Environment=PORT=5100
+Environment=HOST=127.0.0.1
+Environment=LOG_LEVEL=info
+Environment=PATH=/home/digital/sites/examples.jsudc.dev/node:/usr/local/bin:/usr/bin:/bin
+ExecStart=/home/digital/sites/examples.jsudc.dev/node/npm start -w @jsudc/backend
+Restart=on-failure
+RestartSec=3
+KillMode=mixed
+TimeoutStopSec=20
+
+[Install]
+WantedBy=default.target
