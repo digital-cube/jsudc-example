@@ -309,7 +309,11 @@ install_db() {
     echo "    create database $DB_NAME owner $DB_USER"
     sql -c "create database $DB_NAME owner $DB_USER"
   fi
-  echo "    collation: $(sql -c "select datcollate || ' (' || datlocprovider || ')' from pg_database where datname = '$DB_NAME'")"
+  # datlocprovider is a "char": c = libc, i = ICU, b = builtin.
+  local collation
+  collation="$(sql -c "select datcollate || ' (provider ' || datlocprovider::text || ')' from pg_database where datname = '$DB_NAME'")" ||
+    die 1 "cannot read the collation of $DB_NAME"
+  echo "    collation: $collation"
 }
 
 # ~/.config/systemd/user/jsudc-prod.service -> $UNIT_SRC, enabled (started by the caller).
