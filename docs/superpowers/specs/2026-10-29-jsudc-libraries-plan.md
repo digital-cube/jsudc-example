@@ -306,6 +306,26 @@ all 13 collections answering, and pushed as the first `main` of
 `deploy.sh` runs the version from before its own fast-forward, so a branch
 that changes the script deploys with the old one (TCKWMQCE7H).
 
+### After phase 1, as filed (2026-10-29 evening)
+
+Igor's order: npm first, then phase 1b, then the website. Ten tickets in
+Draft, unfiled (written in the Root chat; each needs the `jsudc` worktree
+before a runner takes it). Library work happens in clones under `libs/`
+with a PR per repository; merges and tags are Igor's.
+
+| Chain | Ticket | Waits for |
+|---|---|---|
+| npm | TCKTRJRKMX NON-AI: npm org `jsudc`, `npm login` here, repos public | — |
+| npm | TCKHY7REPK publish core/server/react `v0.1.1`, `publish.yml` with provenance | TCKTRJRKMX |
+| npm | TCKXPC7UY2 example on `^0.1.1`, deploy without `gh` | TCKHY7REPK |
+| 1b | TCK2J36P6E react 1b-1 `UrlStateAdapter`, react-router out of peers | TCKHY7REPK |
+| 1b | TCKXKK5RJ3 react 1b-2 `UiKit` + `UdcUiProvider`, `@jsudc/react/ui` | TCK2J36P6E |
+| 1b | TCKQM2WX7M react 1b-3 `udc:` prefix, `udc-*` classes, `/headless`, subpaths | TCKXKK5RJ3 |
+| 1b | TCKQ67NUP3 release `v0.2.0` lockstep | TCKQM2WX7M |
+| 1b | TCK3WHW677 example on 0.2.0, default-kit and brand-restyle routes | TCKQ67NUP3 |
+| site | TCKJXH2J27 jsudc.dev v1: scaffold, identity, home, Get started | TCKHY7REPK |
+| site | TCK6EEKYKN jsudc.dev: Concepts, generated Reference, Examples, Packages, domain | TCKJXH2J27, TCK3WHW677 |
+
 ### Phase 2 — more frameworks, more design systems
 
 **T10 `@jsudc/ui-mui` and `@jsudc/ui-antd` adapters** with an example route
