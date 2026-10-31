@@ -130,25 +130,72 @@ Checked on 0.2.0 (`frontend/node_modules/@jsudc/react/dist`):
   (`localStorage` that never throws). `useDataViewState` reads both through
   the `UrlStateAdapter` interface and that storage helper.
 - `@jsudc/core/client` is `UdcClient` over `fetch`; RN has `fetch`.
+  `crypto.randomUUID` and `Intl.supportedValuesOf` are optional there.
+
+**Web-platform globals (builder check, my call).** The headless state code
+uses `URLSearchParams` (mutated: `get`/`set`/`delete`) and, in the filter
+codec of `urlState.js`, `TextEncoder`, `TextDecoder("utf-8", {fatal: true})`,
+`btoa` and `atob`. These are not DOM, but they are not guaranteed on Hermes
+either: bare React Native's `URLSearchParams` throws on `set`, while Expo
+ships its own `URL`/`URLSearchParams` and `TextEncoder`/`TextDecoder`
+(UTF-8 only; `fatal` is not documented). Decision: **0.1.0 of the mobile
+library targets Expo** (the platform chosen for the example) and says so in
+its README; it does not add polyfill peers and does not rewrite the codec in
+`jsudc-react`. Two guards go with that: a runtime smoke test in the library
+(a filter round trip through the codec and a `URLSearchParams` mutation,
+run on the emulator by the example's verification, not only under Node), and
+a line in the README naming `react-native-url-polyfill` and a text-encoding
+shim as what a bare-RN host would add. If the codec's `fatal` path turns
+out not to hold on Hermes, the codec gets a `try`-free decode in a later
+`jsudc-react` patch; that is not assumed here.
 
 So the mobile library **imports the hooks and models from
 `@jsudc/react/headless`** and adds only what RN needs:
 
 - an in-memory `UrlStateAdapter` (the "URL" is the screen's state; a host
-  with Expo Router may map it to route params later, not now);
-- a storage adapter over `@react-native-async-storage/async-storage` for the
-  paging mode and the renderer choice, **if** `useDataViewState` accepts an
-  injected storage. Today `lib/storage.js` is a module-level `localStorage`
-  wrapper, not injectable. **Decision: a small PR on `jsudc-react` makes
-  storage injectable** through `useDataViewState`'s `opts` (default stays
-  `localStorage`), released as a patch. That is the one change to the web
-  library this round. Until it is released the mobile library falls back to
-  no persistence; it must not break on a missing `localStorage` (the helper
-  already swallows errors, so it does not).
+  with Expo Router may map it to route params later, not now). The adapter
+  is created with initial params, which is how the mobile hook seeds
+  `tab=cards` on a phone: `useDataViewState` resolves the renderer from the
+  params first and falls back to the view's `default_renderer` (`table` for
+  companies), and `opts.defaultRenderer` of the mobile hook becomes that
+  seed. No change to the web hook for this.
+- a storage adapter for the paging mode and the renderer choice.
+  `useDataViewState` reads storage **synchronously during render** through
+  the module-level `lib/storage.js` (`localStorage`), so AsyncStorage cannot
+  be dropped in. Decision: the injected interface stays sync `{get, set}`;
+  the mobile wrapper preloads the collection's keys from
+  `@react-native-async-storage/async-storage` into memory once, the screen
+  renders a placeholder until that hydration resolves (one frame on a warm
+  cache), and writes go through to AsyncStorage. The renderer choice is not
+  persisted by the web hook at all (only the paging mode is; the tab lives
+  in the params), so the mobile hook persists the tab itself: it writes the
+  chosen tab under its own key on change and uses it as the seed above.
+
+**The `jsudc-react` patch (ticket 2), full scope — one PR, one merge, one
+patch release.** Reading `useDataViewState` against the above gives four
+small seams, all in the same hook or its package manifest, so they ship
+together rather than as four merges:
+
+1. `useDataViewState(collection, view, opts)` accepts `opts.storage`
+   (`{get(key): string | null; set(key, value): void}`), default the
+   existing `localStorage` helper.
+2. `opts.renderers` is typed today as the web `RendererRegistry` (each entry
+   with a `component` and a Lucide `icon`); the hook only needs the names.
+   Loosen it to a minimal shape (`{ [name]: unknown }` or a `string[]`),
+   keeping the registry assignable.
+3. Export the dictionary and its helpers on a subpath `@jsudc/react/i18n`
+   (the module is DOM-free; today it is reachable only from the root entry,
+   which the mobile bundle may not import).
+4. `react-dom` becomes an optional peer in `peerDependenciesMeta`; the
+   headless subpath never needs it.
+
+Until that patch is released the mobile library develops against the branch
+build in `libs/jsudc-react` and must still not break on a missing
+`localStorage` (the helper already swallows errors, so it does not).
 
 `@jsudc/react` stays a dependency of the mobile library only through its
-`headless` subpath; the build has a test asserting the mobile bundle imports
-nothing from `@jsudc/react` except `./headless`, and nothing from `react-dom`.
+`headless` and `i18n` subpaths; the build has a test asserting the mobile
+bundle imports nothing else from `@jsudc/react`, and nothing from `react-dom`.
 
 ### 4.3 The mobile library, first cut
 
