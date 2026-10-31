@@ -304,8 +304,12 @@ iOS stays on Igor's Mac: nothing in this design assumes a Mac on the VM.
 
 ## 6. Verification of the whole
 
-- Library: `typecheck`, `lint`, unit tests for the adapters, the width rule,
-  the chip and sort models; the "no DOM, only headless" bundle test.
+- Library: `typecheck`, `lint`, unit tests for the adapters, the hydration
+  wrapper, the width rule, the chip and sort models; the "only headless and
+  i18n, no react-dom" bundle test; the runtime smoke test of the filter
+  codec and `URLSearchParams` on the emulator (§4.2), run as part of the
+  example's verification because Vitest under Node proves nothing about
+  Hermes.
 - Example: typecheck, lint; on the Android emulator the four screenshots
   above, taken against `examples.stage.jsudc.dev`; the companies list shows
   200 rows across 4 pages, the search for "Novi Sad" narrows the chips and
