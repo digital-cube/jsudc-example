@@ -204,8 +204,9 @@ bundle imports nothing else from `@jsudc/react`, and nothing from `react-dom`.
 - `UdcProvider` (client + query client; same props as the react one where
   they make sense: `baseUrl`, `fetch`, `headers`).
 - `useMobileDataViewState(collection, view, opts)` — `useDataViewState` with
-  the in-memory adapter and the AsyncStorage storage wired in;
-  `opts.defaultRenderer` overrides the view's default.
+  the in-memory adapter and the AsyncStorage storage wired in (hydration as
+  in §4.2); `opts.defaultRenderer` seeds the tab and overrides the view's
+  default; the chosen tab is persisted per collection by this hook.
 - `UdcSearch`, `UdcFilterChips`, `UdcFilterSheet`, `UdcSortPicker`.
 - `UdcCards` (FlatList) and `UdcTable` (horizontal ScrollView + FlatList for
   rows), each taking the state from the hook and `view`/`schema` from
