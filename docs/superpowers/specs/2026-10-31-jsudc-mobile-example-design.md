@@ -229,7 +229,20 @@ sheet and the slider: `@gorhom/bottom-sheet` and
 builds its own filter UI installs neither. Everything else is RN core.
 
 Build: `tsc` to `dist/` (ESM + `.d.ts`), the RN Metro resolver reads the
-TypeScript-compiled JS; no native code in the package.
+TypeScript-compiled JS; no native code in the package. Platform: Expo (see
+§4.2 on web-platform globals); bare React Native is documented as "add these
+polyfills", not tested in 0.1.0.
+
+**First release (builder check, my call).** The sibling packages publish on
+tag through the workflow with npm trusted publishing, which cannot create a
+package that does not exist on npm yet. The first `@jsudc/react-native`
+version therefore needs one manual `npm publish` by Igor (the npm org owner,
+as for the first `@jsudc/core` release), after which the tag workflow takes
+over. That is a NON-AI ticket in §8, and the example (ticket 4) ends on the
+npm version: while developing it installs the library from the `libs/` build
+(`file:`), and its final commit depends on `@jsudc/react-native@^0.1.0`
+from npm, exactly as `jsudc-example` moved from a local link to npm. Ticket 4
+can start before the publish and waits on it only for its last commit.
 
 ### 4.4 The example app
 
