@@ -217,8 +217,9 @@ bundle imports nothing else from `@jsudc/react`, and nothing from `react-dom`.
   `tokens.css` where they overlap, so the Acme restyle of the web example can
   be repeated on mobile later. Styling with `StyleSheet`; no Tailwind-for-RN,
   no UI kit dependency in 0.1.0.
-- i18n: the same keys as `@jsudc/react/i18n` for the strings the screen uses,
-  English and Serbian.
+- i18n: the dictionary from the `@jsudc/react/i18n` subpath (ticket 2) for
+  the strings the screen shares with the web; the mobile-only strings
+  (sheet, sort picker) in the same format, English and Serbian.
 
 Peers: `react`, `react-native`, `@jsudc/core`, `@jsudc/react` (headless),
 `@tanstack/react-query`, `@react-native-async-storage/async-storage`. The
