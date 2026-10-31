@@ -338,14 +338,33 @@ tickets did:
 
 1. **Android emulator on the dev VM** — NON-AI (or Root chat): the setup in
    §5, verified by a headless boot and a screencap.
-2. **`jsudc-react`: injectable storage for `useDataViewState`** — small PR,
-   patch release 0.2.2 (or whatever is next); the merge is a NON-AI ticket.
+2. **`jsudc-react`: headless ready for React Native** — the four seams of
+   §4.2 in one PR (injectable sync storage, loosened `renderers` type, the
+   `./i18n` subpath, `react-dom` optional); patch release; the merge is a
+   NON-AI ticket.
 3. **`@jsudc/react-native` 0.1.0** — §4.3, in `jsudc-react-native`, PR; a
-   NON-AI merge ticket; release by tag.
+   NON-AI merge ticket; then the NON-AI **first `npm publish`** by Igor,
+   after which the tag workflow releases.
 4. **`jsudc-mobile-example`: home + Srpske firme** — §4.4, §4.5, in a new
-   repository; the four emulator screenshots on the ticket; Igor's iOS run
-   is the review.
+   repository (`gh repo create`, public); develops on the `libs/` build,
+   final commit on `@jsudc/react-native@^0.1.0` from npm; the four emulator
+   screenshots and the codec smoke test on the ticket; Igor's iOS run is the
+   review.
 
-3 can start on the unreleased 2 by installing the branch build; 4 needs 3
-published (or a `file:` link to the `libs/` build while developing, as the
-example did with the react library before its first release).
+3 starts on the unreleased 2 by installing the branch build; 4 starts on the
+`libs/` build of 3 and waits on the npm publish only for its last commit.
+
+## 9. Calls made after the builder check
+
+For Igor to glance at while reading; each is marked "my call" where it sits:
+
+- Expo-only in 0.1.0 (§4.2): no polyfill peers, no codec rewrite in
+  `jsudc-react`; a README note for bare RN and a runtime smoke test instead.
+- Storage stays a sync interface; the mobile wrapper hydrates AsyncStorage
+  into memory before the first render (§4.2).
+- The renderer choice is persisted by the mobile hook, not by a change to
+  the web hook; `defaultRenderer` is a seed of the in-memory params (§4.2).
+- The `jsudc-react` patch grew from one seam to four, still one PR and one
+  merge (§4.2, ticket 2).
+- The first npm publish of the new package is a manual step by Igor, one
+  NON-AI ticket (§4.3, ticket 3).
