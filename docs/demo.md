@@ -104,6 +104,94 @@ Everything the board does comes from `kanban_options` in
 `backend/collections/tickets/view.yaml`, typed by `KanbanOptionsSchema` in
 `udc-core`.
 
+## Lookups and drill-down: `tickets` → `boards`, `buckets`, `org`; `boards` → `tickets`
+
+A **lookup** field stores a key (here, the row id of another collection) and
+shows that row's label. A **`row_link`** turns a row into a link to another
+collection, filtered by a value of that row. Both are new in `@jsudc/*` 0.3.0.
+In the example:
+
+| collection | field | type | target | shown as |
+|---|---|---|---|---|
+| `tickets` | `board_id` | `lookup` | `boards`, label `name` | the board's name, a link |
+| `tickets` | `bucket_id` | `lookup` | `buckets`, label `name` | the column's name, a link |
+| `tickets` | `assignees` | `lookup_array` | `org`, label `name`, tooltip `title` | one chip per person, each a link; editable |
+| `buckets` | `board_id` | `lookup` (the flat udc-py spelling, `ref` + `label_field`) | `boards` | the board's name |
+| `boards` | — | `row_link` to `tickets`, `board_id = id` | | a click on a row opens that board's tickets |
+
+`tickets/schema.json` and `boards/view.yaml` are the whole configuration; the
+frontend has no lookup code of its own beyond one line in `App.tsx`
+(`collectionPath`, so a link becomes a route). After pulling this, run
+`npm run seed -- --reset` once: `assignees` used to hold names and now holds
+`org` row ids.
+
+Open `http://localhost:<vite port>/udc/tickets?tab=table`.
+
+1. **Labels, not ids.** The *Assignees* column shows people's names as chips.
+   Hover one: the tooltip is that person's title. Scroll right: *Board* and
+   *Bucket* show names too (*Support desk*, *Waiting on customer*), each
+   underlined on hover. In the network tab, a page of 50 tickets makes one
+   `list` per target collection (`boards`, `buckets`, `org`, with `id in
+   [...]`), not one per cell.
+
+   ![Assignees as lookup chips](../frontend/public/screenshots/lookups-cells-assignees.png)
+
+   ![Board and Bucket by name](../frontend/public/screenshots/lookups-cells-board-bucket.png)
+
+2. **Follow a lookup.** Click a board name in a row. It opens `/udc/boards`
+   filtered to that one board (`?f=` is `id eq <board id>`; the filter pill
+   shows the id, as written). Back takes you to the tickets.
+3. **Filter by a lookup.** Open the **Board** chip: its options are the boards
+   by name. Pick *Release 3.0*: the table narrows to its 20 tickets; the URL
+   keeps the board's id (`?cf=`). The **Assignee** chip has a search box,
+   because `org` has more than 50 rows: type `Zoran`, pick him, and only his
+   tickets are left.
+
+   ![The Board chip lists boards by name](../frontend/public/screenshots/lookups-filter-board.png)
+
+   ![The Assignee chip searches org by name](../frontend/public/screenshots/lookups-filter-assignee.png)
+
+4. **Edit with the combobox.** Double-click an *Assignees* cell (a single
+   click on a name follows the link; a double-click edits). The people already
+   assigned are chips with an ×; type `Ma` to search `org`, click a name (or
+   arrow to it and press Enter) to add it, click it again to take it off.
+   Backspace on an empty search removes the last one. Enter on an empty search
+   (or Tab, or a click outside) saves: the row stores the ids, the cell shows
+   the names. Escape cancels.
+
+   ![Editing the assignees](../frontend/public/screenshots/lookups-combobox.png)
+
+   Two things in this picture are known in 0.3.0. The list is drawn without a
+   background, because `@jsudc/react`'s combobox uses a `popover` colour its
+   theme does not define; that is a known issue of `@jsudc/react` 0.3.0. It
+   also offers the units of `org` (*Marketing*, *Platforma*) as well as the
+   people: a level-1 lookup has no filter on its target, so every row of `org`
+   is a candidate.
+
+5. **Drill down.** Open `/udc/boards`. The rows have a pointer cursor. Click
+   *Release 3.0*: you land on `/udc/tickets` with the filter *Board equals
+   Release 3.0* (the pill names the board, not its id). Switch to **Table**:
+   the 20 tickets of that board. Cmd/Ctrl-click a row (or middle-click) opens
+   the drill-down in a new tab; a click on a link or a control inside a row
+   does not drill down.
+
+   ![Boards: every row is a link](../frontend/public/screenshots/drilldown-boards.png)
+
+   ![The drill-down: the tickets of Release 3.0](../frontend/public/screenshots/drilldown-tickets.png)
+
+   The drill-down opens `tickets` on its default renderer, the kanban, and the
+   kanban's board select does not follow the filter: for any board but the
+   one the kanban opens on (*Product roadmap*), the **Board** tab says
+   *Nothing matches* until you pick the same board in its select, or switch to
+   Table or Cards. That is a known gap of `@jsudc/react` 0.3.0.
+
+The server checks every lookup and `row_link` against the target's schema when
+it starts: a lookup naming a field `boards` does not have stops the start with
+one line saying which. A `lookup` filter accepts `eq neq in not_in is_null
+is_not_null`, a `lookup_array` filter `in not_in is_null is_not_null`. The
+design is in
+[`docs/superpowers/specs/2026-11-11-jsudc-lookups-design.md`](superpowers/specs/2026-11-11-jsudc-lookups-design.md).
+
 ## The calendar: `appointments` and the time zone switch
 
 `npm run seed` generates the appointments around the day it runs (six weeks
@@ -420,7 +508,7 @@ Database / Files / Internet.
   `@jsudc/server` and `@jsudc/react` are the server machinery and the data view.
   What you are looking at is the example: `backend/` (the collections, their
   tables, migrations and generators) and `frontend/` (the shell and its strings)
-  depend on the three from npmjs.org (`^0.1.1`) and import their built
+  depend on the three from npmjs.org (`^0.3.0`) and import their built
   `dist`, as an outside project would.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
   `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for

@@ -23,8 +23,8 @@ both the server and the browser import `@jsudc/core`. `backend/` is the example
 server that serves the demo collections with `@jsudc/server`; `frontend/` is the
 example app around `@jsudc/react`. Both use the libraries the way any outside
 project does (see [How the example uses the libraries](#how-the-example-uses-the-libraries)).
-On `@jsudc/*` 0.2.0 the example also proves the first two of the library's
-layers a host can enter (plan §4.3), on the same `/udc/companies` view. **The
+The example also proves the first two of the library's layers a host can
+enter (plan §4.3, since 0.2.0), on the same `/udc/companies` view. **The
 default kit:** `UdcProvider` without a `kit`, the compiled
 `@jsudc/react/styles.css` (every utility `udc:`-prefixed) beside the shell's own
 Tailwind, and the renderers registered one by one from their subpaths. **A
@@ -37,6 +37,20 @@ explains both and links to each.
 ![/udc/companies with the default kit](frontend/public/screenshots/companies-default.png)
 
 ![/udc/companies with the Acme brand](frontend/public/screenshots/companies-acme.png)
+
+**Lookups and drill-down** (0.3.0). A field can hold the key of a row in
+another collection and show that row's label: in `tickets`, `board_id` and
+`bucket_id` are `lookup`s on `boards` and `buckets`, and `assignees` is a
+`lookup_array` on `org`, edited with a search combobox. The table shows names,
+not ids, each a link to the row it names; the Board and Assignee chips filter
+by label while the URL keeps the keys; one `list` per lookup field resolves a
+whole page. `boards` has a `row_link`: a click on a board opens its tickets.
+The server checks every lookup and link against the target's schema when it
+starts. All of it is configuration (`tickets/schema.json`,
+`boards/view.yaml`); [docs/demo.md](docs/demo.md#lookups-and-drill-down-tickets--boards-buckets-org-boards--tickets)
+walks through it.
+
+![/udc/tickets: assignees as lookup chips](frontend/public/screenshots/lookups-cells-assignees.png)
 
 The design is in
 [`docs/superpowers/specs/2026-10-18-jsudc-design.md`](docs/superpowers/specs/2026-10-18-jsudc-design.md).
@@ -90,7 +104,7 @@ workspace, `npm test` runs only that one.
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
-dependency: each `package.json` names `^0.2.0`, `npm ci` downloads the published
+dependency: each `package.json` names `^0.3.0`, `npm ci` downloads the published
 tarballs (already built, `dist` included) and `package-lock.json` pins their
 version and integrity. No GitHub credential is involved. `@jsudc/server` and
 `@jsudc/react` take `@jsudc/core` as a peer dependency, so npm hoists a single
@@ -104,12 +118,13 @@ alias to a library's source anywhere (not in `vite.config.ts`, `vitest.config.ts
 or any `tsconfig.json`). To change a library, change it in its repository, publish
 a release to npm, and bump the version here.
 
-The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks:
+The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0):
 `frontend/src/index.css` imports the compiled `@jsudc/react/styles.css` (the
 library's utilities, all `udc:`-prefixed) and, for the shell's own unprefixed
 Tailwind, `@jsudc/react/tokens.css`; it does not scan the package.
 `frontend/src/App.tsx` mounts `UdcReactRouterUrlState` from
-`@jsudc/react/react-router` under the router, and `frontend/src/renderers.ts`
+`@jsudc/react/react-router` under the router, with `collectionPath`
+(`/udc/<collection>`) so that lookup links and `row_link`s become routes, and `frontend/src/renderers.ts`
 registers the seven renderers explicitly (`createRendererRegistry` with
 `@jsudc/react/table`, `/cards`, `/kanban`, `/calendar`, `/tree`, `/map`,
 `/chart`). The primitives the shell uses (`Button`, `Segmented`, …) come from
