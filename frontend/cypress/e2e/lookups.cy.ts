@@ -185,4 +185,28 @@ describe("row_link: boards → tickets", () => {
       cy.get('[data-testid="fb-pill-0"]').should("contain.text", board.name as string);
     });
   });
+
+  it("a drill-down onto the kanban lands on the clicked board, not the first one", () => {
+    cy.udc("list", { collection: "boards", sort: [{ field: "name" }] }).then(({ rows }) => {
+      // The last board by name: the kanban's own default is the first one.
+      const board = rows.at(-1) as Row;
+      cy.udc("list", {
+        collection: "tickets",
+        filter: { field: "board_id", op: "eq", value: board.__meta.id },
+        page: { limit: 1 },
+      }).then(({ total }) => {
+        expect(total, `tickets on ${board.name}`).to.be.greaterThan(0);
+        cy.visit("/udc/boards");
+        cy.contains('[data-testid="row"]', board.name as string)
+          .find('[data-testid="cell-key"]')
+          .click();
+        cy.location("pathname").should("eq", "/udc/tickets");
+        // The default renderer, no ?board= in the link: the board follows the filter.
+        cy.location("search").should("not.contain", "board=");
+        cy.get('[data-testid="kanban"]').should("have.attr", "data-board-id", board.__meta.id);
+        cy.get('[data-testid="board-switcher"]').should("contain.text", board.name as string);
+        cy.get('[data-testid="kanban-card"]').should("have.length", total);
+      });
+    });
+  });
 });
