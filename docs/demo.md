@@ -170,20 +170,21 @@ Open `http://localhost:<vite port>/udc/tickets?tab=table`.
 
 5. **Drill down.** Open `/udc/boards`. The rows have a pointer cursor. Click
    *Release 3.0*: you land on `/udc/tickets` with the filter *Board equals
-   Release 3.0* (the pill names the board, not its id). Switch to **Table**:
-   the 20 tickets of that board. Cmd/Ctrl-click a row (or middle-click) opens
-   the drill-down in a new tab; a click on a link or a control inside a row
-   does not drill down.
+   Release 3.0* (the pill names the board, not its id), on the default
+   renderer, the kanban. Its board select reads *Release 3.0* too and the
+   columns are that board's buckets (*Planned*, *Building*, *Testing*,
+   *Staging*, …), holding its 20 tickets. The link carries only the filter, no
+   `?board=`: when there is none, the kanban (and the calendar) takes its board
+   from an `eq` filter on its board field, so it lands on the board you clicked,
+   not on the first one (*Product roadmap*). **Table** and **Cards** show the
+   same 20. Cmd/Ctrl-click a row (or middle-click) opens the drill-down in a
+   new tab; a click on a link or a control inside a row does not drill down.
 
    ![Boards: every row is a link](../frontend/public/screenshots/drilldown-boards.png)
 
-   ![The drill-down: the tickets of Release 3.0](../frontend/public/screenshots/drilldown-tickets.png)
+   ![The drill-down lands on the kanban of Release 3.0](../frontend/public/screenshots/drilldown-tickets-kanban.png)
 
-   The drill-down opens `tickets` on its default renderer, the kanban, and the
-   kanban's board select does not follow the filter: for any board but the
-   one the kanban opens on (*Product roadmap*), the **Board** tab says
-   *Nothing matches* until you pick the same board in its select, or switch to
-   Table or Cards. That is a known gap of `@jsudc/react` 0.3.0.
+   ![The same drill-down on the Table tab](../frontend/public/screenshots/drilldown-tickets.png)
 
 The server checks every lookup and `row_link` against the target's schema when
 it starts: a lookup naming a field `boards` does not have stops the start with
@@ -508,7 +509,7 @@ Database / Files / Internet.
   `@jsudc/server` and `@jsudc/react` are the server machinery and the data view.
   What you are looking at is the example: `backend/` (the collections, their
   tables, migrations and generators) and `frontend/` (the shell and its strings)
-  depend on the three from npmjs.org (`^0.3.0`) and import their built
+  depend on the three from npmjs.org (`^0.3.0`, `@jsudc/react` `^0.3.1`) and import their built
   `dist`, as an outside project would.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
   `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for

@@ -104,7 +104,7 @@ workspace, `npm test` runs only that one.
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
-dependency: each `package.json` names `^0.3.0`, `npm ci` downloads the published
+dependency: each `package.json` names `^0.3.0` (`@jsudc/react` `^0.3.1`, for the kanban drill-down fix), `npm ci` downloads the published
 tarballs (already built, `dist` included) and `package-lock.json` pins their
 version and integrity. No GitHub credential is involved. `@jsudc/server` and
 `@jsudc/react` take `@jsudc/core` as a peer dependency, so npm hoists a single
