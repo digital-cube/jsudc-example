@@ -10,6 +10,20 @@ import type { FilterNode, Row } from "@jsudc/core";
 const BG = "Europe/Belgrade";
 const NY = "America/New_York";
 const HOUR_PX = 64;
+
+/**
+ * The header picker labels a zone with its offset NOW (not on the calendar's
+ * week), so New York reads UTC−4 in summer and UTC−5 in winter: the label the
+ * picker shows on the day the run happens, in its spelling.
+ */
+function offsetNow(zone: string) {
+  const name = new Intl.DateTimeFormat("en-US", { timeZone: zone, timeZoneName: "longOffset" })
+    .formatToParts(new Date())
+    .find((p) => p.type === "timeZoneName")?.value;
+  const m = /^GMT([+-])(\d{2}):(\d{2})$/.exec(name ?? "");
+  if (!m) return "UTC";
+  return `UTC${m[1] === "-" ? "−" : "+"}${Number(m[2])}${m[3] === "00" ? "" : `:${m[3]}`}`;
+}
 /** The README's demo: an 08:00 Belgrade appointment on the seed day. */
 const DEMO_START = "2026-10-27T08:00:00+01:00";
 const WEEK: [string, string] = ["2026-10-26T00:00:00.000+01:00", "2026-10-30T23:59:59.999+01:00"];
@@ -269,7 +283,9 @@ describe("calendar", () => {
       cy.get('[data-testid="tz-trigger"]').click();
       cy.get('[data-testid="tz-option"]').first().should("contain.text", "Browser");
       cy.get('[data-testid="tz-search"]').type("new york");
-      cy.get(`[data-testid="tz-option"][data-tz="${NY}"]`).should("contain.text", "UTC−4").click();
+      cy.get(`[data-testid="tz-option"][data-tz="${NY}"]`)
+        .should("contain.text", offsetNow(NY))
+        .click();
 
       // 2026-10-27: New York is still on summer time (-04:00), Belgrade already on +01:00.
       cy.get('[data-testid="tz-trigger"]').should("have.attr", "data-tz", NY);

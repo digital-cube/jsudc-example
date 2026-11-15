@@ -65,7 +65,10 @@ describe("lookups: labels, links, chips, inline edit", () => {
   it("a lookup link opens the target collection filtered by the key", () => {
     ticketsTable();
     firstTicket().then((ticket) => {
-      rowOf(ticket).find('[data-testid="cell-board_id"] [data-testid="lookup-link"]').click();
+      // Centred: scrolled to the top, the row would sit under the sticky header.
+      rowOf(ticket)
+        .find('[data-testid="cell-board_id"] [data-testid="lookup-link"]')
+        .click({ scrollBehavior: "center" });
       cy.location("pathname").should("eq", "/udc/boards");
       cy.location("search").then((search) => {
         expect(decodeParam(search, "f")).to.deep.eq({
