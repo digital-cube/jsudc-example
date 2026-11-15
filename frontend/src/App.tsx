@@ -41,6 +41,9 @@ function FirstCollection() {
   );
 }
 
+/** Where a lookup link and a `row_link` go: the collection route below. */
+const collectionPath = (collection: string) => `/udc/${collection}`;
+
 function CollectionRoute() {
   const { collection = "" } = useParams();
   // Keyed: switching collections starts from a fresh view, not the old one's edit state.
@@ -59,7 +62,7 @@ export function App() {
               <TooltipProvider delayDuration={400}>
                 <Toaster>
                   <BrowserRouter>
-                    <UdcReactRouterUrlState>
+                    <UdcReactRouterUrlState collectionPath={collectionPath}>
                       <Routes>
                         <Route element={<AppShell />}>
                           <Route index element={<FirstCollection />} />

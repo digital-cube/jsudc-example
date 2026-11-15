@@ -3,16 +3,14 @@
   "core_fields": [],
   "fields": {
     "board_id": {
-      "type": "relation",
-      "ref": "boards",
-      "label_field": "name",
+      "type": "lookup",
+      "lookup": { "collection": "boards", "label_field": "name" },
       "required": true,
       "index": true
     },
     "bucket_id": {
-      "type": "relation",
-      "ref": "buckets",
-      "label_field": "name",
+      "type": "lookup",
+      "lookup": { "collection": "buckets", "label_field": "name" },
       "required": true,
       "index": true
     },
@@ -23,7 +21,10 @@
     "priority": { "type": "enum", "values": ["low", "normal", "high", "urgent"], "index": true },
     "tags": { "type": "string_array" },
     "due": { "type": "date", "index": true },
-    "assignees": { "type": "string_array" },
+    "assignees": {
+      "type": "lookup_array",
+      "lookup": { "collection": "org", "label_field": "name", "extra_fields": ["title"] }
+    },
     "starts_at": { "type": "datetime", "index": true },
     "ends_at": { "type": "datetime" }
   }

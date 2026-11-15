@@ -3,7 +3,7 @@
   "core_fields": [],
   "fields": {
     "board_id": {
-      "type": "relation",
+      "type": "lookup",
       "ref": "boards",
       "label_field": "name",
       "required": true,

@@ -2,7 +2,8 @@
  * Writes `collections/{boards,buckets,tickets}/seed.json`: three invented
  * boards with five buckets each and ~60 tickets. Deterministic: the same seed
  * gives the same files, ids included (tickets refer to boards and buckets by
- * id, so the seed fixes them in `__meta.id`).
+ * id, so the seed fixes them in `__meta.id`; `assignees` holds ids of people
+ * in `org`, from `generate-trees`).
  *
  *   npm run generate:kanban -w @jsudc/backend -- [--seed 20261027]
  */
@@ -11,6 +12,7 @@ import { join } from "node:path";
 import { parseArgs } from "node:util";
 import { COLLECTIONS_DIR } from "../src/config.js";
 import { belgradeIso, parseDay } from "./generate-appointments.js";
+import { generateTrees } from "./generate-trees.js";
 
 /** mulberry32, as the companies generator. */
 function prng(seed: number) {
@@ -163,18 +165,14 @@ const BOARDS: BoardSpec[] = [
   },
 ];
 
-const PEOPLE = [
-  "Ana Petrović",
-  "Marko Ilić",
-  "Jelena Kovač",
-  "Nikola Stojanović",
-  "Mila Đorđević",
-  "Luka Pavlović",
-  "Sara Nikolić",
-  "Stefan Marković",
-  "Ivana Lukić",
-  "Filip Janković",
-];
+/**
+ * Who tickets are assigned to: the first ten people of the `org` example, by
+ * id (`tickets.assignees` is a lookup_array on `org`, shown by `name`).
+ */
+const PEOPLE = generateTrees()
+  .org.filter((r) => r.kind === "person")
+  .slice(0, 10)
+  .map((r) => r.__meta.id);
 
 const PRIORITIES = ["low", "normal", "high", "urgent"] as const;
 const PRIORITY_WEIGHTS = [0.25, 0.45, 0.2, 0.1];

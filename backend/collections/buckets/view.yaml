@@ -7,7 +7,7 @@ page_size_default: 50
 
 columns:
   - {field: name, pin: left, editable: true, width: 200}
-  - {field: board_id, width: 300}
+  - {field: board_id, width: 180}
   - {field: color, width: 110}
   - {field: order, render: number_format, align: right, width: 90}
   - {field: is_done, render: bool, render_options: {style: check_x}, align: center, width: 90}
