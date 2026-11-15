@@ -47,14 +47,14 @@ columns:
   - {field: title, pin: left, editable: true, width: 300}
   - {field: priority, width: 100}
   - {field: tags, width: 200}
-  - {field: assignees, width: 220}
+  - {field: assignees, editable: true, width: 260}
   - {field: due, width: 120}
   - {field: body, width: 320}
   - {field: starts_at, width: 170}
   - {field: ends_at, width: 170}
-  # The machinery: which board and column a card is in, and where.
-  - {field: board_id, width: 300}
-  - {field: bucket_id, width: 300}
+  # Lookups: the board and the column a card is in, shown by name, each a link to that row.
+  - {field: board_id, width: 180}
+  - {field: bucket_id, width: 160}
   - {field: order, render: number_format, align: right, width: 90}
 
 search:
@@ -63,6 +63,13 @@ search:
   case_insensitive: true
 
 filters:
+  # Lookup chips: the options are the target's rows by name, the filter is on the key.
+  - field: board_id
+    kind: select
+    label: Board
+  - field: assignees
+    kind: select
+    label: Assignee
   - field: priority
     kind: select
     label: Priority

@@ -15,6 +15,11 @@ search:
   fields: [name, description]
   placeholder: Search boards
 
+# Drill-down: a click on a board row opens its tickets (tickets where board_id = this board's id).
+row_link:
+  collection: tickets
+  filter: {field: board_id, value_from: id}
+
 card_options:
   title_field: name
   subtitle_field: key
