@@ -15,7 +15,7 @@ The libraries live in their own repositories:
 |---|---|---|
 | `@jsudc/core` | [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core) | the shared protocol, once: envelopes, the filter DSL and an in-memory evaluator, schema and view types, row validation and every action payload as Zod schemas with inferred types, plus the transport client (`@jsudc/core/client`); since 0.5.0 `mutate_many`, `defineHostAction`, `ListRequest.search` and the change feed's `ChangeEvent` / `UdcClient.changes` |
 | `@jsudc/server` | [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) | dispatcher, collection registry, the six sources (`postgres_table` since 0.4.0), schema revisions, seeding, the request context and row scope, `onMutate`, the Fastify plugin; since 0.5.0 `mutate_many`, typed host actions (`Dispatcher.register`), search answered by the source and the change feed (`createChangeFeed`, `GET /udc/changes`) |
-| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), embedding and row activation, custom cells, sessions, the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet (global or scoped); since 0.5.0 selection and the bulk bar, row actions, `useUdcAction` / `useUdcMutateMany`, live updates (`UdcProvider changes`, `useUdcChanges`) and windowed long lists |
+| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), embedding and row activation, custom cells, sessions, the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet (global or scoped); since 0.5.0 selection and the bulk bar, row actions, `useUdcAction` / `useUdcMutateMany`, live updates (`UdcProvider changes`, `useUdcChanges`) and windowed long lists; since 0.5.1 (a patch of react alone) the row count and the pager of a source without a total (`total_count: false`) |
 
 The point of the exercise is the **shared interface**: in UDC today the protocol is
 declared twice, once in Python and once in TypeScript, and the two drift; in jsudc
@@ -122,6 +122,12 @@ has what to click):
   the list is infinite and windowed (`virtualize`): a few dozen rows in the
   page however far it scrolls.
 
+On `@jsudc/react` 0.5.1 the list's toolbar also says how many messages are
+loaded: the messages have no total, and up to 0.5.0 that count stayed a
+loading skeleton. Now it reads *Showing 50+* while a full page says there
+may be more and *Showing 12* once a folder is all loaded
+(`frontend/cypress/e2e/mail-051.cy.ts`).
+
 ![/mail: three messages selected, the bulk bar](frontend/public/screenshots/mail-select-bulk.png)
 
 The design is in
@@ -180,11 +186,13 @@ workspace, `npm test` runs only that one.
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
-dependency: each `package.json` names `^0.5.0`, `npm ci` downloads the published
+dependency: `backend/package.json` names `^0.5.0` for both, `frontend/package.json`
+`@jsudc/core` `^0.5.0` and `@jsudc/react` `^0.5.1` (a patch release of react alone;
+core and server stay at 0.5.0). `npm ci` downloads the published
 tarballs (already built, `dist` included) and `package-lock.json` pins their
 version and integrity. No GitHub credential is involved. `@jsudc/server` and
-`@jsudc/react` take `@jsudc/core` as a peer dependency, so npm hoists a single
-copy of all three to the root `node_modules`. The sources live in their own repositories:
+`@jsudc/react` take `@jsudc/core` as a peer dependency, so npm installs a single
+copy of each. The sources live in their own repositories:
 [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core),
 [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) and
 [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react).
@@ -194,7 +202,7 @@ alias to a library's source anywhere (not in `vite.config.ts`, `vitest.config.ts
 or any `tsconfig.json`). To change a library, change it in its repository, publish
 a release to npm, and bump the version here.
 
-The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0, 0.4.0 and 0.5.0):
+The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0, 0.4.0, 0.5.0 and 0.5.1):
 `frontend/src/index.css` imports the compiled `@jsudc/react/styles.css` (the
 library's utilities, all `udc:`-prefixed) and, for the shell's own unprefixed
 Tailwind, `@jsudc/react/tokens.css`; it does not scan the package.

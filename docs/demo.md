@@ -602,11 +602,13 @@ curl -s localhost:5100/udc/list -H 'content-type: application/json' -H 'x-demo-u
 
 Three things to know in 0.4.0:
 
-- **The count.** With `total_count: false` the server answers `total: null`
-  and the toolbar's count stays a grey placeholder instead of saying how many
-  rows are loaded (visible top right in the pictures, beside *live*). That is
-  a bug of `@jsudc/react` 0.4.0, reported as TCKXTDJURQ, still there in 0.5.0;
-  the example does not work around it.
+- **The count.** With `total_count: false` the server answers `total: null`.
+  Up to `@jsudc/react` 0.5.0 the toolbar's count stayed a grey placeholder
+  instead of saying how many rows are loaded (visible top right in the
+  pictures, beside *live*; reported as TCKXTDJURQ). Since 0.5.1 it says what
+  is loaded: *Showing 50+* while a full page says there may be more,
+  *Showing N* once the folder is all loaded, here and on
+  `/udc/mail_messages` (`frontend/cypress/e2e/mail-051.cy.ts`).
 - **Every field is a column.** `describe` adds a column for each schema field
   a view does not list, and a view cannot leave one out, so the message
   list's `view.yaml` lists the columns the reading pane shows instead
@@ -758,7 +760,8 @@ Things to know in 0.5.0:
   `@jsudc/server` and `@jsudc/react` are the server machinery and the data view.
   What you are looking at is the example: `backend/` (the collections, their
   tables, migrations and generators) and `frontend/` (the shell and its strings)
-  depend on the three from npmjs.org (`^0.5.0`) and import their built
+  depend on the three from npmjs.org (`@jsudc/react` `^0.5.1`, the other two
+  `^0.5.0`) and import their built
   `dist`, as an outside project would.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
   `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for
