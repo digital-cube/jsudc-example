@@ -159,7 +159,21 @@ describe("icon resolution", () => {
     };
     walk(dir);
     expect(names.size).toBeGreaterThan(10);
-    const missing = [...names].filter((n) => !(n in LUCIDE_ICONS));
+    // 0.5.0: the bulk bar and the row actions resolve their icons through a map of their own
+    // first (@jsudc/react's ACTION_ICONS in data-view/BulkBar, not exported), then LUCIDE_ICONS.
+    const actionIcons = new Set([
+      "archive",
+      "check",
+      "clock",
+      "flag",
+      "folder-input",
+      "mail",
+      "mail-open",
+      "star",
+      "tag",
+      "trash-2",
+    ]);
+    const missing = [...names].filter((n) => !(n in LUCIDE_ICONS) && !actionIcons.has(n));
     expect(
       missing,
       "not in @jsudc/react's LUCIDE_ICONS: add them to jsudc-react, release a tag, bump it here",
