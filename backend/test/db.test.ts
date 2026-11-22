@@ -5,7 +5,7 @@ import { createDatabases, databaseName, runMigrations } from "../src/db/admin.js
 import * as schema from "../src/db/schema.js";
 
 describe("the demo tables", () => {
-  it("are the eight collection tables plus the library's revisions table", () => {
+  it("are the eight jsonb collection tables, the three mailbox tables and the library's revisions table", () => {
     const tables = Object.values(schema).map((t) => getTableName(t));
     expect(tables.sort()).toEqual([
       "appointments",
@@ -13,6 +13,9 @@ describe("the demo tables", () => {
       "buckets",
       "comments",
       "companies",
+      "mail_audit",
+      "mail_folders",
+      "mail_messages",
       "metrics",
       "org",
       "tickets",
@@ -24,6 +27,21 @@ describe("the demo tables", () => {
       "version",
       "createdAt",
       "updatedAt",
+    ]);
+    // The mailbox is relational: typed columns, not one jsonb document.
+    expect(Object.keys(getTableColumns(schema.mailMessages))).toEqual([
+      "id",
+      "owner",
+      "folderId",
+      "senderName",
+      "senderEmail",
+      "subject",
+      "preview",
+      "body",
+      "receivedAt",
+      "seen",
+      "sizeBytes",
+      "version",
     ]);
   });
 });

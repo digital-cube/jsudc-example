@@ -1,0 +1,11 @@
+{
+  "version": "v1",
+  "core_fields": [],
+  "fields": {
+    "owner": { "type": "string", "required": true },
+    "message_id": { "type": "string", "required": true },
+    "op": { "type": "enum", "values": ["insert", "update", "delete"] },
+    "changes": { "type": "json" },
+    "at": { "type": "datetime" }
+  }
+}

@@ -1,0 +1,14 @@
+# The folders of the demo user asking (x-demo-user): the owner is the row
+# scope, hidden from describe and the rows. The /mail screen draws this
+# collection as its folder list; /udc/mail_folders is the same rows as data.
+default_renderer: table
+available_renderers: [table]
+pagination: pages
+page_size_default: 50
+
+columns:
+  - {field: name, pin: left, editable: true, width: 200}
+  - {field: role, width: 110, render: badge, render_options: {map: {inbox: info, sent: success, archive: muted, trash: danger}}}
+  - {field: position, align: right, width: 90, color: muted}
+  - {field: unread_count, render: number_format, align: right, width: 120}
+  - {field: message_count, render: number_format, align: right, width: 130}

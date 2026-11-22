@@ -49,6 +49,9 @@ describe("the demo collections in the registry", () => {
       "companies",
       "files",
       "flights",
+      "mail_audit",
+      "mail_folders",
+      "mail_messages",
       "menu",
       "metrics",
       "org",
@@ -57,11 +60,14 @@ describe("the demo collections in the registry", () => {
       "tickets",
     ]);
     // The appointments and the metrics are generated at seed time, around the day it runs;
-    // files, the menu and the net need no seed.
+    // files, the menu and the net need no seed; the mailbox is generated too (src/mail/seed.ts).
     expect(assets.filter((a) => a.seedFile === null).map((a) => a.name)).toEqual([
       "appointments",
       "files",
       "flights",
+      "mail_audit",
+      "mail_folders",
+      "mail_messages",
       "menu",
       "metrics",
       "quakes",
@@ -75,6 +81,9 @@ describe("the demo collections in the registry", () => {
       repos: "http_api",
       flights: "http_api",
       menu: "yaml_menu",
+      mail_folders: "postgres_table",
+      mail_messages: "postgres_table",
+      mail_audit: "postgres_table",
     });
     const tickets = assets.find((a) => a.name === "tickets");
     expect(tickets?.view.default_renderer).toBe("kanban");

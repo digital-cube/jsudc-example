@@ -1,0 +1,10 @@
+# A relational table, not jsonb. In code (backend/src/mail/sources.ts) the
+# collection reads `mail_messages` joined to `mail_folders` (the folder's name
+# as a read-only field), writes `mail_messages` only, and runs an `onMutate`
+# that writes an audit row in the same transaction. A mailbox can be large:
+# no count(*) beside a page.
+kind: postgres_table
+options:
+  table: mail_messages
+  version_column: version
+  total_count: false

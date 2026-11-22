@@ -1,0 +1,8 @@
+# A relational table, not jsonb: typed columns, UUID ids. In code
+# (backend/src/mail/sources.ts) the collection gets the unread and total
+# counts of each folder as computed fields; this file names the table so the
+# collection is a `postgres_table` wherever it is read.
+kind: postgres_table
+options:
+  table: mail_folders
+  version_column: version

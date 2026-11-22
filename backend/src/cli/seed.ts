@@ -6,13 +6,17 @@
  * collection whose table already has rows is left alone. Rows that depend on
  * the day (the appointments, the tickets' calendar slots) are written around
  * today in Belgrade, or `SEED_TODAY=YYYY-MM-DD` when set; the metrics end at
- * the quarter hour the seed runs in, or at noon of `SEED_TODAY`.
+ * the quarter hour the seed runs in, or at noon of `SEED_TODAY`. The mailbox
+ * tables (mail_folders, mail_messages: `postgres_table`, no schema revisions)
+ * get the generated folders and messages of every demo user (src/mail/seed.ts).
  */
 import { parseArgs } from "node:util";
 import { connect, readCollectionAssets, seedCollection } from "@jsudc/server";
 import { seedToday } from "../../scripts/generate-appointments.js";
 import { metricsEnd } from "../../scripts/generate-metrics.js";
 import { COLLECTIONS_DIR, config } from "../config.js";
+import { seedMail } from "../mail/seed.js";
+import { MAIL_COLLECTIONS } from "../mail/users.js";
 import { seedRowsFor } from "../seed-rows.js";
 
 const { values } = parseArgs({
@@ -47,7 +51,8 @@ const assets = readCollectionAssets(COLLECTIONS_DIR).filter(
     a.source.kind === "postgres_jsonb" &&
     (values.collection === undefined || a.name === values.collection),
 );
-if (assets.length === 0)
+const mail = values.collection === undefined || MAIL_COLLECTIONS.has(values.collection);
+if (assets.length === 0 && !mail)
   throw new Error(`no collection to seed (${values.collection ?? "none found"})`);
 
 const today = seedToday();
@@ -68,6 +73,15 @@ try {
       res.skipped
         ? `${where}.${res.table}: already has rows, left alone (use --reset to reseed)`
         : `${where}.${res.table}: ${res.inserted} rows, schema revision 1 ${res.revision}`,
+    );
+  }
+  if (mail) {
+    const res = await seedMail(handle.db, { today, reset: values.reset });
+    const where = new URL(url).pathname.slice(1);
+    console.log(
+      res.skipped
+        ? `${where}.mail_*: already has rows, left alone (use --reset to reseed)`
+        : `${where}.mail_*: ${res.folders} folders, ${res.messages} messages`,
     );
   }
 } finally {

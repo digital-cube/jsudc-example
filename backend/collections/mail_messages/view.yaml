@@ -1,0 +1,35 @@
+# The messages of the demo user asking (x-demo-user), owner as the row scope.
+# /mail embeds this view between its folder list and its reading pane: the
+# open folder as the host's filter, no chrome, the keys and row activation.
+# `seen` is drawn by the example's own cell (render: unread_dot, registered
+# in frontend/src/mail/cells.tsx): a dot for an unread message.
+default_renderer: table
+available_renderers: [table, cards]
+pagination: infinite
+page_size_default: 50
+row_height: 40
+
+columns:
+  - {field: seen, render: unread_dot, width: 44, align: center}
+  - {field: sender_name, pin: left, width: 200}
+  - {field: subject, width: 360}
+  - {field: received_at, width: 150, transform: "date_format:DD.MM. HH:mm"}
+  - {field: folder_name, width: 120, color: muted}
+  - {field: size_bytes, render: bytes, align: right, width: 90, color: muted}
+
+card_options:
+  title_field: subject
+  subtitle_field: sender_name
+  meta_fields: [seen, received_at]
+
+search:
+  fields: [subject, sender_name, sender_email, preview]
+  placeholder: Search subject, sender or text
+  case_insensitive: true
+
+filters:
+  - field: seen
+    kind: bool
+    label: Seen
+
+row_actions: []

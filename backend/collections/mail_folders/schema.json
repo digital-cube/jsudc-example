@@ -1,0 +1,12 @@
+{
+  "version": "v1",
+  "core_fields": [],
+  "fields": {
+    "owner": { "type": "string", "required": true },
+    "name": { "type": "string", "length": 80, "required": true },
+    "role": { "type": "enum", "values": ["inbox", "sent", "drafts", "archive", "trash", "custom"] },
+    "position": { "type": "integer", "min": 0 },
+    "unread_count": { "type": "integer", "min": 0 },
+    "message_count": { "type": "integer", "min": 0 }
+  }
+}

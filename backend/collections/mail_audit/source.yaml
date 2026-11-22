@@ -1,0 +1,6 @@
+# What the messages' onMutate hook writes, one row per change, in the same
+# transaction as the change. Served read-only in code (backend/src/mail/sources.ts).
+kind: postgres_table
+options:
+  table: mail_audit
+  id_type: integer

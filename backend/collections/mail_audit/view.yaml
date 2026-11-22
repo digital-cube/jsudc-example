@@ -1,0 +1,12 @@
+# The trace of the messages' onMutate hook: one row per change of a message,
+# written in the same transaction, for the demo user asking. Read-only.
+default_renderer: table
+available_renderers: [table]
+pagination: infinite
+page_size_default: 50
+
+columns:
+  - {field: at, width: 170, transform: "date_format:DD.MM.YYYY HH:mm:ss"}
+  - {field: op, width: 90, render: badge, render_options: {map: {update: info, delete: danger, insert: success}}}
+  - {field: message_id, width: 300, color: muted}
+  - {field: changes, width: 320}

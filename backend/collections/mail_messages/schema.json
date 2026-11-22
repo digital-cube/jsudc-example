@@ -1,0 +1,17 @@
+{
+  "version": "v1",
+  "core_fields": [],
+  "fields": {
+    "owner": { "type": "string", "required": true },
+    "folder_id": { "type": "string", "required": true },
+    "folder_name": { "type": "string" },
+    "sender_name": { "type": "string", "length": 120, "required": true },
+    "sender_email": { "type": "string", "length": 200, "required": true },
+    "subject": { "type": "string", "length": 300, "required": true },
+    "preview": { "type": "string", "length": 300 },
+    "body": { "type": "text" },
+    "received_at": { "type": "datetime" },
+    "seen": { "type": "bool" },
+    "size_bytes": { "type": "integer", "min": 0 }
+  }
+}
