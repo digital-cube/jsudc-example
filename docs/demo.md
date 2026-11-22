@@ -10,8 +10,8 @@ UDC path, shown as a table and as cards, with columns added from the UI.
 nvm use
 npm ci                      # installs @jsudc/* from npmjs.org, already built
 npm run db:setup
-npm run db:migrate -w @jsudc/backend   # once after pulling: new collection tables (0003 appointments … 0005 metrics)
-npm run seed -- --reset     # 200 companies (with lat / lng), 3 boards / 15 buckets / 60 tickets, ~640 appointments around today, 30 days of metrics up to now
+npm run db:migrate -w @jsudc/backend   # once after pulling: new tables (0003 appointments … 0005 metrics, 0006 the mailbox)
+npm run seed -- --reset     # 200 companies (with lat / lng), 3 boards / 15 buckets / 60 tickets, ~640 appointments around today, 30 days of metrics up to now, 3 mailboxes of 300 messages
 npm run dev                 # backend :5100 + Vite (it prints its port)
 ```
 
@@ -502,6 +502,121 @@ A deployment without a `menu` collection (or with `VITE_MENU_COLLECTION`
 naming none) gets the previous sidebar, the collections grouped by
 Database / Files / Internet.
 
+## The mailbox: `/mail`, context and scope, `postgres_table`, `onMutate`, an embedded view
+
+A small mail client, written in the example on `@jsudc/*` 0.4.0: three demo
+users with their own folders and messages, a folder list and a reading pane
+of the example's own, and the message list between them a `UdcDataView`.
+Each part shows one thing 0.4.0 adds:
+
+| part | where | what it demonstrates |
+|---|---|---|
+| the user switcher in the header | `frontend/src/mail/demoUser.ts`, `UserSwitch.tsx` | `UdcClient`'s `headers` as a function, called before every request (`x-demo-user`); `createUdcQueryClient({ onUnauthenticated })` |
+| `demoContext`, `demoRowScope` | `backend/src/mail/context.ts`, `backend/src/main.ts` | the plugin's `context` and the dispatcher's `rowScope`: `owner = <the user>` on the three mailbox collections, hidden from `describe`; no user → `forbidden`, `details.reason: "unauthenticated"` |
+| `mail_folders`, `mail_messages`, `mail_audit` | migration `backend/drizzle/0006_mail_tables.sql`, `backend/src/mail/sources.ts` | `postgres_table`: typed columns and UUID ids; `unread_count` / `message_count` computed by a subquery; `folder_name` from a join (read-only); `total_count: false` on the messages |
+| the audit trail in the reading pane | `auditMessageChange` in `backend/src/mail/sources.ts` | `onMutate`: one `mail_audit` row per change of a message, after the statement and before COMMIT, in the same transaction |
+| the message list | `frontend/src/mail/MailPage.tsx` | embedding: the open folder as `filter`, `chrome="embedded"`, `pagingMode="infinite"`, a button in `toolbarStart`, `urlPrefix="list."` |
+| the reading pane following the list | `MailPage.tsx` | row activation: `activeRowId` (`?m=`), `onActiveRowChange`, `onRowActivate`; `j` / `k`, the arrows, Home / End, Enter |
+| the blue dot | `frontend/src/mail/cells.tsx`, `mail_messages/view.yaml` | a custom cell: `createCellRegistry`, `UdcProvider cells`, `render: unread_dot` |
+
+`npm run seed -- --reset` (after `npm run db:migrate -w @jsudc/backend`, for
+`0006`) writes for each of Ana, Marko and Jelena six folders (Inbox, Sent,
+Drafts, Archive, Trash and one of their own: *Projects*, *Travel*,
+*Receipts*) and 300 messages over the 60 days before the seed day, the newest
+an unread *Welcome to the jsudc mailbox, <name>*. With `SEED_TODAY=2026-10-27`
+the rows are the ones in the pictures. Open `http://localhost:<vite port>/mail`
+(or **Views → Mailbox** in the menu).
+
+1. **One user's mailbox.** The header says *Ana*. The folder list is hers,
+   each folder with its unread count (computed on the server from the
+   messages); the Inbox is open, newest first (`?list.sort=received_at:desc`,
+   the view's own parameter under its prefix). The dot column is the
+   example's `unread_dot` cell. The list has no title, tabs or frame: it is a
+   pane. Its toolbar starts with the example's own **Unread only** button.
+
+   ![Ana's Inbox, the welcome message open](../frontend/public/screenshots/mail-inbox.png)
+
+2. **The keys.** Click a row: the reading pane opens it (`?m=<id>`) and, if
+   it was unread, marks it seen. Now press `j` (or ArrowDown): the next row
+   is active and the pane follows without Enter; `k` goes back, Home / End
+   jump, Enter opens. Type in the search box and the keys are the box's, not
+   the list's. Change folders on the left: the folder is the view's host
+   filter (not a chip, not in "Clear filters").
+
+   ![j / k: the pane follows the active row](../frontend/public/screenshots/mail-keyboard.png)
+
+3. **Unread only.** The toolbar button ANDs `seen = false` into the host
+   filter (`?unread=1`). The list shows only dots; open one and it leaves the
+   list on the next read, the pane keeps it.
+
+   ![Unread only](../frontend/public/screenshots/mail-unread-only.png)
+
+4. **`onMutate`.** Under every message the pane lists its audit trail. Press
+   **Mark as unread**, then **Mark as read**: each press is one `mutate` (with
+   `expected_version`), and each wrote one `mail_audit` row in the same
+   transaction. A refused change writes nothing: another user's message, a
+   stale version, a read-only field (`folder_name`, `received_at`) — the
+   backend tests check all three (`backend/test/mail.test.ts`). The folder's
+   unread count follows.
+
+   ![The audit trail written by onMutate](../frontend/public/screenshots/mail-audit.png)
+
+5. **The scope.** Copy the address of one of Marko's messages (switch to
+   *Marko*, open his welcome message, copy the URL), switch back to *Ana* and
+   open it: the pane says *No such message in this mailbox*. The server
+   answered `not_found`, exactly as for an id that does not exist; it does
+   not say the message is someone else's. Switch to *Marko* again: his
+   folders (*Travel*, not *Projects*), his rows, and the same link opens. The
+   switch resets the query cache: nothing cached for Ana is shown to Marko.
+
+   ![Marko's message, opened as Ana](../frontend/public/screenshots/mail-not-found.png)
+
+   ![The same link as Marko](../frontend/public/screenshots/mail-marko.png)
+
+6. **Nobody.** Pick *Nobody*: the client sends no `x-demo-user`, the server
+   refuses the mailbox with `forbidden`, `details.reason: "unauthenticated"`,
+   the view shows *You are signed out* (no Retry) and `onUnauthenticated`
+   colours the switcher's icon. `/udc/companies` still works: only the
+   mailbox collections need a user.
+
+   ![Signed out](../frontend/public/screenshots/mail-signed-out.png)
+
+7. **The same rows as data.** `/udc/mail_messages` (Collections → Database,
+   or Docs → Mail messages for its README) is the full view of the same
+   collection for the user in the header: every column, both tabs, the
+   *Infinite* paging. There is no `owner` column (the scope's field is
+   hidden), and the folder name comes from the join.
+
+   ![/udc/mail_messages](../frontend/public/screenshots/mail-messages-collection.png)
+
+Over HTTP, the scope is plain to see:
+
+```sh
+curl -s localhost:5100/udc/list -H 'content-type: application/json' \
+  -d '{"collection":"mail_messages","page":{"limit":1}}'
+# {"kind":"udc.list.err",…,"payload":{"code":"forbidden","message":"pick a demo user to open the mailbox","details":{"reason":"unauthenticated"}}}
+curl -s localhost:5100/udc/list -H 'content-type: application/json' -H 'x-demo-user: ana' \
+  -d '{"collection":"mail_folders"}'
+# Ana's six folders, unread_count and message_count computed, no owner field
+```
+
+Three things to know in 0.4.0:
+
+- **The count.** With `total_count: false` the server answers `total: null`
+  and the toolbar's count stays a grey placeholder instead of saying how many
+  rows are loaded (visible top right in the pictures). That is a bug of
+  `@jsudc/react` 0.4.0, reported as TCKXTDJURQ; the example does not work
+  around it.
+- **Every field is a column.** `describe` adds a column for each schema field
+  a view does not list, and a view cannot leave one out, so the message
+  list's `view.yaml` lists the columns the reading pane shows instead
+  (address, preview, folder id, text) last.
+- **The scoped stylesheet.** `/mail` does not import
+  `@jsudc/react/styles.scoped.css`: this app's pages are the library's own and
+  load the global `styles.css`, and the library asks for one of the two. A
+  host whose own pages embed the list imports the scoped sheet instead; the
+  code under `src/mail/` is the same either way.
+
 ## What is behind it
 
 - Three libraries and an example. `@jsudc/core` ([jsudc-core](https://github.com/digital-cube/jsudc-core)) holds the
@@ -509,7 +624,7 @@ Database / Files / Internet.
   `@jsudc/server` and `@jsudc/react` are the server machinery and the data view.
   What you are looking at is the example: `backend/` (the collections, their
   tables, migrations and generators) and `frontend/` (the shell and its strings)
-  depend on the three from npmjs.org (`^0.3.0`, `@jsudc/react` `^0.3.1`) and import their built
+  depend on the three from npmjs.org (`^0.4.0`) and import their built
   `dist`, as an outside project would.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
   `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for

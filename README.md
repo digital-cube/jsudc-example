@@ -14,8 +14,8 @@ The libraries live in their own repositories:
 | package | repository | what it is |
 |---|---|---|
 | `@jsudc/core` | [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core) | the shared protocol, once: envelopes, the filter DSL and an in-memory evaluator, schema and view types, row validation and every action payload as Zod schemas with inferred types, plus the transport client (`@jsudc/core/client`) |
-| `@jsudc/server` | [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) | dispatcher, collection registry, the five sources, schema revisions, seeding, the Fastify plugin |
-| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet |
+| `@jsudc/server` | [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) | dispatcher, collection registry, the six sources (`postgres_table` since 0.4.0), schema revisions, seeding, the request context and row scope, `onMutate`, the Fastify plugin |
+| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), embedding and row activation, custom cells, sessions, the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet (global or scoped) |
 
 The point of the exercise is the **shared interface**: in UDC today the protocol is
 declared twice, once in Python and once in TypeScript, and the two drift; in jsudc
@@ -52,6 +52,40 @@ walks through it.
 
 ![/udc/tickets: assignees as lookup chips](frontend/public/screenshots/lookups-cells-assignees.png)
 
+**A mailbox per user** (0.4.0), at `/mail`: a screen written in the example
+— a folder list and a reading pane — around an embedded
+`<UdcDataView collection="mail_messages">`. It shows what 0.4.0 adds:
+
+- **Request context and row scope.** There is no login: the header's user
+  switcher (Ana, Marko, Jelena, Nobody) picks a demo user, which `UdcClient`
+  sends in `x-demo-user` through its per-call `headers` function. The
+  server's `context` (`backend/src/mail/context.ts`) reads it and its
+  `rowScope` holds `mail_folders`, `mail_messages` and `mail_audit` to
+  `owner = <that user>`, hidden from `describe`. Another user's message is
+  `not_found`, as if it did not exist; no user on a mailbox collection is
+  `forbidden` with `details.reason: "unauthenticated"`, which the view shows
+  as "You are signed out". The other collections need no user and are
+  unscoped.
+- **`postgres_table`.** The mailbox lives in three relational tables with
+  typed columns and UUID ids (migration `0006`), not in `jsonb`. The folders'
+  unread and total counts are computed fields, the messages are joined to
+  their folder (`folder_name`, read-only), and `mail_messages` has
+  `total_count: false`.
+- **`onMutate`.** Every change of a message writes a row into `mail_audit`
+  in the same transaction; the reading pane lists them under the message.
+- **Embedding and row activation.** The open folder is the view's `filter`,
+  `chrome="embedded"`, an *Unread only* button sits in `toolbarStart`, the
+  view's URL state is under `urlPrefix="list."`, and `activeRowId`,
+  `onActiveRowChange` and `onRowActivate` drive the reading pane: `j` / `k`
+  and the arrows walk the list, Enter or a click opens (and marks seen).
+- **A custom cell.** The `seen` column is drawn by `render: unread_dot`, a
+  cell the example registers (`frontend/src/mail/cells.tsx`).
+
+[docs/demo.md](docs/demo.md#the-mailbox-mail-context-and-scope-postgres_table-onmutate-an-embedded-view)
+walks through it; it is the model a host such as a mail client copies.
+
+![/mail: Ana's Inbox, the welcome message open](frontend/public/screenshots/mail-inbox.png)
+
 The design is in
 [`docs/superpowers/specs/2026-10-18-jsudc-design.md`](docs/superpowers/specs/2026-10-18-jsudc-design.md).
 Until phase 1 of the libraries plan the three packages were developed inside this
@@ -61,10 +95,12 @@ repository; that history is in its git log and in each library's repository.
 
 ```
 backend/             the example server: the demo collections (backend/collections), their eight
-                     tables (src/db/schema.ts) and drizzle migrations (drizzle/), the generators
-                     (scripts/), the seed CLI
+                     jsonb tables and the three mailbox tables (src/db/schema.ts), drizzle
+                     migrations (drizzle/), the generators (scripts/), the seed CLI, the
+                     mailbox's context, scope and sources (src/mail)
 frontend/            the example app (React 19 + Vite): the shell (menu, pickers, about page),
-                     routes and the demo dictionary (src/i18n), around @jsudc/react
+                     routes, the /mail screen (src/mail) and the demo dictionary (src/i18n),
+                     around @jsudc/react
 scripts/e2e.mjs      the Cypress run, end to end
 deploy/              the stage dev stack on examples.stage.jsudc.dev (nginx vhost, systemd unit, deploy.sh)
 docs/                design, plans and the two-minute demo script (docs/demo.md)
@@ -85,7 +121,8 @@ npm run seed -- --reset    # every database collection: schema revision 1 + its 
 npm run dev                # backend :5100, Vite :5173
 ```
 
-Open <http://localhost:5173/udc/companies>; every collection is in the sidebar.
+Open <http://localhost:5173/udc/companies>; every collection is in the sidebar,
+and <http://localhost:5173/mail> is the mailbox.
 
 ## Install and test
 
@@ -104,7 +141,7 @@ workspace, `npm test` runs only that one.
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
-dependency: each `package.json` names `^0.3.0` (`@jsudc/react` `^0.3.1`, for the kanban drill-down fix), `npm ci` downloads the published
+dependency: each `package.json` names `^0.4.0`, `npm ci` downloads the published
 tarballs (already built, `dist` included) and `package-lock.json` pins their
 version and integrity. No GitHub credential is involved. `@jsudc/server` and
 `@jsudc/react` take `@jsudc/core` as a peer dependency, so npm hoists a single
@@ -118,7 +155,7 @@ alias to a library's source anywhere (not in `vite.config.ts`, `vitest.config.ts
 or any `tsconfig.json`). To change a library, change it in its repository, publish
 a release to npm, and bump the version here.
 
-The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0):
+The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0 and 0.4.0):
 `frontend/src/index.css` imports the compiled `@jsudc/react/styles.css` (the
 library's utilities, all `udc:`-prefixed) and, for the shell's own unprefixed
 Tailwind, `@jsudc/react/tokens.css`; it does not scan the package.
@@ -130,6 +167,25 @@ registers the seven renderers explicitly (`createRendererRegistry` with
 `/chart`). The primitives the shell uses (`Button`, `Segmented`, …) come from
 `@jsudc/react/ui`.
 
+Since 0.4.0, `App.tsx` also builds the `UdcClient` with a `headers` function
+(the demo user, read before every request), the query client with
+`createUdcQueryClient({ onUnauthenticated })` (the user switcher lights up
+when the server says "not signed in"), and mounts `UdcProvider` with
+`cells={EXAMPLE_CELLS}` (`createCellRegistry`, the mailbox's `unread_dot`).
+The backend passes `context` to the plugin and `rowScope` to
+`createDispatcher` (`backend/src/main.ts`) and builds the mailbox's
+`PostgresTableSource`s in code (`backend/src/sources.ts`); every other
+collection is still exactly what its `source.yaml` says, unscoped.
+
+The example keeps the global `styles.css`, not `@jsudc/react/styles.scoped.css`:
+its pages are the library's own, and the library asks for one of the two,
+never both (the scoped sheet declares the tokens on each view's root, which
+would override the Acme brand and a host's `:root` tokens inside every view).
+A host that embeds the message list in pages of its own, with its own base
+CSS, imports `@jsudc/react/styles.scoped.css` instead, once, and restyles on
+`.udc-data-view, .udc-scope`; nothing in `src/mail/` depends on which sheet
+is loaded.
+
 ## Backend
 
 Needs Postgres on localhost with the role `jsudc` (password `123`, `CREATEDB`).
@@ -138,7 +194,7 @@ Defaults live in [`backend/.env.example`](backend/.env.example); copy it to
 
 ```sh
 npm run db:setup   # create jsudc + jsudc_test, apply the drizzle migrations to both
-npm run seed       # companies: schema revision 1 + 200 rows (-- --reset, --limit N, --db <url|name>)
+npm run seed       # every collection: schema revision 1 + its rows, and the mailbox (-- --reset, --limit N, --db <url|name>)
 npm run dev        # http://localhost:5100, OpenAPI UI at /docs
 npm test -w @jsudc/backend           # the demo collections' tests, against the same database
 npm run test:cov -w @jsudc/backend   # coverage, thresholds 80%
@@ -164,7 +220,18 @@ curl -s localhost:5100/udc/schema.add_field -H 'content-type: application/json' 
 
 Collections are directories under `backend/collections/<name>/` (`view.yaml`,
 `schema.json`, `seed.json`), each served from a table of the same name with every
-field in `data jsonb`. `backend/scripts/generate-companies.ts` regenerates the
+field in `data jsonb` — except the mailbox (`mail_folders`, `mail_messages`,
+`mail_audit`): `source.yaml` says `postgres_table`, the tables have typed
+columns, and `backend/src/mail/sources.ts` builds the sources in code (a join,
+computed fields, `onMutate`). `npm run seed` fills them with
+`backend/scripts/generate-mail.ts` (per demo user six folders and 300
+messages); a mailbox request needs a demo user:
+
+```sh
+curl -s localhost:5100/udc/list -H 'content-type: application/json' -H 'x-demo-user: ana' \
+  -d '{"collection":"mail_messages","sort":[{"field":"received_at","dir":"desc"}],"page":{"limit":5}}'
+```
+ `backend/scripts/generate-companies.ts` regenerates the
 synthetic `companies` seed deterministically.
 
 ## Frontend
