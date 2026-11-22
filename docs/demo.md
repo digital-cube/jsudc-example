@@ -10,8 +10,8 @@ UDC path, shown as a table and as cards, with columns added from the UI.
 nvm use
 npm ci                      # installs @jsudc/* from npmjs.org, already built
 npm run db:setup
-npm run db:migrate -w @jsudc/backend   # once after pulling: new tables (0003 appointments … 0005 metrics, 0006 the mailbox)
-npm run seed -- --reset     # 200 companies (with lat / lng), 3 boards / 15 buckets / 60 tickets, ~640 appointments around today, 30 days of metrics up to now, 3 mailboxes of 300 messages
+npm run db:migrate -w @jsudc/backend   # once after pulling: new tables (0003 appointments … 0005 metrics, 0006 the mailbox, 0007 its full-text index)
+npm run seed -- --reset     # 200 companies (with lat / lng), 3 boards / 15 buckets / 60 tickets, ~640 appointments around today, 30 days of metrics up to now, 3 mailboxes of 300 messages plus 5,000 newsletters each
 npm run dev                 # backend :5100 + Vite (it prints its port)
 ```
 
@@ -504,10 +504,10 @@ Database / Files / Internet.
 
 ## The mailbox: `/mail`, context and scope, `postgres_table`, `onMutate`, an embedded view
 
-A small mail client, written in the example on `@jsudc/*` 0.4.0: three demo
+A small mail client, written in the example on `@jsudc/*` 0.4.0 and extended on 0.5.0 (see [What 0.5.0 adds](#what-050-adds-selection-row-actions-host-actions-live-updates-source-search-a-long-list)): three demo
 users with their own folders and messages, a folder list and a reading pane
 of the example's own, and the message list between them a `UdcDataView`.
-Each part shows one thing 0.4.0 adds:
+Each part below shows one thing 0.4.0 adds:
 
 | part | where | what it demonstrates |
 |---|---|---|
@@ -604,9 +604,9 @@ Three things to know in 0.4.0:
 
 - **The count.** With `total_count: false` the server answers `total: null`
   and the toolbar's count stays a grey placeholder instead of saying how many
-  rows are loaded (visible top right in the pictures). That is a bug of
-  `@jsudc/react` 0.4.0, reported as TCKXTDJURQ; the example does not work
-  around it.
+  rows are loaded (visible top right in the pictures, beside *live*). That is
+  a bug of `@jsudc/react` 0.4.0, reported as TCKXTDJURQ, still there in 0.5.0;
+  the example does not work around it.
 - **Every field is a column.** `describe` adds a column for each schema field
   a view does not list, and a view cannot leave one out, so the message
   list's `view.yaml` lists the columns the reading pane shows instead
@@ -617,6 +617,140 @@ Three things to know in 0.4.0:
   host whose own pages embed the list imports the scoped sheet instead; the
   code under `src/mail/` is the same either way.
 
+### What 0.5.0 adds: selection, row actions, host actions, live updates, source search, a long list
+
+The same screen on `@jsudc/*` 0.5.0. Nothing above changed. Each new part is
+here the way a host such as a mail client would use it:
+
+| part | where | what it demonstrates |
+|---|---|---|
+| the toolbar's **Select**, the checkboxes and the bulk bar | `mail_messages/view.yaml` (`multiselect`, `bulk_actions`), `MailPage.tsx` (`selectable`, `actions`) | selection (a range on shift-click, Space on the active row, the page); *Mark read* / *Mark unread* by `set` (a `mutate_many` update, no code); *Delete* built in (a confirmation, then `mutate_many` delete); *Archive* by a host handler (`actions={{ archive }}`) |
+| "Select all that match" | the same, on a folder | the selection by filter minus the unticked rows; `mail_messages` has `total_count: false`, so the offer and the bar carry no number and the result says what the server changed (`updated`) |
+| the dots at the end of each row | `row_action_defs`, `row_actions_display: menu` | row actions in a menu (also right-click, Shift+F10 or `.`), each where its `when` holds: no *Mark read* on a read message, no *Archive* in the Archive |
+| **Move to…** in the reading pane, and *Archive* | `shared/src/mail-actions.ts`, `backend/src/mail/actions.ts`, `MailPage.tsx` | a host action typed end to end: `defineHostAction` once in `@jsudc/shared`, `Dispatcher.register(moveToFolder, handler)` with the request context, `useUdcAction(moveToFolder)` in the browser. The handler reads the target folder under the caller's scope (another user's folder is `not_found`) and moves with one `mutate_many`, so the row scope, the audit and the feed all apply |
+| **Simulate incoming mail** and the *live* badge | `simulateIncoming` in the same files, `createChangeFeed()` in `backend/src/main.ts`, `DemoUserFeed` in `App.tsx` | the change feed: `UdcProvider changes`; a host's own write announced with `changes.notify("mail_messages", { op: "insert", ids, ctx })`, which only streams in that user's scope hear; `useUdcChanges` refreshes the folder counts, which the feed cannot know are derived from the messages |
+| the search box | migration `0007_mail_search.sql`, `MAIL_SEARCH` in `backend/src/mail/sources.ts` | search answered by the source: a generated `tsvector` (subject A, sender B, text C; `english` stemming) with a GIN index, the `postgres_table` `search` option (`match` and `rank`), `capabilities.search: "source"`; the box sends `search`, best match first |
+| *Newsletters* | `generateNewsletters` in `backend/scripts/generate-mail.ts`, `VIRTUALIZE` in `MailPage.tsx` | a long list: 5,000 messages per user, infinite paging, `virtualize={{ enabled: true, overscan: 20 }}` |
+
+After pulling: `npm run db:migrate -w @jsudc/backend` (for `0007`), then
+`npm run seed`. *Newsletters* is added for every user who has none, even
+without `--reset`, so a mailbox seeded by 0.4.0 keeps its messages and gains
+the folder.
+
+1. **Select and archive.** In Ana's Inbox press **Select** (`?select=1`): a
+   checkbox column appears. Tick three messages; the bar shows *3 selected*,
+   **Mark read**, **Mark unread**, **Archive** and **Delete**. Press
+   **Archive**: one `POST /udc/mail.move_to_folder` with the three ids, and
+   they leave the Inbox for the Archive (its unread count follows). Every
+   moved message has an audit row: the move is a `mutate_many` with `onMutate`,
+   one transaction, all or nothing.
+
+   ![Three messages selected, the bulk bar](../frontend/public/screenshots/mail-select-bulk.png)
+
+2. **Select all that match.** Open **Archive** (60 messages, 50 per page),
+   press **Select**, tick the header's checkbox: the bar offers *Select all
+   that match*, with no number, because the folder has no total. Take it: *All
+   matching rows are selected*. **Mark unread** now sends `mutate_many` with
+   the folder's filter, not ids, and the server answers how many it changed.
+
+   ![The offer, with no number](../frontend/public/screenshots/mail-select-all-offer.png)
+
+   ![All matching rows are selected](../frontend/public/screenshots/mail-select-all-matching.png)
+
+3. **A row's menu.** Without selecting anything, press the dots at the end of
+   an unread message (or right-click it, or Shift+F10 / `.` on the active
+   row): *Mark read*, *Archive*, *Delete*. On a read message the menu offers
+   *Mark unread* instead; in the Archive there is no *Archive*. *Mark read*
+   shows the message read at once and puts it back if the server refuses.
+
+   ![The row menu of a read message](../frontend/public/screenshots/mail-row-menu.png)
+
+4. **Move to folder.** Open a message and press **Move to…** in the reading
+   pane. The menu lists the user's other folders; pick one. The answer is
+   typed `{ moved, failed }`. Over HTTP, another user's folder is
+   `not_found` and another user's message is in `failed`:
+
+   ```sh
+   curl -s localhost:5100/udc/mail.move_to_folder -H 'content-type: application/json' -H 'x-demo-user: ana' \
+     -d '{"folder_id":"<a folder id of Marko>","ids":["<a message id of Ana>"]}'
+   # {"kind":"udc.mail.move_to_folder.err",…,"payload":{"code":"not_found",…}}
+   ```
+
+   ![Move to… in the reading pane](../frontend/public/screenshots/mail-move-to.png)
+
+5. **Incoming mail, live.** The list's toolbar shows *live*: the stream is
+   open. Press **Simulate incoming mail**: the backend writes a message into
+   Ana's Inbox outside jsudc and tells the feed. The new message appears at
+   the top, unread, and the Inbox count goes up, without a reload. Now open a
+   second browser (or a private window) as **Marko** on `/mail` and simulate
+   mail for Ana again: Marko's screen does not move. His stream asked for the
+   same collection, but the server tests each change against each stream's
+   row scope (`owner = marko`) and sends him nothing. Events carry ids only,
+   never rows: the client refetches under its own scope.
+
+   ![A message arrived by itself](../frontend/public/screenshots/mail-incoming.png)
+
+6. **Search by rank.** Type `invoices` in the search box: the request carries
+   `search: "invoices"` (no `contains` filters) and no sort, so Postgres
+   answers best match first (`ts_rank`); stemming finds *Invoice*. The
+   newest-first default steps aside while a search is typed and comes back
+   when the box is cleared; a column you sort by is kept. Web-search syntax
+   works: `"design review"`, `build -passed`.
+
+   ![A search answered by the full-text index](../frontend/public/screenshots/mail-search.png)
+
+7. **A long list.** Open **Newsletters** and scroll, or hold `j`: pages of 50
+   arrive as you near the end, and however many are loaded the table keeps a
+   few dozen rows in the page (spacer rows stand for the rest). The
+   scrollbar, the sticky header and the keys behave as if every row were
+   there; `aria-rowcount` is the loaded count.
+
+   ![5,000 newsletters, windowed](../frontend/public/screenshots/mail-long-folder.png)
+
+**One process or several.** The stage runs one backend process, so
+`createChangeFeed()` uses the default in-process bus. A host with several
+processes behind a load balancer gives every one the same bus, so a write
+through one reaches the streams of the others:
+
+```ts
+import { createChangeFeed, createPostgresChangeBus } from "@jsudc/server";
+
+const changes = createChangeFeed({
+  bus: createPostgresChangeBus({ connectionString: process.env.DATABASE_URL!, pool: handle.pool }),
+});
+```
+
+`PostgresChangeBus` keeps one `LISTEN` connection per process (reopened with
+backoff) and sends with `NOTIFY` on `jsudc_changes`; Redis or NATS is a
+`ChangeBus` of your own. Whatever sits in front must not buffer the stream:
+nginx `proxy_buffering off`, a read timeout above the 15 s heartbeat, HTTP/1.1
+upstream (the route sends `X-Accel-Buffering: no` itself).
+`deploy/nginx/examples.jsudc.dev.conf` has that block for `/udc/changes`. The
+stage vhost sends everything to Vite, which streams it through.
+
+Things to know in 0.5.0:
+
+- **Select is a switch here.** With selection on, 0.5.0 gives
+  `aria-selected` its multi-select meaning (*this row is selected*) and marks
+  the active row `aria-current` instead. The example turns selection on with
+  the toolbar's **Select** (`selectable`) rather than always: off, the list is
+  exactly 0.4.0's, the active row is `aria-selected`, and the 0.4.0 keyboard
+  walk (step 2 above, `mail.cy.ts`) is unchanged. A mail client that always
+  shows checkboxes leaves `selectable` out; the view's `multiselect` turns it on.
+- **A feed per user.** The server fixes a stream's row scope when it opens,
+  and the feed does not reopen when only the answer of `UdcClient`'s
+  `headers` function changes. The example therefore keys the provider by the
+  demo user (`<UdcProvider key={user} changes>`), which remounts the screen on
+  a switch. Reported as TCKWEPXYF9 (a way to reopen the stream without
+  remounting).
+- **Derived counts.** The feed tells a client which collection changed. The
+  folders' unread counts are computed from the messages, so the example
+  listens to `mail_messages` with `useUdcChanges` and refetches `mail_folders`
+  itself; its host actions also `notify` `mail_folders` for other clients.
+- **Search and "all that match".** While a source search is typed, the bar
+  offers no "Select all that match": `mutate_many` by filter cannot carry the
+  search text, so only the loaded rows can be selected.
+
 ## What is behind it
 
 - Three libraries and an example. `@jsudc/core` ([jsudc-core](https://github.com/digital-cube/jsudc-core)) holds the
@@ -624,7 +758,7 @@ Three things to know in 0.4.0:
   `@jsudc/server` and `@jsudc/react` are the server machinery and the data view.
   What you are looking at is the example: `backend/` (the collections, their
   tables, migrations and generators) and `frontend/` (the shell and its strings)
-  depend on the three from npmjs.org (`^0.4.0`) and import their built
+  depend on the three from npmjs.org (`^0.5.0`) and import their built
   `dist`, as an outside project would.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
   `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for

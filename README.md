@@ -13,9 +13,9 @@ The libraries live in their own repositories:
 
 | package | repository | what it is |
 |---|---|---|
-| `@jsudc/core` | [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core) | the shared protocol, once: envelopes, the filter DSL and an in-memory evaluator, schema and view types, row validation and every action payload as Zod schemas with inferred types, plus the transport client (`@jsudc/core/client`) |
-| `@jsudc/server` | [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) | dispatcher, collection registry, the six sources (`postgres_table` since 0.4.0), schema revisions, seeding, the request context and row scope, `onMutate`, the Fastify plugin |
-| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), embedding and row activation, custom cells, sessions, the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet (global or scoped) |
+| `@jsudc/core` | [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core) | the shared protocol, once: envelopes, the filter DSL and an in-memory evaluator, schema and view types, row validation and every action payload as Zod schemas with inferred types, plus the transport client (`@jsudc/core/client`); since 0.5.0 `mutate_many`, `defineHostAction`, `ListRequest.search` and the change feed's `ChangeEvent` / `UdcClient.changes` |
+| `@jsudc/server` | [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) | dispatcher, collection registry, the six sources (`postgres_table` since 0.4.0), schema revisions, seeding, the request context and row scope, `onMutate`, the Fastify plugin; since 0.5.0 `mutate_many`, typed host actions (`Dispatcher.register`), search answered by the source and the change feed (`createChangeFeed`, `GET /udc/changes`) |
+| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), embedding and row activation, custom cells, sessions, the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet (global or scoped); since 0.5.0 selection and the bulk bar, row actions, `useUdcAction` / `useUdcMutateMany`, live updates (`UdcProvider changes`, `useUdcChanges`) and windowed long lists |
 
 The point of the exercise is the **shared interface**: in UDC today the protocol is
 declared twice, once in Python and once in TypeScript, and the two drift; in jsudc
@@ -86,6 +86,44 @@ walks through it; it is the model a host such as a mail client copies.
 
 ![/mail: Ana's Inbox, the welcome message open](frontend/public/screenshots/mail-inbox.png)
 
+**What 0.5.0 adds to the mailbox**, each part the way a host would use it
+([docs/demo.md](docs/demo.md#what-050-adds-selection-row-actions-host-actions-live-updates-source-search-a-long-list)
+has what to click):
+
+- **Selection and bulk actions.** The view declares `multiselect` and
+  `bulk_actions` (`backend/collections/mail_messages/view.yaml`); the
+  toolbar's *Select* turns selection on with `UdcDataView selectable`.
+  *Mark read* / *Mark unread* carry `set` (a `mutate_many` update, no code),
+  *Delete* is built in, *Archive* runs a handler of the example's
+  (`actions={{ archive }}`) that calls the host action below. With the
+  page selected, "Select all that match" switches to the filter minus the
+  unticked rows; the messages have no total (`total_count: false`), so it
+  shows no number and the server reports what it changed.
+- **Row actions.** `row_action_defs` in a menu (`row_actions_display: menu`):
+  the dots, a right-click, Shift+F10 or `.`; each entry only where its `when`
+  holds (no *Mark read* on a read message, no *Archive* in the Archive).
+- **A host action, typed end to end.** `mail.move_to_folder` is defined once
+  with `defineHostAction` in `shared/` (the workspace `@jsudc/shared`, which
+  both sides import), registered with `Dispatcher.register` in
+  `backend/src/mail/actions.ts` (it reads the target folder and runs one
+  `mutate_many` under the caller's context and scope) and called with
+  `useUdcAction` from the reading pane's *Move to…* and the *Archive*
+  handler.
+- **Live updates.** `createChangeFeed()` on the dispatcher, `UdcProvider
+  changes` in the app. *Simulate incoming mail* calls a second host action
+  that writes a message straight into the table and tells the feed with
+  `changes.notify(…, { ctx })`: the list and the Inbox count update without
+  a reload, and another user's open mailbox hears nothing.
+- **Search answered by the source.** Migration `0007` adds a generated,
+  GIN-indexed `tsvector`; the messages' source has the `search` option, so
+  the search box sends `search` and the rows come best match first
+  (web-search syntax: `"a phrase"`, `-word`).
+- **A long list.** Each user's *Newsletters* folder holds 5,000 messages;
+  the list is infinite and windowed (`virtualize`): a few dozen rows in the
+  page however far it scrolls.
+
+![/mail: three messages selected, the bulk bar](frontend/public/screenshots/mail-select-bulk.png)
+
 The design is in
 [`docs/superpowers/specs/2026-10-18-jsudc-design.md`](docs/superpowers/specs/2026-10-18-jsudc-design.md).
 Until phase 1 of the libraries plan the three packages were developed inside this
@@ -94,10 +132,11 @@ repository; that history is in its git log and in each library's repository.
 ## Layout
 
 ```
+shared/              @jsudc/shared: the mailbox's host actions (defineHostAction), imported by both sides
 backend/             the example server: the demo collections (backend/collections), their eight
                      jsonb tables and the three mailbox tables (src/db/schema.ts), drizzle
                      migrations (drizzle/), the generators (scripts/), the seed CLI, the
-                     mailbox's context, scope and sources (src/mail)
+                     mailbox's context, scope, sources and host actions (src/mail)
 frontend/            the example app (React 19 + Vite): the shell (menu, pickers, about page),
                      routes, the /mail screen (src/mail) and the demo dictionary (src/i18n),
                      around @jsudc/react
@@ -141,7 +180,7 @@ workspace, `npm test` runs only that one.
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
-dependency: each `package.json` names `^0.4.0`, `npm ci` downloads the published
+dependency: each `package.json` names `^0.5.0`, `npm ci` downloads the published
 tarballs (already built, `dist` included) and `package-lock.json` pins their
 version and integrity. No GitHub credential is involved. `@jsudc/server` and
 `@jsudc/react` take `@jsudc/core` as a peer dependency, so npm hoists a single
@@ -155,7 +194,7 @@ alias to a library's source anywhere (not in `vite.config.ts`, `vitest.config.ts
 or any `tsconfig.json`). To change a library, change it in its repository, publish
 a release to npm, and bump the version here.
 
-The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0 and 0.4.0):
+The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0, 0.4.0 and 0.5.0):
 `frontend/src/index.css` imports the compiled `@jsudc/react/styles.css` (the
 library's utilities, all `udc:`-prefixed) and, for the shell's own unprefixed
 Tailwind, `@jsudc/react/tokens.css`; it does not scan the package.
@@ -176,6 +215,18 @@ The backend passes `context` to the plugin and `rowScope` to
 `createDispatcher` (`backend/src/main.ts`) and builds the mailbox's
 `PostgresTableSource`s in code (`backend/src/sources.ts`); every other
 collection is still exactly what its `source.yaml` says, unscoped.
+
+Since 0.5.0 the backend gives `createDispatcher` a change feed
+(`createChangeFeed()`, the in-process bus: one server process) and registers
+the mailbox's host actions on it (`registerMailActions`); the plugin then
+serves `GET /udc/changes`, which Vite's dev proxy forwards (it is a GET, so it
+has a rule of its own beside the POSTs). The frontend wraps the routes in a
+`UdcProvider changes` keyed by the demo user (`DemoUserFeed` in `App.tsx`):
+the server fixes a stream's row scope when it opens, so a new user gets a new
+stream. The host actions are defined once in `shared/` (`@jsudc/shared`, a
+workspace whose `exports` point at its TypeScript source; `tsx` and Vite read
+it directly). A host that changes nothing keeps 0.4.0's behaviour: with no app
+change, the 16 specs of 0.4.0 passed on 0.5.0 before any of this was added.
 
 The example keeps the global `styles.css`, not `@jsudc/react/styles.scoped.css`:
 its pages are the library's own, and the library asks for one of the two,
@@ -223,9 +274,10 @@ Collections are directories under `backend/collections/<name>/` (`view.yaml`,
 field in `data jsonb` — except the mailbox (`mail_folders`, `mail_messages`,
 `mail_audit`): `source.yaml` says `postgres_table`, the tables have typed
 columns, and `backend/src/mail/sources.ts` builds the sources in code (a join,
-computed fields, `onMutate`). `npm run seed` fills them with
+computed fields, `onMutate`, the full-text `search`). `npm run seed` fills them with
 `backend/scripts/generate-mail.ts` (per demo user six folders and 300
-messages); a mailbox request needs a demo user:
+messages, and a seventh, *Newsletters*, with 5,000, added wherever it is
+missing even without `--reset`); a mailbox request needs a demo user:
 
 ```sh
 curl -s localhost:5100/udc/list -H 'content-type: application/json' -H 'x-demo-user: ana' \
@@ -246,7 +298,8 @@ npm run e2e        # Cypress headless against a reseeded jsudc_test (see below)
 Vite listens on `VITE_PORT` (5173; it moves to the next free port if that one is
 taken). The dev proxy targets `UDC_PROXY_TARGET` (default `http://127.0.0.1:5100`);
 setting `VITE_UDC_URL` instead makes the browser call that backend directly.
-Only POSTs under `/udc` are proxied: `GET /udc/<collection>` is an app route.
+Only POSTs under `/udc` are proxied (`GET /udc/<collection>` is an app route),
+plus two GETs: the file preview `/udc/files/blob` and the change feed `/udc/changes`.
 
 `frontend/src/`: `main.tsx`, `App.tsx` (providers and routes), `shell/` (AppShell,
 MenuTree, TimezonePicker, AboutPage) and `i18n/messages.ts`, the example's strings
@@ -276,7 +329,7 @@ second `server` block in the same vhost. Everything it needs is in
 [`deploy/`](deploy):
 
 ```
-edge (TLS)  ->  nginx :80 examples.stage.jsudc.dev  ->  Vite 127.0.0.1:5101  ->  POST /udc/*, /healthz  ->  Fastify 127.0.0.1:5100
+edge (TLS)  ->  nginx :80 examples.stage.jsudc.dev  ->  Vite 127.0.0.1:5101  ->  POST /udc/*, GET /udc/changes, /healthz  ->  Fastify 127.0.0.1:5100
                 nginx :80 jsudc.igor.digitalcube.work  ->  301 https://examples.stage.jsudc.dev$request_uri
 deploy/nginx/examples.stage.jsudc.dev.conf   the vhost (both server blocks); /etc/nginx/sites-enabled/ links to it
 deploy/systemd/jsudc-dev.service             user unit running `npm run dev`; ~/.config/systemd/user/ links to it
