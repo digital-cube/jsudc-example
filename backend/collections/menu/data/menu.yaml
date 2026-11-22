@@ -78,6 +78,11 @@
       translation_key: MENU_VIEW_FLIGHTS
       icon: lucide:plane
       url: /udc/flights?tab=map
+    # Not a tab: a screen of the example's own with an embedded view (src/mail).
+    - code: MAIL
+      translation_key: MENU_VIEW_MAIL
+      icon: lucide:messages-square
+      url: /mail
 
 # The collections that ship a README, straight to their Doc tab.
 - code: DOCS
@@ -120,6 +125,10 @@
       translation_key: COLLECTIONS_MENU
       icon: lucide:file-text
       url: /udc/menu?tab=doc
+    - code: DOC_MAIL_MESSAGES
+      translation_key: COLLECTIONS_MAIL_MESSAGES
+      icon: lucide:file-text
+      url: /udc/mail_messages?tab=doc
 
 # The layers of @jsudc/react a host enters: the default kit, a restyle by CSS variables.
 - code: EXAMPLES

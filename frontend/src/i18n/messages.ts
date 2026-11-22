@@ -29,6 +29,11 @@ export const EXAMPLE_MESSAGES: Messages = {
     BRAND: { en: "Brand", sr: "Brend" },
     BRAND_DEFAULT: { en: "Default", sr: "Podrazumevani" },
     BRAND_ACME: { en: "Acme", sr: "Acme" },
+    DEMO_USER: { en: "Demo user", sr: "Demo korisnik" },
+    USER_ANA: { en: "Ana", sr: "Ana" },
+    USER_MARKO: { en: "Marko", sr: "Marko" },
+    USER_JELENA: { en: "Jelena", sr: "Jelena" },
+    USER_NONE: { en: "Nobody", sr: "Niko" },
   },
   COLLECTIONS: {
     COMPANIES: { en: "Companies", sr: "Preduzeća" },
@@ -44,6 +49,32 @@ export const EXAMPLE_MESSAGES: Messages = {
     REPOS: { en: "Repositories", sr: "Repozitorijumi" },
     METRICS: { en: "Server metrics", sr: "Metrike servera" },
     MENU: { en: "Menu", sr: "Meni" },
+    MAIL_MESSAGES: { en: "Mail messages", sr: "Poruke" },
+    MAIL_FOLDERS: { en: "Mail folders", sr: "Folderi pošte" },
+    MAIL_AUDIT: { en: "Mail audit", sr: "Trag izmena pošte" },
+  },
+  // The /mail screen (src/mail): the host's own panes around the embedded message list.
+  MAIL: {
+    FOLDERS: { en: "Folders", sr: "Folderi" },
+    MESSAGES: { en: "Messages", sr: "Poruke" },
+    READING_PANE: { en: "Message", sr: "Poruka" },
+    UNREAD: { en: "Unread", sr: "Nepročitano" },
+    UNREAD_ONLY: { en: "Unread only", sr: "Samo nepročitane" },
+    NONE_OPEN: {
+      en: "No message open. Walk the list with j / k or the arrows, open one with Enter or a click.",
+      sr: "Nijedna poruka nije otvorena. Kroz listu j / k ili strelicama, otvaranje Enter-om ili klikom.",
+    },
+    NOT_FOUND: {
+      en: "No such message in this mailbox.",
+      sr: "U ovom sandučetu nema takve poruke.",
+    },
+    MARK_READ: { en: "Mark as read", sr: "Označi kao pročitano" },
+    MARK_UNREAD: { en: "Mark as unread", sr: "Označi kao nepročitano" },
+    AUDIT_TITLE: {
+      en: "Audit trail (written by onMutate, in the same transaction)",
+      sr: "Trag izmena (upisuje onMutate, u istoj transakciji)",
+    },
+    AUDIT_EMPTY: { en: "No change yet.", sr: "Još nema izmena." },
   },
   // The /about page. README is the repository README's first section in Serbian; the English
   // page renders README.md itself, so its `en` is only what a missing import would show.
@@ -86,7 +117,7 @@ Stranica Primeri u meniju objašnjava oba i vodi na svaki.
 ![/udc/companies sa brendom Acme](/screenshots/companies-acme.png)`,
     },
   },
-  // The /examples page: the two layers of @jsudc/react the app proves. Inline markdown.
+  // The /examples page: the two layers of @jsudc/react the app proves, and the mailbox. Inline markdown.
   EXAMPLES: {
     TITLE: { en: "Two ways in", sr: "Dva ulaza" },
     LEAD: {
@@ -105,6 +136,15 @@ Stranica Primeri u meniju objašnjava oba i vodi na svaki.
       sr: 'Brend Acme je jedan stylesheet, `src/brand.css`, koji pod `[data-brand="acme"]` redefiniše tokene iz kojih komponente boje (`--background`, `--foreground`, `--primary`, tonove `--sem-*`, serije `--chart-*`, radijus i font), za svetlu i tamnu temu. Prekidač u zaglavlju samo postavlja taj atribut na `<html>` i pamti ga; nijedna komponenta se ne menja, a test drži fajl na samim deklaracijama promenljivih.',
     },
     BRAND_LINK: { en: "Companies, Acme brand", sr: "Preduzeća, brend Acme" },
+    MAIL_TITLE: {
+      en: "3. A screen of your own: the mailbox",
+      sr: "3. Sopstveni ekran: poštansko sanduče",
+    },
+    MAIL_BODY: {
+      en: '`/mail` is written in the example: a folder list and a reading pane around `<UdcDataView collection="mail_messages">`, embedded with the open folder as its `filter`, `chrome="embedded"`, a button in `toolbarStart`, its URL state under `urlPrefix="list."`, and `onRowActivate` / `activeRowId` driving the pane (j / k and the arrows walk the list). The rows come from two relational tables (`postgres_table`), held by the server to the demo user picked in the header (`context` and `rowScope`); every change of a message writes an audit row in its transaction (`onMutate`).',
+      sr: '`/mail` je napisan u primeru: lista foldera i okno za čitanje oko `<UdcDataView collection="mail_messages">`, ugrađenog sa otvorenim folderom kao `filter`, `chrome="embedded"`, dugmetom u `toolbarStart`, URL stanjem pod `urlPrefix="list."`, a `onRowActivate` / `activeRowId` vode okno (j / k i strelice idu kroz listu). Redovi dolaze iz dve relacione tabele (`postgres_table`), a server ih ograničava na demo korisnika izabranog u zaglavlju (`context` i `rowScope`); svaka izmena poruke upisuje red traga u svojoj transakciji (`onMutate`).',
+    },
+    MAIL_LINK: { en: "Open the mailbox", sr: "Otvori sanduče" },
   },
   // The application menu (backend/collections/menu/data/menu.yaml): translation_key MENU_<TERM>.
   MENU: {
@@ -121,10 +161,52 @@ Stranica Primeri u meniju objašnjava oba i vodi na svaki.
     VIEW_METRICS: { en: "Metrics chart", sr: "Grafikon metrika" },
     VIEW_QUAKES: { en: "Earthquakes map", sr: "Mapa zemljotresa" },
     VIEW_FLIGHTS: { en: "Flights map", sr: "Mapa letova" },
+    VIEW_MAIL: { en: "Mailbox", sr: "Poštansko sanduče" },
     DOCS: { en: "Docs", sr: "Dokumentacija" },
     EXAMPLES: { en: "Examples", sr: "Primeri" },
     MENU: { en: "Menu", sr: "Meni" },
     ABOUT: { en: "About", sr: "O aplikaciji" },
+  },
+  TBL_MAIL_MESSAGES: {
+    __DESCRIPTION: {
+      en: "The demo user's messages: a relational table, scoped to its owner by the server",
+      sr: "Poruke demo korisnika: relaciona tabela, server je ograničava na vlasnika",
+    },
+    SEARCH_PLACEHOLDER: {
+      en: "Search subject, sender or text",
+      sr: "Pretraga naslova, pošiljaoca ili teksta",
+    },
+    SEEN: { en: "New", sr: "Novo" },
+    SENDER_NAME: { en: "From", sr: "Od" },
+    SENDER_EMAIL: { en: "Address", sr: "Adresa" },
+    SUBJECT: { en: "Subject", sr: "Naslov" },
+    PREVIEW: { en: "Preview", sr: "Pregled" },
+    BODY: { en: "Text", sr: "Tekst" },
+    RECEIVED_AT: { en: "Received", sr: "Primljeno" },
+    FOLDER_NAME: { en: "Folder", sr: "Folder" },
+    FOLDER_ID: { en: "Folder id", sr: "Id foldera" },
+    SIZE_BYTES: { en: "Size", sr: "Veličina" },
+  },
+  TBL_MAIL_FOLDERS: {
+    __DESCRIPTION: {
+      en: "The demo user's folders, with their unread and total counts computed from the messages",
+      sr: "Folderi demo korisnika, sa brojem nepročitanih i ukupnih poruka izračunatim iz poruka",
+    },
+    NAME: { en: "Name", sr: "Naziv" },
+    ROLE: { en: "Role", sr: "Uloga" },
+    POSITION: { en: "Position", sr: "Pozicija" },
+    UNREAD_COUNT: { en: "Unread", sr: "Nepročitano" },
+    MESSAGE_COUNT: { en: "Messages", sr: "Poruka" },
+  },
+  TBL_MAIL_AUDIT: {
+    __DESCRIPTION: {
+      en: "What the messages' onMutate wrote, one row per change, in the change's transaction",
+      sr: "Šta je onMutate poruka upisao, red po izmeni, u transakciji izmene",
+    },
+    AT: { en: "At", sr: "Vreme" },
+    OP: { en: "Operation", sr: "Operacija" },
+    MESSAGE_ID: { en: "Message", sr: "Poruka" },
+    CHANGES: { en: "Changes", sr: "Izmene" },
   },
   TBL_METRICS: {
     __DESCRIPTION: {

@@ -13,9 +13,13 @@ import {
 import { UdcReactRouterUrlState } from "@jsudc/react/react-router";
 import { Spinner, Toaster, TooltipProvider } from "@jsudc/react/ui";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router";
 import { EXAMPLE_MESSAGES } from "./i18n/messages";
+import { EXAMPLE_CELLS } from "./mail/cells";
+import { demoUserHeaders, subscribeDemoUser } from "./mail/demoUser";
+import { MailPage } from "./mail/MailPage";
+import { SIGNED_OUT_EVENT } from "./mail/UserSwitch";
 import { EXAMPLE_RENDERERS } from "./renderers";
 import { AboutPage } from "./shell/AboutPage";
 import { AppShell } from "./shell/AppShell";
@@ -51,13 +55,24 @@ function CollectionRoute() {
 }
 
 export function App() {
-  const [client] = useState(() => new UdcClient({ httpUrl: import.meta.env.VITE_UDC_URL ?? "" }));
-  const [queryClient] = useState(createUdcQueryClient);
+  // `headers` is a function (@jsudc/core 0.4.0): called before every request, so it sends
+  // whichever demo user the header's switcher has picked at that moment.
+  const [client] = useState(
+    () => new UdcClient({ httpUrl: import.meta.env.VITE_UDC_URL ?? "", headers: demoUserHeaders }),
+  );
+  // "Not signed in" from the server (the mailbox without a user): the shell's switcher lights up.
+  const [queryClient] = useState(() =>
+    createUdcQueryClient({
+      onUnauthenticated: () => window.dispatchEvent(new Event(SIGNED_OUT_EVENT)),
+    }),
+  );
+  // Another user is another mailbox: every cached answer was someone else's.
+  useEffect(() => subscribeDemoUser(() => void queryClient.resetQueries()), [queryClient]);
   return (
     <ThemeProvider>
       <UdcI18nProvider messages={EXAMPLE_MESSAGES}>
         <TimezoneProvider>
-          <UdcProvider client={client} renderers={EXAMPLE_RENDERERS}>
+          <UdcProvider client={client} renderers={EXAMPLE_RENDERERS} cells={EXAMPLE_CELLS}>
             <QueryClientProvider client={queryClient}>
               <TooltipProvider delayDuration={400}>
                 <Toaster>
@@ -67,6 +82,7 @@ export function App() {
                         <Route element={<AppShell />}>
                           <Route index element={<FirstCollection />} />
                           <Route path="udc/:collection" element={<CollectionRoute />} />
+                          <Route path="mail" element={<MailPage />} />
                           <Route path="examples" element={<ExamplesPage />} />
                           <Route path="about" element={<AboutPage />} />
                           <Route path="*" element={<Navigate to="/" replace />} />

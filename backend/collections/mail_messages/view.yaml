@@ -9,13 +9,19 @@ pagination: infinite
 page_size_default: 50
 row_height: 40
 
+# Every schema field is a column (describe adds the ones a view leaves out),
+# so the ones the reading pane shows instead come last.
 columns:
-  - {field: seen, render: unread_dot, width: 44, align: center}
-  - {field: sender_name, pin: left, width: 200}
-  - {field: subject, width: 360}
-  - {field: received_at, width: 150, transform: "date_format:DD.MM. HH:mm"}
-  - {field: folder_name, width: 120, color: muted}
+  - {field: seen, render: unread_dot, pin: left, width: 78, align: center}
+  - {field: sender_name, pin: left, width: 190}
+  - {field: subject, width: 340}
+  - {field: received_at, width: 130, transform: "date_format:DD.MM. HH:mm"}
+  - {field: folder_name, width: 110, color: muted}
   - {field: size_bytes, render: bytes, align: right, width: 90, color: muted}
+  - {field: sender_email, width: 200, color: muted}
+  - {field: preview, width: 320, color: muted}
+  - {field: folder_id, width: 120, color: muted}
+  - {field: body, width: 200, color: muted}
 
 card_options:
   title_field: subject

@@ -7,23 +7,30 @@ import {
   CalendarDays,
   ChartLine,
   Database,
+  FolderClosed,
   FolderGit2,
   FolderOpen,
   Globe,
+  History,
   Kanban,
   Languages,
   type LucideIcon,
+  Mail,
   Moon,
   Palette,
   Plane,
   Sun,
 } from "lucide-react";
 import { NavLink, Outlet } from "react-router";
+import { UserSwitch } from "../mail/UserSwitch";
 import { BRANDS, type Brand, useBrand, useBrandFromUrl } from "./brand";
 import { MENU_COLLECTION, MenuTree } from "./MenuTree";
 import { TimezonePicker } from "./TimezonePicker";
 
 const COLLECTION_ICONS: Record<string, LucideIcon> = {
+  mail_messages: Mail,
+  mail_folders: FolderClosed,
+  mail_audit: History,
   companies: Building2,
   appointments: CalendarDays,
   tickets: Kanban,
@@ -99,6 +106,7 @@ function TopBar() {
         </div>
       </div>
       <div className="flex items-center gap-2">
+        <UserSwitch />
         <BrandSwitch />
         <TimezonePicker />
         <Languages className="size-4 text-muted-foreground" aria-hidden />

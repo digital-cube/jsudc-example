@@ -1,5 +1,5 @@
 import { useI18n } from "@jsudc/react";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, MessagesSquare } from "lucide-react";
 import { marked } from "marked";
 import { Link } from "react-router";
 import { BRAND_PARAM, type Brand } from "./brand";
@@ -20,7 +20,10 @@ const LAYERS: Layer[] = [
 /** `/udc/companies` with `brand` picked on arrival (shell/brand.ts, useBrandFromUrl). */
 export const companiesWith = (brand: Brand): string => `/udc/companies?${BRAND_PARAM}=${brand}`;
 
-/** `/examples`: the two layers of @jsudc/react the app proves, each with a link to see it. */
+/**
+ * `/examples`: the two layers of @jsudc/react the app proves, each with a link to see it,
+ * and the mailbox (0.4.0): a screen of the host's own with an embedded view.
+ */
 export function ExamplesPage() {
   const { t } = useI18n();
   return (
@@ -52,6 +55,28 @@ export function ExamplesPage() {
             </Link>
           </section>
         ))}
+        <section
+          data-testid="examples-mail"
+          className="mt-6 rounded-lg border border-border bg-surface p-5"
+        >
+          <h2 className="text-[15px] font-semibold">{t("EXAMPLES", "MAIL_TITLE")}</h2>
+          <p
+            className="udc-prose mt-2 text-[13px] leading-relaxed"
+            // biome-ignore lint/security/noDangerouslySetInnerHtml: the example's own dictionary
+            dangerouslySetInnerHTML={{
+              __html: marked.parseInline(t("EXAMPLES", "MAIL_BODY"), { async: false }),
+            }}
+          />
+          <Link
+            to="/mail"
+            data-testid="examples-link-mail"
+            className="mt-3 inline-flex items-center gap-1.5 text-[13px] font-medium text-primary hover:underline"
+          >
+            <MessagesSquare className="size-3.5" aria-hidden />
+            {t("EXAMPLES", "MAIL_LINK")}
+            <ArrowRight className="size-3.5" aria-hidden />
+          </Link>
+        </section>
       </div>
     </div>
   );

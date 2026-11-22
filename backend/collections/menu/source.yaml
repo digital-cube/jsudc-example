@@ -22,3 +22,7 @@ options:
     quakes: lucide:activity
     flights: lucide:plane
     repos: lucide:folder-git-2
+    # Only names in @jsudc/react's LUCIDE_ICONS resolve (there is no envelope icon there).
+    mail_messages: lucide:messages-square
+    mail_folders: lucide:folder-open
+    mail_audit: lucide:file-text
