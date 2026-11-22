@@ -75,6 +75,13 @@ export const EXAMPLE_MESSAGES: Messages = {
       sr: "Trag izmena (upisuje onMutate, u istoj transakciji)",
     },
     AUDIT_EMPTY: { en: "No change yet.", sr: "Još nema izmena." },
+    // 0.5.0: the host actions of @jsudc/shared, called with useUdcAction.
+    SELECT: { en: "Select", sr: "Izaberi" },
+    SIMULATE_INCOMING: { en: "Simulate incoming mail", sr: "Simuliraj dolaznu poštu" },
+    DELIVERED: { en: "A new message arrived", sr: "Stigla je nova poruka" },
+    MOVE_TO: { en: "Move to…", sr: "Premesti u…" },
+    MOVE_FAILED: { en: "The message was not moved", sr: "Poruka nije premeštena" },
+    ARCHIVED: { en: "Archived: {count}", sr: "Arhivirano: {count}" },
   },
   // The /about page. README is the repository README's first section in Serbian; the English
   // page renders README.md itself, so its `en` is only what a missing import would show.
@@ -173,9 +180,14 @@ Stranica Primeri u meniju objašnjava oba i vodi na svaki.
       sr: "Poruke demo korisnika: relaciona tabela, server je ograničava na vlasnika",
     },
     SEARCH_PLACEHOLDER: {
-      en: "Search subject, sender or text",
-      sr: "Pretraga naslova, pošiljaoca ili teksta",
+      en: 'Search: words, "a phrase", -exclude',
+      sr: 'Pretraga: reči, "fraza", -isključi',
     },
+    // The bulk bar's and the row menu's buttons (view.yaml bulk_actions / row_action_defs).
+    ACTION_MARK_READ: { en: "Mark read", sr: "Označi pročitano" },
+    ACTION_MARK_UNREAD: { en: "Mark unread", sr: "Označi nepročitano" },
+    ACTION_ARCHIVE: { en: "Archive", sr: "Arhiviraj" },
+    ACTION_DELETE: { en: "Delete", sr: "Obriši" },
     SEEN: { en: "New", sr: "Novo" },
     SENDER_NAME: { en: "From", sr: "Od" },
     SENDER_EMAIL: { en: "Address", sr: "Adresa" },

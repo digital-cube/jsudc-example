@@ -14,6 +14,8 @@ export default defineConfig({
     proxy: {
       // The file preview is a GET; it must reach the backend before the rule below sends GETs to the app.
       "/udc/files/blob": { target: proxyTarget, changeOrigin: true },
+      // The change feed (0.5.0) is a GET too: a Server-Sent Events stream that never ends.
+      "/udc/changes": { target: proxyTarget, changeOrigin: true },
       // `/udc/<collection>` is also an app route: only the RPC (always a POST)
       // goes to the backend, a page load gets the app.
       "/udc": {

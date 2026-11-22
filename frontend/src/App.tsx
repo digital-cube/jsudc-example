@@ -13,11 +13,11 @@ import {
 import { UdcReactRouterUrlState } from "@jsudc/react/react-router";
 import { Spinner, Toaster, TooltipProvider } from "@jsudc/react/ui";
 import { QueryClientProvider } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { type ReactNode, useEffect, useState } from "react";
 import { BrowserRouter, Navigate, Route, Routes, useParams } from "react-router";
 import { EXAMPLE_MESSAGES } from "./i18n/messages";
 import { EXAMPLE_CELLS } from "./mail/cells";
-import { demoUserHeaders, subscribeDemoUser } from "./mail/demoUser";
+import { demoUserHeaders, subscribeDemoUser, useDemoUser } from "./mail/demoUser";
 import { MailPage } from "./mail/MailPage";
 import { SIGNED_OUT_EVENT } from "./mail/UserSwitch";
 import { EXAMPLE_RENDERERS } from "./renderers";
@@ -54,6 +54,24 @@ function CollectionRoute() {
   return <UdcDataView key={collection} collection={collection} />;
 }
 
+/**
+ * Live updates (0.5.0): one change-feed stream for the collections on screen,
+ * so a view refetches when the server says its rows changed (the data view
+ * shows "live" beside its freshness pill). The server fixes a stream's row
+ * scope when it opens, from the `x-demo-user` it was opened with, and the
+ * feed does not reopen when only the header function's answer changes — so
+ * each demo user gets a stream of their own: keyed by the user, the provider
+ * (and what it wraps) starts afresh on a switch, as the queries already do.
+ */
+function DemoUserFeed({ client, children }: { client: UdcClient; children: ReactNode }) {
+  const [user] = useDemoUser();
+  return (
+    <UdcProvider key={user} client={client} changes>
+      {children}
+    </UdcProvider>
+  );
+}
+
 export function App() {
   // `headers` is a function (@jsudc/core 0.4.0): called before every request, so it sends
   // whichever demo user the header's switcher has picked at that moment.
@@ -78,16 +96,18 @@ export function App() {
                 <Toaster>
                   <BrowserRouter>
                     <UdcReactRouterUrlState collectionPath={collectionPath}>
-                      <Routes>
-                        <Route element={<AppShell />}>
-                          <Route index element={<FirstCollection />} />
-                          <Route path="udc/:collection" element={<CollectionRoute />} />
-                          <Route path="mail" element={<MailPage />} />
-                          <Route path="examples" element={<ExamplesPage />} />
-                          <Route path="about" element={<AboutPage />} />
-                          <Route path="*" element={<Navigate to="/" replace />} />
-                        </Route>
-                      </Routes>
+                      <DemoUserFeed client={client}>
+                        <Routes>
+                          <Route element={<AppShell />}>
+                            <Route index element={<FirstCollection />} />
+                            <Route path="udc/:collection" element={<CollectionRoute />} />
+                            <Route path="mail" element={<MailPage />} />
+                            <Route path="examples" element={<ExamplesPage />} />
+                            <Route path="about" element={<AboutPage />} />
+                            <Route path="*" element={<Navigate to="/" replace />} />
+                          </Route>
+                        </Routes>
+                      </DemoUserFeed>
                     </UdcReactRouterUrlState>
                   </BrowserRouter>
                 </Toaster>

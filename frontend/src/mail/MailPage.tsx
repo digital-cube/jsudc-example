@@ -1,30 +1,47 @@
 import { type FilterNode, isUdcError, type Row } from "@jsudc/core";
 import {
+  type BulkActionHandlers,
   cn,
   ErrorState,
   UdcDataView,
   udcKeys,
   useI18n,
   useTimezone,
+  useUdcAction,
   useUdcAllRows,
+  useUdcChanges,
   useUdcClient,
   useUdcMutate,
   useUrlSearchParams,
 } from "@jsudc/react";
-import { Button, Spinner } from "@jsudc/react/ui";
+import {
+  Button,
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuTrigger,
+  Spinner,
+  useToast,
+} from "@jsudc/react/ui";
+import { moveToFolder, simulateIncoming } from "@jsudc/shared";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   Archive,
   FileText,
   Folder,
+  FolderInput,
   Inbox,
+  ListChecks,
   type LucideIcon,
   Mail as MailIcon,
   MailOpen,
+  MailPlus,
+  Newspaper,
   Send,
   Trash2,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo } from "react";
+import { useCallback, useEffect, useMemo, useRef } from "react";
 import { type DemoUserChoice, useDemoUser } from "./demoUser";
 
 /*
@@ -38,6 +55,20 @@ import { type DemoUserChoice, useDemoUser } from "./demoUser";
  * folder), `?m=<id>` (the open message), `?unread=1` (the toolbar's switch).
  * A link to another user's message opens the pane on "not found": the
  * server's row scope answers exactly as for an id that does not exist.
+ *
+ * 0.5.0 (the view's yaml declares the first two):
+ * - selection and the bulk bar, switched on by the toolbar's "Select"
+ *   (`selectable`, `?select=1`): mark read / unread through `set`, delete
+ *   built in, and "archive" through the handler below, which moves the
+ *   selection (ids, or the filter minus the unticked rows for "select all
+ *   that match") with the host action `mail.move_to_folder`;
+ * - a menu of row actions, each where its `when` holds, archive by the same handler;
+ * - the typed host actions of @jsudc/shared, called with `useUdcAction`:
+ *   "move to folder" in the reading pane, "simulate incoming mail" in the toolbar;
+ * - live updates: the change feed refetches the list; a change of the
+ *   messages also refreshes the folder counts, the open message and its trail;
+ * - the search box answered by the server's full-text index, by rank;
+ * - the list windowed (`virtualize`): the Newsletters folder holds 5,000.
  */
 
 const MESSAGES = "mail_messages";
@@ -50,7 +81,11 @@ const ROLE_ICONS: Record<string, LucideIcon> = {
   drafts: FileText,
   archive: Archive,
   trash: Trash2,
+  newsletters: Newspaper,
 };
+
+/** Always windowed, even a short folder, with a deeper overscan for fast j / k. */
+const VIRTUALIZE = { enabled: true, overscan: 20 } as const;
 
 /** Newest first, unless the user sorted otherwise: written once into `list.sort` when absent. */
 const DEFAULT_SORT = "received_at:desc";
@@ -73,6 +108,9 @@ export function MailPage() {
     folderRows[0];
   const openId = params.get("m");
   const unreadOnly = params.get("unread") === "1";
+  // Selection is the view's (multiselect, bulk_actions); the toolbar's "Select" switches it on
+  // with `selectable`. Until then the list is 0.4.0's: the active row is the selected one.
+  const selecting = params.get("select") === "1";
 
   const setParam = useCallback(
     (key: string, value: string | null) =>
@@ -88,10 +126,18 @@ export function MailPage() {
     [setParams],
   );
 
-  // The list's default order, once: the view has no default sort of its own.
+  // The list's default order: the view has no default sort of its own. While a search is
+  // typed, the newest-first default steps aside, so the server answers by relevance (a search
+  // without a sort comes best match first); a sort the user picks is kept either way.
+  const searchText = params.get("list.q") ?? "";
+  const searched = useRef(searchText !== "");
   useEffect(() => {
-    if (params.get("list.sort") === null) setParam("list.sort", DEFAULT_SORT);
-  }, [params, setParam]);
+    const sort = params.get("list.sort");
+    const was = searched.current;
+    searched.current = searchText !== "";
+    if (searchText !== "" && !was && sort === DEFAULT_SORT) setParam("list.sort", null);
+    else if (searchText === "" && sort === null) setParam("list.sort", DEFAULT_SORT);
+  }, [params, searchText, setParam]);
 
   // The host's filter: the open folder (and, with the toolbar's switch, unread only).
   const folderId = folder?.__meta.id;
@@ -102,6 +148,9 @@ export function MailPage() {
   }, [folderId, unreadOnly]);
 
   const markSeen = useMarkSeen();
+  useLiveCounts();
+  const archiveId = folderRows.find((f) => f.role === "archive")?.__meta.id;
+  const actions = useArchiveHandler(archiveId);
   const open = useCallback(
     (row: Row | null) => setParam("m", row ? row.__meta.id : null),
     [setParam],
@@ -195,17 +244,33 @@ export function MailPage() {
             chrome="embedded"
             pagingMode="infinite"
             urlPrefix="list."
+            virtualize={VIRTUALIZE}
+            selectable={selecting}
+            actions={actions}
             toolbarStart={
-              <Button
-                variant={unreadOnly ? "primary" : "outline"}
-                size="sm"
-                data-testid="mail-unread-only"
-                aria-pressed={unreadOnly}
-                onClick={() => setParam("unread", unreadOnly ? null : "1")}
-              >
-                <MailIcon aria-hidden />
-                {t("MAIL", "UNREAD_ONLY")}
-              </Button>
+              <>
+                <Button
+                  variant={unreadOnly ? "primary" : "outline"}
+                  size="sm"
+                  data-testid="mail-unread-only"
+                  aria-pressed={unreadOnly}
+                  onClick={() => setParam("unread", unreadOnly ? null : "1")}
+                >
+                  <MailIcon aria-hidden />
+                  {t("MAIL", "UNREAD_ONLY")}
+                </Button>
+                <Button
+                  variant={selecting ? "primary" : "outline"}
+                  size="sm"
+                  data-testid="mail-select-mode"
+                  aria-pressed={selecting}
+                  onClick={() => setParam("select", selecting ? null : "1")}
+                >
+                  <ListChecks aria-hidden />
+                  {t("MAIL", "SELECT")}
+                </Button>
+                <SimulateIncoming />
+              </>
             }
             activeRowId={openId}
             onActiveRowChange={open}
@@ -214,7 +279,7 @@ export function MailPage() {
         ) : null}
       </section>
 
-      <ReadingPane user={user} id={openId} onToggleSeen={markSeen} />
+      <ReadingPane user={user} id={openId} folders={folderRows} onToggleSeen={markSeen} />
     </div>
   );
 }
@@ -250,13 +315,130 @@ function useMarkSeen() {
   );
 }
 
+/**
+ * What the change feed does not know: the folders' counts are computed from
+ * the messages, and the reading pane reads one message under a key of its
+ * own. Whenever the feed says the messages changed — a bulk action here, a
+ * move in another tab, a message that just arrived — those are read again.
+ * (The list itself is refetched by the data view, which subscribes on its own.)
+ */
+function useLiveCounts() {
+  const qc = useQueryClient();
+  useUdcChanges(MESSAGES, () => {
+    void qc.invalidateQueries({ queryKey: udcKeys.lists(FOLDERS) });
+    void qc.invalidateQueries({ queryKey: udcKeys.lists(AUDIT) });
+    void qc.invalidateQueries({ queryKey: ["example", "mail", "read"] });
+  });
+}
+
+/**
+ * The bulk bar's and the row menu's "archive": the view declares the kind
+ * without `set`, so it comes here. One host action moves the rows — by
+ * `ids` (a selection, or the one row of a menu), or by `filter` minus
+ * `exceptIds` when "select all that match" is on (the folder has no total,
+ * so the server counts what it moved).
+ */
+function useArchiveHandler(archiveId: string | undefined): BulkActionHandlers {
+  const { t } = useI18n();
+  const { toast } = useToast();
+  const move = useUdcAction(moveToFolder, { invalidates: [MESSAGES, FOLDERS] });
+  return useMemo<BulkActionHandlers>(
+    () => ({
+      archive: async ({ ids, filter, exceptIds, row, clearSelection }) => {
+        if (!archiveId) return;
+        const res = await move.mutateAsync(
+          ids
+            ? { folder_id: archiveId, ids }
+            : {
+                folder_id: archiveId,
+                filter,
+                ...(exceptIds?.length ? { except_ids: exceptIds } : {}),
+              },
+        );
+        if (!row) clearSelection();
+        toast({ title: t("MAIL", "ARCHIVED", { count: res.moved }) });
+      },
+    }),
+    [archiveId, move.mutateAsync, toast, t],
+  );
+}
+
+/**
+ * The toolbar's "Simulate incoming mail": the backend writes a message into
+ * this user's Inbox outside jsudc and announces it on the change feed. The
+ * list and the Inbox count update by themselves, from the event; another
+ * user's open mailbox hears nothing. No `invalidates` here on purpose.
+ */
+function SimulateIncoming() {
+  const { t } = useI18n();
+  const { toast } = useToast();
+  const simulate = useUdcAction(simulateIncoming, {
+    onSuccess: (res) => toast({ title: t("MAIL", "DELIVERED"), description: res.subject }),
+  });
+  return (
+    <Button
+      variant="outline"
+      size="sm"
+      data-testid="mail-simulate-incoming"
+      disabled={simulate.isPending}
+      onClick={() => simulate.mutate({})}
+    >
+      <MailPlus aria-hidden />
+      {t("MAIL", "SIMULATE_INCOMING")}
+    </Button>
+  );
+}
+
+/**
+ * "Move to…" in the reading pane: the typed host action from @jsudc/shared.
+ * The payload is checked against its request schema by the compiler, the
+ * answer against its response schema at run time.
+ */
+function MoveToFolder({ id, current, folders }: { id: string; current: string; folders: Row[] }) {
+  const { t } = useI18n();
+  const { toast } = useToast();
+  const qc = useQueryClient();
+  const move = useUdcAction(moveToFolder, {
+    invalidates: [MESSAGES, FOLDERS],
+    onSuccess: () => void qc.invalidateQueries({ queryKey: ["example", "mail", "read"] }),
+    onError: (err) =>
+      toast({ title: t("MAIL", "MOVE_FAILED"), description: err.message, variant: "danger" }),
+  });
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="outline" size="sm" data-testid="mail-move" disabled={move.isPending}>
+          <FolderInput aria-hidden />
+          {t("MAIL", "MOVE_TO")}
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="start" data-testid="mail-move-menu">
+        <DropdownMenuLabel>{t("MAIL", "MOVE_TO")}</DropdownMenuLabel>
+        {folders
+          .filter((f) => String(f.name) !== current)
+          .map((f) => (
+            <DropdownMenuItem
+              key={f.__meta.id}
+              data-testid={`mail-move-to-${String(f.role)}`}
+              onSelect={() => move.mutate({ folder_id: f.__meta.id, ids: [id] })}
+            >
+              {String(f.name)}
+            </DropdownMenuItem>
+          ))}
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
+}
+
 function ReadingPane({
   user,
   id,
+  folders,
   onToggleSeen,
 }: {
   user: DemoUserChoice;
   id: string | null;
+  folders: Row[];
   onToggleSeen: (id: string, seen: boolean, version?: number) => void;
 }) {
   const { t } = useI18n();
@@ -311,7 +493,7 @@ function ReadingPane({
               <span data-testid="mail-folder-name">{String(row.folder_name)}</span>
             </div>
           </header>
-          <div>
+          <div className="flex flex-wrap gap-2">
             <Button
               variant="outline"
               size="sm"
@@ -322,6 +504,7 @@ function ReadingPane({
               {row.seen ? <MailIcon aria-hidden /> : <MailOpen aria-hidden />}
               {t("MAIL", row.seen ? "MARK_UNREAD" : "MARK_READ")}
             </Button>
+            <MoveToFolder id={row.__meta.id} current={String(row.folder_name)} folders={folders} />
           </div>
           <div className="text-[14px] leading-relaxed whitespace-pre-line" data-testid="mail-body">
             {String(row.body ?? "")}
