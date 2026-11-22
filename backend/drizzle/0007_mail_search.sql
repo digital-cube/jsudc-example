@@ -1,0 +1,2 @@
+ALTER TABLE "mail_messages" ADD COLUMN "tsv" "tsvector" GENERATED ALWAYS AS (setweight(to_tsvector('english', coalesce(subject, '')), 'A') || setweight(to_tsvector('english', coalesce(sender_name, '') || ' ' || coalesce(sender_email, '')), 'B') || setweight(to_tsvector('english', coalesce(body, '')), 'C')) STORED;--> statement-breakpoint
+CREATE INDEX "mail_messages_tsv_idx" ON "mail_messages" USING gin ("tsv");

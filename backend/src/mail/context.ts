@@ -7,33 +7,45 @@ export interface DemoCtx {
   user: string | null;
 }
 
-/** What `demoContext` reads of a Fastify request: its headers and the parsed body. */
+/** What `demoContext` reads of a Fastify request: its headers, the parsed body and the query. */
 export interface ContextRequest {
   headers: Record<string, string | string[] | undefined>;
   body?: unknown;
+  query?: unknown;
 }
 
 function headerValue(v: string | string[] | undefined): string | undefined {
   return Array.isArray(v) ? v[0] : v;
 }
 
-function collectionOf(body: unknown): string | undefined {
-  if (body === null || typeof body !== "object") return undefined;
-  const c = (body as { collection?: unknown }).collection;
-  return typeof c === "string" ? c : undefined;
+/**
+ * The collections a request is about: the `collection` of an action's body,
+ * or the `collections=a,b` of the change feed's `GET /udc/changes` (0.5.0).
+ */
+function collectionsOf(request: ContextRequest): string[] {
+  const { body, query } = request;
+  if (body !== null && typeof body === "object") {
+    const c = (body as { collection?: unknown }).collection;
+    if (typeof c === "string") return [c];
+  }
+  if (query !== null && typeof query === "object") {
+    const c = (query as { collections?: unknown }).collections;
+    if (typeof c === "string") return c.split(",").map((s) => s.trim());
+  }
+  return [];
 }
 
 /**
  * `udcPlugin`'s `context`: the demo user named in `x-demo-user`. A request
  * on a mailbox collection without a known user is refused in-protocol with
  * the unauthenticated error (`forbidden`, `details.reason: "unauthenticated"`);
- * the other collections need no user, so every other request goes through
- * with `user: null`.
+ * a change-feed stream that asks for one is refused the same way (HTTP 401,
+ * not a stream). The other collections need no user, so every other request
+ * goes through with `user: null`.
  */
 export function demoContext(request: ContextRequest): DemoCtx {
   const user = demoUser(headerValue(request.headers[DEMO_USER_HEADER]));
-  const collection = collectionOf(request.body);
-  if (!user && collection !== undefined && MAIL_COLLECTIONS.has(collection)) {
+  if (!user && collectionsOf(request).some((c) => MAIL_COLLECTIONS.has(c))) {
     throw unauthenticatedError("pick a demo user to open the mailbox");
   }
   return { user: user?.id ?? null };

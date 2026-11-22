@@ -2,6 +2,7 @@ import {
   type CollectionAsset,
   type Db,
   type OnMutateHook,
+  type PostgresTableSearch,
   PostgresTableSource,
   type Source,
 } from "@jsudc/server";
@@ -56,11 +57,30 @@ export function mailFoldersSource(asset: CollectionAsset, db: Db): Source {
 }
 
 /**
+ * The search box, answered by Postgres (0.5.0): `m.tsv` is the generated
+ * `tsvector` of migration 0007 (subject, sender, text; GIN-indexed). The text
+ * is web-search syntax — `"exact phrase"`, `or`, `-excluded` — and is always a
+ * bound parameter (`q`). With `rank`, a search without a sort comes back best
+ * match first; the source then reports `capabilities.search: "source"` and
+ * the client sends the box's text as `search` instead of `contains` filters.
+ */
+export const MAIL_SEARCH: PostgresTableSearch = {
+  match: (q) => sql`m.tsv @@ websearch_to_tsquery('english', ${q})`,
+  rank: (q) => sql`ts_rank(m.tsv, websearch_to_tsquery('english', ${q}))`,
+};
+
+/**
  * `mail_messages`: the messages joined to their folder (`folder_name` is a
  * column of the other table, so read-only), no `count(*)` beside a page
- * (`total_count: false`: a mailbox can be large), and the audit hook.
+ * (`total_count: false`: a mailbox can be large), the audit hook, and the
+ * search answered by the table's full-text index. `opts.onMutate` replaces
+ * the audit hook (a test makes it fail, to see a bulk action roll back).
  */
-export function mailMessagesSource(asset: CollectionAsset, db: Db): Source {
+export function mailMessagesSource(
+  asset: CollectionAsset,
+  db: Db,
+  opts: { onMutate?: OnMutateHook } = {},
+): Source {
   return new PostgresTableSource({
     db,
     schema: asset.schema,
@@ -83,7 +103,8 @@ export function mailMessagesSource(asset: CollectionAsset, db: Db): Source {
       size_bytes: { column: "m.size_bytes", readOnly: true },
     },
     totalCount: false,
-    onMutate: auditMessageChange as OnMutateHook,
+    search: MAIL_SEARCH,
+    onMutate: opts.onMutate ?? (auditMessageChange as OnMutateHook),
   });
 }
 

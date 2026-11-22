@@ -42,6 +42,8 @@ describe("the demo tables", () => {
       "seen",
       "sizeBytes",
       "version",
+      // 0.5.0: the generated full-text document the search is answered from (migration 0007).
+      "tsv",
     ]);
   });
 });

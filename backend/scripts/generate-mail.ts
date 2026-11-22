@@ -17,7 +17,7 @@ export interface MailFolderRow {
   id: string;
   owner: string;
   name: string;
-  role: "inbox" | "sent" | "drafts" | "archive" | "trash" | "custom";
+  role: "inbox" | "sent" | "drafts" | "archive" | "trash" | "custom" | "newsletters";
   position: number;
 }
 
@@ -41,7 +41,7 @@ export interface MailSeed {
 }
 
 /** Messages per folder role (the custom folder included): 300 a user. */
-export const MESSAGES_PER_ROLE: Record<MailFolderRow["role"], number> = {
+export const MESSAGES_PER_ROLE: Record<Exclude<MailFolderRow["role"], "newsletters">, number> = {
   inbox: 160,
   sent: 45,
   drafts: 5,
@@ -153,8 +153,8 @@ function userMail(user: DemoUser, today: string): MailSeed {
   const rand = rng(seedOf(`${user.id}:${today}`));
   // Noon UTC of the seed day: the newest message, the rest before it.
   const end = parseDay(today) + 12 * HOUR;
-  const roles: MailFolderRow["role"][] = ["inbox", "sent", "drafts", "archive", "trash", "custom"];
-  const names: Record<MailFolderRow["role"], string> = {
+  const roles = ["inbox", "sent", "drafts", "archive", "trash", "custom"] as const;
+  const names: Record<(typeof roles)[number], string> = {
     inbox: "Inbox",
     sent: "Sent",
     drafts: "Drafts",
@@ -173,7 +173,7 @@ function userMail(user: DemoUser, today: string): MailSeed {
   );
   const messages: MailMessageRow[] = [];
   for (const folder of folders) {
-    const n = MESSAGES_PER_ROLE[folder.role];
+    const n = MESSAGES_PER_ROLE[folder.role as keyof typeof MESSAGES_PER_ROLE];
     for (let i = 0; i < n; i++) {
       // Spread over the 60 days, newest first; the first Inbox message is the welcome.
       const age =
@@ -190,9 +190,10 @@ function userMail(user: DemoUser, today: string): MailSeed {
       const body = welcome
         ? [
             `Hello ${user.name.split(" ")[0]},`,
-            "this mailbox is the jsudc 0.4.0 example: your folders and messages live in two relational tables, served by postgres_table and held to your user by the server's row scope.",
+            "this mailbox is the jsudc example: your folders and messages live in two relational tables, served by postgres_table and held to your user by the server's row scope.",
             "Switch the user at the top right and you see somebody else's mail, never a mix.",
             "Walk the list with j / k or the arrows, open a message with Enter.",
+            "New in 0.5.0: tick a few messages and archive them at once, open a row's menu with the dots or a right-click, move a message to another folder, search by relevance, simulate incoming mail and watch it arrive, and scroll the five thousand Newsletters without the page slowing down.",
           ].join("\n\n")
         : `Hi,\n\n${sentences.join(" ")}\n\nBest,\n${outgoing ? user.name : otherName}`;
       // Older mail is mostly read; a third of the recent Inbox is not.
@@ -214,6 +215,107 @@ function userMail(user: DemoUser, today: string): MailSeed {
     }
   }
   return { folders, messages };
+}
+
+/** The long folder (0.5.0): its name, its role and how many messages each user gets in it. */
+export const NEWSLETTERS = { name: "Newsletters", role: "newsletters", size: 5000 } as const;
+
+const NEWSLETTER_SENDERS: readonly [string, string][] = [
+  ["Frontend Weekly", "digest@frontend-weekly.example"],
+  ["Postgres Planet", "news@postgres-planet.example"],
+  ["The Balkan Traveller", "letters@balkan-traveller.example"],
+  ["Data Engineering Digest", "hello@de-digest.example"],
+  ["City of Novi Sad", "events@novisad.example"],
+  ["Open Source Monthly", "monthly@oss.example"],
+];
+
+const NEWSLETTER_TOPICS: readonly string[] = [
+  "React Server Components in practice",
+  "Faster full-text search with tsvector",
+  "Indexes you did not know you needed",
+  "A weekend in Kotor",
+  "Streaming rows with Server-Sent Events",
+  "Virtual scrolling without a library",
+  "The state of TypeScript",
+  "Concerts on the Petrovaradin fortress",
+  "Vacuum, bloat and you",
+  "Designing for keyboards first",
+  "Partitioning a billion rows",
+  "Trains from Belgrade to Budapest",
+];
+
+/**
+ * Each demo user's long folder: `NEWSLETTERS.size` messages over the two years
+ * before the seed day, newest first, nearly all of them read — the folder the
+ * table windows (infinite mode, virtualised). Drawn from a generator of its
+ * own, so adding it leaves every row of `generateMail` exactly as it was.
+ * `position` follows the six folders `generateMail` gives each user.
+ */
+export function generateNewsletters(opts: { today: string; size?: number }): MailSeed {
+  const size = opts.size ?? NEWSLETTERS.size;
+  const out: MailSeed = { folders: [], messages: [] };
+  const span = 730 * 24 * HOUR;
+  for (const user of DEMO_USERS) {
+    const rand = rng(seedOf(`${user.id}:newsletters:${opts.today}`));
+    const end = parseDay(opts.today) + 11 * HOUR;
+    const folder: MailFolderRow = {
+      id: uuidFrom(rand),
+      owner: user.id,
+      name: NEWSLETTERS.name,
+      role: NEWSLETTERS.role,
+      position: 6,
+    };
+    out.folders.push(folder);
+    for (let i = 0; i < size; i++) {
+      const [senderName, senderEmail] = pick(rand, NEWSLETTER_SENDERS);
+      const topic = pick(rand, NEWSLETTER_TOPICS);
+      const issue = size - i;
+      const sentences = Array.from({ length: 3 + Math.floor(rand() * 4) }, () =>
+        pick(rand, SENTENCES),
+      );
+      const body = `This week: ${topic.toLowerCase()}.\n\n${sentences.join(" ")}\n\nIssue ${issue} of ${senderName}. Unsubscribe at any time.`;
+      out.messages.push({
+        id: uuidFrom(rand),
+        owner: user.id,
+        folderId: folder.id,
+        senderName,
+        senderEmail,
+        subject: `${senderName} #${issue}: ${topic}`,
+        preview: body.replace(/\s+/g, " ").slice(0, 140),
+        body,
+        receivedAt: new Date(end - Math.round(((i / size) * span) / 60_000) * 60_000),
+        // The newest dozen unread, the rest read.
+        seen: i >= 12,
+        sizeBytes: body.length * 2 + 12_000 + Math.floor(rand() * 60_000),
+      });
+    }
+  }
+  return out;
+}
+
+/**
+ * One new message for `user`'s Inbox, received `at`: what "Simulate incoming
+ * mail" delivers. `n` varies the sender and the subject between clicks.
+ */
+export function incomingMessage(
+  user: DemoUser,
+  n: number,
+): Pick<
+  MailMessageRow,
+  "senderName" | "senderEmail" | "subject" | "preview" | "body" | "sizeBytes"
+> {
+  const rand = rng(seedOf(`${user.id}:incoming:${n}`));
+  const [senderName, senderEmail] = pick(rand, SENDERS);
+  const subject = `New: ${pick(rand, TOPICS).replace("{n}", String(100 + Math.floor(rand() * 900)))}`;
+  const body = `Hi ${user.name.split(" ")[0]},\n\n${[pick(rand, SENTENCES), pick(rand, SENTENCES)].join(" ")}\n\nThis message was delivered by "Simulate incoming mail": written straight into the table, then announced on the change feed.\n\nBest,\n${senderName}`;
+  return {
+    senderName,
+    senderEmail,
+    subject,
+    preview: body.replace(/\s+/g, " ").slice(0, 140),
+    body,
+    sizeBytes: body.length * 2 + 1800,
+  };
 }
 
 /** Every demo user's folders and messages for the seed day `today` (`YYYY-MM-DD`). */

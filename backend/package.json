@@ -29,6 +29,7 @@
     "@fastify/swagger-ui": "^6.1.2",
     "@jsudc/core": "^0.5.0",
     "@jsudc/server": "^0.5.0",
+    "@jsudc/shared": "*",
     "drizzle-orm": "^0.45.4",
     "fastify": "^5.12.7",
     "fastify-type-provider-zod": "^7.0.0",

@@ -1,5 +1,6 @@
-import { buildApp, connect, createDispatcher, loadRegistry } from "@jsudc/server";
+import { buildApp, connect, createChangeFeed, createDispatcher, loadRegistry } from "@jsudc/server";
 import { COLLECTIONS_DIR, config } from "./config.js";
+import { registerMailActions } from "./mail/actions.js";
 import { type DemoCtx, demoContext, demoRowScope } from "./mail/context.js";
 import { exampleSource } from "./sources.js";
 
@@ -18,16 +19,27 @@ const registry = loadRegistry(COLLECTIONS_DIR, (asset, reg) =>
 
 // Dispatcher failures go to Fastify's logger, which exists once the app does.
 const log = { error: (obj: unknown, msg?: string) => app.log.error(obj, msg) };
+// The change feed (0.5.0): every collection says `capabilities.changes: true` and the plugin
+// serves GET /udc/changes as Server-Sent Events, each stream under its own row scope. One
+// process, so the default in-process bus; several processes behind a load balancer would pass
+// `bus: createPostgresChangeBus({ connectionString })` so a write in one reaches the others.
+const changes = createChangeFeed({ log });
 // Who is asking: the demo user the frontend names in x-demo-user (no login). The mailbox
 // collections are held to that user's rows; every other collection is not scoped.
+const dispatcher = createDispatcher<DemoCtx>(registry, { log, rowScope: demoRowScope, changes });
+// The mailbox's own actions (move to folder, simulate incoming mail), typed in @jsudc/shared.
+registerMailActions(dispatcher, { db: handle.db, changes });
 const app = await buildApp({
-  dispatcher: createDispatcher<DemoCtx>(registry, { log, rowScope: demoRowScope }),
+  dispatcher,
   registry,
   context: demoContext,
   logger: { level: config.logLevel },
 });
 
-app.addHook("onClose", () => handle.close());
+app.addHook("onClose", async () => {
+  await changes.close();
+  await handle.close();
+});
 for (const signal of ["SIGINT", "SIGTERM"] as const) {
   process.once(signal, () => void app.close().then(() => process.exit(0)));
 }

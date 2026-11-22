@@ -8,14 +8,16 @@
  * today in Belgrade, or `SEED_TODAY=YYYY-MM-DD` when set; the metrics end at
  * the quarter hour the seed runs in, or at noon of `SEED_TODAY`. The mailbox
  * tables (mail_folders, mail_messages: `postgres_table`, no schema revisions)
- * get the generated folders and messages of every demo user (src/mail/seed.ts).
+ * get the generated folders and messages of every demo user (src/mail/seed.ts),
+ * and each user's long "Newsletters" folder whenever they have none yet, even
+ * without --reset (so a deploy adds it without reseeding anything else).
  */
 import { parseArgs } from "node:util";
 import { connect, readCollectionAssets, seedCollection } from "@jsudc/server";
 import { seedToday } from "../../scripts/generate-appointments.js";
 import { metricsEnd } from "../../scripts/generate-metrics.js";
 import { COLLECTIONS_DIR, config } from "../config.js";
-import { seedMail } from "../mail/seed.js";
+import { seedMail, seedNewsletters } from "../mail/seed.js";
 import { MAIL_COLLECTIONS } from "../mail/users.js";
 import { seedRowsFor } from "../seed-rows.js";
 
@@ -82,6 +84,12 @@ try {
       res.skipped
         ? `${where}.mail_*: already has rows, left alone (use --reset to reseed)`
         : `${where}.mail_*: ${res.folders} folders, ${res.messages} messages`,
+    );
+    const long = await seedNewsletters(handle.db, { today });
+    console.log(
+      long.skipped
+        ? `${where}.mail_*: every user has the long folder already, left alone`
+        : `${where}.mail_*: the long folder for ${long.folders} users, ${long.messages} messages`,
     );
   }
 } finally {

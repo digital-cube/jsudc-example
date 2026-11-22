@@ -3,6 +3,10 @@
 # open folder as the host's filter, no chrome, the keys and row activation.
 # `seen` is drawn by the example's own cell (render: unread_dot, registered
 # in frontend/src/mail/cells.tsx): a dot for an unread message.
+# 0.5.0 adds selection with a bulk bar, a menu of actions on each row, and the
+# search box answered by the table's full-text index (the source reports
+# `capabilities.search: "source"`, so the box's text goes to the server as
+# `search` instead of the `contains` filters over `search.fields`).
 default_renderer: table
 available_renderers: [table, cards]
 pagination: infinite
@@ -30,7 +34,7 @@ card_options:
 
 search:
   fields: [subject, sender_name, sender_email, preview]
-  placeholder: Search subject, sender or text
+  placeholder: 'Search: words, "a phrase", -exclude'
   case_insensitive: true
 
 filters:
@@ -38,4 +42,41 @@ filters:
     kind: bool
     label: Seen
 
-row_actions: []
+# Selection: a checkbox column, Space on the active row, shift-click for a range.
+# The source has no total (total_count: false), so "select all that match"
+# offers no number; an action then goes to the server by the filter (the open
+# folder, the chips) minus the rows unticked, not by ids.
+multiselect: true
+
+# The bulk bar. mark_read / mark_unread carry `set`: a mutate_many update, no
+# handler. archive has no `set`: the example's handler moves the selection to
+# the Archive folder through its own host action (mail.move_to_folder).
+# delete is built in: a confirmation, then a mutate_many delete. With the
+# messages' onMutate each row is audited, and a failing hook rolls the whole
+# request back.
+bulk_actions:
+  - {kind: mark_read, label: Mark read, icon: "lucide:mail-open", set: {seen: true}}
+  - {kind: mark_unread, label: Mark unread, icon: "lucide:mail", set: {seen: false}}
+  - {kind: archive, label: Archive, icon: "lucide:archive"}
+  - {kind: delete, label: Delete, icon: "lucide:trash-2", variant: destructive}
+
+# The same kinds for one row, in a "more" menu (also right-click, Shift+F10 or
+# "." on the active row), each only where its `when` holds for that row: no
+# "Mark read" on a read message, no "Archive" in the Archive.
+row_actions_display: menu
+row_action_defs:
+  - kind: mark_read
+    label: Mark read
+    icon: "lucide:mail-open"
+    set: {seen: true}
+    when: {field: seen, op: eq, value: false}
+  - kind: mark_unread
+    label: Mark unread
+    icon: "lucide:mail"
+    set: {seen: false}
+    when: {field: seen, op: eq, value: true}
+  - kind: archive
+    label: Archive
+    icon: "lucide:archive"
+    when: {field: folder_name, op: neq, value: Archive}
+  - {kind: delete, label: Delete, icon: "lucide:trash-2", variant: destructive}
