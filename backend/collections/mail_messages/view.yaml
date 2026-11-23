@@ -20,8 +20,12 @@ row_height: 40
 # without this view.
 default_sort: [{field: received_at, dir: desc}]
 
-# Every schema field is a column (describe adds the ones a view leaves out),
-# so the ones the reading pane shows instead come last.
+# The fields the reading pane shows instead (address, preview, folder id,
+# text) are `hidden: true` (0.6.0): not a column, and describe does not add a
+# default column for them either. They stay in the schema and in every row, so
+# search still matches `sender_email` and `preview`, and the reading pane and
+# the row actions' `when` read them as before. A field added later still
+# becomes a column (no `columns_mode: listed` here).
 columns:
   - {field: seen, render: unread_dot, pin: left, width: 78, align: center}
   - {field: sender_name, pin: left, width: 190}
@@ -29,10 +33,10 @@ columns:
   - {field: received_at, width: 130, transform: "date_format:DD.MM. HH:mm"}
   - {field: folder_name, width: 110, color: muted}
   - {field: size_bytes, render: bytes, align: right, width: 90, color: muted}
-  - {field: sender_email, width: 200, color: muted}
-  - {field: preview, width: 320, color: muted}
-  - {field: folder_id, width: 120, color: muted}
-  - {field: body, width: 200, color: muted}
+  - {field: sender_email, hidden: true}
+  - {field: preview, hidden: true}
+  - {field: folder_id, hidden: true}
+  - {field: body, hidden: true}
 
 card_options:
   title_field: subject

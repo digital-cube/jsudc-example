@@ -587,7 +587,9 @@ the rows are the ones in the pictures. Open `http://localhost:<vite port>/mail`
    or Docs → Mail messages for its README) is the full view of the same
    collection for the user in the header: every column, both tabs, the
    *Infinite* paging. There is no `owner` column (the scope's field is
-   hidden), and the folder name comes from the join.
+   hidden), nor a column for the address, preview, folder id or text (the
+   view marks them `hidden: true`; they are still in the rows and the filter
+   builder), and the folder name comes from the join.
 
    ![/udc/mail_messages](../frontend/public/screenshots/mail-messages-collection.png)
 
@@ -611,10 +613,16 @@ Three things to know in 0.4.0:
   is loaded: *Showing 50+* while a full page says there may be more,
   *Showing N* once the folder is all loaded, here and on
   `/udc/mail_messages` (`frontend/cypress/e2e/mail-051.cy.ts`).
-- **Every field is a column.** `describe` adds a column for each schema field
-  a view does not list, and a view cannot leave one out, so the message
-  list's `view.yaml` lists the columns the reading pane shows instead
-  (address, preview, folder id, text) last.
+- **Every field is a column, unless the view hides it.** `describe` adds a
+  column for each schema field a view does not list. Up to 0.5.x a view could
+  not leave one out, so the message list's `view.yaml` listed the fields the
+  reading pane shows instead (address, preview, folder id, text) last, as
+  columns. Since 0.6.0 they are `{field: …, hidden: true}`: no column, and
+  `describe` adds no default one for them, but they stay in the schema and in
+  every row. Search still matches `sender_email` and `preview`, the reading
+  pane still reads them, and the row action *Archive* still checks
+  `folder_name`. A field added later would still become a column; a view that
+  wants only its listed columns says `columns_mode: listed`.
 - **The scoped stylesheet.** `/mail` does not import
   `@jsudc/react/styles.scoped.css`: this app's pages are the library's own and
   load the global `styles.css`, and the library asks for one of the two. A
@@ -767,7 +775,8 @@ Things to know in 0.5.0:
   `dist`, as an outside project would.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
   `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for
-  every schema field that `view.yaml` does not list.
+  every schema field that `view.yaml` does not list (a field the view lists
+  with `hidden: true` gets none, as on `/mail`).
 - Schema edits are revisions in `udc_schema_revisions`. A soft delete marks
   the field `deleted: true` and keeps its values.
 - Files and the internet go through the same `list`: `FilesystemSource` and

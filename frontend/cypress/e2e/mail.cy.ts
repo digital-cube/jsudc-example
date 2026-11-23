@@ -73,6 +73,12 @@ describe("/mail: a mailbox per demo user", () => {
       "descending",
     );
     cy.location("search").should("not.contain", "list.sort");
+    // The fields the reading pane shows are `hidden: true` in view.yaml (0.6.0): no column for
+    // them, the last listed column is the size.
+    cy.get('[data-testid="mail-list"] [data-testid="th-size_bytes"]').should("exist");
+    for (const f of ["sender_email", "preview", "folder_id", "body"]) {
+      cy.get(`[data-testid="mail-list"] [data-testid="th-${f}"]`).should("not.exist");
+    }
     rows().first().should("contain", "Welcome to the jsudc mailbox, Ana");
     rows().first().find('[data-testid="unread-dot"]').should("have.attr", "data-unread", "true");
     // Embedded: no title, no tabs, no frame.

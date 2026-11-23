@@ -215,6 +215,42 @@ describe("two demo users over the same tables", () => {
     expect(code(byOwner)).toBe("validation_error");
   });
 
+  it("the reading pane's fields are hidden columns: not in view.columns, still in the schema, rows and search", async () => {
+    const paneOnly = ["sender_email", "preview", "folder_id", "body"];
+    const d = await ok<{
+      schema: { fields: Record<string, unknown> };
+      view: { columns: { field: string }[]; search?: { fields: string[] } };
+    }>("ana", "describe", { collection: "mail_messages" });
+    const columns = d.view.columns.map((c) => c.field);
+    expect(columns).toEqual([
+      "seen",
+      "sender_name",
+      "subject",
+      "received_at",
+      "folder_name",
+      "size_bytes",
+    ]);
+    for (const f of paneOnly) expect(d.schema.fields).toHaveProperty(f);
+    expect(d.view.search?.fields).toEqual(["subject", "sender_name", "sender_email", "preview"]);
+
+    const page = await ok<ListResponse>("ana", "list", {
+      collection: "mail_messages",
+      page: { limit: 1 },
+    });
+    const row = page.rows[0] as Row;
+    for (const f of [...paneOnly, "folder_name"]) expect(row).toHaveProperty(f);
+
+    // The box still finds a message by the (hidden) sender address.
+    const email = String(row.sender_email);
+    const found = await ok<ListResponse>("ana", "list", {
+      collection: "mail_messages",
+      search: email,
+      page: { limit: 500 },
+    });
+    expect(found.rows.length).toBeGreaterThan(0);
+    expect(found.rows.every((r) => r.sender_email === email)).toBe(true);
+  });
+
   it("filters by the open folder and joins the folder's name", async () => {
     const folders = await ok<ListResponse>("ana", "list", { collection: "mail_folders" });
     const inbox = folders.rows.find((f) => f.role === "inbox") as Row;
