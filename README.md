@@ -186,13 +186,15 @@ workspace, `npm test` runs only that one.
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
-dependency: `backend/package.json` and `frontend/package.json` name `^0.6.0`
-for each (the three are released together; `^0.5.x` does not accept 0.6.0, and
-the `@jsudc/core` peer range of server and react is `^0.6.0`). `npm ci` downloads the published
+dependency: `backend/package.json` and `frontend/package.json` name `^0.8.0`
+for each (the three are released together; `^0.7.x` does not accept 0.8.0, and
+the `@jsudc/core` peer range of server and react is `^0.8.0`). `npm ci` downloads the published
 tarballs (already built, `dist` included) and `package-lock.json` pins their
 version and integrity. No GitHub credential is involved. `@jsudc/server` and
 `@jsudc/react` take `@jsudc/core` as a peer dependency, so npm installs a single
-copy of each. The sources live in their own repositories:
+copy of each. Since `@jsudc/server` 0.7.0 everything that needs `pg` (`connect`,
+`Db`, `collectionTable`, `seedCollection`, the Postgres sources) comes from
+`@jsudc/server/postgres`, and `pg` is the backend's own dependency. The sources live in their own repositories:
 [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core),
 [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) and
 [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react).
@@ -202,7 +204,7 @@ alias to a library's source anywhere (not in `vite.config.ts`, `vitest.config.ts
 or any `tsconfig.json`). To change a library, change it in its repository, publish
 a release to npm, and bump the version here.
 
-The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0, 0.4.0, 0.5.0, 0.5.1 and 0.6.0):
+The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0, 0.4.0, 0.5.0, 0.5.1, 0.6.0, 0.7.0 and 0.8.0):
 `frontend/src/index.css` imports the compiled `@jsudc/react/styles.css` (the
 library's utilities, all `udc:`-prefixed) and, for the shell's own unprefixed
 Tailwind, `@jsudc/react/tokens.css`; it does not scan the package.
