@@ -13,6 +13,13 @@ pagination: infinite
 page_size_default: 50
 row_height: 40
 
+# Newest first (0.6.0): the first `list` already carries this sort, the header
+# shows it, and it is not written into the URL. A typed search drops it (the
+# source answers by rank); clearing the search brings it back. A sort the user
+# clicks replaces it. The source has the same `defaultSort` for a client
+# without this view.
+default_sort: [{field: received_at, dir: desc}]
+
 # Every schema field is a column (describe adds the ones a view leaves out),
 # so the ones the reading pane shows instead come last.
 columns:

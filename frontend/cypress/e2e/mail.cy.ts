@@ -52,12 +52,27 @@ function openMail(user: string, query = "") {
 
 describe("/mail: a mailbox per demo user", () => {
   it("opens the user's Inbox newest first; the folders filter the embedded list", () => {
+    // Every list request of the messages (no search typed in this test).
+    const lists: Array<{ sort?: unknown }> = [];
+    cy.intercept("POST", "/udc/list", (req) => {
+      if (req.body.collection === "mail_messages") lists.push(req.body);
+    });
     openMail("ana");
     cy.get(`[data-testid="user-ana"]`).should("have.attr", "data-state", "on");
     folder("inbox").should("have.attr", "aria-current", "true");
     folder("inbox").find('[data-testid="mail-folder-unread"]').should("exist");
-    // The list's own state is under `list.`; the host's folder and message are its own parameters.
-    cy.location("search").should("contain", "list.sort=received_at%3Adesc");
+    // Newest first is the view's `default_sort` (0.6.0): the very first request already carries
+    // it (no unsorted request thrown away), the header shows it, and the URL stays clean.
+    cy.wrap(lists).should((ls) => {
+      expect(ls.length).to.be.at.least(1);
+      for (const body of ls) expect(body.sort).to.deep.eq([{ field: "received_at", dir: "desc" }]);
+    });
+    cy.get('[data-testid="mail-list"] [data-testid="th-received_at"]').should(
+      "have.attr",
+      "aria-sort",
+      "descending",
+    );
+    cy.location("search").should("not.contain", "list.sort");
     rows().first().should("contain", "Welcome to the jsudc mailbox, Ana");
     rows().first().find('[data-testid="unread-dot"]').should("have.attr", "data-unread", "true");
     // Embedded: no title, no tabs, no frame.

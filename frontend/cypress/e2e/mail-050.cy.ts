@@ -228,8 +228,10 @@ describe("/mail on @jsudc/* 0.5.0", () => {
 
   it("the search box is answered by the source: `search` in the request, best match first", () => {
     openMail("ana");
-    // The request the list settles on: the text as `search`, and no sort (the default steps
-    // aside for a search; a request sent before it did is superseded).
+    // The newest message before the search (an earlier test may have delivered a newer one).
+    rows().first().find('[data-testid="cell-subject"]').invoke("text").as("newest");
+    // The text as `search`, and no sort: the view's `default_sort` steps aside for a search the
+    // source answers (the data view does it; the page writes no sort).
     cy.intercept("POST", "/udc/list", (req) => {
       const b = req.body;
       if (b.collection === "mail_messages" && b.search && !b.sort?.length) req.alias = "search";
@@ -248,9 +250,21 @@ describe("/mail on @jsudc/* 0.5.0", () => {
         expect(r.querySelector('[data-testid="cell-subject"]')?.textContent).to.match(/invoice/i);
       }
     });
-    // Cleared, the newest-first default comes back.
+    cy.get('[data-testid="mail-list"] [data-testid="th-received_at"]').should(
+      "not.have.attr",
+      "aria-sort",
+    );
+    // Cleared, the newest-first default comes back, still without a `list.sort` in the URL.
     cy.get('[data-testid="mail-list"] [data-testid="search-input"]').clear();
-    cy.location("search").should("contain", "list.sort=received_at%3Adesc");
+    cy.get('[data-testid="mail-list"] [data-testid="th-received_at"]').should(
+      "have.attr",
+      "aria-sort",
+      "descending",
+    );
+    cy.get<string>("@newest").then((newest) => {
+      rows().first().find('[data-testid="cell-subject"]').should("have.text", newest);
+    });
+    cy.location("search").should("not.contain", "list.sort");
   });
 
   it("the long folder: 5,000 newsletters, a window of rows mounted however far it scrolls", () => {

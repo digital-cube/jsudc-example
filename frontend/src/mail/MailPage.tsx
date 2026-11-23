@@ -41,7 +41,7 @@ import {
   Send,
   Trash2,
 } from "lucide-react";
-import { useCallback, useEffect, useMemo, useRef } from "react";
+import { useCallback, useMemo } from "react";
 import { type DemoUserChoice, useDemoUser } from "./demoUser";
 
 /*
@@ -69,6 +69,10 @@ import { type DemoUserChoice, useDemoUser } from "./demoUser";
  *   messages also refreshes the folder counts, the open message and its trail;
  * - the search box answered by the server's full-text index, by rank;
  * - the list windowed (`virtualize`): the Newsletters folder holds 5,000.
+ *
+ * 0.6.0: newest first is the view's `default_sort`, applied by the data view
+ * without a `list.sort` in the URL and set aside while a search is typed (the
+ * server then answers by rank); the page no longer writes a sort itself.
  */
 
 const MESSAGES = "mail_messages";
@@ -86,9 +90,6 @@ const ROLE_ICONS: Record<string, LucideIcon> = {
 
 /** Always windowed, even a short folder, with a deeper overscan for fast j / k. */
 const VIRTUALIZE = { enabled: true, overscan: 20 } as const;
-
-/** Newest first, unless the user sorted otherwise: written once into `list.sort` when absent. */
-const DEFAULT_SORT = "received_at:desc";
 
 const readKey = (user: DemoUserChoice, id: string) =>
   ["example", "mail", "read", user, id] as const;
@@ -125,19 +126,6 @@ export function MailPage() {
       ),
     [setParams],
   );
-
-  // The list's default order: the view has no default sort of its own. While a search is
-  // typed, the newest-first default steps aside, so the server answers by relevance (a search
-  // without a sort comes best match first); a sort the user picks is kept either way.
-  const searchText = params.get("list.q") ?? "";
-  const searched = useRef(searchText !== "");
-  useEffect(() => {
-    const sort = params.get("list.sort");
-    const was = searched.current;
-    searched.current = searchText !== "";
-    if (searchText !== "" && !was && sort === DEFAULT_SORT) setParam("list.sort", null);
-    else if (searchText === "" && sort === null) setParam("list.sort", DEFAULT_SORT);
-  }, [params, searchText, setParam]);
 
   // The host's filter: the open folder (and, with the toolbar's switch, unread only).
   const folderId = folder?.__meta.id;

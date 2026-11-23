@@ -72,8 +72,9 @@ export const MAIL_SEARCH: PostgresTableSearch = {
 /**
  * `mail_messages`: the messages joined to their folder (`folder_name` is a
  * column of the other table, so read-only), no `count(*)` beside a page
- * (`total_count: false`: a mailbox can be large), the audit hook, and the
- * search answered by the table's full-text index. `opts.onMutate` replaces
+ * (`total_count: false`: a mailbox can be large), the audit hook, newest first
+ * without a sort (`defaultSort`), and the search answered by the table's
+ * full-text index. `opts.onMutate` replaces
  * the audit hook (a test makes it fail, to see a bulk action roll back).
  */
 export function mailMessagesSource(
@@ -104,6 +105,9 @@ export function mailMessagesSource(
     },
     totalCount: false,
     search: MAIL_SEARCH,
+    // Newest first for a client that sends no sort (the view's `default_sort`
+    // covers the UI); a search without a sort still comes back by rank.
+    defaultSort: [{ field: "received_at", dir: "desc" }],
     onMutate: opts.onMutate ?? (auditMessageChange as OnMutateHook),
   });
 }

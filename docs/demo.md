@@ -529,8 +529,10 @@ the rows are the ones in the pictures. Open `http://localhost:<vite port>/mail`
 
 1. **One user's mailbox.** The header says *Ana*. The folder list is hers,
    each folder with its unread count (computed on the server from the
-   messages); the Inbox is open, newest first (`?list.sort=received_at:desc`,
-   the view's own parameter under its prefix). The dot column is the
+   messages); the Inbox is open, newest first: the view's `default_sort`
+   (0.6.0), so the first request already carries it and the **Received**
+   header shows it, while the URL stays clean (a sort you click goes there,
+   as `?list.sort=`, the view's own parameter under its prefix). The dot column is the
    example's `unread_dot` cell. The list has no title, tabs or frame: it is a
    pane. Its toolbar starts with the example's own **Unread only** button.
 
@@ -695,8 +697,9 @@ the folder.
 6. **Search by rank.** Type `invoices` in the search box: the request carries
    `search: "invoices"` (no `contains` filters) and no sort, so Postgres
    answers best match first (`ts_rank`); stemming finds *Invoice*. The
-   newest-first default steps aside while a search is typed and comes back
-   when the box is cleared; a column you sort by is kept. Web-search syntax
+   view's newest-first `default_sort` steps aside while a search is typed
+   (the data view does that itself for a source search) and comes back when
+   the box is cleared; a column you sort by is kept. Web-search syntax
    works: `"design review"`, `build -passed`.
 
    ![A search answered by the full-text index](../frontend/public/screenshots/mail-search.png)
