@@ -1,4 +1,4 @@
-import type { Db } from "@jsudc/server";
+import type { Db } from "@jsudc/server/postgres";
 import { sql } from "drizzle-orm";
 import { generateMail, generateNewsletters, NEWSLETTERS } from "../../scripts/generate-mail.js";
 import { mailFolders, mailMessages } from "../db/schema.js";

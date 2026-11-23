@@ -1,11 +1,10 @@
+import type { CollectionAsset, Source } from "@jsudc/server";
 import {
-  type CollectionAsset,
   type Db,
   type OnMutateHook,
   type PostgresTableSearch,
   PostgresTableSource,
-  type Source,
-} from "@jsudc/server";
+} from "@jsudc/server/postgres";
 import { sql } from "drizzle-orm";
 import type { DemoCtx } from "./context.js";
 

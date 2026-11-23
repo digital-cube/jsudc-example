@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { type SchemaDocInput, SchemaDocSchema } from "@jsudc/core";
-import { PostgresJsonbSource, seedCollection } from "@jsudc/server";
+import { PostgresJsonbSource, seedCollection } from "@jsudc/server/postgres";
 import { beforeAll, describe, expect, it } from "vitest";
 import { generateAppointments } from "../scripts/generate-appointments.js";
 import { COLLECTIONS_DIR } from "../src/config.js";

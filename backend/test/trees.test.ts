@@ -1,7 +1,8 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { SchemaDocSchema, validateRow } from "@jsudc/core";
-import { PostgresJsonbSource, readCollectionAssets, seedCollection } from "@jsudc/server";
+import { readCollectionAssets } from "@jsudc/server";
+import { PostgresJsonbSource, seedCollection } from "@jsudc/server/postgres";
 import { sql } from "drizzle-orm";
 import { describe, expect, it } from "vitest";
 import {

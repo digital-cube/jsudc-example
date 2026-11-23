@@ -1,4 +1,5 @@
-import { buildApp, connect, createChangeFeed, createDispatcher, loadRegistry } from "@jsudc/server";
+import { buildApp, createChangeFeed, createDispatcher, loadRegistry } from "@jsudc/server";
+import { connect } from "@jsudc/server/postgres";
 import { COLLECTIONS_DIR, config } from "./config.js";
 import { registerMailActions } from "./mail/actions.js";
 import { type DemoCtx, demoContext, demoRowScope } from "./mail/context.js";

@@ -1,4 +1,5 @@
-import { type CollectionAsset, makeSource, type Source } from "@jsudc/server";
+import type { CollectionAsset, Source } from "@jsudc/server";
+import { makeSource } from "@jsudc/server/postgres";
 import { mailSource } from "./mail/sources.js";
 
 export type ExampleSourceDeps = Parameters<typeof makeSource>[1];

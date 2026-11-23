@@ -12,11 +12,9 @@ import {
   HttpApiSource,
   loadRegistry,
   MemorySource,
-  makeSource,
-  PostgresJsonbSource,
   readCollectionAssets,
-  seedCollection,
 } from "@jsudc/server";
+import { makeSource, PostgresJsonbSource, seedCollection } from "@jsudc/server/postgres";
 import { sql } from "drizzle-orm";
 import { describe, expect, it, vi } from "vitest";
 import { COLLECTIONS_DIR } from "../src/config.js";

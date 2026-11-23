@@ -13,7 +13,8 @@
  * without --reset (so a deploy adds it without reseeding anything else).
  */
 import { parseArgs } from "node:util";
-import { connect, readCollectionAssets, seedCollection } from "@jsudc/server";
+import { readCollectionAssets } from "@jsudc/server";
+import { connect, seedCollection } from "@jsudc/server/postgres";
 import { seedToday } from "../../scripts/generate-appointments.js";
 import { metricsEnd } from "../../scripts/generate-metrics.js";
 import { COLLECTIONS_DIR, config } from "../config.js";

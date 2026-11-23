@@ -4,7 +4,8 @@ import {
   type UdcMessage,
   unauthenticatedError,
 } from "@jsudc/core";
-import type { ChangeFeed, Db, Dispatcher } from "@jsudc/server";
+import type { ChangeFeed, Dispatcher } from "@jsudc/server";
+import type { Db } from "@jsudc/server/postgres";
 import { moveToFolder, simulateIncoming } from "@jsudc/shared";
 import { sql } from "drizzle-orm";
 import { incomingMessage } from "../../scripts/generate-mail.js";

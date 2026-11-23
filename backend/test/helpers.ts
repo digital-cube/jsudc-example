@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { join } from "node:path";
 import { type Row, UdcError } from "@jsudc/core";
-import { connect } from "@jsudc/server";
+import { connect } from "@jsudc/server/postgres";
 import { afterAll, expect } from "vitest";
 import { COLLECTIONS_DIR, config } from "../src/config.js";
 
