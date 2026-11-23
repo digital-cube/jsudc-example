@@ -75,7 +75,15 @@ describe("inline edit", () => {
   });
 
   it("a version conflict shows the toast and the fresh value", () => {
+    // Live updates off for this test: with the change feed up, the edit made
+    // "elsewhere" below is pushed to the table, which refetches the row and
+    // then saves on the fresh version — no conflict (TCK7F3XRHY). A 503 is not
+    // a refusal, so the feed only retries; it never opens and never delivers,
+    // and companies has no refresh_interval_ms to poll with instead.
+    cy.intercept("GET", "/udc/changes*", { statusCode: 503, body: "" }).as("changes");
+    cy.intercept("POST", "/udc/mutate").as("save");
     cy.openCompanies();
+    cy.wait("@changes");
     serverFirstRow().then((row) => {
       firstRow().should("have.attr", "data-row-id", row.__meta.id);
       // Someone else edits the row after the table loaded it.
@@ -88,6 +96,8 @@ describe("inline edit", () => {
       });
       firstRow().find('[data-testid="cell-name"]').dblclick();
       cy.get('[data-testid="cell-editor"] input').clear().type("mine{enter}");
+      // The table saved on the version it loaded, which is stale by now.
+      cy.wait("@save").its("request.body.expected_version").should("eq", row.__meta.version);
       cy.get('[data-testid="toast"]')
         .should("be.visible")
         .and("contain.text", "Row was changed by someone else");
