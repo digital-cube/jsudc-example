@@ -356,7 +356,13 @@ npm run e2e -- --spec frontend/cypress/e2e/edit.cy.ts  # one file (other argumen
   keeps its shared memory in `TMPDIR`. When `/tmp` is full or over the user's quota, that
   memory fails to allocate: requests end in `ERR_INSUFFICIENT_RESOURCES` and Cypress
   reports "the Electron Renderer process just crashed". So the run sets `TMPDIR` to
-  `.thilo/e2e-tmp` on the checkout's disk (`E2E_TMPDIR` to put it elsewhere).
+  `.thilo/e2e-tmp` on the checkout's disk (`E2E_TMPDIR` to put it elsewhere). Before any
+  server starts it writes a 64 MB probe file there and stops with the reason ("disk quota
+  exceeded", ENOSPC) when it can't, instead of letting the browser crash.
+- **A Cypress that dies.** When a worker's Cypress process is killed by a signal (exit
+  128 + n, e.g. 132 SIGILL from the Electron main process), the files it left unfinished
+  get one more Cypress run; the summary line says so. A file that ended, passed or failed,
+  is never run again.
 
 A full run takes minutes. **Run it in the background with its output in a log**
 (`npm run e2e > .thilo/e2e.log 2>&1`), and follow the log or the progress file. Don't

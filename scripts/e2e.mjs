@@ -68,6 +68,8 @@ const SPEC_PATTERN = "cypress/e2e/**/*.cy.ts";
 // ("We detected that the Electron Renderer process just crashed"). The run gets a temporary
 // directory on the disk of the checkout instead (E2E_TMPDIR overrides it).
 const E2E_TMPDIR = resolve(process.env.E2E_TMPDIR || join(OUT_DIR, "e2e-tmp"));
+// How much the run must be able to write into E2E_TMPDIR before Cypress starts.
+const TMPDIR_PROBE_MB = 64;
 
 // --- arguments ---------------------------------------------------------------------------
 
@@ -91,6 +93,26 @@ if (!Number.isInteger(workersWanted) || workersWanted < 1) {
 }
 
 // --- small helpers -----------------------------------------------------------------------
+
+// A full or over-quota TMPDIR doesn't make Cypress fail cleanly: the browser either
+// won't start (exit 133) or its renderer crashes a few tests into a spec. So write a
+// probe file before any server starts, and stop with the reason if that fails.
+function checkTmpdir() {
+  const probe = join(E2E_TMPDIR, `.space-probe-${process.pid}`);
+  try {
+    writeFileSync(probe, Buffer.alloc(TMPDIR_PROBE_MB * 1024 * 1024));
+  } catch (err) {
+    // Node has no name for EDQUOT and reports it as UNKNOWN, errno -122.
+    const reason = err.errno === -122 ? "disk quota exceeded" : (err.code ?? err.message);
+    throw new Error(
+      `cannot write ${TMPDIR_PROBE_MB} MB into TMPDIR ${E2E_TMPDIR} (${reason}); ` +
+        "the browser keeps its shared memory there and crashes without it. " +
+        "Free space or quota there, or point E2E_TMPDIR at another disk",
+    );
+  } finally {
+    rmSync(probe, { force: true });
+  }
+}
 
 function log(msg) {
   console.log(`\n[e2e] ${msg}`);
@@ -476,33 +498,49 @@ async function runWorker(w) {
     );
     await waitFor(`${webUrl}/healthz`, `w${w.index} vite proxy`);
 
-    say(out, `cypress: ${w.keys.map((k) => basename(k)).join(", ")}`);
-    const cypress = start(
-      `w${w.index} cypress`,
-      "npx",
-      [
-        "cypress",
-        "run",
-        "--project",
-        "frontend",
-        "--config",
-        // The screenshots folder is shared: emptied once before the workers start, not by each.
-        `baseUrl=${webUrl}${w.workers > 1 ? ",trashAssetsBeforeRuns=false" : ""}`,
-        "--spec",
-        w.keys.map((k) => join(FRONTEND, k)).join(","),
-        ...cypressArgs,
-      ],
-      {
-        env: {
-          ...process.env,
-          // Specs that edit rows reseed first, so each spec file starts from the same 200 rows.
-          E2E_SEED_CMD: `cd ${JSON.stringify(ROOT)} && ${seedCmd}`,
-          E2E_EVENTS_FILE: w.eventsFile,
+    const cypress = (keys) => {
+      say(out, `cypress: ${keys.map((k) => basename(k)).join(", ")}`);
+      return start(
+        `w${w.index} cypress`,
+        "npx",
+        [
+          "cypress",
+          "run",
+          "--project",
+          "frontend",
+          "--config",
+          // The screenshots folder is shared: emptied once before the workers start, not by each.
+          `baseUrl=${webUrl}${w.workers > 1 ? ",trashAssetsBeforeRuns=false" : ""}`,
+          "--spec",
+          keys.map((k) => join(FRONTEND, k)).join(","),
+          ...cypressArgs,
+        ],
+        {
+          env: {
+            ...process.env,
+            // Specs that edit rows reseed first, so each spec file starts from the same 200 rows.
+            E2E_SEED_CMD: `cd ${JSON.stringify(ROOT)} && ${seedCmd}`,
+            E2E_EVENTS_FILE: w.eventsFile,
+          },
         },
-      },
-      out,
-    );
-    w.code = await exitCode(cypress);
+        out,
+      );
+    };
+    w.code = await exitCode(cypress(w.keys));
+    // Cypress killed by a signal (exit 128 + n: 132 SIGILL, 133 SIGTRAP, 139 SIGSEGV) is the
+    // browser process dying, not a test failing. The files it never finished get one more
+    // Cypress; a file that ended, passed or failed, is never run again.
+    if (w.code >= 128 && !stopping) {
+      await drainEvents(w);
+      const unfinished = w.keys.filter((k) => !["passed", "failed"].includes(progress.specs[k].status));
+      if (unfinished.length > 0) {
+        const msg = `worker ${w.index}: cypress died (exit ${w.code}) with ${unfinished.length} file(s) unfinished; running them once more`;
+        say(out, msg);
+        if (out) log(msg);
+        w.relaunched = unfinished.length;
+        w.code = await exitCode(cypress(unfinished));
+      }
+    }
   } catch (err) {
     w.code = 1;
     w.error = err instanceof Error ? err.message : String(err);
@@ -544,6 +582,7 @@ let code = 1;
 try {
   mkdirSync(OUT_DIR, { recursive: true });
   mkdirSync(E2E_TMPDIR, { recursive: true });
+  checkTmpdir();
   const previous = readProgress();
   const keys = listSpecs();
   if (keys.length === 0) throw new Error("no spec files");
@@ -659,6 +698,7 @@ try {
       `  worker ${w.index}: ${mine.filter((x) => x.status === "passed").length}/${mine.length} files passed, ` +
         `${passed} tests passed, ${failed} failed, ${fmtMs(w.endedAt - startedAt)}, exit ${w.code}` +
         (w.error ? ` — ${w.error}` : "") +
+        (w.relaunched ? `, cypress relaunched once for ${w.relaunched} file(s) after it died` : "") +
         (workers > 1 ? ` (${relative(ROOT, w.logFile)})` : ""),
     );
   }
