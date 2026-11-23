@@ -13,9 +13,9 @@ The libraries live in their own repositories:
 
 | package | repository | what it is |
 |---|---|---|
-| `@jsudc/core` | [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core) | the shared protocol, once: envelopes, the filter DSL and an in-memory evaluator, schema and view types, row validation and every action payload as Zod schemas with inferred types, plus the transport client (`@jsudc/core/client`); since 0.5.0 `mutate_many`, `defineHostAction`, `ListRequest.search` and the change feed's `ChangeEvent` / `UdcClient.changes` |
-| `@jsudc/server` | [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) | dispatcher, collection registry, the six sources (`postgres_table` since 0.4.0), schema revisions, seeding, the request context and row scope, `onMutate`, the Fastify plugin; since 0.5.0 `mutate_many`, typed host actions (`Dispatcher.register`), search answered by the source and the change feed (`createChangeFeed`, `GET /udc/changes`) |
-| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), embedding and row activation, custom cells, sessions, the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet (global or scoped); since 0.5.0 selection and the bulk bar, row actions, `useUdcAction` / `useUdcMutateMany`, live updates (`UdcProvider changes`, `useUdcChanges`) and windowed long lists; since 0.5.1 (a patch of react alone) the row count and the pager of a source without a total (`total_count: false`) |
+| `@jsudc/core` | [digital-cube/jsudc-core](https://github.com/digital-cube/jsudc-core) | the shared protocol, once: envelopes, the filter DSL and an in-memory evaluator, schema and view types, row validation and every action payload as Zod schemas with inferred types, plus the transport client (`@jsudc/core/client`); since 0.5.0 `mutate_many`, `defineHostAction`, `ListRequest.search` and the change feed's `ChangeEvent` / `UdcClient.changes`; since 0.6.0 the view keys `default_sort`, `hidden` / `columns_mode`, column `sortable`, `width: fill` / `grow` / `min_width` / `hide_below`, and `describe.sortable` |
+| `@jsudc/server` | [digital-cube/jsudc-server](https://github.com/digital-cube/jsudc-server) | dispatcher, collection registry, the six sources (`postgres_table` since 0.4.0), schema revisions, seeding, the request context and row scope, `onMutate`, the Fastify plugin; since 0.5.0 `mutate_many`, typed host actions (`Dispatcher.register`), search answered by the source and the change feed (`createChangeFeed`, `GET /udc/changes`); since 0.6.0 `PostgresTableSource` `defaultSort`, hidden columns and `columns_mode` in `describe`, and `describe.sortable.fields` |
+| `@jsudc/react` | [digital-cube/jsudc-react](https://github.com/digital-cube/jsudc-react) | hooks, `<UdcDataView>` and its seven renderers (one subpath each), embedding and row activation, custom cells, sessions, the default UI kit, the router adapter, the schema editor, i18n, theme tokens and a compiled stylesheet (global or scoped); since 0.5.0 selection and the bulk bar, row actions, `useUdcAction` / `useUdcMutateMany`, live updates (`UdcProvider changes`, `useUdcChanges`) and windowed long lists; since 0.5.1 (a patch of react alone) the row count and the pager of a source without a total (`total_count: false`); since 0.6.0 `chrome` toolbar flags, `default_sort` / `defaultSort`, hidden columns, plain headers for fields the source does not sort, flexible column widths and `TBL_<COLLECTION>.EMPTY_*` |
 
 The point of the exercise is the **shared interface**: in UDC today the protocol is
 declared twice, once in Python and once in TypeScript, and the two drift; in jsudc
@@ -186,9 +186,9 @@ workspace, `npm test` runs only that one.
 
 `backend/` depends on `@jsudc/core` and `@jsudc/server`, `frontend/` on
 `@jsudc/core` and `@jsudc/react`. They come **from npmjs.org**, like any other
-dependency: `backend/package.json` names `^0.5.0` for both, `frontend/package.json`
-`@jsudc/core` `^0.5.0` and `@jsudc/react` `^0.5.1` (a patch release of react alone;
-core and server stay at 0.5.0). `npm ci` downloads the published
+dependency: `backend/package.json` and `frontend/package.json` name `^0.6.0`
+for each (the three are released together; `^0.5.x` does not accept 0.6.0, and
+the `@jsudc/core` peer range of server and react is `^0.6.0`). `npm ci` downloads the published
 tarballs (already built, `dist` included) and `package-lock.json` pins their
 version and integrity. No GitHub credential is involved. `@jsudc/server` and
 `@jsudc/react` take `@jsudc/core` as a peer dependency, so npm installs a single
@@ -202,7 +202,7 @@ alias to a library's source anywhere (not in `vite.config.ts`, `vitest.config.ts
 or any `tsconfig.json`). To change a library, change it in its repository, publish
 a release to npm, and bump the version here.
 
-The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0, 0.4.0, 0.5.0 and 0.5.1):
+The frontend uses `@jsudc/react` as its CHANGELOG's 0.2.0 migration asks (unchanged in 0.3.0, 0.4.0, 0.5.0, 0.5.1 and 0.6.0):
 `frontend/src/index.css` imports the compiled `@jsudc/react/styles.css` (the
 library's utilities, all `udc:`-prefixed) and, for the shell's own unprefixed
 Tailwind, `@jsudc/react/tokens.css`; it does not scan the package.

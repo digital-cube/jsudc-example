@@ -760,8 +760,7 @@ Things to know in 0.5.0:
   `@jsudc/server` and `@jsudc/react` are the server machinery and the data view.
   What you are looking at is the example: `backend/` (the collections, their
   tables, migrations and generators) and `frontend/` (the shell and its strings)
-  depend on the three from npmjs.org (`@jsudc/react` `^0.5.1`, the other two
-  `^0.5.0`) and import their built
+  depend on the three from npmjs.org (all `^0.6.0`) and import their built
   `dist`, as an outside project would.
 - One endpoint, `POST /udc/:action`, serves `describe`, `list`, `mutate`,
   `schema.*`, `reindex`, `tree.reparent` and `source.read`. The new column shows up because `describe` derives a column for
