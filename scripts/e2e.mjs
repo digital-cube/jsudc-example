@@ -17,6 +17,10 @@
  * given, Cypress printing straight to the terminal. With more than one worker each
  * worker's output goes to .thilo/e2e-w<i>.log and the terminal gets the progress.
  *
+ * Display: on Linux without DISPLAY each worker gets an Xvfb of its own (:100 and up, the
+ * first displays with no lock file), passed to Cypress as DISPLAY and stopped with the
+ * worker's servers, so parallel workers never race for the :99 Cypress would spawn.
+ *
  * Progress: after every spec file the state of the run is written to
  * .thilo/e2e-progress.json (the per-file results, the totals, the elapsed time) and
  * one line is printed. `--resume` runs only the files that did not pass in the run
@@ -241,6 +245,64 @@ function stopAll() {
 function say(out, msg) {
   if (out) out.write(`\n[e2e] ${msg}\n`);
   else log(msg);
+}
+
+// --- a display of its own for each worker ------------------------------------------------
+//
+// Without DISPLAY, every `cypress run` spawns an Xvfb of its own, always on :99. Two workers
+// starting in the same second race for it, and the loser dies before its first spec
+// ("Server is already active for display 99"). So on Linux, unless DISPLAY is already set,
+// each worker gets an Xvfb started here on a display nobody holds (from XVFB_DISPLAY_BASE up,
+// skipping any number with a lock file or a socket), and Cypress, seeing DISPLAY, starts none.
+// The Xvfb is one of the worker's children and is stopped with its servers.
+
+const XVFB_DISPLAY_BASE = 100;
+const XVFB_DIED = "Xvfb exited with a non zero exit code";
+const ownXvfb =
+  process.platform === "linux" &&
+  !process.env.DISPLAY &&
+  ["/usr/bin/Xvfb", "/usr/local/bin/Xvfb"].some((p) => existsSync(p));
+const displaysTaken = new Set();
+
+function displayHeld(n) {
+  return existsSync(`/tmp/.X${n}-lock`) || existsSync(`/tmp/.X11-unix/X${n}`);
+}
+
+/** Start an Xvfb on the first free display; resolves to its number once its socket is there. */
+async function startXvfb(w, out) {
+  for (let n = XVFB_DISPLAY_BASE + w.index - 1; n < XVFB_DISPLAY_BASE + 200; n++) {
+    if (displaysTaken.has(n) || displayHeld(n)) continue;
+    displaysTaken.add(n);
+    const child = start(
+      `w${w.index} Xvfb :${n}`,
+      "Xvfb",
+      [`:${n}`, "-screen", "0", "1920x1080x24", "-nolisten", "tcp"],
+      {},
+      out,
+    );
+    let exited = false;
+    child.once("exit", () => {
+      exited = true;
+    });
+    const socket = `/tmp/.X11-unix/X${n}`;
+    const until = Date.now() + 10_000;
+    while (!exited && !existsSync(socket) && Date.now() < until && !stopping) {
+      await new Promise((r) => setTimeout(r, 100));
+    }
+    if (existsSync(socket) && !exited) {
+      w.xvfb = child;
+      return n;
+    }
+    // Another process took the display in the meantime (or Xvfb is stuck): try the next one.
+    child.quietExit = true;
+    try {
+      process.kill(-child.pid, "SIGTERM");
+    } catch {
+      // Already gone.
+    }
+    say(out, `Xvfb :${n} did not start, trying the next display`);
+  }
+  throw new Error(`no free X display in :${XVFB_DISPLAY_BASE}..:${XVFB_DISPLAY_BASE + 199}`);
 }
 
 async function waitFor(url, label, timeoutMs = 60_000) {
@@ -498,9 +560,17 @@ async function runWorker(w) {
     );
     await waitFor(`${webUrl}/healthz`, `w${w.index} vite proxy`);
 
+    let display = null;
+    const ensureDisplay = async () => {
+      if (!ownXvfb || (w.xvfb && w.xvfb.exitCode === null && w.xvfb.signalCode === null)) return;
+      display = await startXvfb(w, out);
+      say(out, `Xvfb on :${display}`);
+    };
+    await ensureDisplay();
+
     const cypress = (keys) => {
       say(out, `cypress: ${keys.map((k) => basename(k)).join(", ")}`);
-      return start(
+      const child = start(
         `w${w.index} cypress`,
         "npx",
         [
@@ -521,26 +591,43 @@ async function runWorker(w) {
             // Specs that edit rows reseed first, so each spec file starts from the same 200 rows.
             E2E_SEED_CMD: `cd ${JSON.stringify(ROOT)} && ${seedCmd}`,
             E2E_EVENTS_FILE: w.eventsFile,
+            ...(display !== null ? { DISPLAY: `:${display}` } : {}),
           },
         },
         out,
       );
+      // An Xvfb Cypress spawned itself (DISPLAY set to nothing usable, or no Xvfb of ours)
+      // that dies takes the whole Cypress with it, exit 1, before any spec: watch for it.
+      let tail = "";
+      const watch = (chunk) => {
+        tail = (tail + chunk.toString("utf8")).slice(-4096);
+        if (tail.includes(XVFB_DIED)) child.xvfbDied = true;
+      };
+      child.stdout?.on("data", watch);
+      child.stderr?.on("data", watch);
+      return child;
     };
-    w.code = await exitCode(cypress(w.keys));
+    let child = cypress(w.keys);
+    w.code = await exitCode(child);
     // Cypress killed by a signal (exit 128 + n: 132 SIGILL, 133 SIGTRAP, 139 SIGSEGV) is the
-    // browser process dying, not a test failing. The files it never finished get one more
-    // Cypress; a file that ended, passed or failed, is never run again.
-    if (w.code >= 128 && !stopping) {
+    // browser process dying, not a test failing; neither is its Xvfb exiting under it. The
+    // files it never finished get one more Cypress; a file that ended, passed or failed, is
+    // never run again.
+    if ((w.code >= 128 || child.xvfbDied) && !stopping) {
       await drainEvents(w);
       const unfinished = w.keys.filter(
         (k) => !["passed", "failed"].includes(progress.specs[k].status),
       );
       if (unfinished.length > 0) {
-        const msg = `worker ${w.index}: cypress died (exit ${w.code}) with ${unfinished.length} file(s) unfinished; running them once more`;
+        const why = child.xvfbDied ? "its Xvfb died" : `cypress died (exit ${w.code})`;
+        const msg = `worker ${w.index}: ${why} with ${unfinished.length} file(s) unfinished; running them once more`;
         say(out, msg);
         if (out) log(msg);
         w.relaunched = unfinished.length;
-        w.code = await exitCode(cypress(unfinished));
+        w.relaunchReason = why;
+        await ensureDisplay();
+        child = cypress(unfinished);
+        w.code = await exitCode(child);
       }
     }
   } catch (err) {
@@ -701,7 +788,7 @@ try {
         `${passed} tests passed, ${failed} failed, ${fmtMs(w.endedAt - startedAt)}, exit ${w.code}` +
         (w.error ? ` — ${w.error}` : "") +
         (w.relaunched
-          ? `, cypress relaunched once for ${w.relaunched} file(s) after it died`
+          ? `, cypress relaunched once for ${w.relaunched} file(s) after ${w.relaunchReason}`
           : "") +
         (workers > 1 ? ` (${relative(ROOT, w.logFile)})` : ""),
     );
