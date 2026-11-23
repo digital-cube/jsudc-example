@@ -532,7 +532,9 @@ async function runWorker(w) {
     // Cypress; a file that ended, passed or failed, is never run again.
     if (w.code >= 128 && !stopping) {
       await drainEvents(w);
-      const unfinished = w.keys.filter((k) => !["passed", "failed"].includes(progress.specs[k].status));
+      const unfinished = w.keys.filter(
+        (k) => !["passed", "failed"].includes(progress.specs[k].status),
+      );
       if (unfinished.length > 0) {
         const msg = `worker ${w.index}: cypress died (exit ${w.code}) with ${unfinished.length} file(s) unfinished; running them once more`;
         say(out, msg);
@@ -698,7 +700,9 @@ try {
       `  worker ${w.index}: ${mine.filter((x) => x.status === "passed").length}/${mine.length} files passed, ` +
         `${passed} tests passed, ${failed} failed, ${fmtMs(w.endedAt - startedAt)}, exit ${w.code}` +
         (w.error ? ` — ${w.error}` : "") +
-        (w.relaunched ? `, cypress relaunched once for ${w.relaunched} file(s) after it died` : "") +
+        (w.relaunched
+          ? `, cypress relaunched once for ${w.relaunched} file(s) after it died`
+          : "") +
         (workers > 1 ? ` (${relative(ROOT, w.logFile)})` : ""),
     );
   }
