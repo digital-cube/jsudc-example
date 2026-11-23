@@ -183,6 +183,8 @@ Stranica Primeri u meniju objašnjava oba i vodi na svaki.
       en: 'Search: words, "a phrase", -exclude',
       sr: 'Pretraga: reči, "fraza", -isključi',
     },
+    // An empty folder (@jsudc/react asks TBL_<COLLECTION> before APP; the next release).
+    EMPTY_PLAIN: { en: "No messages here.", sr: "Ovde nema poruka." },
     // The bulk bar's and the row menu's buttons (view.yaml bulk_actions / row_action_defs).
     ACTION_MARK_READ: { en: "Mark read", sr: "Označi pročitano" },
     ACTION_MARK_UNREAD: { en: "Mark unread", sr: "Označi nepročitano" },
