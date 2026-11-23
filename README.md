@@ -300,7 +300,7 @@ synthetic `companies` seed deterministically.
 npm run dev        # backend (:5100) and Vite (:5173) together; open /udc/companies
 npm run dev:web    # Vite only, proxying POST /udc/* and /healthz to 127.0.0.1:5100
 npm test -w @jsudc/frontend   # the shell's tests (menu, sidebar groups, about page)
-npm run e2e        # Cypress headless against a reseeded jsudc_test (see below)
+npm run e2e        # Cypress headless on 4 workers, each with its own reseeded database (see below)
 ```
 
 Vite listens on `VITE_PORT` (5173; it moves to the next free port if that one is
@@ -321,11 +321,47 @@ filter tree as base64url JSON, `?sort=field:dir,…`, `?mode=pages|infinite`, `?
 `?tab=`). The paging mode defaults from the view's `pagination`; the user's choice
 is remembered per collection in `localStorage` (`udc:paging:<collection>`).
 
-`npm run e2e` (`scripts/e2e.mjs`) migrates and reseeds the test database
-(`TEST_DATABASE_URL`, 200 rows), starts the backend on it at `E2E_BACKEND_PORT`
-(5110) and Vite at `E2E_WEB_PORT` (5310), runs `cypress run`, and stops both. Spec
-files that edit rows reseed first. Extra arguments go to Cypress, e.g.
-`npm run e2e -- --spec frontend/cypress/e2e/edit.cy.ts`.
+### End-to-end tests (Cypress)
+
+`npm run e2e` (`scripts/e2e.mjs`) migrates and reseeds a test database (200 rows),
+starts a backend on it and a Vite proxying to that backend, runs `cypress run`, and
+stops every server whatever happens. Spec files that edit rows reseed first.
+
+```sh
+npm run e2e > .thilo/e2e.log 2>&1                    # the whole suite, 4 workers
+E2E_WORKERS=1 npm run e2e > .thilo/e2e.log 2>&1      # one worker, as before
+npm run e2e -- --resume > .thilo/e2e.log 2>&1        # only the files that did not pass last time
+npm run e2e -- --spec frontend/cypress/e2e/edit.cy.ts  # one file (other arguments go to Cypress)
+```
+
+- **Workers.** `E2E_WORKERS` (default 4) splits the spec files into that many groups,
+  balanced by the durations the earlier runs recorded. Each worker has its own
+  database (`jsudc_test_1` … `_N` next to `TEST_DATABASE_URL`, created and migrated
+  when missing), its own backend and Vite ports (the first free ones from
+  `E2E_BACKEND_PORT`, 5110, and `E2E_WEB_PORT`, 5310) and its own reseed command, so
+  one worker's reseed never resets another's rows. Each worker's Cypress output goes to
+  `.thilo/e2e-w<N>.log`; the terminal gets the progress and one summary. The exit code
+  is non-zero when any worker failed. `E2E_WORKERS=1` is the old run: `TEST_DATABASE_URL`
+  itself, the two ports exactly, Cypress printing to the terminal.
+- **Progress.** After every spec file the run writes `.thilo/e2e-progress.json` (each
+  file's status, tests passed/failed and duration, the totals, the elapsed time) and
+  prints one line: `7/18 files · 41 passed, 0 failed of 115 tests · 3m12s — w2 kanban.cy.ts passed in 48s`.
+  `jq .summary .thilo/e2e-progress.json` answers how far a run is from another shell.
+- **Resume.** `--resume` runs only the files that did not pass in the run recorded in
+  the progress file (failed, crashed, or not reached because the run was stopped) and
+  keeps the passed ones as they were. A plain run starts fresh. Stop a run with Ctrl-C
+  or `kill <pid>` (the `pid` is in the progress file): it stops its servers and marks
+  the run interrupted. A `kill -9` leaves the servers running.
+- **TMPDIR.** Cypress starts the browser with `--disable-dev-shm-usage`, so Chromium
+  keeps its shared memory in `TMPDIR`. When `/tmp` is full or over the user's quota, that
+  memory fails to allocate: requests end in `ERR_INSUFFICIENT_RESOURCES` and Cypress
+  reports "the Electron Renderer process just crashed". So the run sets `TMPDIR` to
+  `.thilo/e2e-tmp` on the checkout's disk (`E2E_TMPDIR` to put it elsewhere).
+
+A full run takes minutes. **Run it in the background with its output in a log**
+(`npm run e2e > .thilo/e2e.log 2>&1`), and follow the log or the progress file. Don't
+run it as a foreground command with a timeout: a run cut by a command limit leaves only
+the files it finished, and `--resume` is what picks up after it.
 
 ## Deploy: examples.stage.jsudc.dev (stage)
 

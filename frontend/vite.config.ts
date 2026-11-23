@@ -8,6 +8,8 @@ import { defineConfig } from "vite";
 const proxyTarget = process.env.UDC_PROXY_TARGET || "http://127.0.0.1:5100";
 
 export default defineConfig({
+  // `npm run e2e` with several workers gives each Vite a deps cache of its own.
+  cacheDir: process.env.VITE_CACHE_DIR || "node_modules/.vite",
   plugins: [react(), tailwindcss()],
   server: {
     port: Number(process.env.VITE_PORT || 5173),
